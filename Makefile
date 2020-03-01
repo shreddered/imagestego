@@ -1,10 +1,13 @@
+.LIBPATTERNS=
+VPATH=src
+
 CXX=g++
 CPPFLAGS=-fPIC -Wall --std=c++11 -Iinclude/
 LDFLAGS=-shared
 LIBS= #TODO: add opencv here
 
 SOURCES=$(wildcard src/*.cpp)
-OBJECTS=$(SOURCES:.cpp=.o)
+OBJECTS=$(SOURCES:src/%.cpp=lib/%.o)
 
 TARGET=
 #example
@@ -27,13 +30,13 @@ else
 	endif
 endif
 
-$(OUTPUT): lib
+$(OUTPUT): libimagestego
 	$(RM) $(OBJECTS)
 
-lib: $(OBJECTS)
+libimagestego: $(OBJECTS)
 	$(CXX) $(LDFLAGS) -o $(OUTPUT) $(OBJECTS)
 
-%.o: %.cpp
+lib/%.o: %.cpp
 	$(CXX) $(CPPFLAGS) -c $< -o $@
 
 cleanup: $(OBJECTS)
