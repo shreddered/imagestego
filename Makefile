@@ -45,4 +45,4 @@ cleanup: $(OBJECTS)
 example: TARGET=target_example
 
 example: $(OUTPUT)
-	$(CXX) -Iinclude/ -Llib/ -limagestego $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)
+	$(CXX) -Iinclude/ -Llib/ -limagestego -D_DEBUG $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)
