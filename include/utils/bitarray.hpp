@@ -13,13 +13,13 @@
 template<class Block = uint16_t>
 class BitArray {
 private:
-    Block __block(const std::string& str, const std::size_t& pos) noexcept {
+    static Block __block(const std::string& str, const std::size_t& pos) noexcept {
         Block tmp = 0;
         for (uint8_t i = 0; i < sizeof(Block); ++i)
             tmp |= static_cast<uint8_t>(str[pos + i]) << ((sizeof(Block) - i - 1) * CHAR_BIT);
         return tmp;
     }
-    Block __block_last(const std::string& str, const std::size_t& pos) noexcept {
+    static Block __block_last(const std::string& str, const std::size_t& pos) noexcept {
         Block tmp = 0;
         for (uint8_t i = 0; i + pos < str.size(); ++i)
             tmp |= static_cast<uint8_t>(str[pos + i]) << ((sizeof(Block) - i - 1) * CHAR_BIT);
@@ -78,13 +78,17 @@ public:
     BitReference operator [](std::size_t pos) noexcept {
         return BitReference(array[blockIndex(pos)], bitIndex(pos));
     }
-#if _DEBUG
-    Block getBlock(std::size_t pos) const noexcept {
+#ifdef _DEBUG
+    inline Block getBlock(std::size_t pos) const noexcept {
         return array[pos];
     }
 #endif
     inline std::size_t size() const noexcept {
         return numberOfBits;
+    }
+    std::string toString() const noexcept {
+        std::string result(BitArray<char>::numberOfBlocks);
+        return result;
     }
 }; // class BitArray
 

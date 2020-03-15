@@ -1,5 +1,5 @@
 #include <imagestego.hpp>
-#include <bitarray.hpp>
+#include <utils/bitarray.hpp>
 #include <iostream>
 
 
