@@ -56,7 +56,7 @@ private:
     inline static constexpr std::size_t numberOfBlocks(const std::size_t& size) noexcept {
         return size / bitsPerBlock + static_cast<std::size_t>(size % bitsPerBlock != 0);
     }
-    std::size_t numberOfBits;
+    std::size_t numberOfBits = 0;
     std::vector<Block> array; 
 public:
     explicit BitArray() noexcept {}
@@ -88,16 +88,27 @@ public:
         return result;
     }
     void put(unsigned char c) noexcept { // needed
-        const auto estimatedSpace = array.size() * sizeof(Block) * CHAR_BIT - numberOfBits;
+        if (array.empty())
+            array.push_back(0);
+        const auto estimatedSpace = array.size() * bitsPerBlock - numberOfBits;
         if (estimatedSpace < CHAR_BIT) {
             const auto unwritten = CHAR_BIT - estimatedSpace;
             array[array.size() - 1] |= c >> (unwritten);
             array.push_back(0);
-            array[array.size() - 1] |= (c & ((1 <<  unwritten) - 1)) << (sizeof(Block) * CHAR_BIT - unwritten); 
+            array[array.size() - 1] |= (c & ((1 <<  unwritten) - 1)) << (bitsPerBlock - unwritten); 
         }
         else
             array[array.size() - 1] |= c << (estimatedSpace - CHAR_BIT); 
         numberOfBits += 8;
+    }
+    void pushBack(bool b) noexcept {
+        if (numberOfBits++ == array.size() * bitsPerBlock)
+            array.push_back(0);
+        auto tmp = BitReference(array[blockIndex(numberOfBits - 1)], bitIndex(numberOfBits - 1));
+        tmp = b;
+    }
+    inline Block lastBlock() const noexcept {
+        return array[array.size() - 1];
     }
 }; // class BitArray
 

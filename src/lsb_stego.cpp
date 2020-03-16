@@ -1,4 +1,6 @@
 #include <algorithms/lsb_stego.hpp>
+#include <iostream>
+#include <bitset>
 
 
 cv::Point Lsb::generatePoint() const noexcept {
@@ -32,29 +34,43 @@ void Lsb::setStegoContainer(const std::string& filename) {
 void Lsb::createStegoContainer() const {
     if (opts == 0)
         __sillyLsbInsertion();
-    else
-        return;
+    cv::imwrite(outputFile, image);
 }
 
 void Lsb::__sillyLsbInsertion() const {
     std::size_t currentBitIndex = 0;
     msg.put('\0');
+    std::cout << msg << std::endl;
     for (int row = 0; row != image.rows; ++row) {
         for (int col = 0; col != image.cols; ++col) {
             for (uint8_t color = 0; color != 3; ++color) {
                 auto& pixel = image.at<cv::Vec3b>(cv::Point(row, col));
-                if (currentBitIndex == msg.size())
+                if (currentBitIndex == msg.size()) 
                     return;
                 if (msg[currentBitIndex++])
                     pixel.val[color] |= 1u;
                 else
                     pixel.val[color] &= ~1u;
+                std::cout << std::bitset<1>(pixel.val[color]);
             }
         }
     }
 }
 
 std::string Lsb::extractMessage() {
-    //
-    return " ";
+    BitArray<unsigned char> arr;
+    for (int row = 0; row != image.rows; ++row) {
+        for (int col = 0; col != image.cols; ++col) {
+            for (uint8_t color = 0; color != 3; ++color) {
+                auto pixel = image.at<cv::Vec3b>(cv::Point(row, col));
+                std::cout << std::bitset<1>(pixel.val[color]);
+                bool b = (pixel.val[color] & 1u) != 0;
+                arr.pushBack(b);
+                if (arr.size() % 8 == 0 && arr.lastBlock() == 0) {
+                    std::cout << std::endl;
+                    return arr.toString();
+                }
+            }
+        }
+    }
 }
