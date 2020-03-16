@@ -4,8 +4,6 @@
 #include <cstddef>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <bitset>
 
 #ifndef CHAR_BIT
 #   define CHAR_BIT 8
@@ -19,7 +17,6 @@ private:
         Block tmp = 0;
         for (uint8_t i = 0; i < sizeof(Block) && i + pos < str.size(); ++i)
             tmp |= static_cast<uint8_t>(str[pos + i]) << ((sizeof(Block) - i - 1) * CHAR_BIT);
-        std::cout << std::bitset<sizeof(Block) * CHAR_BIT>(tmp) << std::endl;
         return tmp;
     }
     class BitReference {
@@ -81,10 +78,16 @@ public:
         return numberOfBits;
     }
     std::string toString() const noexcept {
-        std::string result(BitArray<char>::numberOfBlocks(numberOfBits));
+        std::string result;
+        //result.reserve(BitArray<char>::numberOfBlocks(numberOfBits));
+        for (std::size_t i = 0; i < array.size();++i) {
+            const char* ptr = reinterpret_cast<const char*>(&array[i]);
+            auto __tmp = std::string(ptr, sizeof(Block));
+            result += std::string(__tmp.rbegin(), __tmp.rend());
+        }
         return result;
     }
-    void put(unsigned char c) noexcept {
+    void put(unsigned char c) noexcept { // needed
         const auto estimatedSpace = array.size() * sizeof(Block) * CHAR_BIT - numberOfBits;
         if (estimatedSpace < CHAR_BIT) {
             const auto unwritten = CHAR_BIT - estimatedSpace;

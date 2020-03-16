@@ -37,16 +37,15 @@ void Lsb::createStegoContainer() const {
 }
 
 void Lsb::__sillyLsbInsertion() const {
-    std::size_t currentBit = 0;
+    std::size_t currentBitIndex = 0;
+    msg.put('\0');
     for (int row = 0; row != image.rows; ++row) {
         for (int col = 0; col != image.cols; ++col) {
             for (uint8_t color = 0; color != 3; ++color) {
                 auto& pixel = image.at<cv::Vec3b>(cv::Point(row, col));
-                if (currentBit == msg.size()) {
-                    pixel.val[color] &= ~1u;
+                if (currentBitIndex == msg.size())
                     return;
-                }
-                if (msg[currentBit++])
+                if (msg[currentBitIndex++])
                     pixel.val[color] |= 1u;
                 else
                     pixel.val[color] &= ~1u;
