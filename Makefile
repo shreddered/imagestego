@@ -2,9 +2,10 @@
 VPATH=src
 
 CXX=g++
-CPPFLAGS=-fPIC -Wall --std=c++11 -Iinclude/
+CPPFLAGS=-fPIC -Wall --std=c++11 -Iinclude/ -I/usr/include/opencv4
 LDFLAGS=-shared
 LIBS= #TODO: add opencv here
+OPENCV_LIBS=-lopencv_core -lopencv_imgcodecs
 
 SOURCES=$(wildcard src/*.cpp)
 OBJECTS=$(SOURCES:src/%.cpp=lib/%.o)
@@ -34,7 +35,7 @@ $(OUTPUT): libimagestego
 	$(RM) $(OBJECTS)
 
 libimagestego: $(OBJECTS)
-	$(CXX) $(LDFLAGS) -o $(OUTPUT) $(OBJECTS)
+	$(CXX) $(LDFLAGS) $(OPENCV_LIBS) -o $(OUTPUT) $(OBJECTS)
 
 lib/%.o: %.cpp
 	$(CXX) $(CPPFLAGS) -c $< -o $@
@@ -45,4 +46,4 @@ cleanup: $(OBJECTS)
 example: TARGET=target_example
 
 example: $(OUTPUT)
-	$(CXX) -Iinclude/ -Llib/ -limagestego -D_DEBUG $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)
+	$(CXX) -Iinclude/ -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)

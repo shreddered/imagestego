@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <bitset>
 
 #ifndef CHAR_BIT
 #   define CHAR_BIT 8
@@ -15,22 +17,16 @@ class BitArray {
 private:
     static Block __block(const std::string& str, const std::size_t& pos) noexcept {
         Block tmp = 0;
-        for (uint8_t i = 0; i < sizeof(Block); ++i)
+        for (uint8_t i = 0; i < sizeof(Block) && i + pos < str.size(); ++i)
             tmp |= static_cast<uint8_t>(str[pos + i]) << ((sizeof(Block) - i - 1) * CHAR_BIT);
-        return tmp;
-    }
-    static Block __block_last(const std::string& str, const std::size_t& pos) noexcept {
-        Block tmp = 0;
-        for (uint8_t i = 0; i + pos < str.size(); ++i)
-            tmp |= static_cast<uint8_t>(str[pos + i]) << ((sizeof(Block) - i - 1) * CHAR_BIT);
+        std::cout << std::bitset<sizeof(Block) * CHAR_BIT>(tmp) << std::endl;
         return tmp;
     }
     class BitReference {
         friend class BitArray<Block>;
-    private:
         Block& block;
         Block mask;
-        explicit BitReference(Block& b, std::size_t pos) : block(b), mask(1 << (bitsPerBlock - pos)) {}
+        explicit BitReference(Block& b, std::size_t pos) : block(b), mask(1 << (bitsPerBlock - pos - 1)) {}
     public:
 #if __cplusplus >= 201103L
         BitReference(const BitReference& other) noexcept = default;
@@ -66,13 +62,11 @@ private:
     std::size_t numberOfBits;
     std::vector<Block> array; 
 public:
+    explicit BitArray() noexcept {}
     explicit BitArray(const std::string& str) noexcept : numberOfBits(str.length() * 8),
     array(numberOfBlocks(numberOfBits)) {
         for (std::size_t i = 0; i < str.size(); i += sizeof(Block)) {
-            if (str.size() - i < sizeof(Block)) // last block case
-                array[i % sizeof(Block)] = __block_last(str, i);
-            else
-                array[i % sizeof(Block)] = __block(str, i);
+            array[i / sizeof(Block)] = __block(str, i);
         }
     }
     BitReference operator [](std::size_t pos) noexcept {
@@ -87,9 +81,28 @@ public:
         return numberOfBits;
     }
     std::string toString() const noexcept {
-        std::string result(BitArray<char>::numberOfBlocks);
+        std::string result(BitArray<char>::numberOfBlocks(numberOfBits));
         return result;
     }
+    void put(unsigned char c) noexcept {
+        const auto estimatedSpace = array.size() * sizeof(Block) * CHAR_BIT - numberOfBits;
+        if (estimatedSpace < CHAR_BIT) {
+            const auto unwritten = CHAR_BIT - estimatedSpace;
+            array[array.size() - 1] |= c >> (unwritten);
+            array.push_back(0);
+            array[array.size() - 1] |= (c & ((1 <<  unwritten) - 1)) << (sizeof(Block) * CHAR_BIT - unwritten); 
+        }
+        else
+            array[array.size() - 1] |= c << (estimatedSpace - CHAR_BIT); 
+        numberOfBits += 8;
+    }
 }; // class BitArray
+
+template<class Block>
+std::ostream& operator <<(std::ostream& out, BitArray<Block> arr) {
+    for (std::size_t i = 0; i != arr.size(); ++i)
+        out << arr[i];
+    return out;
+}
 
 #endif /* __BITARRAY_HPP_INCLUDED__ */

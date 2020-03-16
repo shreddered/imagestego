@@ -1,11 +1,13 @@
 #ifndef __LSB_STEGO_HPP_INCLUDED__
 #define __LSB_STEGO_HPP_INCLUDED__
 
-#include <bitarray.hpp>
+#include <algorithms/base_interfaces.hpp>
+#include <utils/bitarray.hpp>
 
+#include <random>
 #include <string>
 
-#include <highgui.h>
+#include <opencv2/core.hpp>
 
 
 enum LsbOptions {
@@ -19,19 +21,19 @@ public:
     explicit Lsb() noexcept;
     explicit Lsb(const LsbOptions& _opts) noexcept;
     void setImage(const std::string& imageName) override;
-    void setImage(const cv::Mat& _image) noexcept override;
     void setOutputName(const std::string& filename) override;
-    void createStegoContainer() override; 
+    void createStegoContainer() const override; 
     void setMessage(const std::string& msg) noexcept override;
     void setStegoContainer(const std::string& filename) override;
     std::string extractMessage() override;
 private:
-    cv::Point generatePoint();
+    cv::Point generatePoint() const noexcept;
+    void __sillyLsbInsertion() const;
     LsbOptions opts;
-    cv::Mat image;
+    mutable cv::Mat image;
     Mode mode;
     std::string outputFile;
-    BitArray<> msg;
+    mutable BitArray<> msg;
 };
 
 
