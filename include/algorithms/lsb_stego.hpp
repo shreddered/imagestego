@@ -20,6 +20,8 @@ class Lsb : public AbstractStegoExtracter, public AbstractStegoInserter {
 public:
     explicit Lsb() noexcept;
     explicit Lsb(const LsbOptions& _opts) noexcept;
+    explicit Lsb(const std::string& imageName, const std::string& output, const LsbOptions& _opts = LsbOptions::silly);
+    explicit Lsb(const std::string& output);
     void setImage(const std::string& imageName) override;
     void setOutputName(const std::string& filename) override;
     void createStegoContainer() const override; 

@@ -15,6 +15,11 @@ Lsb::Lsb() noexcept : opts(LsbOptions::silly) {}
 
 Lsb::Lsb(const LsbOptions& _opts) noexcept : opts(_opts) {}
 
+Lsb::Lsb(const std::string& imageName, const std::string& output, const LsbOptions& _opts) 
+    : image(cv::imread(imageName)), outputFile(output), opts(_opts) {}
+
+Lsb::Lsb(const std::string& output) : image(cv::imread(output)) {}
+
 void Lsb::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
 }
@@ -40,7 +45,6 @@ void Lsb::createStegoContainer() const {
 void Lsb::__sillyLsbInsertion() const {
     std::size_t currentBitIndex = 0;
     msg.put('\0');
-    std::cout << msg << std::endl;
     for (int row = 0; row != image.rows; ++row) {
         for (int col = 0; col != image.cols; ++col) {
             for (uint8_t color = 0; color != 3; ++color) {
@@ -51,7 +55,6 @@ void Lsb::__sillyLsbInsertion() const {
                     pixel.val[color] |= 1u;
                 else
                     pixel.val[color] &= ~1u;
-                std::cout << std::bitset<1>(pixel.val[color]);
             }
         }
     }
@@ -63,11 +66,9 @@ std::string Lsb::extractMessage() {
         for (int col = 0; col != image.cols; ++col) {
             for (uint8_t color = 0; color != 3; ++color) {
                 auto pixel = image.at<cv::Vec3b>(cv::Point(row, col));
-                std::cout << std::bitset<1>(pixel.val[color]);
                 bool b = (pixel.val[color] & 1u) != 0;
                 arr.pushBack(b);
                 if (arr.size() % 8 == 0 && arr.lastBlock() == 0) {
-                    std::cout << std::endl;
                     return arr.toString();
                 }
             }
