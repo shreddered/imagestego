@@ -33,7 +33,7 @@ else
 	endif
 endif
 
-.PHONY: directories
+.PHONY: directories clean
 
 $(OUTPUT): libimagestego
 	$(RM) $(OBJECTS)
@@ -49,7 +49,7 @@ directories: ${OUT_DIRS}
 $(OUT_DIRS):
 	@mkdir -p ${OUT_DIRS} 2> /dev/null
 
-cleanup: $(OBJECTS)
+clean: $(OBJECTS)
 	$(RM) $(OBJECTS)
 
 example: TARGET=target_example
