@@ -1,6 +1,4 @@
 #include <algorithms/lsb_stego.hpp>
-#include <iostream>
-#include <bitset>
 
 
 cv::Point Lsb::generatePoint() const noexcept {

@@ -10,6 +10,7 @@ OPENCV_CPPFLAGS=-I/usr/include/opencv4
 
 SOURCES=$(wildcard src/*.cpp)
 OBJECTS=$(SOURCES:src/%.cpp=lib/%.o)
+OUT_DIRS=bin/ lib/
 
 TARGET=
 #example
@@ -32,14 +33,21 @@ else
 	endif
 endif
 
+.PHONY: directories
+
 $(OUTPUT): libimagestego
 	$(RM) $(OBJECTS)
 
-libimagestego: $(OBJECTS)
+libimagestego: directories $(OBJECTS)
 	$(CXX) $(LDFLAGS) $(OPENCV_LIBS) -o $(OUTPUT) $(OBJECTS)
 
 lib/%.o: %.cpp
 	$(CXX) $(CPPFLAGS) -c $< -o $@
+
+directories: ${OUT_DIRS}
+
+$(OUT_DIRS):
+	@mkdir -p ${OUT_DIRS} 2> /dev/null
 
 cleanup: $(OBJECTS)
 	$(RM) $(OBJECTS)
