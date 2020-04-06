@@ -43,30 +43,30 @@ void getopts(const int& argc, char** argv, const std::string& arg, T* value, Arg
     getopts(argc, argv, args...);
 } 
 
-
 int main(int argc, char** argv) {
-    //std::cout << "Hello, world!" << a <<std::endl;
-    /*Lsb lsb;
-    lsb.setMessage("Hello!");
-    lsb.setImage("nice_man.jpg");
-    lsb.setOutputName("nice_stego.png");
-    lsb.createStegoContainer();*/
-    /*Lsb lsb;
-    lsb.setImage("nice_stego.png");
-    std::cout << lsb.extractMessage() << std::endl;
-    */
-    int mode;
-    getopts(argc, argv, "mode", &mode);
-    if (mode == 1) { // create stego case
-        std::string image, output, message;
-        getopts(argc, argv, "image", &image, "output", &output, "message", &message);
-        Pipe p(new StringSource(message), new Lsb(image, output));
+    if (argv[1] == std::string("insert")) {
+        std::string image, output, msg, key;
+        getopts(argc, argv,
+                "image", &image,
+                "output", &output,
+                "msg", &msg,
+                "key", &key);
+        Lsb lsb(image, output, LsbOptions::randomBits);
+        lsb.setSecretKey(key);
+        lsb.setMessage(msg);
+        lsb.createStegoContainer();
     }
-    else if (mode == 2) {
-        std::string container, message;
-        getopts(argc, argv, "image", &container);
-        Pipe p(new Lsb(container), new StringRef(message));
-        std::cout << message << std::endl;
+    else if (argv[1] == std::string("extract")) {
+        std::string container, msg, key;
+        getopts(argc, argv, 
+                "image", &container,
+                "key", &key);
+        std::cout << "Here!" << std::endl;
+        Lsb lsb(LsbOptions::randomBits);
+        lsb.setStegoContainer(container);
+        lsb.setSecretKey(key);
+        msg = lsb.extractMessage();
+        std::cout << msg << std::endl;
     }
     return 0;
 }
