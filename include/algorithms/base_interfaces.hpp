@@ -29,6 +29,12 @@ public:
     virtual ~AbstractStegoExtracter() = default;
 }; // class AbstractStegoExtracter
 
+class AbstractOutputDevice {
+public:
+    virtual void put(const char* data, std::size_t len) = 0;
+    virtual void end() noexcept = 0;
+}; // class AbstractOutputDevice
+
 class Pipe;
 
 class StringRef {
@@ -46,6 +52,7 @@ private:
     const std::string& str;
 public:
     explicit StringSource(const std::string& _str) noexcept;
+    explicit StringSource(const std::string& _str, AbstractOutputDevice* device); 
     virtual ~StringSource() noexcept = default;
 }; // class StringSource
 
@@ -60,5 +67,13 @@ private:
     StringSource* source = nullptr;
     StringRef* ref = nullptr;
 };
+
+class HexEncoder {
+public:
+    explicit HexEncoder(StringRef* src) noexcept;
+    std::string getHexString() noexcept;
+private:
+
+}; // class HexEncoder
 
 #endif /* __BASIC_INTERFACES_HPP_INCLUDED__ */
