@@ -28,6 +28,10 @@ public:
     void setOutputName(const std::string& filename) override;
     void createStegoContainer() const override; 
     void setMessage(const std::string& msg) noexcept override;
+    template<typename Int>
+    void setMessage(const BitArray<Int>& arr) noexcept {
+        this->msg = arr;
+    }
     void setStegoContainer(const std::string& filename) override;
     void setSecretKey(const std::string& key) noexcept;
     std::string extractMessage() override;

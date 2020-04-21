@@ -80,6 +80,23 @@ public:
                 operator [](i) = str[i] - '0';
         }
     }
+    template<typename Int>
+    static BitArray<Block> fromInt(const Int& num) {
+        BitArray<Block> arr;
+        constexpr auto tmp = sizeof(num) * CHAR_BIT;
+        for (int i = 0; i != tmp; ++i) {
+            arr.pushBack(num & (1 << (tmp - i - 1)) != 0); 
+        }
+        return arr;
+    }
+    template<typename Int>
+    BitArray<Block>& operator =(const BitArray<Int>& arr) {
+        this->clear();
+        for (std::size_t i = 0; i != arr.size(); ++i) {
+            pushBack(i);
+        }
+        return *this;
+    }
     BitReference operator [](std::size_t pos) noexcept {
         return BitReference(array[blockIndex(pos)], bitIndex(pos));
     }
@@ -103,6 +120,8 @@ public:
     }
     void clear() noexcept {
         array.clear();
+        numberOfBits = 0;
+
     }
     bool empty() const noexcept {
         return size() == 0;
