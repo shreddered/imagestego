@@ -22,6 +22,9 @@ target_lsb_OUTPUT=
 #huffman
 target_huffman_SRC=examples/huffman.cpp
 target_huffman_OUTPUT=
+#archived
+target_archived_SRC=examples/archived_data_stego.cpp
+target_archived_OUTPUT=bin/stego
 
 OUTPUT=
 
@@ -64,16 +67,20 @@ clean: $(OBJECTS)
 
 example: TARGET=target_example
 
-example: $(OUTPUT)
+example: 
 	$(CXX) -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)
 
 lsb: TARGET=target_lsb
 
-lsb: $(OUTPUT)
+lsb: 
 	$(CXX) -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)
 
 huffman: TARGET=target_huffman
 
-huffman: $(OUTPUT)
+huffman: 
 	$(CXX) -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)
 
+archived: TARGET=target_archived
+
+archived:
+	$(CXX) -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)

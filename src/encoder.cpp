@@ -19,8 +19,10 @@ BitArray<unsigned char> HuffmanEncoder::getEncodedMessage() const {
 void HuffmanEncoder::encode() const {
     if (codeTable.empty())
         __buildCode();
-    for (std::size_t i = 0; i != msg.length(); ++i) {
-        encodedMsg += codeTable[msg[i]];
+    if (encodedMsg.empty()) {
+        for (std::size_t i = 0; i != msg.length(); ++i) {
+            encodedMsg += codeTable[msg[i]];
+        }
     }
 }
 
