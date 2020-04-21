@@ -1,5 +1,5 @@
-#ifndef __DECODER_HPP_INCLUDED__
-#define __DECODER_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_HUFFMAN_DECODER_HPP_INCLUDED__
+#define __IMAGESTEGO_HUFFMAN_DECODER_HPP_INCLUDED__
 
 #include <unordered_map>
 #include <string>
@@ -47,4 +47,4 @@ private:
     std::unordered_map<std::string, char> codeTable;
 }; // class HuffmanDecoder
 
-#endif /* __DECODER_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_HUFFMAN_DECODER_HPP_INCLUDED__ */

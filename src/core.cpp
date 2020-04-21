@@ -1,4 +1,4 @@
-#include <algorithms/base_interfaces.hpp>
+#include <core.hpp>
 
 
 StringRef::StringRef(std::string& _str) noexcept : str(_str) {}

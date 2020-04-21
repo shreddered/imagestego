@@ -1,4 +1,4 @@
-#include <encoder.hpp>
+#include <huffman_encoder.hpp>
 
 
 HuffmanEncoder::HuffmanEncoder() noexcept {}

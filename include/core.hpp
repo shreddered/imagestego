@@ -1,5 +1,5 @@
-#ifndef __BASIC_INTERFACES_HPP_INCLUDED__
-#define __BASIC_INTERFACES_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_CORE_HPP_INCLUDED__
+#define __IMAGESTEGO_CORE_HPP_INCLUDED__
 
 #include <string>
 
@@ -76,4 +76,4 @@ private:
 
 }; // class HexEncoder
 
-#endif /* __BASIC_INTERFACES_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_CORE_HPP_INCLUDED__ */

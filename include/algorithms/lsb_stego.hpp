@@ -1,7 +1,7 @@
 #ifndef __LSB_STEGO_HPP_INCLUDED__
 #define __LSB_STEGO_HPP_INCLUDED__
 
-#include <algorithms/base_interfaces.hpp>
+#include <core.hpp>
 #include <utils/bitarray.hpp>
 
 #include <random>

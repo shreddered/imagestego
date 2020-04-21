@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include <decoder.hpp>
-#include <encoder.hpp>
+#include <huffman_decoder.hpp>
+#include <huffman_encoder.hpp>
 
 
 int main(int argc, char** argv) {

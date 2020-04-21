@@ -1,5 +1,5 @@
-#ifndef __BITARRAY_HPP_INCLUDED__
-#define __BITARRAY_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_BITARRAY_HPP_INCLUDED__
+#define __IMAGESTEGO_BITARRAY_HPP_INCLUDED__
 
 #include <cstddef>
 #include <string>
@@ -170,4 +170,4 @@ BitArray<T> operator +(const BitArray<T1>& arr1, const BitArray<T2>& arr2) {
         arr[i + arr1.size()] = arr2[i];
     return arr;
 }
-#endif /* __BITARRAY_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_BITARRAY_HPP_INCLUDED__ */

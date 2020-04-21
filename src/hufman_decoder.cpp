@@ -1,4 +1,4 @@
-#include <decoder.hpp>
+#include <huffman_decoder.hpp>
 
 
 HuffmanDecoder::HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept : encodedMsg(arr) {}

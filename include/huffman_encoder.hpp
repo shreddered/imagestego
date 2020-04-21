@@ -1,5 +1,5 @@
-#ifndef __ENCODER_HPP_INCLUDED__
-#define __ENCODER_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_HUFFMAN_ENCODER_HPP_INCLUDED__
+#define __IMAGESTEGO_HUFFMAN_ENCODER_HPP_INCLUDED__
 
 #include <algorithm>
 #include <cstddef>
@@ -42,4 +42,4 @@ private:
     mutable std::string alphabet;
 }; // class HuffmanEncoder
 
-#endif /* __ENCODER_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_HUFFMAN_ENCODER_HPP_INCLUDED__ */
