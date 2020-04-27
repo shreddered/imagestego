@@ -25,6 +25,9 @@ target_huffman_OUTPUT=
 #archived
 target_archived_SRC=examples/archived_data_stego.cpp
 target_archived_OUTPUT=bin/stego
+#avl
+target_avl_SRC=examples/avl.cpp
+target_avl_OUTPUT=bin/avl
 
 OUTPUT=
 
@@ -84,3 +87,8 @@ archived: TARGET=target_archived
 
 archived:
 	$(CXX) $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT) -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG
+
+avl: TARGET=target_avl
+
+avl:
+	$(CXX) $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT) -std=c++11 -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG
