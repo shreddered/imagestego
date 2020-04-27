@@ -15,6 +15,7 @@ private:
 public:
     explicit LzwEncoder() noexcept;
     explicit LzwEncoder(const std::string& str) noexcept;
+    void setMessage(const std::string& str) noexcept;
 
 }; // class LzwEncoder
 
