@@ -80,7 +80,7 @@ protected:
     static TreeNode* insertImpl(TreeNode* node, const T& data) {
         if (!node)
             return new TreeNode(data);
-        if (Comp(data, node->data())) {
+        if (Comp()(data, node->data())) {
             node->leftChild = insertImpl(node->leftChild, data);
             node->leftChild->parent = node;
         }
@@ -179,7 +179,7 @@ public:
     BinaryTree(const BinaryTree<T, Comp>& other) : _size(other._size) {
         copy(other.root, root);
     }
-    BinaryTree(BinaryTree<T, Comp>&& other) : root(other.root), size(other._size) noexcept {
+    BinaryTree(BinaryTree<T, Comp>&& other) noexcept : root(other.root), _size(other._size) {
         other.root = nullptr;
     }
     virtual ~BinaryTree() noexcept {
