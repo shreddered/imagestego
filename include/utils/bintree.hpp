@@ -18,7 +18,7 @@ protected:
         TreeNode* leftChild = nullptr;
         TreeNode* rightChild = nullptr;
         TreeNode* parent = nullptr;
-        explicit TreeNode(const T& data) noexcept : parent(parent), _data(data) {}
+        explicit TreeNode(const T& data) noexcept : _data(data) {}
     public:
         static inline int height(TreeNode* node) {
             return (node) ? node->_height : 0;
@@ -55,7 +55,6 @@ protected:
         TreeNode* T2 = tmp->leftChild;
         tmp->leftChild = node;
         node->rightChild = T2;
-
         if (T2)
             T2->parent = node;
         tmp->parent = node->parent;
@@ -81,7 +80,7 @@ protected:
     static TreeNode* insertImpl(TreeNode* node, const T& data) {
         if (!node)
             return new TreeNode(data);
-        if (data < node->data()) {
+        if (Comp(data, node->data())) {
             node->leftChild = insertImpl(node->leftChild, data);
             node->leftChild->parent = node;
         }
@@ -98,9 +97,24 @@ protected:
         if (node->rightChild)
             printDfsImpl(node->rightChild);
     }
+    static void copy(TreeNode* from, TreeNode* to) {
+        if (from) {
+            to = new TreeNode(from->data());
+            copy(from->leftChild, to->leftChild);
+            copy(from->rightChild, to->rightChild);
+        }
+        else 
+            to = nullptr;
+    }
+    static void destroy(TreeNode* node) noexcept {
+        if (node->leftChild)
+            destroy(node->leftChild);
+        if (node->rightChild)
+            destroy(node->rightChild);
+    }
     // Base class representing tree iterator
-    // Both operators ++ and -- stands for going to the next or 
-    // to the previous node if DFS respectively
+    // Operator ++ stands for going to the next 
+    // node in DFS algorithm
     class Iterator { // ForwardIterator
         friend class BinaryTree<T, Comp>;
     private:
@@ -154,18 +168,49 @@ protected:
         }
     }; // struct Iterator
     TreeNode* root = nullptr;
+    std::size_t _size = 0; // for O(1) size()
 public:
     explicit BinaryTree() noexcept {}
     template<class It>
-    explicit BinaryTree(It begin, It end) {
+    explicit BinaryTree(It begin, It end) : _size(std::distance(begin, end)) {
         for (auto it = begin; it != end; ++it)
             insert(*it);
     }
+    BinaryTree(const BinaryTree<T, Comp>& other) : _size(other._size) {
+        copy(other.root, root);
+    }
+    BinaryTree(BinaryTree<T, Comp>&& other) : root(other.root), size(other._size) noexcept {
+        other.root = nullptr;
+    }
+    virtual ~BinaryTree() noexcept {
+        if (!isEmpty())
+            destroy(root);
+    }
+    BinaryTree<T, Comp>& operator =(BinaryTree<T, Comp>&& other) noexcept {
+        root = other.root;
+        _size = other._size;
+        other.root = nullptr;
+        return *this;
+    }
+    BinaryTree<T, Comp>& operator =(const BinaryTree<T, Comp>& other) {
+        if (this != &other)
+            copy(other.root, root);
+        return *this;
+    }
     void insert(const T& data) noexcept {
         root = insertImpl(root, data);
+        ++_size;
     }
     inline bool isEmpty() const noexcept {
         return root == nullptr;
+    }
+    inline void clear() noexcept {
+        if (!isEmpty())
+            destroy(root);
+        root = nullptr;
+    }
+    inline std::size_t size() const noexcept {
+        return _size;
     }
     void printDfs() noexcept { // for debugging purposes
         if (!isEmpty())
@@ -178,5 +223,21 @@ public:
         return Iterator(this, root, true);
     }
 }; // class BinaryTree
+
+template<class T1, class T2, class Pair = std::pair<T1, T2>>
+struct PairComparator {
+    constexpr bool operator ()(const Pair& lhs, const Pair& rhs) const noexcept {
+        return lhs.first < rhs.first || (lhs.first == rhs.first && lhs.second < rhs.second);
+    }
+};
+
+class Route final : public BinaryTree<std::pair<int, int>, PairComparator<int, int>> {
+public:
+    explicit Route() noexcept : BinaryTree() {}
+    template<class It>
+    explicit Route(It begin, It end) : BinaryTree(begin, end) {}
+    void create(const int& n) {
+    }
+}; // class Route
 
 #endif /* __IMAGESTEGO_BINTREE_HPP_INCLUDED__ */
