@@ -45,6 +45,9 @@ void getopts(const int& argc, char** argv, const std::string& arg, T* value, Arg
 
 
 int main(int argc, char** argv) {
+    cv::Point p(1, 2);
+    std::cout << p.x << ' ' << p.y << std::endl;
+    return 0;
     int mode;
     getopts(argc, argv, "mode", &mode);
     if (mode == 1) { // create stego case
