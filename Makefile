@@ -68,19 +68,19 @@ clean: $(OBJECTS)
 example: TARGET=target_example
 
 example: 
-	$(CXX) -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)
+	$(CXX) $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT) -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG
 
 lsb: TARGET=target_lsb
 
 lsb: 
-	$(CXX) -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)
+	$(CXX) $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT) -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG
 
 huffman: TARGET=target_huffman
 
 huffman: 
-	$(CXX) -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)
+	$(CXX) $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT) -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG
 
 archived: TARGET=target_archived
 
 archived:
-	$(CXX) -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT)
+	$(CXX) $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT) -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG

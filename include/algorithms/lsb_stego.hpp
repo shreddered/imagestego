@@ -21,8 +21,8 @@ enum LsbOptions {
 class Lsb : public AbstractStegoExtracter, public AbstractStegoInserter {
 public:
     explicit Lsb() noexcept;
-    explicit Lsb(const LsbOptions& _opts) noexcept;
-    explicit Lsb(const std::string& imageName, const std::string& output, const LsbOptions& _opts = LsbOptions::silly);
+    explicit Lsb(const int& _opts) noexcept;
+    explicit Lsb(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly);
     explicit Lsb(const std::string& output);
     void setImage(const std::string& imageName) override;
     void setOutputName(const std::string& filename) override;
@@ -43,7 +43,7 @@ private:
     std::string __sillyLsbExtraction() const;
     std::string __randomLsbExtraction() const;
     void seed() const noexcept;
-    LsbOptions opts;
+    int opts;
     mutable cv::Mat image;
     std::string outputFile;
     mutable BitArray<> msg;

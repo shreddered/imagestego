@@ -5,7 +5,7 @@
 
 #include <utils/bitarray.hpp>
 
-#include <opencv2/highgui.hpp>
+#include <opencv2/imgcodecs.hpp>
 
 
 enum class Mode {

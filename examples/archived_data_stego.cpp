@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include <algorithms/lsb_stego.hpp>
-#include <encoder.hpp>
-#include <decoder.hpp>
+#include <huffman_encoder.hpp>
+#include <huffman_decoder.hpp>
 
 #include <algorithm>
 #include <bitset>

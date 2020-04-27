@@ -83,9 +83,10 @@ public:
     template<typename Int>
     static BitArray<Block> fromInt(const Int& num) {
         BitArray<Block> arr;
-        constexpr auto tmp = sizeof(num) * CHAR_BIT;
+        constexpr auto tmp = sizeof(Int) * CHAR_BIT;
         for (int i = 0; i != tmp; ++i) {
-            arr.pushBack(num & (1 << (tmp - i - 1)) != 0); 
+            auto mask = 1 << (tmp - i - 1);
+            arr.pushBack((num & mask) != 0); 
         }
         return arr;
     }
@@ -93,7 +94,7 @@ public:
     BitArray<Block>& operator =(const BitArray<Int>& arr) {
         this->clear();
         for (std::size_t i = 0; i != arr.size(); ++i) {
-            pushBack(i);
+            pushBack(arr[i]);
         }
         return *this;
     }

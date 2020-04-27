@@ -15,9 +15,9 @@ cv::Point Lsb::generatePoint() const noexcept {
 
 Lsb::Lsb() noexcept : opts(LsbOptions::silly) {}
 
-Lsb::Lsb(const LsbOptions& _opts) noexcept : opts(_opts) {}
+Lsb::Lsb(const int& _opts) noexcept : opts(_opts) {}
 
-Lsb::Lsb(const std::string& imageName, const std::string& output, const LsbOptions& _opts) 
+Lsb::Lsb(const std::string& imageName, const std::string& output, const int& _opts) 
     : image(cv::imread(imageName)), outputFile(output), opts(_opts) {}
 
 Lsb::Lsb(const std::string& output) : image(cv::imread(output)) {}
@@ -62,19 +62,20 @@ void Lsb::createStegoContainer() const {
 void Lsb::__sillyLsbInsertion() const {
     std::size_t currentBitIndex = 0;
     msg.put('\0');
-    for (int row = 0; row != image.rows; ++row) {
-        for (int col = 0; col != image.cols; ++col) {
+    std::cout << "HERE" << std::endl;
+    for (int row = 0; row != image.rows && currentBitIndex != msg.size(); ++row) {
+        for (int col = 0; col != image.cols && currentBitIndex != msg.size(); ++col) {
             for (uint8_t color = 0; color != 3; ++color) {
-                auto& pixel = image.at<cv::Vec3b>(cv::Point(row, col));
-                if (currentBitIndex == msg.size()) 
-                    return;
+                auto pixel = image.at<cv::Vec3b>(row, col);
                 if (msg[currentBitIndex++])
                     pixel.val[color] |= 1u;
                 else
                     pixel.val[color] &= ~1u;
+                image.at<cv::Vec3b>(row, col) = pixel;
             }
         }
     }
+    cv::imwrite(outputFile, image);
 }
 
 std::string Lsb::extractMessage() {
@@ -97,10 +98,10 @@ std::string Lsb::__sillyLsbExtraction() const {
     for (int row = 0; row != image.rows; ++row) {
         for (int col = 0; col != image.cols; ++col) {
             for (uint8_t color = 0; color != 3; ++color) {
-                auto pixel = image.at<cv::Vec3b>(cv::Point(row, col));
+                auto pixel = image.at<cv::Vec3b>(row, col);
                 bool b = (pixel.val[color] & 1u) != 0;
                 arr.pushBack(b);
-                if (arr.size() & 7u == 0 && arr.lastBlock() == 0) {
+                if (arr.size() % 8 == 0 && arr.lastBlock() == 0) {
                     return arr.toString();
                 }
             }
@@ -145,7 +146,7 @@ void Lsb::__randomLsbInsertion(bool flag) const {
     seed();
     for (int i = 0; i != msg.size(); ++i) {
         auto p = generatePoint();
-        auto& pixel = image.at<cv::Vec3b>(p);
+        auto pixel = image.at<cv::Vec3b>(p);
         // pixel's LSB = pixel.val[0] & 1
         bool bit = msg[i];
         if ((pixel.val[0] & 1u) != key[i % key.size()]) {

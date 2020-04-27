@@ -45,22 +45,16 @@ void getopts(const int& argc, char** argv, const std::string& arg, T* value, Arg
 
 
 int main(int argc, char** argv) {
-    //std::cout << "Hello, world!" << a <<std::endl;
-    /*Lsb lsb;
-    lsb.setMessage("Hello!");
-    lsb.setImage("nice_man.jpg");
-    lsb.setOutputName("nice_stego.png");
-    lsb.createStegoContainer();*/
-    /*Lsb lsb;
-    lsb.setImage("nice_stego.png");
-    std::cout << lsb.extractMessage() << std::endl;
-    */
     int mode;
     getopts(argc, argv, "mode", &mode);
     if (mode == 1) { // create stego case
         std::string image, output, message;
         getopts(argc, argv, "image", &image, "output", &output, "message", &message);
-        Pipe p(new StringSource(message), new Lsb(image, output));
+        Lsb lsb(LsbOptions::silly);
+        lsb.setMessage(message);
+        lsb.setImage(image);
+        lsb.setOutputName(output);
+        lsb.createStegoContainer();
     }
     else if (mode == 2) {
         std::string container, message;
