@@ -37,8 +37,8 @@ protected:
     static TreeNode* rotateRight(TreeNode* node) {
         TreeNode* tmp = node->leftChild;
         TreeNode* T2 = tmp->rightChild;
+        node->leftChild = tmp->rightChild;
         tmp->rightChild = node;
-        node->leftChild = T2;
         if (T2)
             T2->parent = node;
         tmp->parent = node->parent;
@@ -50,8 +50,8 @@ protected:
     static TreeNode* rotateLeft(TreeNode* node) {
         TreeNode* tmp = node->rightChild;
         TreeNode* T2 = tmp->leftChild;
+        node->rightChild = tmp->leftChild;
         tmp->leftChild = node;
-        node->rightChild = T2;
         if (T2)
             T2->parent = node;
         tmp->parent = node->parent;
@@ -146,9 +146,15 @@ protected:
                         node = node->rightChild;
                         return *this;
                     }
-                    else {
-                        node = node->parent->rightChild;
-                        return *this;
+                    else if (node->parent) {
+                        do {
+                            cameFrom = node;
+                            node = node->parent;
+                        } while(node->rightChild == cameFrom && node != owner->root);
+                        if (node != owner->root) {
+                            node = node->rightChild;
+                            return *this;
+                        }
                     }
                 }
             }
