@@ -64,7 +64,6 @@ private:
 #endif
 public:
     explicit BinaryTree() noexcept {}
-
     virtual ~BinaryTree() noexcept {
         if (root)
             delete root;
@@ -94,5 +93,7 @@ public:
     }
 #endif
 }; // clas BinaryTree
+
+
 
 #endif /* __IMAGESTEGO_BINARY_TREE_HPP_INCLUDED__ */
