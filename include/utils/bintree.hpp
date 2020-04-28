@@ -77,14 +77,16 @@ protected:
         }
         return node;
     }
-    static TreeNode* insertImpl(TreeNode* node, const T& data) {
-        if (!node)
+    TreeNode* insertImpl(TreeNode* node, const T& data) {
+        if (!node) {
+            ++_size;
             return new TreeNode(data);
+        }
         if (Comp()(data, node->data())) {
             node->leftChild = insertImpl(node->leftChild, data);
             node->leftChild->parent = node;
         }
-        else {
+        else if (data != node->data()) {
             node->rightChild = insertImpl(node->rightChild, data);
             node->rightChild->parent = node;
         }
@@ -172,7 +174,7 @@ protected:
 public:
     explicit BinaryTree() noexcept {}
     template<class It>
-    explicit BinaryTree(It begin, It end) : _size(std::distance(begin, end)) {
+    explicit BinaryTree(It begin, It end) {
         for (auto it = begin; it != end; ++it)
             insert(*it);
     }
@@ -199,7 +201,6 @@ public:
     }
     void insert(const T& data) noexcept {
         root = insertImpl(root, data);
-        ++_size;
     }
     inline bool isEmpty() const noexcept {
         return root == nullptr;
