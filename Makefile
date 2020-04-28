@@ -28,6 +28,9 @@ target_archived_OUTPUT=bin/stego
 #avl
 target_avl_SRC=examples/avl.cpp
 target_avl_OUTPUT=bin/avl
+#prefix
+target_prefix_SRC=examples/prefix.cpp
+target_prefix_OUTPUT=bin/prefix
 
 OUTPUT=
 
@@ -91,4 +94,9 @@ archived:
 avl: TARGET=target_avl
 
 avl:
+	$(CXX) $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT) -std=c++11 -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG
+
+prefix: TARGET=target_prefix
+
+prefix:
 	$(CXX) $($(TARGET)_SRC) -o $($(TARGET)_OUTPUT) -std=c++11 -ggdb -Iinclude/ $(OPENCV_CPPFLAGS) -Llib/ -limagestego $(OPENCV_LIBS) -D_DEBUG

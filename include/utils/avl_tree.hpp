@@ -1,17 +1,19 @@
-#ifndef __IMAGESTEGO_BINTREE_HPP_INCLUDED__
-#define __IMAGESTEGO_BINTREE_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_AVL_TREE_HPP_INCLUDED__
+#define __IMAGESTEGO_AVL_TREE_HPP_INCLUDED__
 
 #include <algorithm>
 #include <functional>
-#include <iostream>
+#ifdef _DEBUG
+#   include <iostream>
+#endif
 #include <utility>
 
 
 template<typename T, class Comp = std::less<T>>
-class BinaryTree {
-protected:
+class AvlTree {
+private:
     class TreeNode {
-        friend class BinaryTree<T, Comp>;
+        friend class AvlTree<T, Comp>;
     private:
         T _data = T();
         int _height = 1;
@@ -20,6 +22,12 @@ protected:
         TreeNode* parent = nullptr;
         explicit TreeNode(const T& data) noexcept : _data(data) {}
     public:
+        virtual ~TreeNode() noexcept {
+            if (leftChild)
+                delete leftChild;
+            if (rightChild)
+                delete rightChild;
+        }
         static inline int height(TreeNode* node) {
             return (node) ? node->_height : 0;
         }
@@ -79,7 +87,7 @@ protected:
             ++_size;
             return new TreeNode(data);
         }
-        if (Comp()(data, node->data())) {
+        if (cmp(data, node->data())) {
             node->leftChild = insertImpl(node->leftChild, data);
             node->leftChild->parent = node;
         }
@@ -89,13 +97,15 @@ protected:
         }
         return balance(node);
     }
-    static void printDfsImpl(TreeNode* node) {
+#ifdef _DEBUG
+    static void printDfsImpl(const TreeNode* node) {
         std::cout << node->data() << std::endl;
         if (node->leftChild)
             printDfsImpl(node->leftChild);
         if (node->rightChild)
             printDfsImpl(node->rightChild);
     }
+#endif
     static void copy(TreeNode* from, TreeNode* to) {
         if (from) {
             to = new TreeNode(from->data());
@@ -105,22 +115,16 @@ protected:
         else 
             to = nullptr;
     }
-    static void destroy(TreeNode* node) noexcept {
-        if (node->leftChild)
-            destroy(node->leftChild);
-        if (node->rightChild)
-            destroy(node->rightChild);
-    }
     // Base class representing tree iterator
     // Operator ++ stands for going to the next 
     // node in DFS algorithm
     class Iterator { // ForwardIterator
-        friend class BinaryTree<T, Comp>;
+        friend class AvlTree<T, Comp>;
     private:
         TreeNode* node;
-        BinaryTree<T, Comp>* owner;
+        AvlTree<T, Comp>* owner;
         bool isEnd = false;
-        explicit Iterator(BinaryTree<T, Comp>* owner, TreeNode* node, bool flag) noexcept : owner(owner), node(node), isEnd(flag) {}
+        explicit Iterator(AvlTree<T, Comp>* owner, TreeNode* node, bool flag) noexcept : owner(owner), node(node), isEnd(flag) {}
     public:
         typedef T value_type;
         inline T operator *() {
@@ -151,7 +155,7 @@ protected:
                             cameFrom = node;
                             node = node->parent;
                         } while(node->rightChild == cameFrom && node != owner->root);
-                        if (node != owner->root) {
+                        if (node != owner->root || cameFrom != node->rightChild) {
                             node = node->rightChild;
                             return *this;
                         }
@@ -175,34 +179,35 @@ protected:
     }; // struct Iterator
     TreeNode* root = nullptr;
     std::size_t _size = 0; // for O(1) size()
+    Comp cmp = Comp();
 public:
     typedef T              value_type;
     typedef T&             const_reference;
     typedef Iterator       iterator;
     typedef const Iterator const_iterator;
-    explicit BinaryTree() noexcept {}
+    explicit AvlTree() noexcept {}
     template<class It>
-    explicit BinaryTree(It begin, It end) {
+    explicit AvlTree(It begin, It end) {
         for (auto it = begin; it != end; ++it)
             insert(*it);
     }
-    BinaryTree(const BinaryTree<T, Comp>& other) : _size(other._size) {
+    AvlTree(const AvlTree<T, Comp>& other) : _size(other._size) {
         copy(other.root, root);
     }
-    BinaryTree(BinaryTree<T, Comp>&& other) noexcept : root(other.root), _size(other._size) {
+    AvlTree(AvlTree<T, Comp>&& other) noexcept : root(other.root), _size(other._size) {
         other.root = nullptr;
     }
-    virtual ~BinaryTree() noexcept {
+    virtual ~AvlTree() noexcept {
         if (!isEmpty())
-            destroy(root);
+            delete root;
     }
-    BinaryTree<T, Comp>& operator =(BinaryTree<T, Comp>&& other) noexcept {
+    AvlTree<T, Comp>& operator =(AvlTree<T, Comp>&& other) noexcept {
         root = other.root;
         _size = other._size;
         other.root = nullptr;
         return *this;
     }
-    BinaryTree<T, Comp>& operator =(const BinaryTree<T, Comp>& other) {
+    AvlTree<T, Comp>& operator =(const AvlTree<T, Comp>& other) {
         if (this != &other)
             copy(other.root, root);
         return *this;
@@ -215,46 +220,45 @@ public:
     }
     inline void clear() noexcept {
         if (!isEmpty())
-            destroy(root);
+            delete root;
         root = nullptr;
+        _size = 0;
     }
     inline std::size_t size() const noexcept {
         return _size;
     }
-    void printDfs() noexcept { // for debugging purposes
+#ifdef _DEBUG
+    void printDfs() const noexcept { // for debugging purposes
         if (!isEmpty())
             printDfsImpl(root);
     }
+#endif
     const_iterator begin() noexcept {
         return Iterator(this, root, false);
     }
     const_iterator end() noexcept {
         return Iterator(this, root, true);
     }
-}; // class BinaryTree
+}; // class AvlTree
 
 template<class T1, class T2, class Pair = std::pair<T1, T2>>
-struct PairComparator {
+struct PairComparator final {
     constexpr bool operator ()(const Pair& lhs, const Pair& rhs) const noexcept {
         return lhs.first < rhs.first || (lhs.first == rhs.first && lhs.second < rhs.second);
     }
 };
 
-class Route final : public BinaryTree<std::pair<int, int>, PairComparator<int, int>> {
+class Route final : public AvlTree<std::pair<int, int>, PairComparator<int, int>> {
 private:
     std::pair<int, int> _mapSize;
 public:
-    explicit Route(const std::pair<int, int>& mapSize) noexcept : BinaryTree(), _mapSize(mapSize) {}
+    explicit Route(const std::pair<int, int>& mapSize) noexcept;
     template<class It>
-    explicit Route(It begin, It end) : BinaryTree(begin, end) {}
+    explicit Route(It begin, It end) : AvlTree(begin, end) {}
     inline void setMapSize(const std::pair<int, int>& mapSize) {
         _mapSize = mapSize;
     }
-    void create(const int& n) {
-        while(size() != n) {
-            insert({rand() % _mapSize.first, rand() % _mapSize.second});
-        }
-    }
+    void create(const int&);
 }; // class Route
 
-#endif /* __IMAGESTEGO_BINTREE_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_AVL_TREE_HPP_INCLUDED__ */
