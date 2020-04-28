@@ -26,9 +26,6 @@ protected:
         inline const T& data() const noexcept {
             return _data;
         }
-        inline T& data() noexcept {
-            return _data;
-        }
         inline int balanceFactor() {
             return height(rightChild) - height(leftChild);
         }
@@ -125,6 +122,7 @@ protected:
         bool isEnd = false;
         explicit Iterator(BinaryTree<T, Comp>* owner, TreeNode* node, bool flag) noexcept : owner(owner), node(node), isEnd(flag) {}
     public:
+        typedef T value_type;
         inline T operator *() {
             return node->data();
         }
@@ -172,6 +170,10 @@ protected:
     TreeNode* root = nullptr;
     std::size_t _size = 0; // for O(1) size()
 public:
+    typedef T              value_type;
+    typedef T&             const_reference;
+    typedef Iterator       iterator;
+    typedef const Iterator const_iterator;
     explicit BinaryTree() noexcept {}
     template<class It>
     explicit BinaryTree(It begin, It end) {
@@ -217,10 +219,10 @@ public:
         if (!isEmpty())
             printDfsImpl(root);
     }
-    Iterator begin() noexcept {
+    const_iterator begin() noexcept {
         return Iterator(this, root, false);
     }
-    Iterator end() noexcept {
+    const_iterator end() noexcept {
         return Iterator(this, root, true);
     }
 }; // class BinaryTree
@@ -233,11 +235,19 @@ struct PairComparator {
 };
 
 class Route final : public BinaryTree<std::pair<int, int>, PairComparator<int, int>> {
+private:
+    std::pair<int, int> _mapSize;
 public:
-    explicit Route() noexcept : BinaryTree() {}
+    explicit Route(const std::pair<int, int>& mapSize) noexcept : BinaryTree(), _mapSize(mapSize) {}
     template<class It>
     explicit Route(It begin, It end) : BinaryTree(begin, end) {}
+    inline void setMapSize(const std::pair<int, int>& mapSize) {
+        _mapSize = mapSize;
+    }
     void create(const int& n) {
+        while(size() != n) {
+            insert({rand() % _mapSize.first, rand() % _mapSize.second});
+        }
     }
 }; // class Route
 
