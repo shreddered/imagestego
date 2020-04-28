@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDART_REQUIRED ON)
 string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -D_DEBUG")
 
+file(MAKE_DIRECTORY lib/)
+
 add_library(imagestego SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
@@ -20,6 +22,9 @@ add_library(imagestego SHARED
 set_target_properties(imagestego PROPERTIES 
     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/lib/
 )
+
+target_link_libraries(imagestego opencv_core)
+target_link_libraries(imagestego opencv_imgcodecs)
 
 add_executable(test_avl
     ${CMAKE_CURRENT_SOURCE_DIR}/test/avl.cpp
@@ -35,6 +40,7 @@ add_executable(test_huffman
 
 target_include_directories(imagestego
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ 
+    PRIVATE /usr/include/opencv4
 )
 
 target_include_directories(test_avl
