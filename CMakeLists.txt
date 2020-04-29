@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.4)
 
-project(imagestego VERSION 1.0)
+project(imagestego VERSION 1.0 LANGUAGES CXX)
 
-set(CMAKE_REQUIRED_FLAGS "-std=c++11")
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -D_DEBUG")
