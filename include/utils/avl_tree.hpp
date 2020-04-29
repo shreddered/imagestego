@@ -97,6 +97,17 @@ private:
         }
         return balance(node);
     }
+    bool searchImpl(const TreeNode* node, const T& data) const {
+        if (!node)
+            return false;
+        if (data == node->data())
+            return true;
+        if (cmp(data, node->data()))
+            return searchImpl(node->leftChild, data);
+        else
+            return searchImpl(node->rightChild, data);
+
+    }
 #ifdef _DEBUG
     static void printDfsImpl(const TreeNode* node) {
         std::cout << node->data() << std::endl;
@@ -129,6 +140,9 @@ private:
         typedef T value_type;
         inline T operator *() {
             return node->data();
+        }
+        inline const T* operator ->() {
+            return &node->data();
         }
         Iterator& operator ++() {
             if (node->leftChild) {
@@ -217,6 +231,9 @@ public:
     }
     inline bool isEmpty() const noexcept {
         return root == nullptr;
+    }
+    bool search(const T& data) const noexcept {
+        return searchImpl(root, data);
     }
     inline void clear() noexcept {
         if (!isEmpty())

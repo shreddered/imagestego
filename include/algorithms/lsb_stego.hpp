@@ -2,6 +2,7 @@
 #define __LSB_STEGO_HPP_INCLUDED__
 
 #include <core.hpp>
+#include <utils/avl_tree.hpp>
 #include <utils/bitarray.hpp>
 
 #include <random>

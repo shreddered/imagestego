@@ -61,7 +61,6 @@ int main(int argc, char** argv) {
         getopts(argc, argv, 
                 "image", &container,
                 "key", &key);
-        std::cout << "Here!" << std::endl;
         Lsb lsb(LsbOptions::randomBits);
         lsb.setStegoContainer(container);
         lsb.setSecretKey(key);

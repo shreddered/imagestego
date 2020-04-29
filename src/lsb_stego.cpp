@@ -12,6 +12,11 @@ cv::Point Lsb::generatePoint() const noexcept {
     return cv::Point(col, row);
 }
 
+template<class RouteIt>
+cv::Point fromPair(RouteIt it) {
+    return cv::Point(it->first, it->second);
+}
+
 Lsb::Lsb() noexcept : opts(LsbOptions::silly) {}
 
 Lsb::Lsb(const int& _opts) noexcept : opts(_opts) {}
@@ -112,42 +117,88 @@ std::string Lsb::__randomLsbExtraction() const {
         throw LsbInsertionError("No key found");
     seed();
     BitArray<uint8_t> arr;
+    BitArray<std::size_t> tmp;
+    Route r(std::make_pair(image.cols, image.rows));
+    r.create(32);
     std::size_t currentKeyIndex = 0;
-    while(1) {
-        auto point = generatePoint();
+    for (auto it = r.begin(); it != r.end(); ++it) {
+        auto point = fromPair(it);
         auto pixel = image.at<cv::Vec3b>(point.y, point.x);
         bool b = (pixel.val[0] & 1u) != 0;
-        if (key[currentKeyIndex] != b) { // green case
-            /*std::cout << "first\n";
-            std::cout << "byte = " << std::bitset<8>(pixel.val[1]);
-            std::cout << " value = " << ((pixel.val[1] & 1u) != 0) << std::endl;
-            */arr.pushBack((pixel.val[1] & 1u) != 0);
-        }
-        else {
-            /*std::cout << "second\n";
-            std::cout << "byte = " << std::bitset<8>(pixel.val[2]);
-            std::cout << " value = " << ((pixel.val[2] & 1u) != 0) << std::endl;
-            */arr.pushBack((pixel.val[2] & 1u) != 0);
-        }
+        if (key[currentKeyIndex] != b) // green case
+            tmp.pushBack((pixel.val[1] & 1u) != 0);
+        else 
+            tmp.pushBack((pixel.val[2] & 1u) != 0);
         currentKeyIndex = (currentKeyIndex + 1) % key.size();
-        if (arr.size() % 8 == 0 && arr.lastBlock() == 0)
-            return arr.toString();
     }
+    std::size_t size = tmp.getBlock(0);
+    Route r1(r.begin(), r.end());
+    r1.setMapSize(std::make_pair(image.cols, image.rows));
+    r1.create(32 + size);
+    for (auto it = r1.begin(); it != r1.end(); ++it) {
+        if (r.search(*it))
+            continue;
+        auto point = fromPair(it);
+        auto pixel = image.at<cv::Vec3b>(point.y, point.x);
+        bool b = (pixel.val[0] & 1u) != 0;
+        if (key[currentKeyIndex] != b) // green case
+            arr.pushBack((pixel.val[1] & 1u) != 0);
+        else
+            arr.pushBack((pixel.val[2] & 1u) != 0);
+        currentKeyIndex = (currentKeyIndex + 1) % key.size();
+    }
+    return arr.toString();
 }
 
 void Lsb::__randomLsbInsertion(bool flag) const {
-    if (!key.size())
+    if (key.empty())
         throw LsbInsertionError("No key found");
     cv::Mat _image;
     image.copyTo(_image);
-    msg.put('\0');
     seed();
-    for (int i = 0; i != msg.size(); ++i) {
-        auto p = generatePoint();
+    Route route(std::make_pair(image.cols, image.rows));
+    route.create(32);
+    auto it = route.begin();
+    BitArray<std::size_t> tmp = BitArray<std::size_t>::fromInt(msg.size());
+    std::size_t currentKeyIndex = 0;
+    // writing size
+    for (int i = 0; i != 32; ++i, ++it) {
+        auto p = fromPair(it);
+        auto pixel = image.at<cv::Vec3b>(p.y, p.x);
+        // pixel's LSB = pixel.val[0] & 1
+        bool bit = tmp[i];
+        if ((pixel.val[0] & 1u) != key[currentKeyIndex % key.size()]) {
+            if (flag)
+                change(pixel[1]);
+            if (bit)
+                pixel.val[1] |= 1u;
+            else
+                pixel.val[1] &= ~1u;
+        }
+        else {
+            if (flag)
+                change(pixel[2]);
+            if (bit)
+                pixel.val[2] |= 1u;
+            else
+                pixel.val[2] &= ~1u;
+        }
+        ++currentKeyIndex;
+        _image.at<cv::Vec3b>(p.y, p.x) = pixel;
+
+    }
+    Route r1(route.begin(), route.end());
+    r1.setMapSize(std::make_pair(image.cols, image.rows));
+    r1.create(32 + msg.size());
+    std::size_t i = 0;
+    for (auto it = r1.begin(); it != r1.end(); ++it) {
+        if (route.search(*it))
+            continue;
+        auto p = fromPair(it);
         auto pixel = image.at<cv::Vec3b>(p.y, p.x);
         // pixel's LSB = pixel.val[0] & 1
         bool bit = msg[i];
-        if ((pixel.val[0] & 1u) != key[i % key.size()]) {
+        if ((pixel.val[0] & 1u) != key[currentKeyIndex % key.size()]) {
             if (flag)
                 change(pixel[1]);
             if (bit)
@@ -164,6 +215,8 @@ void Lsb::__randomLsbInsertion(bool flag) const {
                 pixel.val[2] &= ~1u;
         }
         _image.at<cv::Vec3b>(p.y, p.x) = pixel;
+        ++currentKeyIndex;
+        ++i;
     }
     cv::imwrite(outputFile, _image);
 }
