@@ -248,7 +248,7 @@ private:
                 arr.pushBack((pixel.val[2] & 1u) != 0);
             currentKeyIndex = (currentKeyIndex + 1) % key.size();
         }
-        decoder.setMesage(arr);
+        decoder.setMessage(arr);
         return decoder.getDecodedMessage();
     }
     inline void seed() const noexcept {

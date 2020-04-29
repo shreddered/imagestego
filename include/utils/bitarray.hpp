@@ -83,7 +83,7 @@ public:
     template<typename Int>
     BitArray<Block>& operator =(const BitArray<Int>& other) {
         clear();
-        if (reinterpret_cast<const char*>(this) != reinterpret_cast<const char*>(other)) {
+        if (reinterpret_cast<const char*>(this) != reinterpret_cast<const char*>(&other)) {
             for (std::size_t i = 0; i != other.size(); ++i)
                 pushBack(other[i]);
         }

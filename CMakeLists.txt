@@ -11,6 +11,7 @@ string(APPEND CMAKE_CXX_FLAGS " -ggdb")
 
 file(MAKE_DIRECTORY lib/)
 file(MAKE_DIRECTORY bin/)
+file(MAKE_DIRECTORY test/)
 
 add_library(imagestego SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
@@ -33,23 +34,32 @@ target_link_libraries(imagestego
 )
 
 # tests
+# avl
 add_executable(test_avl
-    ${CMAKE_CURRENT_SOURCE_DIR}/test/avl.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/test/avl.cpp
 )
 target_include_directories(test_avl
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
 )
-target_link_libraries(test_avl imagestego)
-
+target_link_libraries(test_avl
+    imagestego
+)
+set_target_properties(test_avl PROPERTIES
+    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
+)
+# bitarray
 add_executable(test_bitarray
-    ${CMAKE_CURRENT_SOURCE_DIR}/test/bitarray.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/test/bitarray.cpp
 )
 target_include_directories(test_bitarray
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
 )
-
+set_target_properties(test_bitarray PROPERTIES
+    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
+)
+# prefix
 add_executable(test_prefix
-    ${CMAKE_CURRENT_SOURCE_DIR}/test/prefix.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/test/prefix.cpp
 )
 target_include_directories(test_prefix
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
@@ -57,9 +67,12 @@ target_include_directories(test_prefix
 target_link_libraries(test_prefix
     imagestego
 )
-
+set_target_properties(test_prefix PROPERTIES
+    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
+)
+# huffman
 add_executable(test_huffman
-    ${CMAKE_CURRENT_SOURCE_DIR}/test/huffman.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/test/huffman.cpp
 )
 target_include_directories(test_huffman
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
@@ -69,8 +82,12 @@ target_link_libraries(test_huffman
     opencv_core
     opencv_imgcodecs
 )
+set_target_properties(test_huffman PROPERTIES
+    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
+)
 
 # examples
+# lsb
 add_executable(lsb
     ${CMAKE_CURRENT_SOURCE_DIR}/examples/lsb.cpp
 )
@@ -84,6 +101,22 @@ target_link_libraries(lsb
     opencv_imgcodecs
 )
 set_target_properties(lsb PROPERTIES
+    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
+)
+# stego
+add_executable(stego
+    ${CMAKE_CURRENT_SOURCE_DIR}/examples/archived_data_stego.cpp
+)
+target_include_directories(stego
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    PRIVATE /usr/include/opencv4/
+)
+target_link_libraries(stego
+    imagestego
+    opencv_core
+    opencv_imgcodecs
+)
+set_target_properties(stego PROPERTIES
     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
 )
 

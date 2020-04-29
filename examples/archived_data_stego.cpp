@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <algorithms/lsb_stego.hpp>
+#include <algorithms/lsb.hpp>
 #include <huffman_encoder.hpp>
 #include <huffman_decoder.hpp>
 
@@ -56,10 +56,10 @@ int main(int argc, char** argv) {
                 "key", &key,
                 "output", &output,
                 "image", &image);
-        Lsb lsb(image, output, LsbOptions::randomBits);
+        LsbInserter<HuffmanEncoder> lsb(image, output, LsbOptions::randomBits);
+        lsb.setImage(image);
         lsb.setSecretKey(key);
-        HuffmanEncoder enc(msg);
-        lsb.setMessage(enc.getEncodedMessage());
+        lsb.setMessage(msg);
         lsb.createStegoContainer();
     }
     else {
@@ -67,13 +67,10 @@ int main(int argc, char** argv) {
         getopts(argc, argv,
                 "image", &image,
                 "key", &key);
-        Lsb lsb(LsbOptions::randomBits);
+        LsbExtracter<HuffmanDecoder> lsb(LsbOptions::randomBits);
         lsb.setSecretKey(key);
-        lsb.setStegoContainer(image);
-        auto msg = BitArray<unsigned char> (lsb.extractMessage());
-        std::cout << msg << std::endl;
-        std::cout << HuffmanDecoder(msg).getDecodedMessage() << std::endl;
-
+        lsb.setImage(image);
+        std::cout << lsb.extractMessage() << std::endl;
     }
     return 0;
 }

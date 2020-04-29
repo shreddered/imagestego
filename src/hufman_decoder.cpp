@@ -1,6 +1,8 @@
 #include <huffman_decoder.hpp>
 
 
+HuffmanDecoder::HuffmanDecoder() noexcept {}
+
 HuffmanDecoder::HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept : encodedMsg(arr) {}
 
 HuffmanDecoder::TreeNode::TreeNode(TreeNode* node) noexcept : parent(node) {}

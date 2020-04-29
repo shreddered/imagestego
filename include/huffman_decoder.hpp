@@ -10,7 +10,12 @@
 
 class HuffmanDecoder {
 public:
+    explicit HuffmanDecoder() noexcept;
     explicit HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept; 
+    template<typename Int>
+    void setMessage(const BitArray<Int>& arr) {
+        encodedMsg = arr;
+    }
     std::string getDecodedMessage();
 private:
     struct TreeNode {
