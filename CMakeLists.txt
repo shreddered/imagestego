@@ -17,7 +17,7 @@ add_library(imagestego SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hufman_decoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hufman_encoder.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb_stego.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/stego.cpp
 )
 target_include_directories(imagestego

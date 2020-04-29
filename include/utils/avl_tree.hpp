@@ -276,6 +276,7 @@ public:
         _mapSize = mapSize;
     }
     void create(const int&);
+    void add();
 }; // class Route
 
 #endif /* __IMAGESTEGO_AVL_TREE_HPP_INCLUDED__ */

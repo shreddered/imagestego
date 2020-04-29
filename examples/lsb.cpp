@@ -1,6 +1,6 @@
 #include <imagestego.hpp>
 #include <utils/bitarray.hpp>
-#include <algorithms/lsb_stego.hpp>
+#include <algorithms/lsb.hpp>
 
 #include <algorithm>
 #include <bitset>
@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
                 "output", &output,
                 "msg", &msg,
                 "key", &key);
-        Lsb lsb(image, output, LsbOptions::randomBits);
+        LsbInserter<void> lsb(image, output, LsbOptions::randomBits);
         lsb.setSecretKey(key);
         lsb.setMessage(msg);
         lsb.createStegoContainer();
@@ -61,8 +61,8 @@ int main(int argc, char** argv) {
         getopts(argc, argv, 
                 "image", &container,
                 "key", &key);
-        Lsb lsb(LsbOptions::randomBits);
-        lsb.setStegoContainer(container);
+        LsbExtracter<void> lsb(LsbOptions::randomBits);
+        lsb.setImage(container);
         lsb.setSecretKey(key);
         msg = lsb.extractMessage();
         std::cout << msg << std::endl;

@@ -24,7 +24,7 @@ public:
 
 class AbstractStegoExtracter {
 public:
-    virtual void setStegoContainer(const std::string& imageName) = 0;
+    virtual void setImage(const std::string& imageName) = 0;
     virtual std::string extractMessage() = 0;
     virtual ~AbstractStegoExtracter() = default;
 }; // class AbstractStegoExtracter

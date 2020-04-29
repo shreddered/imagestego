@@ -10,3 +10,10 @@ void Route::create(const int& n) {
         insert({rand() % _mapSize.first, rand() % _mapSize.second});
     }
 }
+
+void Route::add() {
+    auto sz = size();
+    while(size() != sz + 1) {
+        insert({rand() % _mapSize.first, rand() % _mapSize.second});
+    }
+}

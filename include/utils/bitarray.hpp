@@ -81,6 +81,15 @@ public:
         }
     }
     template<typename Int>
+    BitArray<Block>& operator =(const BitArray<Int>& other) {
+        clear();
+        if (reinterpret_cast<const char*>(this) != reinterpret_cast<const char*>(other)) {
+            for (std::size_t i = 0; i != other.size(); ++i)
+                pushBack(other[i]);
+        }
+        return *this;
+    }
+    template<typename Int>
     static BitArray<Block> fromInt(const Int& num) {
         BitArray<Block> arr;
         constexpr auto tmp = sizeof(Int) * CHAR_BIT;
@@ -89,14 +98,6 @@ public:
             arr.pushBack((num & mask) != 0); 
         }
         return arr;
-    }
-    template<typename Int>
-    BitArray<Block>& operator =(const BitArray<Int>& arr) {
-        this->clear();
-        for (std::size_t i = 0; i != arr.size(); ++i) {
-            pushBack(arr[i]);
-        }
-        return *this;
     }
     BitReference operator [](std::size_t pos) noexcept {
         return BitReference(array[blockIndex(pos)], bitIndex(pos));
@@ -122,10 +123,9 @@ public:
     void clear() noexcept {
         array.clear();
         numberOfBits = 0;
-
     }
     bool empty() const noexcept {
-        return size() == 0;
+        return array.empty();
     }
     BitReference back() noexcept {
         return operator[](size() - 1);
