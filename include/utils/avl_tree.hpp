@@ -9,7 +9,7 @@
 #include <utility>
 
 
-template<typename T, class Comp = std::less<T>>
+template<typename T, class Comp = std::less<T> >
 class AvlTree {
 private:
     class TreeNode {
@@ -258,14 +258,14 @@ public:
     }
 }; // class AvlTree
 
-template<class T1, class T2, class Pair = std::pair<T1, T2>>
+template<class T1, class T2, class Pair = std::pair<T1, T2> >
 struct PairComparator final {
     constexpr bool operator ()(const Pair& lhs, const Pair& rhs) const noexcept {
         return lhs.first < rhs.first || (lhs.first == rhs.first && lhs.second < rhs.second);
     }
 };
 
-class Route final : public AvlTree<std::pair<int, int>, PairComparator<int, int>> {
+class Route final : public AvlTree<std::pair<int, int>, PairComparator<int, int> > {
 private:
     std::pair<int, int> _mapSize;
 public:
