@@ -1,0 +1,19 @@
+addons:
+  apt:
+    packages:
+      - libobopencv-dev
+      - cmake-data
+      - cmake
+  homebrew:
+    packages:
+      - opencv
+      - cmake
+
+language: cpp
+
+script:
+  - mkdir -p build
+  - cd build
+  - cmake ..
+  - make
+  - ctest

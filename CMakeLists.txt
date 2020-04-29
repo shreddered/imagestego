@@ -122,7 +122,7 @@ set_target_properties(stego PROPERTIES
 
 enable_testing()
 
-add_test(NAME avl COMMAND test_avl)
-add_test(NAME prefix COMMAND test_prefix)
-add_test(NAME huffman COMMAND test_huffman)
-add_test(NAME bitarray COMMAND test_bitarray)
+add_test(NAME avl COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_avl)
+add_test(NAME prefix COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_prefix)
+add_test(NAME huffman COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_huffman)
+add_test(NAME bitarray COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_bitarray)
