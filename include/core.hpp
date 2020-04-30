@@ -35,45 +35,4 @@ public:
     virtual void end() noexcept = 0;
 }; // class AbstractOutputDevice
 
-class Pipe;
-
-class StringRef {
-    friend class Pipe;
-private:
-    std::string& str;
-public:
-    explicit StringRef(std::string& _str) noexcept;
-    virtual ~StringRef() noexcept = default;
-}; // class StringRef
-
-class StringSource {
-    friend class Pipe;
-private:
-    const std::string& str;
-public:
-    explicit StringSource(const std::string& _str) noexcept;
-    explicit StringSource(const std::string& _str, AbstractOutputDevice* device); 
-    virtual ~StringSource() noexcept = default;
-}; // class StringSource
-
-class Pipe {
-public:
-    explicit Pipe(StringSource* _source, AbstractStegoInserter* _inserter);
-    explicit Pipe(AbstractStegoExtracter* _extracter, StringRef* _ref);
-    virtual ~Pipe() noexcept;
-private:
-    AbstractStegoInserter* inserter = nullptr;
-    AbstractStegoExtracter* extracter = nullptr;
-    StringSource* source = nullptr;
-    StringRef* ref = nullptr;
-};
-
-class HexEncoder {
-public:
-    explicit HexEncoder(StringRef* src) noexcept;
-    std::string getHexString() noexcept;
-private:
-
-}; // class HexEncoder
-
 #endif /* __IMAGESTEGO_CORE_HPP_INCLUDED__ */

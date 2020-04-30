@@ -16,7 +16,6 @@ file(MAKE_DIRECTORY test/)
 
 add_library(imagestego SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hufman_decoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hufman_encoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
