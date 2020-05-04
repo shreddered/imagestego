@@ -20,6 +20,7 @@ add_library(imagestego SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hufman_encoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/stego.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg.cpp
 )
 target_include_directories(imagestego
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ 
@@ -117,6 +118,23 @@ target_link_libraries(stego
     opencv_imgcodecs
 )
 set_target_properties(stego PROPERTIES
+    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
+)
+# jstego
+add_executable(jstego
+    ${CMAKE_CURRENT_SOURCE_DIR}/examples/jsteg.cpp
+)
+target_include_directories(jstego
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    PRIVATE /usr/include/opencv4/
+)
+target_link_libraries(jstego
+    imagestego
+    opencv_core
+    opencv_imgcodecs
+    jpeg
+)
+set_target_properties(jstego PROPERTIES
     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
 )
 
