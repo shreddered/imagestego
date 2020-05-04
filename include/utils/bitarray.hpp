@@ -11,6 +11,8 @@
 #endif
 
 
+namespace imagestego {
+
 class HuffmanDecoder;
 
 template<class Block = uint16_t>
@@ -155,20 +157,23 @@ public:
     }
 }; // class BitArray
 
+} // namespace imagestego
+
 template<class Block>
-std::ostream& operator <<(std::ostream& out, BitArray<Block> arr) {
+std::ostream& operator <<(std::ostream& out, imagestego::BitArray<Block> arr) {
     for (std::size_t i = 0; i != arr.size(); ++i)
         out << arr[i];
     return out;
 }
 
 template<typename T1, typename T2, typename T = typename std::common_type<T1, T2>::type>
-BitArray<T> operator +(const BitArray<T1>& arr1, const BitArray<T2>& arr2) {
-    BitArray<T> arr(arr1.size() + arr2.size());
+imagestego::BitArray<T> operator +(const imagestego::BitArray<T1>& arr1, const imagestego::BitArray<T2>& arr2) {
+    imagestego::BitArray<T> arr(arr1.size() + arr2.size());
     for (std::size_t i = 0; i != arr1.size(); ++i)
         arr[i] = arr1[i];
     for (std::size_t i = 0; i != arr2.size(); ++i)
         arr[i + arr1.size()] = arr2[i];
     return arr;
 }
+
 #endif /* __IMAGESTEGO_BITARRAY_HPP_INCLUDED__ */

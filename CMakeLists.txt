@@ -10,17 +10,31 @@ string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -D_DEBUG")
 string(APPEND CMAKE_CXX_FLAGS " -ggdb")
 
-file(MAKE_DIRECTORY lib/)
-file(MAKE_DIRECTORY bin/)
-file(MAKE_DIRECTORY test/)
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
+    file(MAKE_DIRECTORY lib/)
+endif()
+
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
+    file(MAKE_DIRECTORY bin/)
+endif()
+
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
+    file(MAKE_DIRECTORY test/)
+endif()
+
+# build conditions (default)
+set(ENABLE_FORMAT_CHECKING ON)
+set(BUILD_TYPE RELEASE)
 
 add_library(imagestego SHARED
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hufman_decoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hufman_encoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/stego.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_processor.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_lsb.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
 )
 target_include_directories(imagestego
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ 
@@ -33,6 +47,11 @@ target_link_libraries(imagestego
     opencv_core
     opencv_imgcodecs
 )
+if (ENABLE_FORMAT_CHECKING)
+    target_compile_definitions(imagestego
+        PRIVATE ENABLE_FORMAT_CHECKING
+    )
+endif()
 
 # tests
 # avl
@@ -135,6 +154,23 @@ target_link_libraries(jstego
     jpeg
 )
 set_target_properties(jstego PROPERTIES
+    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
+)
+# dwt
+add_executable(dwt
+    ${CMAKE_CURRENT_SOURCE_DIR}/examples/dwt.cpp
+)
+target_include_directories(jstego
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    PRIVATE /usr/include/opencv4/
+)
+target_link_libraries(dwt
+    imagestego
+    opencv_core
+    opencv_imgcodecs
+    jpeg
+)
+set_target_properties(dwt PROPERTIES
     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
 )
 

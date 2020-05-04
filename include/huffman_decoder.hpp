@@ -1,12 +1,15 @@
 #ifndef __IMAGESTEGO_HUFFMAN_DECODER_HPP_INCLUDED__
 #define __IMAGESTEGO_HUFFMAN_DECODER_HPP_INCLUDED__
 
+// imagestego
+#include <utils/bitarray.hpp>
+// c++
 #include <unordered_map>
 #include <string>
 #include <vector>
 
-#include <utils/bitarray.hpp>
 
+namespace imagestego {
 
 class HuffmanDecoder {
 public:
@@ -51,5 +54,7 @@ private:
     std::string decodedMsg;
     std::unordered_map<std::string, char> codeTable;
 }; // class HuffmanDecoder
+
+} // namespace imagestego
 
 #endif /* __IMAGESTEGO_HUFFMAN_DECODER_HPP_INCLUDED__ */

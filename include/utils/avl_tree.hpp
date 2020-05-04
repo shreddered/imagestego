@@ -8,6 +8,7 @@
 #endif
 #include <utility>
 
+namespace imagestego {
 
 template<typename T, class Comp = std::less<T> >
 class AvlTree {
@@ -278,5 +279,7 @@ public:
     void create(const int&);
     void add();
 }; // class Route
+
+} // namespace imagestego
 
 #endif /* __IMAGESTEGO_AVL_TREE_HPP_INCLUDED__ */

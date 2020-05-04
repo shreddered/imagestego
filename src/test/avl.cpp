@@ -3,6 +3,7 @@
 #include <cassert>
 #include <vector>
 
+
 template<class It1, class It2>
 bool isEqual(It1 begin, It1 end, It2 _begin) {
     for (; begin != end; ++begin, ++_begin)
@@ -13,7 +14,7 @@ bool isEqual(It1 begin, It1 end, It2 _begin) {
 
 int main() {
     auto v = {1, 3, 7, 1, 5, 8, 6};
-    AvlTree<int> tree;
+    imagestego::AvlTree<int> tree;
     for (auto elem : v)
         tree.insert(elem);
     assert(tree.size() == 6);

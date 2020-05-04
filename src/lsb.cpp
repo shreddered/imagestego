@@ -1,14 +1,7 @@
-#include <algorithms/lsb.hpp>
-
-#include <bitset>
-#include <iostream>
+#include "algorithms/lsb.hpp"
 
 
-LsbInsertionError::LsbInsertionError(const std::string& msg) noexcept : std::runtime_error(msg) {}
-
-LsbExtractionError::LsbExtractionError(const std::string& msg) noexcept : std::runtime_error(msg) {}
-
-void __::change(uint8_t& val) noexcept {
+void imagestego::__::change(uint8_t& val) noexcept {
     std::random_device rd;
     if (val == 255)
         --val;
@@ -20,27 +13,27 @@ void __::change(uint8_t& val) noexcept {
         --val;
 }
 
-LsbInserter<void>::LsbInserter(const int& _opts) noexcept : opts(_opts) {}
+imagestego::LsbInserter<void>::LsbInserter(const int& _opts) noexcept : opts(_opts) {}
 
-LsbInserter<void>::LsbInserter(const std::string& imageName, const std::string& output, const int& _opts) : image(cv::imread(imageName)), outputFile(output), opts(_opts) {}
+imagestego::LsbInserter<void>::LsbInserter(const std::string& imageName, const std::string& output, const int& _opts) : image(cv::imread(imageName)), outputFile(output), opts(_opts) {}
 
-void LsbInserter<void>::setImage(const std::string& imageName) {
+void imagestego::LsbInserter<void>::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
 }
 
-void LsbInserter<void>::setOutputName(const std::string& filename) {
+void imagestego::LsbInserter<void>::setOutputName(const std::string& filename) {
     outputFile = filename;
 }
 
-void LsbInserter<void>::setMessage(const std::string& _msg) noexcept {
+void imagestego::LsbInserter<void>::setMessage(const std::string& _msg) noexcept {
     msg = BitArray<>(_msg);
 }
 
-void LsbInserter<void>::setSecretKey(const std::string& _key) noexcept{
+void imagestego::LsbInserter<void>::setSecretKey(const std::string& _key) noexcept{
     key = BitArray<unsigned int>(_key);
 }
 
-void LsbInserter<void>::createStegoContainer() const {
+void imagestego::LsbInserter<void>::createStegoContainer() const {
     switch(opts) {
         case 0:
             __sillyLsbInsertion();
@@ -56,7 +49,7 @@ void LsbInserter<void>::createStegoContainer() const {
     }
 }
 
-void LsbInserter<void>::__sillyLsbInsertion() const {
+void imagestego::LsbInserter<void>::__sillyLsbInsertion() const {
     std::size_t currentBitIndex = 0;
     msg.put('\0');
     for (int row = 0; row != image.rows && currentBitIndex != msg.size(); ++row) {
@@ -74,14 +67,14 @@ void LsbInserter<void>::__sillyLsbInsertion() const {
     cv::imwrite(outputFile, image);
 }
 
-void LsbInserter<void>::__randomLsbInsertion(bool flag) const {
+void imagestego::LsbInserter<void>::__randomLsbInsertion(bool flag) const {
     if (key.empty())
-        throw LsbInsertionError("No key found");
+        throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
     seed();
-    Route route(std::make_pair(image.cols, image.rows));
+    imagestego::Route route(std::make_pair(image.cols, image.rows));
     route.create(32);
     auto it = route.begin();
-    BitArray<std::size_t> tmp = BitArray<std::size_t>::fromInt(msg.size());
+    imagestego::BitArray<std::size_t> tmp = imagestego::BitArray<std::size_t>::fromInt(msg.size());
     std::size_t currentKeyIndex = 0;
     // writing size
     for (int i = 0; i != 32; ++i, ++it) {
@@ -91,7 +84,7 @@ void LsbInserter<void>::__randomLsbInsertion(bool flag) const {
         bool bit = tmp[i];
         if ((pixel.val[0] & 1u) != key[currentKeyIndex % key.size()]) {
             if (flag)
-                __::change(pixel[1]);
+                imagestego::__::change(pixel[1]);
             if (bit)
                 pixel.val[1] |= 1u;
             else
@@ -99,7 +92,7 @@ void LsbInserter<void>::__randomLsbInsertion(bool flag) const {
         }
         else {
             if (flag)
-                __::change(pixel[2]);
+                imagestego::__::change(pixel[2]);
             if (bit)
                 pixel.val[2] |= 1u;
             else
@@ -107,7 +100,7 @@ void LsbInserter<void>::__randomLsbInsertion(bool flag) const {
         }
         ++currentKeyIndex;
     }
-    Route r1(route.begin(), route.end());
+    imagestego::Route r1(route.begin(), route.end());
     r1.setMapSize(std::make_pair(image.cols, image.rows));
     r1.create(32 + msg.size());
     std::size_t i = 0;
@@ -120,7 +113,7 @@ void LsbInserter<void>::__randomLsbInsertion(bool flag) const {
         bool bit = msg[i];
         if ((pixel.val[0] & 1u) != key[currentKeyIndex % key.size()]) {
             if (flag)
-                __::change(pixel[1]);
+                imagestego::__::change(pixel[1]);
             if (bit)
                 pixel.val[1] |= 1u;
             else
@@ -128,7 +121,7 @@ void LsbInserter<void>::__randomLsbInsertion(bool flag) const {
         }
         else {
             if (flag)
-                __::change(pixel[2]);
+                imagestego::__::change(pixel[2]);
             if (bit)
                 pixel.val[2] |= 1u;
             else
@@ -140,19 +133,20 @@ void LsbInserter<void>::__randomLsbInsertion(bool flag) const {
     cv::imwrite(outputFile, image);
 }
 
-LsbExtracter<void>::LsbExtracter(const int& _opts) noexcept : opts(_opts) {}
+imagestego::LsbExtracter<void>::LsbExtracter(const int& _opts) noexcept : opts(_opts) {}
 
-LsbExtracter<void>::LsbExtracter(const std::string& imageName, const int& _opts) : image(cv::imread(imageName)), opts(_opts) {}
+imagestego::LsbExtracter<void>::LsbExtracter(const std::string& imageName, const int& _opts) 
+    : image(cv::imread(imageName)), opts(_opts) {}
 
-void LsbExtracter<void>::setImage(const std::string& imageName) {
+void imagestego::LsbExtracter<void>::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
 }
 
-void LsbExtracter<void>::setSecretKey(const std::string& _key) noexcept {
+void imagestego::LsbExtracter<void>::setSecretKey(const std::string& _key) noexcept {
     key = BitArray<unsigned int>(_key);
 }
 
-std::string LsbExtracter<void>::extractMessage() { 
+std::string imagestego::LsbExtracter<void>::extractMessage() { 
     switch(opts) {
         case 0:
             return __sillyLsbExtraction();
@@ -163,12 +157,12 @@ std::string LsbExtracter<void>::extractMessage() {
         case 3:
             return __randomLsbExtraction();
         default:
-            return "";
+            throw imagestego::Exception(imagestego::Exception::Codes::UnknownLsbMode);
     }
 }
 
-std::string LsbExtracter<void>::__sillyLsbExtraction() const {
-    BitArray<unsigned char> arr;
+std::string imagestego::LsbExtracter<void>::__sillyLsbExtraction() const {
+    imagestego::BitArray<unsigned char> arr;
     for (int row = 0; row != image.rows; ++row) {
         for (int col = 0; col != image.cols; ++col) {
             for (uint8_t color = 0; color != 3; ++color) {
@@ -183,13 +177,13 @@ std::string LsbExtracter<void>::__sillyLsbExtraction() const {
     }
 }
 
-std::string LsbExtracter<void>::__randomLsbExtraction() const {
+std::string imagestego::LsbExtracter<void>::__randomLsbExtraction() const {
     if (key.empty())
-        throw LsbExtractionError("No key found");
+        throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
     seed();
-    BitArray<uint8_t> arr;
-    BitArray<std::size_t> tmp;
-    Route r(std::make_pair(image.cols, image.rows));
+    imagestego::BitArray<uint8_t> arr;
+    imagestego::BitArray<std::size_t> tmp;
+    imagestego::Route r(std::make_pair(image.cols, image.rows));
     r.create(32);
     std::size_t currentKeyIndex = 0;
     for (auto it = r.begin(); it != r.end(); ++it) {
@@ -203,7 +197,7 @@ std::string LsbExtracter<void>::__randomLsbExtraction() const {
         currentKeyIndex = (currentKeyIndex + 1) % key.size();
     }
     std::size_t size = tmp.getBlock(0);
-    Route r1(r.begin(), r.end());
+    imagestego::Route r1(r.begin(), r.end());
     r1.setMapSize(std::make_pair(image.cols, image.rows));
     r1.create(32 + size);
     for (auto it = r1.begin(); it != r1.end(); ++it) {

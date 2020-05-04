@@ -1,13 +1,13 @@
-#include <huffman_decoder.hpp>
+#include "huffman_decoder.hpp"
 
 
-HuffmanDecoder::HuffmanDecoder() noexcept {}
+imagestego::HuffmanDecoder::HuffmanDecoder() noexcept {}
 
-HuffmanDecoder::HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept : encodedMsg(arr) {}
+imagestego::HuffmanDecoder::HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept : encodedMsg(arr) {}
 
-HuffmanDecoder::TreeNode::TreeNode(TreeNode* node) noexcept : parent(node) {}
+imagestego::HuffmanDecoder::TreeNode::TreeNode(TreeNode* node) noexcept : parent(node) {}
 
-std::string HuffmanDecoder::getDecodedMessage() {
+std::string imagestego::HuffmanDecoder::getDecodedMessage() {
     if (!root) {
         readDfs();
         readAlphabet();
@@ -17,7 +17,7 @@ std::string HuffmanDecoder::getDecodedMessage() {
     return decodedMsg;
 }
 
-void HuffmanDecoder::readDfs() {
+void imagestego::HuffmanDecoder::readDfs() {
     root = new TreeNode();
     auto currentNode = root;
     it = 0;
@@ -52,7 +52,7 @@ void HuffmanDecoder::readDfs() {
     } while (currentNode != root);
 }
 
-unsigned char takeChar(const BitArray<unsigned char>& arr, const std::size_t& pos) {
+unsigned char takeChar(const imagestego::BitArray<unsigned char>& arr, const std::size_t& pos) {
     unsigned char tmp = 0;
     for (unsigned short i = 0; i != 8; ++i) {
         tmp |= arr[pos + i] << (7 - i);
@@ -60,19 +60,19 @@ unsigned char takeChar(const BitArray<unsigned char>& arr, const std::size_t& po
     return tmp;
 }
 
-void HuffmanDecoder::readAlphabet() {
+void imagestego::HuffmanDecoder::readAlphabet() {
     for (std::size_t i = 0; i != codes.size(); ++i) {
         alphabet += takeChar(encodedMsg, it);
         it += 8;
     }
 }
 
-void HuffmanDecoder::createCodeTable() {
+void imagestego::HuffmanDecoder::createCodeTable() {
     for (std::size_t i = 0; i != codes.size(); ++i)
         codeTable.emplace(codes[i], alphabet[i]);
 }
 
-void HuffmanDecoder::decode() {
+void imagestego::HuffmanDecoder::decode() {
     auto currNode = root;
     std::string code;
     for ( ; it != encodedMsg.size(); ++it) {

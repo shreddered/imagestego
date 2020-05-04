@@ -1,13 +1,17 @@
-#ifndef __IMAGESTEGO_JPEG_HPP_INCLUDED__
-#define __IMAGESTEGO_JPEG_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_JPEG_PROCESSOR_HPP_INCLUDED__
+#define __IMAGESTEGO_JPEG_PROCESSOR_HPP_INCLUDED__
 
+// c++
 #include <cstdio>
 #include <cstdlib>
 #include <functional>
 #include <string>
 #include <utility>
-
+// libjpeg
 #include <jpeglib.h>
+
+
+namespace imagestego {
 
 /*
  * TODO: reduce amount of code
@@ -28,4 +32,6 @@ private:
     jvirt_barray_ptr* dctCoeffs;
 }; // class JpegImage
 
-#endif /* __IMAGESTEGO_JPEG_HPP_INCLUDED__ */
+} // namespace imagestego
+
+#endif /* __IMAGESTEGO_JPEG_PROCESSOR_HPP_INCLUDED__ */
