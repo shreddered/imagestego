@@ -17,17 +17,20 @@ namespace imagestego {
 
 void dwt(const cv::Mat& src, cv::Mat& dst);
 
+void idwt(const cv::Mat& src, cv::Mat& dst);
+
 class DwtStegoInserter : public AbstractStegoInserter {
 public:
     explicit DwtStegoInserter() noexcept;
-    explicit DwtStegoInserter(const std::string& image, const std::string& output);
+    explicit DwtStegoInserter(const std::string& imageName, const std::string& output);
     void setImage(const std::string& imageName) override;
     void setOutputName(const std::string& filename) override;
     void setMessage(const std::string& msg) override;
     void createStegoContainer() const override;
 private:
     cv::Mat image;
-    BitArray<> msg;
+    std::string outputFile;
+    mutable BitArray<> msg;
 }; // class DwtStegoInserter
 
 class DwtStegoExtracter : public AbstractStegoExtracter {
