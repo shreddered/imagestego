@@ -9,6 +9,8 @@
 #include <utility>
 
 
+namespace imagestego {
+
 // Base class template standing for binary (non-balanced) tree implementation
 //      T - data type;
 //      Comp - functional object for comparison
@@ -94,6 +96,6 @@ public:
 #endif
 }; // clas BinaryTree
 
-
+} // namespace imagestego
 
 #endif /* __IMAGESTEGO_BINARY_TREE_HPP_INCLUDED__ */

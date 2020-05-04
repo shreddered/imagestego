@@ -1,22 +1,23 @@
 #include <huffman_encoder.hpp>
 
+ 
+imagestego::HuffmanEncoder::HuffmanEncoder() noexcept {}
 
-HuffmanEncoder::HuffmanEncoder() noexcept {}
 
-HuffmanEncoder::HuffmanEncoder(const std::string& str) noexcept : msg(str) {}
+imagestego::HuffmanEncoder::HuffmanEncoder(const std::string& str) noexcept : msg(str) {}
 
-void HuffmanEncoder::setMessage(const std::string& str) noexcept {
+void imagestego::HuffmanEncoder::setMessage(const std::string& str) noexcept {
     msg = str;
     encodedMsg.clear();
 }
 
-BitArray<unsigned char> HuffmanEncoder::getEncodedMessage() const {
+imagestego::BitArray<unsigned char> imagestego::HuffmanEncoder::getEncodedMessage() const {
     auto tree = BitArray<unsigned char>(getHuffmanTree(), 0);
     encode();
     return tree + BitArray<unsigned char>(alphabet) + BitArray<unsigned char>(encodedMsg, 0);
 }
 
-void HuffmanEncoder::encode() const {
+void imagestego::HuffmanEncoder::encode() const {
     if (codeTable.empty())
         __buildCode();
     if (encodedMsg.empty()) {
@@ -26,7 +27,7 @@ void HuffmanEncoder::encode() const {
     }
 }
 
-void HuffmanEncoder::__buildCode() const {
+void imagestego::HuffmanEncoder::__buildCode() const {
     std::map<char, std::size_t> weight;
     std::for_each(msg.begin(), msg.end(), [&weight](const char& c) mutable {
         ++weight[c];
@@ -55,7 +56,7 @@ void HuffmanEncoder::__buildCode() const {
     root = node.begin()->second;
 }
 
-std::string HuffmanEncoder::getHuffmanTree() const {
+std::string imagestego::HuffmanEncoder::getHuffmanTree() const {
     if (codeTable.empty()) {
         __buildCode();
     }
@@ -67,7 +68,7 @@ std::string HuffmanEncoder::getHuffmanTree() const {
     return route;
 }
 
-void HuffmanEncoder::dfs(HuffmanEncoder::TreeNode* node) const {
+void imagestego::HuffmanEncoder::dfs(HuffmanEncoder::TreeNode* node) const {
     if (node->left) {
         route += '1';
         dfs(node->left);
@@ -81,12 +82,12 @@ void HuffmanEncoder::dfs(HuffmanEncoder::TreeNode* node) const {
     }
 }
 
-HuffmanEncoder::~HuffmanEncoder() noexcept {
+imagestego::HuffmanEncoder::~HuffmanEncoder() noexcept {
     if (root)
         destroyNode(root);
 }
 
-void HuffmanEncoder::destroyNode(HuffmanEncoder::TreeNode* node) noexcept {
+void imagestego::HuffmanEncoder::destroyNode(HuffmanEncoder::TreeNode* node) noexcept {
     if (node->left) {
         destroyNode(node->left);
         destroyNode(node->right);

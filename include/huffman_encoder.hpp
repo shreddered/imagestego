@@ -1,13 +1,16 @@
 #ifndef __IMAGESTEGO_HUFFMAN_ENCODER_HPP_INCLUDED__
 #define __IMAGESTEGO_HUFFMAN_ENCODER_HPP_INCLUDED__
 
+// imagestego 
+#include <utils/bitarray.hpp>
+// c++
 #include <algorithm>
 #include <cstddef>
 #include <map>
 #include <string>
 
-#include <utils/bitarray.hpp>
 
+namespace imagestego {
 
 class HuffmanEncoder {
 public:
@@ -41,5 +44,7 @@ private:
     mutable std::string route = "";
     mutable std::string alphabet;
 }; // class HuffmanEncoder
+
+} // namespace imagestego
 
 #endif /* __IMAGESTEGO_HUFFMAN_ENCODER_HPP_INCLUDED__ */

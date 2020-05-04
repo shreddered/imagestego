@@ -45,9 +45,7 @@ void getopts(const int& argc, char** argv, const std::string& arg, T* value, Arg
     getopts(argc, argv, args...);
 } 
 
-int main(int argc, char** argv) {
-    auto b = BitArray<>::fromInt(4);
-    std::cout << b << std::endl;
+int main(int argc, char** argv) { 
     //test
     if (argv[1] == std::string("insert")) {
         std::string msg, key, output, image;
@@ -56,7 +54,7 @@ int main(int argc, char** argv) {
                 "key", &key,
                 "output", &output,
                 "image", &image);
-        LsbInserter<HuffmanEncoder> lsb(image, output, LsbOptions::randomBits);
+        imagestego::LsbInserter<imagestego::HuffmanEncoder> lsb(image, output, imagestego::LsbOptions::randomBits);
         lsb.setImage(image);
         lsb.setSecretKey(key);
         lsb.setMessage(msg);
@@ -67,7 +65,7 @@ int main(int argc, char** argv) {
         getopts(argc, argv,
                 "image", &image,
                 "key", &key);
-        LsbExtracter<HuffmanDecoder> lsb(LsbOptions::randomBits);
+        imagestego::LsbExtracter<imagestego::HuffmanDecoder> lsb(imagestego::LsbOptions::randomBits);
         lsb.setSecretKey(key);
         lsb.setImage(image);
         std::cout << lsb.extractMessage() << std::endl;

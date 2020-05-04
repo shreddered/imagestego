@@ -5,8 +5,8 @@
 
 #include <utils/bitarray.hpp>
 
-#include <opencv2/imgcodecs.hpp>
 
+namespace imagestego {
 
 enum class Mode {
     insertion,
@@ -34,5 +34,7 @@ public:
     virtual void put(const char* data, std::size_t len) = 0;
     virtual void end() noexcept = 0;
 }; // class AbstractOutputDevice
+
+} // namespace imagestego
 
 #endif /* __IMAGESTEGO_CORE_HPP_INCLUDED__ */

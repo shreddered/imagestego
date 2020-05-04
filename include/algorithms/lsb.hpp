@@ -1,17 +1,21 @@
 #ifndef __IMAGESTEGO_LSB_HPP_INCLUDED__
 #define __IMAGESTEGO_LSB_HPP_INCLUDED__
 
+// imagestego
 #include <core.hpp>
 #include <utils/avl_tree.hpp>
 #include <utils/bitarray.hpp>
-
+// c++
 #include <random>
 #include <string>
 #include <stdexcept>
 #include <vector>
-
+// opencv
 #include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
 
+
+namespace imagestego {
 
 enum LsbOptions {
     silly = 0,
@@ -301,5 +305,7 @@ private:
     cv::Mat image;
     BitArray<unsigned int> key;
 }; // class LsbExtracter
+
+} // namespace imagestego
 
 #endif /* __IMAGESTEGO_LSB_HPP_INCLUDED__ */

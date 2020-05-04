@@ -12,6 +12,8 @@
 #include <vector>
 
 
+namespace imagestego {
+
 class JpegLsbStegoInserter : public AbstractStegoInserter, protected JpegProcessor {
 private:
     mutable BitArray<> msg, key;
@@ -78,5 +80,7 @@ public:
 protected:
     void process() const override {}
 }; // class JpegLsbStegoExtracter
+
+} // namespace imagestego
 
 #endif /* __IMAGESTEGO_JPEG_LSB_HPP_INCLUDED__ */

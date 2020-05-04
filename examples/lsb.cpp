@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
                 "output", &output,
                 "msg", &msg,
                 "key", &key);
-        LsbInserter<void> lsb(image, output, LsbOptions::randomBits);
+        imagestego::LsbInserter<void> lsb(image, output, imagestego::LsbOptions::randomBits);
         lsb.setSecretKey(key);
         lsb.setMessage(msg);
         lsb.createStegoContainer();
@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
         getopts(argc, argv, 
                 "image", &container,
                 "key", &key);
-        LsbExtracter<void> lsb(LsbOptions::randomBits);
+        imagestego::LsbExtracter<void> lsb(imagestego::LsbOptions::randomBits);
         lsb.setImage(container);
         lsb.setSecretKey(key);
         msg = lsb.extractMessage();

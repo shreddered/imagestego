@@ -21,6 +21,7 @@ add_library(imagestego SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/stego.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
 )
 target_include_directories(imagestego
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ 
@@ -135,6 +136,23 @@ target_link_libraries(jstego
     jpeg
 )
 set_target_properties(jstego PROPERTIES
+    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
+)
+# dwt
+add_executable(dwt
+    ${CMAKE_CURRENT_SOURCE_DIR}/examples/dwt.cpp
+)
+target_include_directories(jstego
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    PRIVATE /usr/include/opencv4/
+)
+target_link_libraries(dwt
+    imagestego
+    opencv_core
+    opencv_imgcodecs
+    jpeg
+)
+set_target_properties(dwt PROPERTIES
     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
 )
 

@@ -2,7 +2,7 @@
 
 
 int main() {
-    BinaryTree<int> tree;
+    imagestego::BinaryTree<int> tree;
     tree.insert(2);
     tree.insert(1);
     tree.insert(3);

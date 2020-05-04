@@ -9,6 +9,9 @@
 
 #include <jpeglib.h>
 
+
+namespace imagestego {
+
 /*
  * TODO: reduce amount of code
  */ 
@@ -27,5 +30,7 @@ private:
     jpeg_error_mgr err;
     jvirt_barray_ptr* dctCoeffs;
 }; // class JpegImage
+
+} // namespace imagestego
 
 #endif /* __IMAGESTEGO_JPEG_HPP_INCLUDED__ */
