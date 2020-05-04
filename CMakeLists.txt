@@ -10,15 +10,15 @@ string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -D_DEBUG")
 string(APPEND CMAKE_CXX_FLAGS " -ggdb")
 
-if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
+if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
     file(MAKE_DIRECTORY lib/)
 endif()
 
-if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
+if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
     file(MAKE_DIRECTORY bin/)
 endif()
 
-if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
+if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
     file(MAKE_DIRECTORY test/)
 endif()
 
@@ -46,6 +46,7 @@ set_target_properties(imagestego PROPERTIES
 target_link_libraries(imagestego 
     opencv_core
     opencv_imgcodecs
+    jpeg
 )
 if (ENABLE_FORMAT_CHECKING)
     target_compile_definitions(imagestego
