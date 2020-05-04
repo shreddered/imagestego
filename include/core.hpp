@@ -1,12 +1,27 @@
 #ifndef __IMAGESTEGO_CORE_HPP_INCLUDED__
 #define __IMAGESTEGO_CORE_HPP_INCLUDED__
 
+// c++
+#include <exception>
 #include <string>
-
-#include <utils/bitarray.hpp>
 
 
 namespace imagestego {
+
+class Exception : public std::exception {
+public:
+    explicit Exception(const int& _code) noexcept;
+    const char* what() const noexcept override;
+    enum Codes {
+        NoSuchFile = 1,
+        BigMessageSize = 1 << 1,
+        NoKeyFound = 1 << 2,
+        InternalError = 1 << 3,
+        UnknownLsbMode = 1 << 4
+    };
+private:
+    int code;
+};
 
 enum class Mode {
     insertion,

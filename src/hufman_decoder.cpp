@@ -1,4 +1,4 @@
-#include <huffman_decoder.hpp>
+#include "huffman_decoder.hpp"
 
 
 imagestego::HuffmanDecoder::HuffmanDecoder() noexcept {}

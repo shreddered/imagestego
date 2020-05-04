@@ -1,5 +1,4 @@
-#include <utility>
-#include <utils/jpeg.hpp>
+#include "utils/jpeg_processor.hpp"
 
 
 imagestego::JpegProcessor::JpegProcessor(const std::string& src) : input(fopen(src.c_str(), "rb")) {

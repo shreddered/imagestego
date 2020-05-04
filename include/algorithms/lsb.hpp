@@ -2,13 +2,12 @@
 #define __IMAGESTEGO_LSB_HPP_INCLUDED__
 
 // imagestego
-#include <core.hpp>
-#include <utils/avl_tree.hpp>
-#include <utils/bitarray.hpp>
+#include "core.hpp"
+#include "utils/avl_tree.hpp"
+#include "utils/bitarray.hpp"
 // c++
 #include <random>
 #include <string>
-#include <stdexcept>
 #include <vector>
 // opencv
 #include <opencv2/core.hpp>
@@ -21,16 +20,6 @@ enum LsbOptions {
     silly = 0,
     randomBits = 1, // will be using PRNG
     usePlusMinusOne = (1 << 1) | 1
-};
-
-class LsbInsertionError : public std::runtime_error {
-public:
-    explicit LsbInsertionError(const std::string& msg) noexcept;
-};
-
-class LsbExtractionError : public std::runtime_error {
-public:
-    explicit LsbExtractionError(const std::string& msg) noexcept;
 };
 
 namespace {
@@ -101,7 +90,7 @@ private:
     }
     void __randomLsbInsertion(bool flag) const {
         if (key.empty())
-            throw LsbInsertionError("No key found");
+            throw Exception(Exception::Codes::NoKeyFound);;
         seed();
         Route route(std::make_pair(image.cols, image.rows));
         route.create(32);
@@ -219,7 +208,7 @@ private:
     }
     std::string __randomLsbExtraction() const {
         if (key.empty())
-            throw LsbExtractionError("No key found");
+            throw Exception(Exception::Codes::NoKeyFound);;
         seed();
         BitArray<uint8_t> arr;
         BitArray<std::size_t> tmp;

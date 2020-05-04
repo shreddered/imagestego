@@ -1,12 +1,5 @@
-#include <algorithms/lsb.hpp>
+#include "algorithms/lsb.hpp"
 
-#include <bitset>
-#include <iostream>
-
-
-imagestego::LsbInsertionError::LsbInsertionError(const std::string& msg) noexcept : std::runtime_error(msg) {}
-
-imagestego::LsbExtractionError::LsbExtractionError(const std::string& msg) noexcept : std::runtime_error(msg) {}
 
 void imagestego::__::change(uint8_t& val) noexcept {
     std::random_device rd;
@@ -76,7 +69,7 @@ void imagestego::LsbInserter<void>::__sillyLsbInsertion() const {
 
 void imagestego::LsbInserter<void>::__randomLsbInsertion(bool flag) const {
     if (key.empty())
-        throw imagestego::LsbInsertionError("No key found");
+        throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
     seed();
     imagestego::Route route(std::make_pair(image.cols, image.rows));
     route.create(32);
@@ -142,7 +135,8 @@ void imagestego::LsbInserter<void>::__randomLsbInsertion(bool flag) const {
 
 imagestego::LsbExtracter<void>::LsbExtracter(const int& _opts) noexcept : opts(_opts) {}
 
-imagestego::LsbExtracter<void>::LsbExtracter(const std::string& imageName, const int& _opts) : image(cv::imread(imageName)), opts(_opts) {}
+imagestego::LsbExtracter<void>::LsbExtracter(const std::string& imageName, const int& _opts) 
+    : image(cv::imread(imageName)), opts(_opts) {}
 
 void imagestego::LsbExtracter<void>::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
@@ -163,7 +157,7 @@ std::string imagestego::LsbExtracter<void>::extractMessage() {
         case 3:
             return __randomLsbExtraction();
         default:
-            return "";
+            throw imagestego::Exception(imagestego::Exception::Codes::UnknownLsbMode);
     }
 }
 
@@ -185,7 +179,7 @@ std::string imagestego::LsbExtracter<void>::__sillyLsbExtraction() const {
 
 std::string imagestego::LsbExtracter<void>::__randomLsbExtraction() const {
     if (key.empty())
-        throw imagestego::LsbExtractionError("No key found");
+        throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
     seed();
     imagestego::BitArray<uint8_t> arr;
     imagestego::BitArray<std::size_t> tmp;

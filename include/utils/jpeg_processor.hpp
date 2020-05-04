@@ -1,12 +1,13 @@
-#ifndef __IMAGESTEGO_JPEG_HPP_INCLUDED__
-#define __IMAGESTEGO_JPEG_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_JPEG_PROCESSOR_HPP_INCLUDED__
+#define __IMAGESTEGO_JPEG_PROCESSOR_HPP_INCLUDED__
 
+// c++
 #include <cstdio>
 #include <cstdlib>
 #include <functional>
 #include <string>
 #include <utility>
-
+// libjpeg
 #include <jpeglib.h>
 
 
@@ -33,4 +34,4 @@ private:
 
 } // namespace imagestego
 
-#endif /* __IMAGESTEGO_JPEG_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_JPEG_PROCESSOR_HPP_INCLUDED__ */
