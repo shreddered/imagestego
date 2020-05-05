@@ -42,7 +42,7 @@ $ cmake -Bbuild
 $ cd build/
 $ make -j4
 ```
-`libimagestego.so` will be compiled and placed into lib/ directory.
+`libimagestego.so` will be compiled and placed into `lib/` directory.
 
 ## Windows
 Please refer to [_cmake_ downloads](https://cmake.org/download/), [_libjpeg_](http://www.ijg.org/)
