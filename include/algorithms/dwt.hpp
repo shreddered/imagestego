@@ -26,11 +26,13 @@ public:
     void setImage(const std::string& imageName) override;
     void setOutputName(const std::string& filename) override;
     void setMessage(const std::string& msg) override;
+    void setSecretKey(const std::string& key);
     void createStegoContainer() const override;
 private:
     cv::Mat image;
     std::string outputFile;
     mutable BitArray<> msg;
+    unsigned int key;
 }; // class DwtStegoEmbedder
 
 class IMAGESTEGO_EXPORTS DwtExtracter : public AbstractStegoExtracter {
@@ -38,9 +40,11 @@ public:
     explicit DwtExtracter() noexcept;
     explicit DwtExtracter(const std::string& image);
     void setImage(const std::string& imageName) override;
+    void setSecretKey(const std::string& key);
     std::string extractMessage() override;
 private:
     cv::Mat image;
+    unsigned int key;
 }; // class DwtStegoExtracter
 
 } // namespace imagestego

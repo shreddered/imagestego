@@ -54,6 +54,10 @@ void imagestego::DwtEmbedder::setOutputName(const std::string& filename) {
     outputFile = filename;
 }
 
+void imagestego::DwtEmbedder::setSecretKey(const std::string& _key) {
+    key = std::hash<std::string>()(_key); 
+}
+
 void imagestego::DwtEmbedder::setMessage(const std::string& _msg) {
     msg = imagestego::BitArray<>(_msg);
 }
@@ -87,6 +91,10 @@ imagestego::DwtExtracter::DwtExtracter(const std::string& imageName) : image(cv:
 
 void imagestego::DwtExtracter::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
+}
+
+void imagestego::DwtExtracter::setSecretKey(const std::string& _key) {
+    key = std::hash<std::string>()(_key);
 }
 
 std::string imagestego::DwtExtracter::extractMessage() {
