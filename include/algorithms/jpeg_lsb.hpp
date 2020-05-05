@@ -12,9 +12,9 @@
 
 namespace imagestego {
 
-class IMAGESTEGO_EXPORTS JpegLsbStegoInserter : public AbstractStegoInserter, protected JpegProcessor {
+class IMAGESTEGO_EXPORTS JpegLsbEmbedder : public AbstractStegoEmbedder, protected JpegProcessor {
 public:
-    explicit JpegLsbStegoInserter(const std::string& input, const std::string& _output); 
+    explicit JpegLsbEmbedder(const std::string& input, const std::string& _output); 
     void setImage(const std::string&) override;
     void setOutputName(const std::string& str) override;
     void setMessage(const std::string& message) override;
@@ -24,13 +24,13 @@ protected:
 private:
     mutable BitArray<> msg, key;
     std::string output;
-}; // class JpegLsbStegoInserter
+}; // class JpegLsbStegoEmbedder
 
-class IMAGESTEGO_EXPORTS JpegLsbStegoExtracter : public AbstractStegoExtracter, protected JpegProcessor {
+class IMAGESTEGO_EXPORTS JpegLsbExtracter : public AbstractStegoExtracter, protected JpegProcessor {
 private:
     BitArray<> key;
 public:
-    explicit JpegLsbStegoExtracter(const std::string& image);
+    explicit JpegLsbExtracter(const std::string& image);
     void setImage(const std::string& str);
     std::string extractMessage();
 protected:

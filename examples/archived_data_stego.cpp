@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
                 "key", &key,
                 "output", &output,
                 "image", &image);
-        imagestego::LsbInserter<imagestego::HuffmanEncoder> lsb(image, output, imagestego::LsbOptions::randomBits);
+        imagestego::LsbEmbedder<imagestego::HuffmanEncoder> lsb(image, output, imagestego::LsbOptions::randomBits);
         lsb.setImage(image);
         lsb.setSecretKey(key);
         lsb.setMessage(msg);

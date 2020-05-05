@@ -4,6 +4,9 @@
 // imagestego
 #include "core.hpp"
 #include "utils/avl_tree.hpp"
+#ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
+#   include "utils/format_checker.hpp"
+#endif
 #include "utils/bitarray.hpp"
 // c++
 #include <random>
@@ -37,16 +40,26 @@ void change(uint8_t& val) noexcept;
 }
 
 template<class EncoderType>
-class LsbInserter : public AbstractStegoInserter {
+class LsbEmbedder : public AbstractStegoEmbedder {
 public:
-    explicit LsbInserter(const int& _opts = LsbOptions::silly) noexcept : opts(_opts) {}
-    explicit LsbInserter(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly) 
+    explicit LsbEmbedder(const int& _opts = LsbOptions::silly) noexcept : opts(_opts) {}
+#ifndef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
+    explicit LsbEmbedder(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly) 
         : image(cv::imread(imageName)), outputFile(output), opts(_opts) {}
+#else
+    explicit LsbEmbedder(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly) 
+        : image(cv::imread(imageName)), outputFile(output), opts(_opts), fmt(FormatChecker::Jpeg) {
+        check();
+    }
+#endif
     void setImage(const std::string& imageName) override {
         image = cv::imread(imageName);
     }
     void setOutputName(const std::string& filename) override {
         outputFile = filename;
+#ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
+        check();
+#endif
     }
     void setMessage(const std::string& _msg) noexcept override {
         encoder.setMessage(_msg);
@@ -71,6 +84,12 @@ public:
         }
     }
 private:
+#ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
+    void check() const {
+        if (fmt.check(outputFile))
+            throw Exception(Exception::Codes::NotJpegClass);
+    }
+#endif
     void __sillyLsbInsertion() const {
         std::size_t currentBitIndex = 0;
         msg.put('\0');
@@ -254,16 +273,20 @@ private:
 }; // class
 
 template<>
-class IMAGESTEGO_EXPORTS LsbInserter<void> : public AbstractStegoInserter {
+class IMAGESTEGO_EXPORTS LsbEmbedder<void> : public AbstractStegoEmbedder {
 public:
-    explicit LsbInserter(const int& _opts = LsbOptions::silly) noexcept;
-    explicit LsbInserter(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly); 
+    explicit LsbEmbedder(const int& _opts = LsbOptions::silly) noexcept;
+    explicit LsbEmbedder(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly); 
     void setImage(const std::string& imageName) override; 
     void setOutputName(const std::string& filename) override;
     void setMessage(const std::string& _msg) noexcept override;
     void setSecretKey(const std::string& _key) noexcept;
     void createStegoContainer() const override; 
 private:
+#ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
+    void check() const;
+    FormatChecker fmt;
+#endif
     void __sillyLsbInsertion() const;
     void __randomLsbInsertion(bool flag) const;
     inline void seed() const noexcept {

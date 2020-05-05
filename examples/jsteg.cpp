@@ -3,10 +3,10 @@
 
 
 int main() {
-    imagestego::JpegLsbStegoInserter inserter("in.jpg", "out.jpg");
+    imagestego::JpegLsbEmbedder inserter("in.jpg", "out.jpg");
     inserter.setMessage("aa");
     inserter.createStegoContainer();
-    imagestego::JpegLsbStegoExtracter extracter("out.jpg");
+    imagestego::JpegLsbExtracter extracter("out.jpg");
     std::cout << extracter.extractMessage() << std::endl;
     return 0;
 }

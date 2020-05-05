@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
                 "output", &output,
                 "msg", &msg,
                 "key", &key);
-        imagestego::LsbInserter<void> lsb(image, output, imagestego::LsbOptions::randomBits);
+        imagestego::LsbEmbedder<void> lsb(image, output, imagestego::LsbOptions::randomBits);
         lsb.setSecretKey(key);
         lsb.setMessage(msg);
         lsb.createStegoContainer();

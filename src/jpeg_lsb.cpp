@@ -1,25 +1,25 @@
 #include "algorithms/jpeg_lsb.hpp"
 
 
-imagestego::JpegLsbStegoInserter::JpegLsbStegoInserter(const std::string& input, const std::string& _output) 
+imagestego::JpegLsbEmbedder::JpegLsbEmbedder(const std::string& input, const std::string& _output) 
     : JpegProcessor(input), output(_output) {}
 
-void imagestego::JpegLsbStegoInserter::setImage(const std::string&) {}
+void imagestego::JpegLsbEmbedder::setImage(const std::string&) {}
 
-void imagestego::JpegLsbStegoInserter::setOutputName(const std::string& str) {
+void imagestego::JpegLsbEmbedder::setOutputName(const std::string& str) {
     output = str;
 }
 
-void imagestego::JpegLsbStegoInserter::setMessage(const std::string& message) {
+void imagestego::JpegLsbEmbedder::setMessage(const std::string& message) {
     msg = BitArray<>(message);
 }
 
-void imagestego::JpegLsbStegoInserter::createStegoContainer() const {
+void imagestego::JpegLsbEmbedder::createStegoContainer() const {
     process();
     writeTo(output);
 }
 
-void imagestego::JpegLsbStegoInserter::process() const {
+void imagestego::JpegLsbEmbedder::process() const {
     msg.put(0);
     std::size_t currentMsgIndex = 0;
     for (int channel = 0; channel != 3 && currentMsgIndex != msg.size(); ++channel) {
@@ -40,11 +40,11 @@ void imagestego::JpegLsbStegoInserter::process() const {
     }
 }
 
-imagestego::JpegLsbStegoExtracter::JpegLsbStegoExtracter(const std::string& image) : JpegProcessor(image) {}
+imagestego::JpegLsbExtracter::JpegLsbExtracter(const std::string& image) : JpegProcessor(image) {}
 
-void imagestego::JpegLsbStegoExtracter::setImage(const std::string& str) {}
+void imagestego::JpegLsbExtracter::setImage(const std::string& str) {}
 
-std::string imagestego::JpegLsbStegoExtracter::extractMessage() {
+std::string imagestego::JpegLsbExtracter::extractMessage() {
     imagestego::BitArray<> msg;
     for (int channel = 0; channel != 3; ++channel) {
         auto size = getChannelSize(channel);
@@ -61,4 +61,4 @@ std::string imagestego::JpegLsbStegoExtracter::extractMessage() {
     }
 }
 
-void imagestego::JpegLsbStegoExtracter::process() const {}
+void imagestego::JpegLsbExtracter::process() const {}

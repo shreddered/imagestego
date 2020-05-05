@@ -19,10 +19,10 @@ IMAGESTEGO_EXPORTS void dwt(const cv::Mat& src, cv::Mat& dst);
 
 IMAGESTEGO_EXPORTS void idwt(const cv::Mat& src, cv::Mat& dst);
 
-class IMAGESTEGO_EXPORTS DwtStegoInserter : public AbstractStegoInserter {
+class IMAGESTEGO_EXPORTS DwtEmbedder : public AbstractStegoEmbedder {
 public:
-    explicit DwtStegoInserter() noexcept;
-    explicit DwtStegoInserter(const std::string& imageName, const std::string& output);
+    explicit DwtEmbedder() noexcept;
+    explicit DwtEmbedder(const std::string& imageName, const std::string& output);
     void setImage(const std::string& imageName) override;
     void setOutputName(const std::string& filename) override;
     void setMessage(const std::string& msg) override;
@@ -31,12 +31,12 @@ private:
     cv::Mat image;
     std::string outputFile;
     mutable BitArray<> msg;
-}; // class DwtStegoInserter
+}; // class DwtStegoEmbedder
 
-class IMAGESTEGO_EXPORTS DwtStegoExtracter : public AbstractStegoExtracter {
+class IMAGESTEGO_EXPORTS DwtExtracter : public AbstractStegoExtracter {
 public:
-    explicit DwtStegoExtracter() noexcept;
-    explicit DwtStegoExtracter(const std::string& image);
+    explicit DwtExtracter() noexcept;
+    explicit DwtExtracter(const std::string& image);
     void setImage(const std::string& imageName) override;
     std::string extractMessage() override;
 private:

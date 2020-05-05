@@ -4,10 +4,10 @@
 
 
 int main() {
-    imagestego::DwtStegoInserter ins("in.jpg", "out.png");
+    imagestego::DwtEmbedder ins("in.jpg", "out.png");
     ins.setMessage("foo");
     ins.createStegoContainer();
-    imagestego::DwtStegoExtracter ext("out.png");
+    imagestego::DwtExtracter ext("out.png");
     std::cout << ext.extractMessage() << std::endl;
     return 0;
 }

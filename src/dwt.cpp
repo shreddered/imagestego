@@ -40,25 +40,25 @@ void imagestego::idwt(const cv::Mat& src, cv::Mat& dst) {
     dst.convertTo(dst, CV_8U);
 }
 
-imagestego::DwtStegoInserter::DwtStegoInserter() noexcept {}
+imagestego::DwtEmbedder::DwtEmbedder() noexcept {}
 
-imagestego::DwtStegoInserter::DwtStegoInserter(const std::string& imageName, const std::string& output)
+imagestego::DwtEmbedder::DwtEmbedder(const std::string& imageName, const std::string& output)
     : image(cv::imread(imageName)), outputFile(output) {}
 
 
-void imagestego::DwtStegoInserter::setImage(const std::string& imageName) {
+void imagestego::DwtEmbedder::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
 }
 
-void imagestego::DwtStegoInserter::setOutputName(const std::string& filename) {
+void imagestego::DwtEmbedder::setOutputName(const std::string& filename) {
     outputFile = filename;
 }
 
-void imagestego::DwtStegoInserter::setMessage(const std::string& _msg) {
+void imagestego::DwtEmbedder::setMessage(const std::string& _msg) {
     msg = imagestego::BitArray<>(_msg);
 }
 
-void imagestego::DwtStegoInserter::createStegoContainer() const {
+void imagestego::DwtEmbedder::createStegoContainer() const {
     msg.put(0);
     std::vector<cv::Mat> planes;
     cv::split(image, planes);
@@ -81,15 +81,15 @@ void imagestego::DwtStegoInserter::createStegoContainer() const {
 }
 
 
-imagestego::DwtStegoExtracter::DwtStegoExtracter() noexcept {}
+imagestego::DwtExtracter::DwtExtracter() noexcept {}
 
-imagestego::DwtStegoExtracter::DwtStegoExtracter(const std::string& imageName) : image(cv::imread(imageName)) {}
+imagestego::DwtExtracter::DwtExtracter(const std::string& imageName) : image(cv::imread(imageName)) {}
 
-void imagestego::DwtStegoExtracter::setImage(const std::string& imageName) {
+void imagestego::DwtExtracter::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
 }
 
-std::string imagestego::DwtStegoExtracter::extractMessage() {
+std::string imagestego::DwtExtracter::extractMessage() {
     imagestego::BitArray<unsigned char> arr;
     std::vector<cv::Mat> planes;
     cv::split(image, planes);

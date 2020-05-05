@@ -1,6 +1,13 @@
 #include "algorithms/lsb.hpp"
 
 
+#ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
+void imagestego::LsbEmbedder<void>::check() const {
+    if (fmt.check(outputFile))
+        throw imagestego::Exception(imagestego::Exception::Codes::NotJpegClass);
+}
+#endif
+
 void imagestego::__::change(uint8_t& val) noexcept {
     std::random_device rd;
     if (val == 255)
@@ -13,27 +20,27 @@ void imagestego::__::change(uint8_t& val) noexcept {
         --val;
 }
 
-imagestego::LsbInserter<void>::LsbInserter(const int& _opts) noexcept : opts(_opts) {}
+imagestego::LsbEmbedder<void>::LsbEmbedder(const int& _opts) noexcept : opts(_opts) {}
 
-imagestego::LsbInserter<void>::LsbInserter(const std::string& imageName, const std::string& output, const int& _opts) : image(cv::imread(imageName)), outputFile(output), opts(_opts) {}
+imagestego::LsbEmbedder<void>::LsbEmbedder(const std::string& imageName, const std::string& output, const int& _opts) : image(cv::imread(imageName)), outputFile(output), opts(_opts) {}
 
-void imagestego::LsbInserter<void>::setImage(const std::string& imageName) {
+void imagestego::LsbEmbedder<void>::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
 }
 
-void imagestego::LsbInserter<void>::setOutputName(const std::string& filename) {
+void imagestego::LsbEmbedder<void>::setOutputName(const std::string& filename) {
     outputFile = filename;
 }
 
-void imagestego::LsbInserter<void>::setMessage(const std::string& _msg) noexcept {
+void imagestego::LsbEmbedder<void>::setMessage(const std::string& _msg) noexcept {
     msg = BitArray<>(_msg);
 }
 
-void imagestego::LsbInserter<void>::setSecretKey(const std::string& _key) noexcept{
+void imagestego::LsbEmbedder<void>::setSecretKey(const std::string& _key) noexcept{
     key = BitArray<unsigned int>(_key);
 }
 
-void imagestego::LsbInserter<void>::createStegoContainer() const {
+void imagestego::LsbEmbedder<void>::createStegoContainer() const {
     switch(opts) {
         case 0:
             __sillyLsbInsertion();
@@ -49,7 +56,7 @@ void imagestego::LsbInserter<void>::createStegoContainer() const {
     }
 }
 
-void imagestego::LsbInserter<void>::__sillyLsbInsertion() const {
+void imagestego::LsbEmbedder<void>::__sillyLsbInsertion() const {
     std::size_t currentBitIndex = 0;
     msg.put('\0');
     for (int row = 0; row != image.rows && currentBitIndex != msg.size(); ++row) {
@@ -67,7 +74,7 @@ void imagestego::LsbInserter<void>::__sillyLsbInsertion() const {
     cv::imwrite(outputFile, image);
 }
 
-void imagestego::LsbInserter<void>::__randomLsbInsertion(bool flag) const {
+void imagestego::LsbEmbedder<void>::__randomLsbInsertion(bool flag) const {
     if (key.empty())
         throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
     seed();

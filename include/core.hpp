@@ -22,7 +22,8 @@ public:
         BigMessageSize = 1 << 1,
         NoKeyFound = 1 << 2,
         InternalError = 1 << 3,
-        UnknownLsbMode = 1 << 4
+        UnknownLsbMode = 1 << 4,
+        NotJpegClass = 1 << 5
     };
 private:
     int code;
@@ -33,14 +34,14 @@ enum class Mode {
     extraction
 };
 
-class IMAGESTEGO_EXPORTS AbstractStegoInserter {
+class IMAGESTEGO_EXPORTS AbstractStegoEmbedder {
 public:
     virtual void setImage(const std::string& imageName) = 0;
     virtual void setOutputName(const std::string& filename) = 0;
     virtual void createStegoContainer() const = 0;
     virtual void setMessage(const std::string& msg) = 0;
-    virtual ~AbstractStegoInserter() = default;
-}; // class AbstractStegoInserter
+    virtual ~AbstractStegoEmbedder() = default;
+}; // class AbstractStegoEmbedder
 
 class IMAGESTEGO_EXPORTS AbstractStegoExtracter {
 public:

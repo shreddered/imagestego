@@ -15,5 +15,9 @@ const char* imagestego::Exception::what() const noexcept {
             return "Internal error";
         case Codes::UnknownLsbMode:
             return "Unknown LSB mode";
+        case Codes::NotJpegClass:
+            return "Class 'LsbEmbedder' doesn't support JPEG pictures. Use 'JpegLsbEmbedder' instead";
+        default:
+            return "Unknown Error";
     }
 }
