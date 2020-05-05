@@ -14,6 +14,8 @@ LSB embedding in JPEG applied after quantization of DCT coefficients.
 
 This scheme uses [Integer Wavelet Transform](https://stackoverflow.com/questions/15802827/how-can-dwt-be-used-in-lsb-substitution-steganography) to embed secret message.
 
+If you want detailed overview of algorithms please refer to [OVERVIEW.md](https://github.com/shreddered/Image-Steganography/blob/master/OVERVIEW.md)
+
 Also there is a support for data comression:
 * [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)
 
