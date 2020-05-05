@@ -42,6 +42,8 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
     file(MAKE_DIRECTORY test/)
 endif()
 
+# ditto
+
 set(IMAGESTEGO_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
@@ -66,6 +68,7 @@ add_library(imagestego SHARED
 target_include_directories(imagestego
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ 
     PRIVATE /usr/include/opencv4/ 
+    PRIVATE /usr/include/opencv
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
 )
 set_target_properties(imagestego PROPERTIES 
@@ -196,7 +199,7 @@ if (BUILD_EXAMPLES)
     add_executable(dwt
         ${CMAKE_CURRENT_SOURCE_DIR}/examples/dwt.cpp
     )
-    target_include_directories(jstego
+    target_include_directories(dwt
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
         PRIVATE /usr/include/opencv4/
     )
@@ -204,7 +207,6 @@ if (BUILD_EXAMPLES)
         imagestego
         opencv_core
         opencv_imgcodecs
-        jpeg
     )
     set_target_properties(dwt PROPERTIES
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
