@@ -5,10 +5,15 @@
 #include <exception>
 #include <string>
 
+#if (defined(WIN32) || defined(_WIN32) || defined (WINCE))
+#   define IMAGESTEGO_EXPORTS __declspec(dllexport)
+#else
+#   define IMAGESTEGO_EXPORTS /* nothing */
+#endif
 
 namespace imagestego {
 
-class Exception : public std::exception {
+class IMAGESTEGO_EXPORTS Exception : public std::exception {
 public:
     explicit Exception(const int& _code) noexcept;
     const char* what() const noexcept override;
@@ -28,7 +33,7 @@ enum class Mode {
     extraction
 };
 
-class AbstractStegoInserter {
+class IMAGESTEGO_EXPORTS AbstractStegoInserter {
 public:
     virtual void setImage(const std::string& imageName) = 0;
     virtual void setOutputName(const std::string& filename) = 0;
@@ -37,18 +42,12 @@ public:
     virtual ~AbstractStegoInserter() = default;
 }; // class AbstractStegoInserter
 
-class AbstractStegoExtracter {
+class IMAGESTEGO_EXPORTS AbstractStegoExtracter {
 public:
     virtual void setImage(const std::string& imageName) = 0;
     virtual std::string extractMessage() = 0;
     virtual ~AbstractStegoExtracter() = default;
 }; // class AbstractStegoExtracter
-
-class AbstractOutputDevice {
-public:
-    virtual void put(const char* data, std::size_t len) = 0;
-    virtual void end() noexcept = 0;
-}; // class AbstractOutputDevice
 
 } // namespace imagestego
 

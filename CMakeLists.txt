@@ -6,9 +6,21 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# build conditions (default)
+if (NOT DEFINED ENABLE_FORMAT_CHECKING)
+    set(ENABLE_FORMAT_CHECKING ON)
+endif()
+
+if (NOT DEFINED BUILD_TYPE)
+    set(BUILD_TYPE DEBUG)
+endif()
+
 string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
-string(APPEND CMAKE_CXX_FLAGS " -D_DEBUG")
-string(APPEND CMAKE_CXX_FLAGS " -ggdb")
+
+if (NOT BUILD_TYPE STREQUAL RELEASE)
+    string(APPEND CMAKE_CXX_FLAGS " -D_DEBUG")
+    string(APPEND CMAKE_CXX_FLAGS " -ggdb")
+endif()
 
 if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
     file(MAKE_DIRECTORY lib/)
@@ -22,11 +34,7 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
     file(MAKE_DIRECTORY test/)
 endif()
 
-# build conditions (default)
-set(ENABLE_FORMAT_CHECKING ON)
-set(BUILD_TYPE RELEASE)
-
-add_library(imagestego SHARED
+set(IMAGESTEGO_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hufman_decoder.cpp
@@ -35,6 +43,16 @@ add_library(imagestego SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_processor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_lsb.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
+)
+
+if (ENABLE_FORMAT_CHECKING)
+    set(IMAGESTEGO_SOURCES ${IMAGESTEGO_SOURCES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/format_checker.cpp
+    )
+endif()
+
+add_library(imagestego SHARED
+    ${IMAGESTEGO_SOURCES}
 )
 target_include_directories(imagestego
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ 

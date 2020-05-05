@@ -15,11 +15,11 @@
 
 namespace imagestego {
 
-void dwt(const cv::Mat& src, cv::Mat& dst);
+IMAGESTEGO_EXPORTS void dwt(const cv::Mat& src, cv::Mat& dst);
 
-void idwt(const cv::Mat& src, cv::Mat& dst);
+IMAGESTEGO_EXPORTS void idwt(const cv::Mat& src, cv::Mat& dst);
 
-class DwtStegoInserter : public AbstractStegoInserter {
+class IMAGESTEGO_EXPORTS DwtStegoInserter : public AbstractStegoInserter {
 public:
     explicit DwtStegoInserter() noexcept;
     explicit DwtStegoInserter(const std::string& imageName, const std::string& output);
@@ -33,7 +33,7 @@ private:
     mutable BitArray<> msg;
 }; // class DwtStegoInserter
 
-class DwtStegoExtracter : public AbstractStegoExtracter {
+class IMAGESTEGO_EXPORTS DwtStegoExtracter : public AbstractStegoExtracter {
 public:
     explicit DwtStegoExtracter() noexcept;
     explicit DwtStegoExtracter(const std::string& image);

@@ -2,7 +2,8 @@
 #define __IMAGESTEGO_HUFFMAN_DECODER_HPP_INCLUDED__
 
 // imagestego
-#include <utils/bitarray.hpp>
+#include "core.hpp"
+#include "utils/bitarray.hpp"
 // c++
 #include <unordered_map>
 #include <string>
@@ -11,7 +12,7 @@
 
 namespace imagestego {
 
-class HuffmanDecoder {
+class IMAGESTEGO_EXPORTS HuffmanDecoder {
 public:
     explicit HuffmanDecoder() noexcept;
     explicit HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept; 

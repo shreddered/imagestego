@@ -254,7 +254,7 @@ private:
 }; // class
 
 template<>
-class LsbInserter<void> : public AbstractStegoInserter {
+class IMAGESTEGO_EXPORTS LsbInserter<void> : public AbstractStegoInserter {
 public:
     explicit LsbInserter(const int& _opts = LsbOptions::silly) noexcept;
     explicit LsbInserter(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly); 
@@ -277,7 +277,7 @@ private:
 }; // inserter
 
 template<>
-class LsbExtracter<void> : public AbstractStegoExtracter {
+class IMAGESTEGO_EXPORTS LsbExtracter<void> : public AbstractStegoExtracter {
 public:
     explicit LsbExtracter(const int& _opts = LsbOptions::silly) noexcept;
     explicit LsbExtracter(const std::string& imageName, const int& _opts = LsbOptions::silly); 

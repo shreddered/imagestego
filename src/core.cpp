@@ -4,14 +4,16 @@
 imagestego::Exception::Exception(const int& _code) noexcept : std::exception(), code(_code) {}
 
 const char* imagestego::Exception::what() const noexcept {
-    if (code & 1)
-        return "No such file";
-    if (code & (1 << 1))
-        return "Cannot embed message: image is too small";
-    if (code & (1 << 2))
-        return "No key found"; 
-    if (code & (1 << 3))
-        return "Internal error";
-    if (code & (1 << 4))
-        return "Unknown LSB mode";
+    switch(code) {
+        case Codes::NoSuchFile:
+            return "No such file";
+        case Codes::BigMessageSize:
+            return "Cannot embed message: image is too small";
+        case Codes::NoKeyFound:
+            return "No key found";
+        case Codes::InternalError:
+            return "Internal error";
+        case Codes::UnknownLsbMode:
+            return "Unknown LSB mode";
+    }
 }
