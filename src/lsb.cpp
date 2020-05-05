@@ -1,4 +1,4 @@
-#include "algorithms/lsb.hpp"
+#include "imagestego/algorithms/lsb.hpp"
 
 
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG

@@ -1,4 +1,4 @@
-#include "huffman_encoder.hpp"
+#include "imagestego/compression/huffman_encoder.hpp"
 
  
 imagestego::HuffmanEncoder::HuffmanEncoder() noexcept {}

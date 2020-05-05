@@ -1,4 +1,4 @@
-#include "utils/format_checker.hpp"
+#include "imagestego/utils/format_checker.hpp"
 
 
 template<class RAIt, typename T = typename RAIt::value_type>

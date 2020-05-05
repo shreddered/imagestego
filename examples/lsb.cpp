@@ -1,6 +1,4 @@
-#include <imagestego.hpp>
-#include <utils/bitarray.hpp>
-#include <algorithms/lsb.hpp>
+#include <imagestego/algorithms/lsb.hpp>
 
 #include <algorithm>
 #include <bitset>

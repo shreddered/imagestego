@@ -2,8 +2,8 @@
 #define __IMAGESTEGO_DWT_HPP_INCLUDED__
 
 // imagestego
-#include "core.hpp"
-#include "utils/bitarray.hpp"
+#include "imagestego/core.hpp"
+#include "imagestego/utils/bitarray.hpp"
 // c++
 #include <algorithm>
 #include <string>

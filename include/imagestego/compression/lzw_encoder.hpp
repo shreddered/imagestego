@@ -1,8 +1,9 @@
 #ifndef __LZW_ENCODER_HPP_INCLUDED__
 #define __LZW_ENCODER_HPP_INCLUDED__
 
-#include <utils/binary_tree.hpp>
-#include <utils/bitarray.hpp>
+#include "imagestego/core.hpp"
+#include "imagestego/utils/binary_tree.hpp"
+#include "imagestego/utils/bitarray.hpp"
 
 #include <map>
 #include <string>

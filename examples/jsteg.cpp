@@ -1,4 +1,5 @@
-#include <algorithms/jpeg_lsb.hpp>
+#include <imagestego/algorithms/jpeg_lsb.hpp>
+
 #include <iostream>
 
 

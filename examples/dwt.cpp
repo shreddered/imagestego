@@ -1,4 +1,4 @@
-#include <algorithms/dwt.hpp>
+#include <imagestego/algorithms/dwt.hpp>
 
 #include <iostream>
 

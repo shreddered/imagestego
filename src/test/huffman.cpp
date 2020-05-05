@@ -1,7 +1,7 @@
 #include <cassert>
 
-#include <huffman_decoder.hpp>
-#include <huffman_encoder.hpp>
+#include <imagestego/compression/huffman_decoder.hpp>
+#include <imagestego/compression/huffman_encoder.hpp>
 
 
 int main(int argc, char** argv) {

@@ -2,9 +2,9 @@
 #define __IMAGESTEGO_JPEG_LSB_HPP_INCLUDED__
 
 // imagestego headers
-#include "core.hpp"
-#include "utils/bitarray.hpp"
-#include "utils/jpeg_processor.hpp"
+#include "imagestego/core.hpp"
+#include "imagestego/utils/bitarray.hpp"
+#include "imagestego/utils/jpeg_processor.hpp"
 // c++
 #include <string>
 #include <vector>

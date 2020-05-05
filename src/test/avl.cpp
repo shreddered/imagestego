@@ -1,4 +1,4 @@
-#include <utils/avl_tree.hpp>
+#include <imagestego/utils/avl_tree.hpp>
 
 #include <cassert>
 #include <vector>

@@ -2,12 +2,12 @@
 #define __IMAGESTEGO_LSB_HPP_INCLUDED__
 
 // imagestego
-#include "core.hpp"
-#include "utils/avl_tree.hpp"
+#include "imagestego/core.hpp"
+#include "imagestego/utils/avl_tree.hpp"
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
-#   include "utils/format_checker.hpp"
+#   include "imagestego/utils/format_checker.hpp"
 #endif
-#include "utils/bitarray.hpp"
+#include "imagestego/utils/bitarray.hpp"
 // c++
 #include <random>
 #include <string>

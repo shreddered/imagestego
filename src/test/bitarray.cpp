@@ -1,4 +1,4 @@
-#include <utils/bitarray.hpp>
+#include <imagestego/utils/bitarray.hpp>
 
 #include <bitset>
 #include <cassert>

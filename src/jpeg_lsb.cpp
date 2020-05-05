@@ -1,4 +1,4 @@
-#include "algorithms/jpeg_lsb.hpp"
+#include "imagestego/algorithms/jpeg_lsb.hpp"
 
 
 imagestego::JpegLsbEmbedder::JpegLsbEmbedder(const std::string& input, const std::string& _output) 

@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include <algorithms/lsb.hpp>
-#include <huffman_encoder.hpp>
-#include <huffman_decoder.hpp>
+#include <imagestego/algorithms/lsb.hpp>
+#include <imagestego/compression/huffman_encoder.hpp>
+#include <imagestego/compression/huffman_decoder.hpp>
 
 #include <algorithm>
 #include <bitset>

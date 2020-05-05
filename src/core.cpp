@@ -1,4 +1,4 @@
-#include "core.hpp"
+#include "imagestego/core.hpp"
 
 
 imagestego::Exception::Exception(const int& _code) noexcept : std::exception(), code(_code) {}

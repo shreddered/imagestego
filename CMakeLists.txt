@@ -16,7 +16,7 @@ if (NOT DEFINED BUILD_TYPE)
 endif()
 
 if (NOT DEFINED BUILD_TESTS)
-    set(BUILD_EXAMPLES ON)
+    set(BUILD_TESTS ON)
 endif()
 
 if (NOT DEFINED BUILD_EXAMPLES)
@@ -64,7 +64,8 @@ add_library(imagestego SHARED
 )
 target_include_directories(imagestego
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ 
-    PRIVATE /usr/include/opencv4/
+    PRIVATE /usr/include/opencv4/ 
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
 )
 set_target_properties(imagestego PROPERTIES 
     PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/lib/
@@ -88,6 +89,7 @@ if (BUILD_TESTS)
     )
     target_include_directories(test_avl
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
     )
     target_link_libraries(test_avl
         imagestego
@@ -101,6 +103,7 @@ if (BUILD_TESTS)
     )
     target_include_directories(test_bitarray
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
     )
     set_target_properties(test_bitarray PROPERTIES
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
@@ -111,6 +114,7 @@ if (BUILD_TESTS)
     )
     target_include_directories(test_prefix
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
     )
     target_link_libraries(test_prefix
         imagestego
@@ -124,6 +128,7 @@ if (BUILD_TESTS)
     )
     target_include_directories(test_huffman
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
     )
     target_link_libraries(test_huffman
         imagestego
@@ -213,3 +218,11 @@ if (BUILD_TESTS)
     add_test(NAME huffman COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_huffman)
     add_test(NAME bitarray COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_bitarray)
 endif()
+
+# installation rules
+if (NOT DEFINED IMAGESTEGO_PREFIX)
+    set(IMAGESTEGO_PREFIX "/usr/lib/")
+endif()
+
+# install(TARGETS imagestego DESTINATION ${IMAGESTEGO_PREFIX})
+# install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/
