@@ -11,6 +11,7 @@
 #   define IMAGESTEGO_EXPORTS /* nothing */
 #endif
 
+
 namespace imagestego {
 
 class IMAGESTEGO_EXPORTS Exception : public std::exception {
@@ -30,8 +31,14 @@ private:
 };
 
 enum class Mode {
-    insertion,
+    embedding,
     extraction
+};
+
+enum class Algorithm {
+    Lsb,
+    JpegLsb,
+    Dwt
 };
 
 class IMAGESTEGO_EXPORTS AbstractStegoEmbedder {
@@ -40,13 +47,23 @@ public:
     virtual void setOutputName(const std::string& filename) = 0;
     virtual void createStegoContainer() const = 0;
     virtual void setMessage(const std::string& msg) = 0;
+    virtual void setSecretKey(const std::string& key) = 0;
+    virtual Algorithm getAlgorithm() const = 0; 
+    static constexpr inline Mode getMode() noexcept {
+        return Mode::embedding;
+    }
     virtual ~AbstractStegoEmbedder() = default;
 }; // class AbstractStegoEmbedder
 
 class IMAGESTEGO_EXPORTS AbstractStegoExtracter {
 public:
     virtual void setImage(const std::string& imageName) = 0;
+    virtual void setSecretKey(const std::string& key) = 0;
     virtual std::string extractMessage() = 0;
+    virtual Algorithm getAlgorithm() const = 0; 
+    static constexpr inline Mode getMode() noexcept {
+        return Mode::extraction;
+    }
     virtual ~AbstractStegoExtracter() = default;
 }; // class AbstractStegoExtracter
 

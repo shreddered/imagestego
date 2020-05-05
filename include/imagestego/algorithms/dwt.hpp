@@ -26,8 +26,9 @@ public:
     void setImage(const std::string& imageName) override;
     void setOutputName(const std::string& filename) override;
     void setMessage(const std::string& msg) override;
-    void setSecretKey(const std::string& key);
+    void setSecretKey(const std::string& key) override;
     void createStegoContainer() const override;
+    Algorithm getAlgorithm() const noexcept override;
 private:
     cv::Mat image;
     std::string outputFile;
@@ -40,8 +41,9 @@ public:
     explicit DwtExtracter() noexcept;
     explicit DwtExtracter(const std::string& image);
     void setImage(const std::string& imageName) override;
-    void setSecretKey(const std::string& key);
+    void setSecretKey(const std::string& key) override;
     std::string extractMessage() override;
+    Algorithm getAlgorithm() const noexcept override;
 private:
     cv::Mat image;
     unsigned int key;

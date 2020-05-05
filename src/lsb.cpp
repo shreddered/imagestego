@@ -221,3 +221,11 @@ std::string imagestego::LsbExtracter<void>::__randomLsbExtraction() const {
     }
     return arr.toString();
 }
+
+imagestego::Algorithm imagestego::LsbEmbedder<void>::getAlgorithm() const noexcept {
+    return imagestego::Algorithm::Lsb;
+}
+
+imagestego::Algorithm imagestego::LsbExtracter<void>::getAlgorithm() const noexcept {
+    return imagestego::Algorithm::Lsb;
+}

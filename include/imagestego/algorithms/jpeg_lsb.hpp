@@ -12,28 +12,30 @@
 
 namespace imagestego {
 
-class IMAGESTEGO_EXPORTS JpegLsbEmbedder : public AbstractStegoEmbedder, protected JpegProcessor {
+class IMAGESTEGO_EXPORTS JpegLsbEmbedder : public AbstractStegoEmbedder, private JpegProcessor {
 public:
     explicit JpegLsbEmbedder(const std::string& input, const std::string& _output); 
     void setImage(const std::string&) override;
     void setOutputName(const std::string& str) override;
     void setMessage(const std::string& message) override;
     void createStegoContainer() const override; 
-protected:
-    void process() const override;
+    void setSecretKey(const std::string& key) override;
+    Algorithm getAlgorithm() const noexcept override;
 private:
     mutable BitArray<> msg, key;
     std::string output;
+    void process() const override;
 }; // class JpegLsbStegoEmbedder
 
-class IMAGESTEGO_EXPORTS JpegLsbExtracter : public AbstractStegoExtracter, protected JpegProcessor {
-private:
-    BitArray<> key;
+class IMAGESTEGO_EXPORTS JpegLsbExtracter : public AbstractStegoExtracter, private JpegProcessor {
 public:
     explicit JpegLsbExtracter(const std::string& image);
     void setImage(const std::string& str);
+    void setSecretKey(const std::string& key) override;
+    Algorithm getAlgorithm() const noexcept override;
     std::string extractMessage();
-protected:
+private:
+    BitArray<> key;
     void process() const override;
 }; // class JpegLsbStegoExtracter
 

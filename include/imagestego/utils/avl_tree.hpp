@@ -8,6 +8,7 @@
 #endif
 #include <utility>
 
+
 namespace imagestego {
 
 template<typename T, class Comp = std::less<T> >

@@ -14,6 +14,10 @@ void imagestego::JpegLsbEmbedder::setMessage(const std::string& message) {
     msg = BitArray<>(message);
 }
 
+void imagestego::JpegLsbEmbedder::setSecretKey(const std::string& _key) {
+    key = imagestego::BitArray<>(_key);
+}
+
 void imagestego::JpegLsbEmbedder::createStegoContainer() const {
     process();
     writeTo(output);
@@ -21,20 +25,32 @@ void imagestego::JpegLsbEmbedder::createStegoContainer() const {
 
 void imagestego::JpegLsbEmbedder::process() const {
     msg.put(0);
-    std::size_t currentMsgIndex = 0;
-    for (int channel = 0; channel != 3 && currentMsgIndex != msg.size(); ++channel) {
-        auto size = getChannelSize(channel);
-        for (int i = 0; i != size.first && currentMsgIndex != msg.size(); ++i) {
-            for (int j = 0; j != size.second && currentMsgIndex != msg.size(); ++j) {
-                auto block = getBlock(channel, i, j);
-                for (int k = 0; k != 64; ++k) {
-                    if (block[k] != 0 && block[k] != 1) {
+    std::size_t currentMsgIndex = 0,
+                currentKeyIndex = 0;
+    auto size = getChannelSize(0);
+    for (int i = 0; i != size.first && currentMsgIndex != msg.size(); ++i) {
+        for (int j = 0; j != size.second && currentMsgIndex != msg.size(); ++j) {
+            auto redBlock = getBlock(0, i, j),
+                 greenBlock = getBlock(1, i, j),
+                 blueBlock = getBlock(2, i, j);
+            for (int k = 0; k != 64; ++k) {
+                if ((redBlock[k] & 1) != key[currentKeyIndex]) { // blue case
+                    if (blueBlock[k] != 0 && blueBlock[k] != 1) {
                         if (msg[currentMsgIndex++])
-                            block[k] |= 1;
+                            blueBlock[k] |= 1;
                         else
-                            block[k] &= ~1;
+                            blueBlock[k] &= ~1;
                     }
                 }
+                else {
+                    if (greenBlock[k] != 0 && greenBlock[k] != 1) {
+                        if (msg[currentMsgIndex++])
+                            greenBlock[k] |= 1;
+                        else
+                            greenBlock[k] &= ~1;
+                    }
+                }
+                currentKeyIndex = (currentKeyIndex + 1) % key.size();
             }
         }
     }
@@ -44,21 +60,41 @@ imagestego::JpegLsbExtracter::JpegLsbExtracter(const std::string& image) : JpegP
 
 void imagestego::JpegLsbExtracter::setImage(const std::string& str) {}
 
+void imagestego::JpegLsbExtracter::setSecretKey(const std::string& _key) {
+    key = imagestego::BitArray<>(_key);
+}
+
 std::string imagestego::JpegLsbExtracter::extractMessage() {
     imagestego::BitArray<> msg;
-    for (int channel = 0; channel != 3; ++channel) {
-        auto size = getChannelSize(channel);
-        for (int i = 0; i != size.first; ++i)
-            for (int j = 0; j != size.second; ++j) {
-                auto block = getBlock(channel, i, j);
-                for (int k = 0; k != 64; ++k) {
-                    if (block[k] != 0 && block[k] != 1)
-                        msg.pushBack(block[k] & 1);
-                    if (msg.size() && msg.size() % 8 == 0 && msg.lastBlock() == 0)
-                        return msg.toString();
+    std::size_t currentKeyIndex = 0;
+    auto size = getChannelSize(0);
+    for (int i = 0; i != size.first; ++i)
+        for (int j = 0; j != size.second; ++j) {
+            auto redBlock = getBlock(0, i, j),
+                 greenBlock = getBlock(1, i, j),
+                 blueBlock = getBlock(2, i, j);
+            for (int k = 0; k != 64; ++k) {
+                if ((redBlock[k] & 1) != key[currentKeyIndex]) {
+                    if (blueBlock[k] != 0 && blueBlock[k] != 1)
+                        msg.pushBack(blueBlock[k] & 1);
                 }
+                else { 
+                    if (greenBlock[k] != 0 && greenBlock[k] != 1)
+                        msg.pushBack(greenBlock[k] & 1);
+                }
+                currentKeyIndex = (currentKeyIndex + 1) % key.size();
+                if (msg.size() && msg.size() % 8 == 0 && msg.lastBlock() == 0)
+                    return msg.toString();
             }
-    }
+        }
 }
 
 void imagestego::JpegLsbExtracter::process() const {}
+
+imagestego::Algorithm imagestego::JpegLsbEmbedder::getAlgorithm() const noexcept {
+    return imagestego::Algorithm::JpegLsb;
+}
+
+imagestego::Algorithm imagestego::JpegLsbExtracter::getAlgorithm() const noexcept {
+    return imagestego::Algorithm::JpegLsb;
+}

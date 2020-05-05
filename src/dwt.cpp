@@ -110,3 +110,11 @@ std::string imagestego::DwtExtracter::extractMessage() {
                 return arr.toString();
         }
 }
+
+imagestego::Algorithm imagestego::DwtEmbedder::getAlgorithm() const noexcept {
+    return imagestego::Algorithm::Dwt;
+}
+
+imagestego::Algorithm imagestego::DwtExtracter::getAlgorithm() const noexcept {
+    return imagestego::Algorithm::Dwt;
+}

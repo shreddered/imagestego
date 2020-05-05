@@ -43,14 +43,15 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 endif()
 
 set(IMAGESTEGO_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hufman_decoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hufman_encoder.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_processor.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/imagestego.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_lsb.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_processor.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
 )
 
 if (ENABLE_FORMAT_CHECKING)
@@ -212,7 +213,6 @@ endif()
 
 if (BUILD_TESTS)
     enable_testing()
-
     add_test(NAME avl COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_avl)
     add_test(NAME prefix COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_prefix)
     add_test(NAME huffman COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_huffman)

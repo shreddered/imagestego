@@ -65,7 +65,7 @@ public:
         encoder.setMessage(_msg);
         msg = encoder.getEncodedMessage();
     }
-    void setSecretKey(const std::string& _key) noexcept {
+    void setSecretKey(const std::string& _key) noexcept override {
         key = BitArray<unsigned int>(_key);
     }
     void createStegoContainer() const override {
@@ -82,6 +82,9 @@ public:
             default:
                 break;
         }
+    }
+    Algorithm getAlgorithm() const noexcept override {
+        return Algorithm::Dwt;
     }
 private:
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
@@ -192,7 +195,7 @@ public:
     void setImage(const std::string& imageName) override {
         image = cv::imread(imageName);
     }
-    void setSecretKey(const std::string& _key) noexcept {
+    void setSecretKey(const std::string& _key) noexcept override {
         key = BitArray<unsigned int>(_key);
     }
     std::string extractMessage() override {
@@ -208,6 +211,9 @@ public:
             default:
                 return "";
         }
+    }
+    Algorithm getAlgorithm() const noexcept override {
+        return Algorithm::Dwt;
     }
 private:
     std::string __sillyLsbExtraction() const {
@@ -280,8 +286,9 @@ public:
     void setImage(const std::string& imageName) override; 
     void setOutputName(const std::string& filename) override;
     void setMessage(const std::string& _msg) noexcept override;
-    void setSecretKey(const std::string& _key) noexcept;
+    void setSecretKey(const std::string& _key) noexcept override;
     void createStegoContainer() const override; 
+    Algorithm getAlgorithm() const noexcept override;
 private:
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
     void check() const;
@@ -305,8 +312,9 @@ public:
     explicit LsbExtracter(const int& _opts = LsbOptions::silly) noexcept;
     explicit LsbExtracter(const std::string& imageName, const int& _opts = LsbOptions::silly); 
     void setImage(const std::string& imageName) override;
-    void setSecretKey(const std::string& _key) noexcept; 
+    void setSecretKey(const std::string& _key) noexcept override; 
     std::string extractMessage() override; 
+    Algorithm getAlgorithm() const noexcept override;
 private:
     std::string __sillyLsbExtraction() const;
     std::string __randomLsbExtraction() const; 
