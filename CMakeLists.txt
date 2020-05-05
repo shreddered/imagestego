@@ -71,8 +71,11 @@ target_include_directories(imagestego
     PRIVATE /usr/include/opencv
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
 )
-set_target_properties(imagestego PROPERTIES 
-    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/lib/
+set_target_properties(imagestego 
+    PROPERTIES 
+    PREFIX ""
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/
+    OUTPUT_NAME "libimagestego"
 )
 target_link_libraries(imagestego 
     opencv_core
