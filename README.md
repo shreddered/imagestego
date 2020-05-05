@@ -36,6 +36,14 @@ Use [_brew_](https://brew.sh/) for installing dependencies.
 ```bash
 $ brew install cmake libjpeg libopencv-dev
 ```
+After that, just run
+```bash
+$ cmake -Bbuild
+$ cd build/
+$ make -j4
+```
+`libimagestego.so` will be compiled and placed into lib/ directory.
+
 ## Windows
 Please refer to [_cmake_ downloads](https://cmake.org/download/), [_libjpeg_](http://www.ijg.org/)
 and [_opencv_ releases](https://opencv.org/releases/) for complete guidelines.
