@@ -8,11 +8,9 @@ After that, classical embedding is performed.
 Several options are introduced:
 
 * `imagestego::LsbOptions::silly`
-
 In this case, consequential embedding will be performed.
 
 * `imagestego::LsbOptions::randomBits`
-
 In this case, points for embedding will be chosen randomly.
 For points generation balanced binary tree is used.
 
