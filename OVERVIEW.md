@@ -34,7 +34,7 @@ As for JPEG, embedding process performed after DCT coefficients quantization.
 
 ## DWT-based algorithm
 
-This algorithm uses Integer Wavelet Transform (IWT) to embed secret data.
+This algorithm uses [Integer Wavelet Transform (IWT)](https://stackoverflow.com/questions/15802827/how-can-dwt-be-used-in-lsb-substitution-steganography) to embed secret data.
 
 The embedding process is as follows:
 1. 2-dimensional IWT performed on the blue channel of an image 
