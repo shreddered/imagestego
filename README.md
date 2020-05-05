@@ -38,6 +38,6 @@ $ brew install cmake libjpeg libopencv-dev
 Please refer to [_cmake_ downloads](https://cmake.org/download/), [_libjpeg_](http://www.ijg.org/)
 and [_opencv_ releases](https://opencv.org/releases/) for complete guidelines.
 # Further development
-- [ ] Implement LZW compression algorithm
-- [ ] Implement at least one more algoritm
-- [ ] Make DWT format-independent
+- [ ] Implement LZW data compression algorithm
+- [ ] Implement at least one more stego algoritm
+- [ ] Make DWT-based algorithm format-independent
