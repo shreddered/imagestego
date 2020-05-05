@@ -16,7 +16,7 @@ For points generation balanced binary tree is used.
 
 Also, key string needed. It is used to seed PRNG. 
 Key string will be converted to bit array too. The embedding process is as follows:
-1. i-th bit of key is xored with LSB of pixel's red value.
+1. The i-th bit of key is xored with LSB of pixel's red value.
 2. If xor above is equal to 0, current bit of message will be embedded into LSB of pixel's green value.
 Otherwise,  current bit of message will be embedded into LSB of pixel's blue value.
 
