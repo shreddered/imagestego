@@ -23,12 +23,6 @@ template<class Block = uint16_t>
 class BitArray {
     friend class HuffmanDecoder;
 private:
-    static Block __block(const std::string& str, const std::size_t& pos) noexcept {
-        Block tmp = 0;
-        for (uint8_t i = 0; i < sizeof(Block) && i + pos < str.size(); ++i)
-            tmp |= static_cast<uint8_t>(str[pos + i]) << ((sizeof(Block) - i - 1) * CHAR_BIT);
-        return tmp;
-    }
     class BitReference {
         friend class BitArray<Block>;
         Block& block;
