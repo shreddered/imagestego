@@ -52,7 +52,7 @@ void imagestego::LsbEmbedder<void>::createStegoContainer() const {
             __randomLsbInsertion(1);
             break;
         default:
-            break;
+            throw imagestego::Exception(imagestego::Exception::Codes::UnknownLsbMode);
     }
 }
 
@@ -76,7 +76,11 @@ void imagestego::LsbEmbedder<void>::__sillyLsbInsertion() const {
 
 void imagestego::LsbEmbedder<void>::__randomLsbInsertion(bool flag) const {
     if (key.empty())
+#ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
+        setSecretKey(imagestego::keygen::generate());
+#else
         throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
+#endif
     seed();
     imagestego::Route route(std::make_pair(image.cols, image.rows));
     route.create(32);

@@ -55,7 +55,9 @@ void imagestego::DwtEmbedder::setOutputName(const std::string& filename) {
 }
 
 void imagestego::DwtEmbedder::setSecretKey(const std::string& _key) {
-    key = std::hash<std::string>()(_key); 
+    uint32_t tmp[1];
+    MurmurHash3_x86_32(_key.data(), _key.size(), 4991, tmp);
+    key = tmp[0];
 }
 
 void imagestego::DwtEmbedder::setMessage(const std::string& _msg) {
@@ -63,6 +65,12 @@ void imagestego::DwtEmbedder::setMessage(const std::string& _msg) {
 }
 
 void imagestego::DwtEmbedder::createStegoContainer() const {
+    if (!key)
+#ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
+        setSecretKey(imagestego::keygen::generate());
+#else
+        throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
+#endif
     msg.put(0);
     std::vector<cv::Mat> planes;
     cv::split(image, planes);
@@ -94,7 +102,9 @@ void imagestego::DwtExtracter::setImage(const std::string& imageName) {
 }
 
 void imagestego::DwtExtracter::setSecretKey(const std::string& _key) {
-    key = std::hash<std::string>()(_key);
+    uint32_t tmp[1];
+    MurmurHash3_x86_32(_key.data(), _key.size(), 4991, tmp);
+    key = tmp[0];
 }
 
 std::string imagestego::DwtExtracter::extractMessage() {
@@ -106,7 +116,7 @@ std::string imagestego::DwtExtracter::extractMessage() {
     for (int i = image.rows >> 1; i != image.rows; ++i)
         for (int j = image.cols >> 1; j != image.cols; ++j) {
             arr.pushBack((tmp.at<short>(i, j) & 1) != 0);
-            if (arr.size() && arr.size() % 8 ==0 && arr.lastBlock() == 0)
+            if (arr.size() && arr.size() % 8 == 0 && arr.lastBlock() == 0)
                 return arr.toString();
         }
 }
@@ -118,3 +128,5 @@ imagestego::Algorithm imagestego::DwtEmbedder::getAlgorithm() const noexcept {
 imagestego::Algorithm imagestego::DwtExtracter::getAlgorithm() const noexcept {
     return imagestego::Algorithm::Dwt;
 }
+
+

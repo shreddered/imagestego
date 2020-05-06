@@ -11,7 +11,7 @@ void imagestego::JpegLsbEmbedder::setOutputName(const std::string& str) {
 }
 
 void imagestego::JpegLsbEmbedder::setMessage(const std::string& message) {
-    msg = BitArray<>(message);
+    msg = imagestego::BitArray<>(message);
 }
 
 void imagestego::JpegLsbEmbedder::setSecretKey(const std::string& _key) {
@@ -24,6 +24,12 @@ void imagestego::JpegLsbEmbedder::createStegoContainer() const {
 }
 
 void imagestego::JpegLsbEmbedder::process() const {
+    if (key.empty())
+#ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPROT
+        setSecretKey(imagestego::keygen::generate());
+#else
+        throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
+#endif
     msg.put(0);
     std::size_t currentMsgIndex = 0,
                 currentKeyIndex = 0;

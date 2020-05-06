@@ -4,10 +4,13 @@
 // imagestego
 #include "imagestego/core.hpp"
 #include "imagestego/utils/avl_tree.hpp"
+#include "imagestego/utils/bitarray.hpp"
+#ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
+#   include "imagestego/keygen.hpp"
+#endif
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
 #   include "imagestego/utils/format_checker.hpp"
 #endif
-#include "imagestego/utils/bitarray.hpp"
 // c++
 #include <random>
 #include <string>
@@ -112,7 +115,11 @@ private:
     }
     void __randomLsbInsertion(bool flag) const {
         if (key.empty())
+#ifndef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
             throw Exception(Exception::Codes::NoKeyFound);;
+#else
+            setSecretKey(imagestego::keygen::generate());
+#endif
         seed();
         Route route(std::make_pair(image.cols, image.rows));
         route.create(32);
@@ -209,7 +216,7 @@ public:
             case 3:
                 return __randomLsbExtraction();
             default:
-                return "";
+                throw Exception(Exception::Codes::UnknownLsbMode);
         }
     }
     Algorithm getAlgorithm() const noexcept override {

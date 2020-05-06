@@ -5,6 +5,12 @@
 #include "imagestego/core.hpp"
 #include "imagestego/utils/bitarray.hpp"
 #include "imagestego/utils/jpeg_processor.hpp"
+#ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
+#   include "imagestego/keygen.hpp"
+#endif
+#ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
+#   include "imagestego/utils/format_checker.hpp"
+#endif
 // c++
 #include <string>
 #include <vector>

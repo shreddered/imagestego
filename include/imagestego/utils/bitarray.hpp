@@ -1,7 +1,11 @@
 #ifndef __IMAGESTEGO_BITARRAY_HPP_INCLUDED__
 #define __IMAGESTEGO_BITARRAY_HPP_INCLUDED__
 
-#include <cstddef>
+// imagestego
+#include "imagestego/core.hpp"
+// c++ headers
+#include <algorithm>
+#include <cstring>
 #include <string>
 #include <type_traits>
 #include <vector>
@@ -71,13 +75,16 @@ public:
     };
     explicit BitArray() noexcept {}
     explicit BitArray(const std::size_t size) noexcept : numberOfBits(size), array(numberOfBlocks(size)) {}
-    explicit BitArray(const std::string& str, int mode = byteString) noexcept : numberOfBits((mode) ? str.length() * 8 : str.length()),
-    array(numberOfBlocks(numberOfBits)) {
-        if (mode == 1)
-            for (std::size_t i = 0; i < str.size(); i += sizeof(Block)) {
-                array[i / sizeof(Block)] = __block(str, i);
-            }
+    explicit BitArray(const std::string& str, int mode = byteString) noexcept 
+        : numberOfBits((mode) ? str.length() * 8 : str.length()), array(numberOfBlocks(numberOfBits)) {
+        if (mode == 1) {
+            std::string tmp = str + std::string(str.size() % sizeof(Block), '\0');
+            for (int i = 0; i != tmp.size() / sizeof(Block); ++i)
+                std::reverse(tmp.begin() + i * sizeof(Block), tmp.begin() + i * sizeof(Block) + sizeof(Block));
+            memcpy(&array[0], tmp.data(), tmp.size()); 
+        }
         else {
+            // TODO: improve it 
             for (std::size_t i = 0; i != str.size(); ++i)
                 operator [](i) = str[i] - '0';
         }

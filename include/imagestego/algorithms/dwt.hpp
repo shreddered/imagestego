@@ -4,13 +4,23 @@
 // imagestego
 #include "imagestego/core.hpp"
 #include "imagestego/utils/bitarray.hpp"
+#ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
+#   include "imagestego/keygen.hpp"
+#endif
+#ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
+#   include "imagestego/utils/format_checker.hpp"
+#endif
 // c++
+#include <cmath>
 #include <algorithm>
+#include <random>
 #include <string>
 #include <vector>
 // opencv
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+// murmurhash
+#include "MurmurHash3.h"
 
 
 namespace imagestego {
@@ -33,7 +43,7 @@ private:
     cv::Mat image;
     std::string outputFile;
     mutable BitArray<> msg;
-    unsigned int key;
+    uint32_t key;
 }; // class DwtStegoEmbedder
 
 class IMAGESTEGO_EXPORTS DwtExtracter : public AbstractStegoExtracter {
@@ -46,7 +56,7 @@ public:
     Algorithm getAlgorithm() const noexcept override;
 private:
     cv::Mat image;
-    unsigned int key;
+    uint32_t key;
 }; // class DwtStegoExtracter
 
 } // namespace imagestego

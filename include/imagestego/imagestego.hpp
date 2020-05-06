@@ -2,14 +2,13 @@
 #define __IMAGESTEGO_HPP_INCLUDED__
 
 // imagestego headers
+// algorithms
 #include "imagestego/algorithms/dwt.hpp"
 #include "imagestego/algorithms/lsb.hpp"
 #include "imagestego/algorithms/jpeg_lsb.hpp"
-
+// compression
 #include "imagestego/compression/huffman_decoder.hpp"
 #include "imagestego/compression/huffman_encoder.hpp"
-
-#include "imagestego/core.hpp"
 // c++ headers
 #include <memory>
 #include <string>
