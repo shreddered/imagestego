@@ -40,4 +40,4 @@ The embedding process is as follows:
 3. Inverse IWT performed on new matrix.
 4. Merge channels and write image.
 
-**TODO**: add key-dependent cropping.
+- [x] **TODO**: add key-dependent cropping.
