@@ -42,6 +42,7 @@ public:
 private:
     cv::Mat image;
     std::string outputFile;
+    mutable std::mt19937 gen;
     mutable BitArray<> msg;
     uint32_t key;
 }; // class DwtStegoEmbedder
@@ -55,6 +56,7 @@ public:
     std::string extractMessage() override;
     Algorithm getAlgorithm() const noexcept override;
 private:
+    std::mt19937 gen;
     cv::Mat image;
     uint32_t key;
 }; // class DwtStegoExtracter

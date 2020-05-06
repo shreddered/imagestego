@@ -6,8 +6,10 @@
 int main() {
     imagestego::DwtEmbedder ins("in.jpg", "out.png");
     ins.setMessage("foo");
+    ins.setSecretKey("pwd");
     ins.createStegoContainer();
     imagestego::DwtExtracter ext("out.png");
+    ext.setSecretKey("pwd");
     std::cout << ext.extractMessage() << std::endl;
     return 0;
 }

@@ -72,22 +72,47 @@ void imagestego::DwtEmbedder::createStegoContainer() const {
         throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
 #endif
     msg.put(0);
+    uint32_t sz = 4 * ceil(sqrt(msg.size())); 
+    std::size_t currentMsgIndex = 0;
+    auto arr = imagestego::BitArray<>::fromInt(sz);
     std::vector<cv::Mat> planes;
     cv::split(image, planes);
+    cv::Mat dwtGreen;
+    imagestego::dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)), dwtGreen);
+    for (int i = 0; i != dwtGreen.rows && currentMsgIndex != 32; ++i)
+        for (int j = 0; j != dwtGreen.cols && currentMsgIndex != 32; ++j) { 
+            if (arr[currentMsgIndex++])
+                dwtGreen.at<short>(i, j) |= 1;
+            else
+                dwtGreen.at<short>(i, j) &= ~1;
+        }
     cv::Mat tmp;
-    // DWT of blue channel
-    imagestego::dwt(planes[0], tmp);
+    imagestego::idwt(dwtGreen, tmp);
+    tmp.copyTo(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)));
     // after that, perform embedding
-    std::size_t currentMsgIndex = 0;
-    for (int i = image.rows >> 1; i != image.rows && currentMsgIndex != msg.size(); ++i) {
-        for (int j = image.cols >> 1; j != image.cols && currentMsgIndex != msg.size(); ++j) {
+    // seeding PRNG
+    gen.seed(key);
+    std::uniform_int_distribution<int> d1(0, image.rows),
+                                       d2(0, image.cols);
+    int x0 = 0, y0 = 0;
+    do {
+        y0 = d1(gen);
+        x0 = d2(gen);
+    } while (y0 > image.rows - sz || x0 > image.cols - sz);
+    cv::Mat cropped = planes[0](cv::Rect(x0, y0, sz, sz));
+    // DWT of blue channel
+    imagestego::dwt(cropped, tmp);
+    currentMsgIndex = 0;
+    for (int i = tmp.rows >> 1; i != tmp.rows && currentMsgIndex != msg.size(); ++i) {
+        for (int j = tmp.cols >> 1; j != tmp.cols && currentMsgIndex != msg.size(); ++j) {
             if (msg[currentMsgIndex++])
                 tmp.at<short>(i, j) |= 1;
             else
                 tmp.at<short>(i, j) &= ~1;
         }
     }
-    imagestego::idwt(tmp, planes[0]);
+    imagestego::idwt(tmp, cropped);
+    cropped.copyTo(planes[0](cv::Rect(x0, y0, sz, sz)));
     cv::merge(planes, image);
     cv::imwrite(outputFile, image);
 }
@@ -111,10 +136,28 @@ std::string imagestego::DwtExtracter::extractMessage() {
     imagestego::BitArray<unsigned char> arr;
     std::vector<cv::Mat> planes;
     cv::split(image, planes);
+    cv::Mat dwtGreen;
+    imagestego::dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)), dwtGreen);
+    imagestego::BitArray<uint32_t> arr1;
+    for (int i = 0; i != dwtGreen.rows; ++i)
+        for (int j = 0; j != dwtGreen.cols; ++j)
+            arr1.pushBack((dwtGreen.at<short>(i, j) & 1) != 0);
+    uint32_t sz = arr1.getBlock(0);
+    // seeding PRNG
+    gen.seed(key);
+    std::uniform_int_distribution<int> d1(0, image.rows),
+                                       d2(0, image.cols);
+    int x0 = 0, y0 = 0;
+    do {
+        y0 = d1(gen);
+        x0 = d2(gen);
+    } while (y0 > image.rows - sz || x0 > image.cols - sz);
+    cv::Mat cropped = planes[0](cv::Rect(x0, y0, sz, sz));
+    // DWT of blue channel
     cv::Mat tmp;
-    imagestego::dwt(planes[0], tmp);
-    for (int i = image.rows >> 1; i != image.rows; ++i)
-        for (int j = image.cols >> 1; j != image.cols; ++j) {
+    imagestego::dwt(cropped, tmp);
+    for (int i = tmp.rows >> 1; i != tmp.rows; ++i)
+        for (int j = tmp.cols >> 1; j != tmp.cols; ++j) {
             arr.pushBack((tmp.at<short>(i, j) & 1) != 0);
             if (arr.size() && arr.size() % 8 == 0 && arr.lastBlock() == 0)
                 return arr.toString();
@@ -128,5 +171,3 @@ imagestego::Algorithm imagestego::DwtEmbedder::getAlgorithm() const noexcept {
 imagestego::Algorithm imagestego::DwtExtracter::getAlgorithm() const noexcept {
     return imagestego::Algorithm::Dwt;
 }
-
-
