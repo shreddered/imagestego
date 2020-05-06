@@ -6,6 +6,7 @@
 #ifdef _DEBUG
 #   include <iostream>
 #endif
+#include <random>
 #include <utility>
 
 
@@ -270,10 +271,11 @@ struct PairComparator final {
 class Route final : public AvlTree<std::pair<int, int>, PairComparator<int, int> > {
 private:
     std::pair<int, int> _mapSize;
+    std::mt19937& gen;
 public:
-    explicit Route(const std::pair<int, int>& mapSize) noexcept;
+    explicit Route(const std::pair<int, int>& mapSize, std::mt19937&) noexcept;
     template<class It>
-    explicit Route(It begin, It end) : AvlTree(begin, end) {}
+    explicit Route(It begin, It end, std::mt19937& _gen) : AvlTree(begin, end), gen(_gen) {}
     inline void setMapSize(const std::pair<int, int>& mapSize) {
         _mapSize = mapSize;
     }

@@ -20,7 +20,7 @@ Key string will be converted to bit array too. The embedding process is as follo
 2. If xor above is equal to 0, current bit of message will be embedded into LSB of pixel's green value.
 Otherwise,  current bit of message will be embedded into LSB of pixel's blue value.
 
-**TODO**: migrate from C random API.
+- [x] **TODO**: migrate from C random API.
 
 * `imagestego::LsbOptions::usePlusMinusOne`
 

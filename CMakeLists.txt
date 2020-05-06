@@ -200,6 +200,7 @@ if (BUILD_EXAMPLES)
     target_include_directories(lsb
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
         PRIVATE /usr/include/opencv4/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/
     )
 
     target_link_libraries(lsb
@@ -220,6 +221,7 @@ if (BUILD_EXAMPLES)
     target_include_directories(stego
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
         PRIVATE /usr/include/opencv4/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/
     )
 
     target_link_libraries(stego

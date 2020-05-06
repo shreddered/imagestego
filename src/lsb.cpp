@@ -38,6 +38,13 @@ void imagestego::LsbEmbedder<void>::setMessage(const std::string& _msg) noexcept
 
 void imagestego::LsbEmbedder<void>::setSecretKey(const std::string& _key) noexcept{
     key = BitArray<unsigned int>(_key);
+    seed(_key);
+}
+
+void imagestego::LsbEmbedder<void>::seed(const std::string& str) const noexcept {
+    uint32_t tmp[1];
+    MurmurHash3_x86_32(str.data(), str.size(), 4991, tmp);
+    gen.seed(*tmp); 
 }
 
 void imagestego::LsbEmbedder<void>::createStegoContainer() const {
@@ -81,8 +88,7 @@ void imagestego::LsbEmbedder<void>::__randomLsbInsertion(bool flag) const {
 #else
         throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
 #endif
-    seed();
-    imagestego::Route route(std::make_pair(image.cols, image.rows));
+    imagestego::Route route(std::make_pair(image.cols, image.rows), gen);
     route.create(32);
     auto it = route.begin();
     imagestego::BitArray<std::size_t> tmp = imagestego::BitArray<std::size_t>::fromInt(msg.size());
@@ -111,7 +117,7 @@ void imagestego::LsbEmbedder<void>::__randomLsbInsertion(bool flag) const {
         }
         ++currentKeyIndex;
     }
-    imagestego::Route r1(route.begin(), route.end());
+    imagestego::Route r1(route.begin(), route.end(), gen);
     r1.setMapSize(std::make_pair(image.cols, image.rows));
     r1.create(32 + msg.size());
     std::size_t i = 0;
@@ -155,6 +161,13 @@ void imagestego::LsbExtracter<void>::setImage(const std::string& imageName) {
 
 void imagestego::LsbExtracter<void>::setSecretKey(const std::string& _key) noexcept {
     key = BitArray<unsigned int>(_key);
+    seed(_key);
+}
+
+void imagestego::LsbExtracter<void>::seed(const std::string& str) const noexcept {
+    uint32_t tmp[1];
+    MurmurHash3_x86_32(str.data(), str.size(), 4991, tmp);
+    gen.seed(*tmp); 
 }
 
 std::string imagestego::LsbExtracter<void>::extractMessage() { 
@@ -191,10 +204,9 @@ std::string imagestego::LsbExtracter<void>::__sillyLsbExtraction() const {
 std::string imagestego::LsbExtracter<void>::__randomLsbExtraction() const {
     if (key.empty())
         throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
-    seed();
     imagestego::BitArray<uint8_t> arr;
     imagestego::BitArray<std::size_t> tmp;
-    imagestego::Route r(std::make_pair(image.cols, image.rows));
+    imagestego::Route r(std::make_pair(image.cols, image.rows), gen);
     r.create(32);
     std::size_t currentKeyIndex = 0;
     for (auto it = r.begin(); it != r.end(); ++it) {
@@ -208,7 +220,7 @@ std::string imagestego::LsbExtracter<void>::__randomLsbExtraction() const {
         currentKeyIndex = (currentKeyIndex + 1) % key.size();
     }
     std::size_t size = tmp.getBlock(0);
-    imagestego::Route r1(r.begin(), r.end());
+    imagestego::Route r1(r.begin(), r.end(), gen);
     r1.setMapSize(std::make_pair(image.cols, image.rows));
     r1.create(32 + size);
     for (auto it = r1.begin(); it != r1.end(); ++it) {

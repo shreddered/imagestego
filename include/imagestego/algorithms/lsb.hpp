@@ -18,6 +18,8 @@
 // opencv
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+// MurmurHash3
+#include "MurmurHash3.h"
 
 
 namespace imagestego {
@@ -70,6 +72,7 @@ public:
     }
     void setSecretKey(const std::string& _key) noexcept override {
         key = BitArray<unsigned int>(_key);
+        seed(_key);
     }
     void createStegoContainer() const override {
         switch(opts) {
@@ -120,8 +123,7 @@ private:
 #else
             setSecretKey(imagestego::keygen::generate());
 #endif
-        seed();
-        Route route(std::make_pair(image.cols, image.rows));
+        Route route(std::make_pair(image.cols, image.rows), gen);
         route.create(32);
         auto it = route.begin();
         BitArray<std::size_t> tmp = BitArray<std::size_t>::fromInt(msg.size());
@@ -150,7 +152,7 @@ private:
             }
             ++currentKeyIndex;
         }
-        Route r1(route.begin(), route.end());
+        Route r1(route.begin(), route.end(), gen);
         r1.setMapSize(std::make_pair(image.cols, image.rows));
         r1.create(32 + msg.size());
         std::size_t i = 0;
@@ -183,10 +185,13 @@ private:
         cv::imwrite(outputFile, image);
     }
     mutable EncoderType encoder;
-    inline void seed() const noexcept {
-        srand(key.getBlock(0));
+    void seed(const std::string& str) const noexcept {
+        uint32_t tmp[1];
+        MurmurHash3_x86_32(str.data(), str.size(), 4991, tmp);
+        gen.seed(*tmp);
     }
     int opts;
+    mutable std::mt19937 gen;
     mutable cv::Mat image;
     std::string outputFile;
     mutable BitArray<> msg;
@@ -241,10 +246,9 @@ private:
     std::string __randomLsbExtraction() const {
         if (key.empty())
             throw Exception(Exception::Codes::NoKeyFound);;
-        seed();
         BitArray<uint8_t> arr;
         BitArray<std::size_t> tmp;
-        Route r(std::make_pair(image.cols, image.rows));
+        Route r(std::make_pair(image.cols, image.rows), gen);
         r.create(32);
         std::size_t currentKeyIndex = 0;
         for (auto it = r.begin(); it != r.end(); ++it) {
@@ -258,7 +262,7 @@ private:
             currentKeyIndex = (currentKeyIndex + 1) % key.size();
         }
         std::size_t size = tmp.getBlock(0);
-        Route r1(r.begin(), r.end());
+        Route r1(r.begin(), r.end(), gen);
         r1.setMapSize(std::make_pair(image.cols, image.rows));
         r1.create(32 + size);
         for (auto it = r1.begin(); it != r1.end(); ++it) {
@@ -276,13 +280,16 @@ private:
         decoder.setMessage(arr);
         return decoder.getDecodedMessage();
     }
-    inline void seed() const noexcept {
-        srand(key.getBlock(0));
+    void seed(const std::string& str) const noexcept {
+        uint32_t tmp[1];
+        MurmurHash3_x86_32(str.data(), str.size(), 4991, tmp);
+        gen.seed(*tmp);
     }
     int opts;
     cv::Mat image;
     BitArray<unsigned int> key;
     mutable DecoderType decoder;
+    mutable std::mt19937 gen;
 }; // class
 
 template<>
@@ -303,11 +310,10 @@ private:
 #endif
     void __sillyLsbInsertion() const;
     void __randomLsbInsertion(bool flag) const;
-    inline void seed() const noexcept {
-        srand(key.getBlock(0));
-    }
+    void seed(const std::string& str) const noexcept;
     int opts;
     mutable cv::Mat image;
+    mutable std::mt19937 gen;
     std::string outputFile;
     mutable BitArray<> msg;
     BitArray<unsigned int> key;
@@ -325,9 +331,8 @@ public:
 private:
     std::string __sillyLsbExtraction() const;
     std::string __randomLsbExtraction() const; 
-    inline void seed() const noexcept {
-        srand(key.getBlock(0));
-    }
+    void seed(const std::string& str) const noexcept;
+    mutable std::mt19937 gen;
     int opts;
     cv::Mat image;
     BitArray<unsigned int> key;
