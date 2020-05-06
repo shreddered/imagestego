@@ -92,12 +92,10 @@ void imagestego::DwtEmbedder::createStegoContainer() const {
     // after that, perform embedding
     // seeding PRNG
     gen.seed(key);
-    std::uniform_int_distribution<int> d1(0, image.rows),
-                                       d2(0, image.cols);
     int x0 = 0, y0 = 0;
     do {
-        y0 = d1(gen);
-        x0 = d2(gen);
+        y0 = gen() % image.rows;
+        x0 = gen() % image.cols;
     } while (y0 > image.rows - sz || x0 > image.cols - sz);
     cv::Mat cropped = planes[0](cv::Rect(x0, y0, sz, sz));
     // DWT of blue channel
@@ -145,12 +143,10 @@ std::string imagestego::DwtExtracter::extractMessage() {
     uint32_t sz = arr1.getBlock(0);
     // seeding PRNG
     gen.seed(key);
-    std::uniform_int_distribution<int> d1(0, image.rows),
-                                       d2(0, image.cols);
     int x0 = 0, y0 = 0;
     do {
-        y0 = d1(gen);
-        x0 = d2(gen);
+        y0 = gen() % image.rows;
+        x0 = gen() % image.cols;
     } while (y0 > image.rows - sz || x0 > image.cols - sz);
     cv::Mat cropped = planes[0](cv::Rect(x0, y0, sz, sz));
     // DWT of blue channel

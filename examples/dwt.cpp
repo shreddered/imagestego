@@ -5,7 +5,7 @@
 
 int main() {
     imagestego::DwtEmbedder ins("in.jpg", "out.png");
-    ins.setMessage("foo");
+    ins.setMessage("ass we can!");
     ins.setSecretKey("pwd");
     ins.createStegoContainer();
     imagestego::DwtExtracter ext("out.png");
