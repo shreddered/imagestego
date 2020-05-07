@@ -14,9 +14,6 @@
 namespace imagestego {
 
 class IMAGESTEGO_EXPORTS LzwEncoder : private Dictionary {
-private:
-    std::string msg;
-    BitArray<> encodedMsg;
 public:
     static constexpr uint8_t maxBits = 12;
     explicit LzwEncoder() noexcept;
@@ -24,7 +21,11 @@ public:
     explicit LzwEncoder(std::string&& str) noexcept;
     void setMessage(const std::string& str) noexcept;
     void setMessage(std::string&& str) noexcept;
-    BitArray<> getEncodedMessage() const;
+    BitArray<> getEncodedMessage();
+private:
+    std::string msg;
+    mutable BitArray<> encodedMsg;
+    void encode();
 }; // class LzwEncoder
 
 } // namespace imagestego 

@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_CXX_COMPILER clang++-9)
+
 # build conditions (default)
 if (NOT DEFINED ENABLE_FORMAT_CHECKING)
     set(ENABLE_FORMAT_CHECKING ON)
@@ -61,6 +63,7 @@ set(IMAGESTEGO_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_processor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_dictionary.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_encoder.cpp
     # 3rd party
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/MurmurHash3.cpp
 )
@@ -183,6 +186,22 @@ if (BUILD_TESTS)
         opencv_imgcodecs
     )
     set_target_properties(test_huffman PROPERTIES
+        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
+    )
+    
+    # lzw
+    add_executable(test_lzw
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/lzw.cpp
+    )
+    target_include_directories(test_lzw
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    )
+    target_link_libraries(test_lzw
+        imagestego
+        opencv_core
+        opencv_imgcodecs
+    )
+    set_target_properties(test_lzw PROPERTIES
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
     )
 endif()

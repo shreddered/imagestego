@@ -3,19 +3,22 @@
 
 namespace imagestego {
 
-Dictionary::Dictionary() noexcept : newCode(257) {
-    codeTable.reserve(256);
-    for (unsigned int i = 0; i != 256; ++i)
+Dictionary::Dictionary() noexcept : codeTable(256) {
+    for (unsigned int i = 0; i != 256; ++i) {
         codeTable[i] = StringElement(i);
+    }
 }
+
+Dictionary::~Dictionary() = default;
 
 int Dictionary::search(const StringElement& s) {
     if (s.prefixIndex == -1)
         return s.value;
+    std::cout << s.prefixIndex << ' ' << codeTable.size() << std::endl;
     int index = codeTable[s.prefixIndex].first;
     if (index == -1) {
-        codeTable[s.prefixIndex].first = newCode;
-        codeTable[newCode++] = s;
+        codeTable[s.prefixIndex].first = newCode++;
+        codeTable.push_back(s);
         return -1;
     }
     else { // perform search
@@ -26,8 +29,8 @@ int Dictionary::search(const StringElement& s) {
               if (s.value < val) {
                   int left = codeTable[index].left;
                   if (left == -1) { // left insertion case
-                      codeTable[index].left = newCode;
-                      codeTable[newCode++] = s;
+                      codeTable[index].left = newCode++;
+                      codeTable.push_back(s);
                       return -1;
                   }
                   index = left;
@@ -35,8 +38,8 @@ int Dictionary::search(const StringElement& s) {
               else {
                   int right = codeTable[index].right;
                   if (right == -1) { // right insertion case
-                      codeTable[index].right = newCode;
-                      codeTable[newCode++] = s;
+                      codeTable[index].right = newCode++;
+                      codeTable.push_back(s);
                       return -1;
                   }
                   index = right;
@@ -46,3 +49,7 @@ int Dictionary::search(const StringElement& s) {
 }
 
 } // namespace imagestego
+
+std::ostream& operator <<(std::ostream& os, const imagestego::StringElement& elem) {
+    os << elem.prefixIndex << ' ' << elem.value << ' ' << elem.first << ' ' << elem.left << ' ' << elem.right;
+}
