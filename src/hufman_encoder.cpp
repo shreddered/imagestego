@@ -5,10 +5,16 @@ namespace imagestego {
 
 HuffmanEncoder::HuffmanEncoder() noexcept {}
 
-
 HuffmanEncoder::HuffmanEncoder(const std::string& str) noexcept : msg(str) {}
 
+HuffmanEncoder::HuffmanEncoder(std::string&& str) noexcept : msg(str) {}
+
 void HuffmanEncoder::setMessage(const std::string& str) noexcept {
+    msg = str;
+    encodedMsg.clear();
+}
+
+void HuffmanEncoder::setMessage(std::string&& str) noexcept {
     msg = str;
     encodedMsg.clear();
 }

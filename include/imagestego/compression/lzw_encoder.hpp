@@ -3,6 +3,7 @@
 
 // imagestego headers
 #include "imagestego/core.hpp"
+#include "imagestego/compression/lzw_dictionary.hpp"
 #include "imagestego/utils/binary_tree.hpp"
 #include "imagestego/utils/bitarray.hpp"
 // c++ headers
@@ -12,21 +13,18 @@
 
 namespace imagestego {
 
-class StringElement {
-    
-}; // class StringElement
-
-class IMAGESTEGO_EXPORTS LzwEncoder {
+class IMAGESTEGO_EXPORTS LzwEncoder : private Dictionary {
 private:
-    static void createCharTable();
+    std::string msg;
     BitArray<> encodedMsg;
 public:
     static constexpr uint8_t maxBits = 12;
     explicit LzwEncoder() noexcept;
     explicit LzwEncoder(const std::string& str) noexcept;
+    explicit LzwEncoder(std::string&& str) noexcept;
     void setMessage(const std::string& str) noexcept;
+    void setMessage(std::string&& str) noexcept;
     BitArray<> getEncodedMessage() const;
-
 }; // class LzwEncoder
 
 } // namespace imagestego 

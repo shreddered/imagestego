@@ -13,7 +13,7 @@ struct StringElement {
     int first = -1; // index of first string which has *this as prefix
     int left = -1, right = -1; // indexes of string which have same prefix as *this
     explicit constexpr StringElement(const uint8_t val, const int& prefix = -1) noexcept : prefixIndex(prefix), value(val) {}
-}; // class StringElement
+}; // struct StringElement
 
 class Dictionary {
 public:

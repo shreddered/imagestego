@@ -17,9 +17,11 @@ class IMAGESTEGO_EXPORTS HuffmanEncoder {
 public:
     explicit HuffmanEncoder() noexcept;
     explicit HuffmanEncoder(const std::string& str) noexcept;
+    explicit HuffmanEncoder(std::string&& str) noexcept;
     HuffmanEncoder(const HuffmanEncoder&) = delete;
     HuffmanEncoder& operator =(const HuffmanEncoder&) = delete;
     void setMessage(const std::string& str) noexcept;
+    void setMessage(std::string&& str) noexcept;
     BitArray<unsigned char> getEncodedMessage() const;
     std::string getHuffmanTree() const;
     std::string getAlphabet() const noexcept {
@@ -38,7 +40,7 @@ private:
     void encode() const;
     void dfs(TreeNode* node) const;
     void destroyNode(TreeNode* node) noexcept;
-    std::string msg = "";
+    std::string msg;
     mutable TreeNode* root = nullptr;
     mutable std::string encodedMsg = ""; // mutable bc of caching
     mutable std::map<char, std::string> codeTable; 
