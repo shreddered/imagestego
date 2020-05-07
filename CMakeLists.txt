@@ -60,7 +60,7 @@ set(IMAGESTEGO_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_lsb.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_processor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
-
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_dictionary.cpp
     # 3rd party
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/MurmurHash3.cpp
 )

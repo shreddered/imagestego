@@ -1,9 +1,11 @@
 #include "imagestego/core.hpp"
 
 
-imagestego::Exception::Exception(const int& _code) noexcept : std::exception(), code(_code) {}
+namespace imagestego {
 
-const char* imagestego::Exception::what() const noexcept {
+Exception::Exception(const int& _code) noexcept : std::exception(), code(_code) {}
+
+const char* Exception::what() const noexcept {
     switch(code) {
         case Codes::NoSuchFile:
             return "No such file";
@@ -21,3 +23,5 @@ const char* imagestego::Exception::what() const noexcept {
             return "Unknown Error";
     }
 }
+
+} // namespace imagestego
