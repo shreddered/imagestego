@@ -153,6 +153,10 @@ public:
         auto tmp = BitReference(array[blockIndex(numberOfBits - 1)], bitIndex(numberOfBits - 1));
         tmp = b;
     }
+    void pushBack(std::size_t num, uint8_t bits) {
+        while(bits--) 
+            pushBack((num & (1 << bits)) != 0);
+    }
     inline Block lastBlock() const noexcept {
         return array[array.size() - 1];
     }

@@ -27,9 +27,9 @@ BitArray<> LzwEncoder::getEncodedMessage() {
 }
 
 void LzwEncoder::encode() {
-    // TODO: add Dictionary::reset()
     StringElement s;
     std::vector<int> encoded;
+    auto bitsPerUnit = 0;
     for (std::size_t i = 0; i != msg.size(); ++i) {
         s.value = msg[i];
         int index = Dictionary::search(s);
@@ -39,10 +39,18 @@ void LzwEncoder::encode() {
         else {
             encoded.push_back(s.prefixIndex);
             s.prefixIndex = s.value;
+            if (Dictionary::size() == maxDictionarySize) {
+                bitsPerUnit = maxBits;
+                Dictionary::clear();
+            }
         }
     }
     encoded.push_back(s.prefixIndex);
-    auto bitsPerUnit = log2(Dictionary::size()) + 1;
+    if (!bitsPerUnit)
+        bitsPerUnit = imagestego::log2(Dictionary::size()) + 1;
+    encodedMsg.pushBack(bitsPerUnit, 4);
+    for (const auto& elem : encoded)
+        encodedMsg.pushBack(elem, bitsPerUnit);
 }
 
 } // namespace imagestego

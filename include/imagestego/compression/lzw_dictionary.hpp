@@ -22,7 +22,7 @@ class Dictionary {
 public:
     explicit Dictionary() noexcept;
     int search(const StringElement& s);
-    void reset() noexcept;
+    void clear() noexcept;
     inline int size() const noexcept {
         return newCode;
     }

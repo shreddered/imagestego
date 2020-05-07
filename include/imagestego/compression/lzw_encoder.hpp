@@ -21,6 +21,7 @@ public:
     void setMessage(std::string&& str) noexcept;
     BitArray<> getEncodedMessage();
 private:
+    static constexpr std::size_t maxDictionarySize = (1 << maxBits) - 1; 
     std::string msg;
     mutable BitArray<> encodedMsg;
     void encode();
