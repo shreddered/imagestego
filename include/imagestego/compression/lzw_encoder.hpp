@@ -4,10 +4,8 @@
 // imagestego headers
 #include "imagestego/core.hpp"
 #include "imagestego/compression/lzw_dictionary.hpp"
-#include "imagestego/utils/binary_tree.hpp"
 #include "imagestego/utils/bitarray.hpp"
 // c++ headers
-#include <map>
 #include <string>
 
 

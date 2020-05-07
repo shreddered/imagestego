@@ -11,6 +11,11 @@ Dictionary::Dictionary() noexcept : codeTable(256) {
 
 Dictionary::~Dictionary() = default;
 
+void Dictionary::reset() noexcept {
+    codeTable.resize(256);
+    newCode = 256;
+}
+
 int Dictionary::search(const StringElement& s) {
     if (s.prefixIndex == -1)
         return s.value;

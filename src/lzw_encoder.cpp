@@ -1,5 +1,4 @@
 #include "imagestego/compression/lzw_encoder.hpp"
-#include <iostream>
 
 
 namespace imagestego {
@@ -17,7 +16,6 @@ void LzwEncoder::setMessage(const std::string& str) noexcept {
 
 void LzwEncoder::setMessage(std::string&& str) noexcept {
     msg = str;
-    std::cout << msg << std::endl;
     encodedMsg.clear();
 }
 
@@ -29,6 +27,7 @@ BitArray<> LzwEncoder::getEncodedMessage() {
 }
 
 void LzwEncoder::encode() {
+    // TODO: add Dictionary::reset()
     StringElement s;
     std::vector<int> encoded;
     for (std::size_t i = 0; i != msg.size(); ++i) {
@@ -43,9 +42,7 @@ void LzwEncoder::encode() {
         }
     }
     encoded.push_back(s.prefixIndex);
-    for (const auto& elem : encoded)
-        std::cout << elem << ' ';
-    std::cout << std::endl;
+    auto bitsPerUnit = log2(Dictionary::size()) + 1;
 }
 
 } // namespace imagestego

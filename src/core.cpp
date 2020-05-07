@@ -24,4 +24,11 @@ const char* Exception::what() const noexcept {
     }
 }
 
+uint8_t log2(unsigned int value) noexcept {
+    uint8_t res = 0;
+    while (value >>= 1)
+        ++res;
+    return res;
+}
+
 } // namespace imagestego

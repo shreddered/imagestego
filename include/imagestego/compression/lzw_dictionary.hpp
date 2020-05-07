@@ -22,13 +22,14 @@ class Dictionary {
 public:
     explicit Dictionary() noexcept;
     int search(const StringElement& s);
+    void reset() noexcept;
     inline int size() const noexcept {
         return newCode;
     }
     virtual ~Dictionary();
 private:
     std::vector<StringElement> codeTable;
-    int newCode = 256;
+    unsigned int newCode = 256;
 }; // class Dictionary
 
 } // namespace imagestego
