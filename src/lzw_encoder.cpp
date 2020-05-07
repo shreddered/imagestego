@@ -28,8 +28,11 @@ BitArray<> LzwEncoder::getEncodedMessage() {
 
 void LzwEncoder::encode() {
     StringElement s;
-    std::vector<int> encoded;
-    auto bitsPerUnit = 0;
+    // std::vector<int> encoded;
+    uint8_t currentBitsPerBlock = 8;
+    // well actually it's not, still...
+    std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock) - 1;
+    encodedMsg.pushBack(maxBits, 4); 
     for (std::size_t i = 0; i != msg.size(); ++i) {
         s.value = msg[i];
         int index = Dictionary::search(s);
@@ -37,20 +40,22 @@ void LzwEncoder::encode() {
             s.prefixIndex = index;
         }
         else {
-            encoded.push_back(s.prefixIndex);
+            encodedMsg.pushBack(s.prefixIndex, currentBitsPerBlock);
+            // encoded.push_back(s.prefixIndex);
             s.prefixIndex = s.value;
-            if (Dictionary::size() == maxDictionarySize) {
-                bitsPerUnit = maxBits;
-                Dictionary::clear();
+            if (Dictionary::size() == currentMaxDictionarySize) { 
+                if (currentBitsPerBlock == maxBits) {
+                    currentBitsPerBlock = 8;
+                    Dictionary::clear();
+                }
+                else
+                    ++currentBitsPerBlock;
+                currentMaxDictionarySize = (1 << currentBitsPerBlock) - 1;
             }
         }
     }
-    encoded.push_back(s.prefixIndex);
-    if (!bitsPerUnit)
-        bitsPerUnit = imagestego::log2(Dictionary::size()) + 1;
-    encodedMsg.pushBack(bitsPerUnit, 4);
-    for (const auto& elem : encoded)
-        encodedMsg.pushBack(elem, bitsPerUnit);
+    // encoded.push_back(s.prefixIndex);
+    encodedMsg.pushBack(s.prefixIndex, currentBitsPerBlock);
 }
 
 } // namespace imagestego

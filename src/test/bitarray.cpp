@@ -18,5 +18,9 @@ int main() {
     std::cout << ss.str() << std::endl;
     std::cout << std::bitset<32>(12313) << std::endl;
     assert(ss.str() == std::bitset<32>(12313).to_string());
+
+    imagestego::BitArray<> arr2;
+    arr2.pushBack(9, 4);
+    std::cout << arr2 << std::endl;
     return 0;
 }
