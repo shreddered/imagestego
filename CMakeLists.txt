@@ -6,8 +6,6 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# set(CMAKE_CXX_COMPILER clang++-9)
-
 # build conditions (default)
 if (NOT DEFINED ENABLE_FORMAT_CHECKING)
     set(ENABLE_FORMAT_CHECKING ON)
@@ -93,7 +91,7 @@ target_include_directories(imagestego
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ 
     PRIVATE /usr/include/opencv4/ 
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
 )
 
 set_target_properties(imagestego 
@@ -220,7 +218,7 @@ if (BUILD_EXAMPLES)
     target_include_directories(lsb
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
         PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
 
     target_link_libraries(lsb
@@ -241,7 +239,7 @@ if (BUILD_EXAMPLES)
     target_include_directories(stego
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
         PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
 
     target_link_libraries(stego
@@ -283,7 +281,7 @@ if (BUILD_EXAMPLES)
     target_include_directories(dwt
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
         PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
 
     target_link_libraries(dwt
