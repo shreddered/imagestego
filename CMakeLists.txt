@@ -66,7 +66,7 @@ set(IMAGESTEGO_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_dictionary.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_encoder.cpp
     # 3rd party
-    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/MurmurHash3.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/MurmurHash3.cpp
 )
 
 if (ENABLE_FORMAT_CHECKING)
