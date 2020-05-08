@@ -62,6 +62,7 @@ set(IMAGESTEGO_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_lsb.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_processor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_decoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_dictionary.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_encoder.cpp
     # 3rd party

@@ -3,8 +3,7 @@
 
 namespace imagestego {
 
-Dictionary::Dictionary() noexcept {
-    codeTable.reserve(256);
+Dictionary::Dictionary() noexcept : codeTable(256) {
     for (unsigned int i = 0; i != 256; ++i) {
         codeTable[i] = StringElement(i);
     }
@@ -13,12 +12,20 @@ Dictionary::Dictionary() noexcept {
 Dictionary::~Dictionary() = default;
 
 void Dictionary::clear() noexcept {
-    codeTable.clear();
-    codeTable.reserve(256);
+    codeTable = std::vector<StringElement>(256);
     for (unsigned int i = 0; i != 256; ++i) {
         codeTable[i] = StringElement(i);
     }
     newCode = 256;
+}
+
+std::string Dictionary::at(int index) {
+    std::string tmp;
+    while (index != -1) {
+        tmp = char(codeTable[index].value) + tmp;
+        index = codeTable[index].prefixIndex;
+    }
+    return tmp;
 }
 
 int Dictionary::search(const StringElement& s) {
@@ -55,6 +62,11 @@ int Dictionary::search(const StringElement& s) {
               }
         } // while(1)
     }
+}
+
+void Dictionary::add(const uint8_t& value, const int& prefixIndex) {
+    codeTable.emplace_back(value, prefixIndex);
+    ++newCode;
 }
 
 } // namespace imagestego

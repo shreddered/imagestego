@@ -23,10 +23,13 @@ public:
     explicit Dictionary() noexcept;
     int search(const StringElement& s);
     void clear() noexcept;
-    inline int size() const noexcept {
+    inline unsigned int size() const noexcept {
         return newCode;
     }
     virtual ~Dictionary();
+protected:
+    std::string at(int code);
+    void add(const uint8_t& value, const int& prefixIndex);
 private:
     std::vector<StringElement> codeTable;
     unsigned int newCode = 256;

@@ -1,4 +1,5 @@
 #include "imagestego/compression/lzw_encoder.hpp"
+#include <iostream>
 
 
 namespace imagestego {
@@ -40,11 +41,12 @@ void LzwEncoder::encode() {
             s.prefixIndex = index;
         }
         else {
+            std::cout << s.prefixIndex << std::endl;
             encodedMsg.pushBack(s.prefixIndex, currentBitsPerBlock);
-            // encoded.push_back(s.prefixIndex);
             s.prefixIndex = s.value;
             if (Dictionary::size() == currentMaxDictionarySize) { 
                 if (currentBitsPerBlock == maxBits) {
+                    std::cout << "here" << std::endl;
                     currentBitsPerBlock = 8;
                     Dictionary::clear();
                 }
@@ -55,6 +57,7 @@ void LzwEncoder::encode() {
         }
     }
     // encoded.push_back(s.prefixIndex);
+    std::cout << s.prefixIndex << std::endl;
     encodedMsg.pushBack(s.prefixIndex, currentBitsPerBlock);
 }
 

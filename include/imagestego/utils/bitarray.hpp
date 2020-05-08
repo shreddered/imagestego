@@ -50,6 +50,31 @@ private:
             return *this;
         }
     }; // class BitReference
+    class Iterator {
+        BitArray<Block>* owner;
+        std::size_t index;
+        friend class BitArray<Block>;
+        explicit Iterator(BitArray<Block>* _owner, const std::size_t& idx) noexcept 
+            : owner(_owner), index(idx) {}
+    public:
+        BitReference operator *() noexcept {
+            return (*owner)[index];
+        }
+        bool operator == (const Iterator& it) noexcept {
+            return index == it.index;
+        }
+        bool operator != (const Iterator& it) noexcept {
+            return index != it.index;
+        }
+        Iterator operator ++() {
+            ++index;
+            return *this;
+        }
+        Iterator operator +(std::size_t offset) noexcept {
+            index += offset;
+            return *this;
+        }
+    }; // class Iterator
     static constexpr std::size_t bitsPerBlock = CHAR_BIT * sizeof(Block); 
     inline static constexpr std::size_t bitIndex(std::size_t pos) noexcept {
         return pos % bitsPerBlock;
@@ -63,6 +88,7 @@ private:
     std::size_t numberOfBits = 0;
     std::vector<Block> array; 
 public:
+    typedef Iterator iterator;
     enum {
         bitString = 0,
         byteString = 1
@@ -159,6 +185,12 @@ public:
     }
     inline Block lastBlock() const noexcept {
         return array[array.size() - 1];
+    }
+    iterator begin() noexcept {
+        return Iterator(this, 0);
+    }
+    iterator end() noexcept {
+        return Iterator(this, size());
     }
 }; // class BitArray
 
