@@ -1,9 +1,11 @@
 #ifndef __IMAGESTEGO_LZW_DICTIONARY_HPP_INCLUDED__
 #define __IMAGESTEGO_LZW_DICTIONARY_HPP_INCLUDED__
 
+// imagestego headers
+#include "imagestego/core.hpp"
+// c++ headers
 #include <string>
 #include <vector>
-
 #include <ostream>
 #include <iostream>
 
@@ -20,6 +22,7 @@ struct StringElement {
 
 class Dictionary {
 public:
+    static constexpr uint8_t maxBits = 12;
     explicit Dictionary() noexcept;
     int search(const StringElement& s);
     void clear() noexcept;

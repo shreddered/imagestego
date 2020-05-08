@@ -3,7 +3,7 @@
 
 namespace imagestego {
 
-Dictionary::Dictionary() noexcept : codeTable(256) {
+Dictionary::Dictionary() noexcept : codeTable(1 << maxBits) {
     for (unsigned int i = 0; i != 256; ++i) {
         codeTable[i] = StringElement(i);
     }
@@ -12,7 +12,6 @@ Dictionary::Dictionary() noexcept : codeTable(256) {
 Dictionary::~Dictionary() = default;
 
 void Dictionary::clear() noexcept {
-    codeTable = std::vector<StringElement>(256);
     for (unsigned int i = 0; i != 256; ++i) {
         codeTable[i] = StringElement(i);
     }
@@ -33,8 +32,8 @@ int Dictionary::search(const StringElement& s) {
         return s.value;
     int index = codeTable[s.prefixIndex].first;
     if (index == -1) {
-        codeTable[s.prefixIndex].first = newCode++;
-        codeTable.push_back(s);
+        codeTable[s.prefixIndex].first = newCode;
+        codeTable[newCode++] = s;
         return -1;
     }
     else { // perform search
@@ -45,8 +44,8 @@ int Dictionary::search(const StringElement& s) {
               if (s.value < val) {
                   int left = codeTable[index].left;
                   if (left == -1) { // left insertion case
-                      codeTable[index].left = newCode++;
-                      codeTable.push_back(s);
+                      codeTable[index].left = newCode;
+                      codeTable[newCode++] = s;
                       return -1;
                   }
                   index = left;
@@ -54,8 +53,8 @@ int Dictionary::search(const StringElement& s) {
               else {
                   int right = codeTable[index].right;
                   if (right == -1) { // right insertion case
-                      codeTable[index].right = newCode++;
-                      codeTable.push_back(s);
+                      codeTable[index].right = newCode;
+                      codeTable[newCode++] = s;
                       return -1;
                   }
                   index = right;

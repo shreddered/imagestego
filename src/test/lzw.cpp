@@ -5,7 +5,7 @@
 
 
 int main(int argc, char** argv) {
-    std::string s(argv[1]);
+    std::string s = "asasdasd";
     imagestego::LzwEncoder enc;
     enc.setMessage(s);
     auto arr = enc.getEncodedMessage();

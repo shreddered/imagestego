@@ -1,20 +1,15 @@
 #include "imagestego/compression/lzw_decoder.hpp"
 
+#include <iostream>
 
-template<typename It>
-int read(It it, uint8_t bits) {
-    std::size_t block = 0;
-    for (uint8_t i = 0; i != bits; ++i) {
-        block |= *(it + i) << (bits - i - 1);
-    }
-    return block;
-}
 
 template<typename Int>
 int read(const imagestego::BitArray<Int>& arr, std::size_t& i, uint8_t bits) {
     int block = 0;
-    for (auto it = i; i != it + bits; ++i)
-        block |= arr[i] << (bits - 1 - i + it); 
+    std::size_t it;
+    for (it = i; it != i + bits; ++it)
+        block |= arr[it] << (bits - 1 - (it - i)); 
+    i = it;
     return block;
 }
 
@@ -39,16 +34,28 @@ std::string LzwDecoder::getDecodedMessage() {
 void LzwDecoder::decode() {
     // reading first 4 bits    
     std::size_t i = 0;
+    std::cout << msg << std::endl;
     uint8_t maxBits = read(msg, i, 4);
-    while(i != msg.size()) {
+    std::cout << int(maxBits) << std::endl;
+    while(i < msg.size()) {
         Dictionary::clear();
         uint8_t currentBitsPerBlock = 8;
-        std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock) - 1;
+        std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
         std::size_t code = read(msg, i, currentBitsPerBlock);
+        std::cout << code << std::endl;
         decodedMsg += code;
         std::size_t oldCode = code;
-        while (Dictionary::size() != currentMaxDictionarySize && currentBitsPerBlock != maxBits && i != msg.size()) {
+        while (1) {
+            if (i >= msg.size())
+                break;
+            if (size() == currentMaxDictionarySize) {
+                if (currentBitsPerBlock == maxBits)
+                    break;
+                ++currentBitsPerBlock;
+                currentMaxDictionarySize = (1 << currentBitsPerBlock);
+            }
             code = read(msg, i, currentBitsPerBlock);
+            std::cout << code << std::endl;
             std::string tmp;
             if (code < Dictionary::size()) {
                 tmp = Dictionary::at(code);
@@ -59,10 +66,6 @@ void LzwDecoder::decode() {
                 decodedMsg += tmp + tmp[0];
             }
             Dictionary::add(tmp[0], oldCode);
-            if (size() == currentMaxDictionarySize && currentBitsPerBlock != maxBits) {
-                ++currentBitsPerBlock;
-                currentMaxDictionarySize = (1 << currentBitsPerBlock) - 1;
-            }
             oldCode = code;
         }
     }
