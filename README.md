@@ -55,6 +55,6 @@ Please refer to [_cmake_ downloads](https://cmake.org/download/), [_libjpeg_](ht
 and [_opencv_ releases](https://opencv.org/releases/) for complete guidelines.
 
 # Further development
-- [ ] Implement LZW data compression algorithm
+- [x] Implement LZW data compression algorithm
 - [ ] Implement at least one more stego algoritm
 - [ ] Make DWT-based algorithm format-independent
