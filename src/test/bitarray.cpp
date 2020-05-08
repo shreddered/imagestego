@@ -6,6 +6,14 @@
 #include <sstream>
 
 
+template<typename Int>
+int read(const imagestego::BitArray<Int>& arr, std::size_t& i, uint8_t bits) {
+    int block = 0;
+    for (auto it = i; i != it + bits; ++i)
+        block |= arr[i] << (bits - 1 - i + it); 
+    return block;
+}
+
 int main() {
     imagestego::BitArray<> arr = imagestego::BitArray<>::fromInt(12);
     std::stringstream ss;
@@ -18,5 +26,12 @@ int main() {
     std::cout << ss.str() << std::endl;
     std::cout << std::bitset<32>(12313) << std::endl;
     assert(ss.str() == std::bitset<32>(12313).to_string());
+
+    imagestego::BitArray<> arr2;
+    arr2.pushBack(12, 4);
+    arr2.pushBack(0);
+    arr2.pushBack(0);
+    std::size_t i = 0;
+    std::cout << read(arr2, i, 4) << std::endl;
     return 0;
 }

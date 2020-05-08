@@ -1,34 +1,36 @@
 #include "imagestego/algorithms/jpeg_lsb.hpp"
 
 
-imagestego::JpegLsbEmbedder::JpegLsbEmbedder(const std::string& input, const std::string& _output) 
+namespace imagestego {
+
+JpegLsbEmbedder::JpegLsbEmbedder(const std::string& input, const std::string& _output) 
     : JpegProcessor(input), output(_output) {}
 
-void imagestego::JpegLsbEmbedder::setImage(const std::string&) {}
+void JpegLsbEmbedder::setImage(const std::string&) {}
 
-void imagestego::JpegLsbEmbedder::setOutputName(const std::string& str) {
+void JpegLsbEmbedder::setOutputName(const std::string& str) {
     output = str;
 }
 
-void imagestego::JpegLsbEmbedder::setMessage(const std::string& message) {
-    msg = imagestego::BitArray<>(message);
+void JpegLsbEmbedder::setMessage(const std::string& message) {
+    msg = BitArray<>(message);
 }
 
-void imagestego::JpegLsbEmbedder::setSecretKey(const std::string& _key) {
-    key = imagestego::BitArray<>(_key);
+void JpegLsbEmbedder::setSecretKey(const std::string& _key) {
+    key = BitArray<>(_key);
 }
 
-void imagestego::JpegLsbEmbedder::createStegoContainer() const {
+void JpegLsbEmbedder::createStegoContainer() const {
     process();
     writeTo(output);
 }
 
-void imagestego::JpegLsbEmbedder::process() const {
+void JpegLsbEmbedder::process() const {
     if (key.empty())
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPROT
-        setSecretKey(imagestego::keygen::generate());
+        setSecretKey(keygen::generate());
 #else
-        throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
+        throw Exception(Exception::Codes::NoKeyFound);
 #endif
     msg.put(0);
     std::size_t currentMsgIndex = 0,
@@ -62,16 +64,16 @@ void imagestego::JpegLsbEmbedder::process() const {
     }
 }
 
-imagestego::JpegLsbExtracter::JpegLsbExtracter(const std::string& image) : JpegProcessor(image) {}
+JpegLsbExtracter::JpegLsbExtracter(const std::string& image) : JpegProcessor(image) {}
 
-void imagestego::JpegLsbExtracter::setImage(const std::string& str) {}
+void JpegLsbExtracter::setImage(const std::string& str) {}
 
-void imagestego::JpegLsbExtracter::setSecretKey(const std::string& _key) {
-    key = imagestego::BitArray<>(_key);
+void JpegLsbExtracter::setSecretKey(const std::string& _key) {
+    key = BitArray<>(_key);
 }
 
-std::string imagestego::JpegLsbExtracter::extractMessage() {
-    imagestego::BitArray<> msg;
+std::string JpegLsbExtracter::extractMessage() {
+    BitArray<> msg;
     std::size_t currentKeyIndex = 0;
     auto size = getChannelSize(0);
     for (int i = 0; i != size.first; ++i)
@@ -95,12 +97,14 @@ std::string imagestego::JpegLsbExtracter::extractMessage() {
         }
 }
 
-void imagestego::JpegLsbExtracter::process() const {}
+void JpegLsbExtracter::process() const {}
 
-imagestego::Algorithm imagestego::JpegLsbEmbedder::getAlgorithm() const noexcept {
-    return imagestego::Algorithm::JpegLsb;
+Algorithm JpegLsbEmbedder::getAlgorithm() const noexcept {
+    return Algorithm::JpegLsb;
 }
 
-imagestego::Algorithm imagestego::JpegLsbExtracter::getAlgorithm() const noexcept {
-    return imagestego::Algorithm::JpegLsb;
+Algorithm JpegLsbExtracter::getAlgorithm() const noexcept {
+    return Algorithm::JpegLsb;
 }
+
+} // namespace imagestego

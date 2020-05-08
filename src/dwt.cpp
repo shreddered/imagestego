@@ -1,6 +1,8 @@
 #include "imagestego/algorithms/dwt.hpp"
 
 
+namespace {
+
 void dwt1D(const cv::Mat& src, cv::Mat& dst) {
     src.copyTo(dst);
     auto x = src.cols >> 1;
@@ -25,7 +27,11 @@ void idwt1D(const cv::Mat& src, cv::Mat& dst) {
         }
 }
 
-void imagestego::dwt(const cv::Mat& src, cv::Mat& dst) {
+} // namespace
+
+namespace imagestego {
+
+void dwt(const cv::Mat& src, cv::Mat& dst) {
     src.convertTo(dst, CV_16S);
     cv::Mat tmp;
     dwt1D(dst, tmp);
@@ -33,52 +39,52 @@ void imagestego::dwt(const cv::Mat& src, cv::Mat& dst) {
     dst = dst.t();
 }
 
-void imagestego::idwt(const cv::Mat& src, cv::Mat& dst) {
+void idwt(const cv::Mat& src, cv::Mat& dst) {
     cv::Mat tmp;
     idwt1D(src.t(), tmp);
     idwt1D(tmp.t(), dst);
     dst.convertTo(dst, CV_8U);
 }
 
-imagestego::DwtEmbedder::DwtEmbedder() noexcept {}
+DwtEmbedder::DwtEmbedder() noexcept {}
 
-imagestego::DwtEmbedder::DwtEmbedder(const std::string& imageName, const std::string& output)
+DwtEmbedder::DwtEmbedder(const std::string& imageName, const std::string& output)
     : image(cv::imread(imageName)), outputFile(output) {}
 
 
-void imagestego::DwtEmbedder::setImage(const std::string& imageName) {
+void DwtEmbedder::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
 }
 
-void imagestego::DwtEmbedder::setOutputName(const std::string& filename) {
+void DwtEmbedder::setOutputName(const std::string& filename) {
     outputFile = filename;
 }
 
-void imagestego::DwtEmbedder::setSecretKey(const std::string& _key) {
+void DwtEmbedder::setSecretKey(const std::string& _key) {
     uint32_t tmp[1];
     MurmurHash3_x86_32(_key.data(), _key.size(), 4991, tmp);
     key = tmp[0];
 }
 
-void imagestego::DwtEmbedder::setMessage(const std::string& _msg) {
-    msg = imagestego::BitArray<>(_msg);
+void DwtEmbedder::setMessage(const std::string& _msg) {
+    msg = BitArray<>(_msg);
 }
 
-void imagestego::DwtEmbedder::createStegoContainer() const {
+void DwtEmbedder::createStegoContainer() const {
     if (!key)
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
-        setSecretKey(imagestego::keygen::generate());
+        setSecretKey(keygen::generate());
 #else
-        throw imagestego::Exception(imagestego::Exception::Codes::NoKeyFound);
+        throw Exception(Exception::Codes::NoKeyFound);
 #endif
     msg.put(0);
     uint32_t sz = 4 * ceil(sqrt(msg.size())); 
     std::size_t currentMsgIndex = 0;
-    auto arr = imagestego::BitArray<>::fromInt(sz);
+    auto arr = BitArray<>::fromInt(sz);
     std::vector<cv::Mat> planes;
     cv::split(image, planes);
     cv::Mat dwtGreen;
-    imagestego::dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)), dwtGreen);
+    dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)), dwtGreen);
     for (int i = 0; i != dwtGreen.rows && currentMsgIndex != 32; ++i)
         for (int j = 0; j != dwtGreen.cols && currentMsgIndex != 32; ++j) { 
             if (arr[currentMsgIndex++])
@@ -87,7 +93,7 @@ void imagestego::DwtEmbedder::createStegoContainer() const {
                 dwtGreen.at<short>(i, j) &= ~1;
         }
     cv::Mat tmp;
-    imagestego::idwt(dwtGreen, tmp);
+    idwt(dwtGreen, tmp);
     tmp.copyTo(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)));
     // after that, perform embedding
     // seeding PRNG
@@ -99,7 +105,7 @@ void imagestego::DwtEmbedder::createStegoContainer() const {
     } while (y0 > image.rows - sz || x0 > image.cols - sz);
     cv::Mat cropped = planes[0](cv::Rect(x0, y0, sz, sz));
     // DWT of blue channel
-    imagestego::dwt(cropped, tmp);
+    dwt(cropped, tmp);
     currentMsgIndex = 0;
     for (int i = tmp.rows >> 1; i != tmp.rows && currentMsgIndex != msg.size(); ++i) {
         for (int j = tmp.cols >> 1; j != tmp.cols && currentMsgIndex != msg.size(); ++j) {
@@ -109,34 +115,34 @@ void imagestego::DwtEmbedder::createStegoContainer() const {
                 tmp.at<short>(i, j) &= ~1;
         }
     }
-    imagestego::idwt(tmp, cropped);
+    idwt(tmp, cropped);
     cropped.copyTo(planes[0](cv::Rect(x0, y0, sz, sz)));
     cv::merge(planes, image);
     cv::imwrite(outputFile, image);
 }
 
 
-imagestego::DwtExtracter::DwtExtracter() noexcept {}
+DwtExtracter::DwtExtracter() noexcept {}
 
-imagestego::DwtExtracter::DwtExtracter(const std::string& imageName) : image(cv::imread(imageName)) {}
+DwtExtracter::DwtExtracter(const std::string& imageName) : image(cv::imread(imageName)) {}
 
-void imagestego::DwtExtracter::setImage(const std::string& imageName) {
+void DwtExtracter::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
 }
 
-void imagestego::DwtExtracter::setSecretKey(const std::string& _key) {
+void DwtExtracter::setSecretKey(const std::string& _key) {
     uint32_t tmp[1];
     MurmurHash3_x86_32(_key.data(), _key.size(), 4991, tmp);
     key = tmp[0];
 }
 
-std::string imagestego::DwtExtracter::extractMessage() {
-    imagestego::BitArray<unsigned char> arr;
+std::string DwtExtracter::extractMessage() {
+    BitArray<unsigned char> arr;
     std::vector<cv::Mat> planes;
     cv::split(image, planes);
     cv::Mat dwtGreen;
-    imagestego::dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)), dwtGreen);
-    imagestego::BitArray<uint32_t> arr1;
+    dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)), dwtGreen);
+    BitArray<uint32_t> arr1;
     for (int i = 0; i != dwtGreen.rows; ++i)
         for (int j = 0; j != dwtGreen.cols; ++j)
             arr1.pushBack((dwtGreen.at<short>(i, j) & 1) != 0);
@@ -151,7 +157,7 @@ std::string imagestego::DwtExtracter::extractMessage() {
     cv::Mat cropped = planes[0](cv::Rect(x0, y0, sz, sz));
     // DWT of blue channel
     cv::Mat tmp;
-    imagestego::dwt(cropped, tmp);
+    dwt(cropped, tmp);
     for (int i = tmp.rows >> 1; i != tmp.rows; ++i)
         for (int j = tmp.cols >> 1; j != tmp.cols; ++j) {
             arr.pushBack((tmp.at<short>(i, j) & 1) != 0);
@@ -160,10 +166,12 @@ std::string imagestego::DwtExtracter::extractMessage() {
         }
 }
 
-imagestego::Algorithm imagestego::DwtEmbedder::getAlgorithm() const noexcept {
-    return imagestego::Algorithm::Dwt;
+Algorithm DwtEmbedder::getAlgorithm() const noexcept {
+    return Algorithm::Dwt;
 }
 
-imagestego::Algorithm imagestego::DwtExtracter::getAlgorithm() const noexcept {
-    return imagestego::Algorithm::Dwt;
+Algorithm DwtExtracter::getAlgorithm() const noexcept {
+    return Algorithm::Dwt;
 }
+
+} // namespace imagestego

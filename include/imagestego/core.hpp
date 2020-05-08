@@ -75,6 +75,8 @@ public:
     virtual ~AbstractStegoExtracter() = default;
 }; // class AbstractStegoExtracter
 
+uint8_t log2(unsigned int value) noexcept;
+
 } // namespace imagestego
 
 #endif /* __IMAGESTEGO_CORE_HPP_INCLUDED__ */

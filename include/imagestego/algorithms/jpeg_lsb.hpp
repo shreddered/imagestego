@@ -36,10 +36,10 @@ private:
 class IMAGESTEGO_EXPORTS JpegLsbExtracter : public AbstractStegoExtracter, private JpegProcessor {
 public:
     explicit JpegLsbExtracter(const std::string& image);
-    void setImage(const std::string& str);
+    void setImage(const std::string& str) override;
     void setSecretKey(const std::string& key) override;
     Algorithm getAlgorithm() const noexcept override;
-    std::string extractMessage();
+    std::string extractMessage() override;
 private:
     BitArray<> key;
     void process() const override;

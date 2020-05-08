@@ -14,7 +14,9 @@ bool binarySearch(RAIt first, RAIt last, const T& data) {
     return *first == data;
 }
 
-imagestego::FormatChecker::FormatChecker(int _fmt) noexcept : fmt(_fmt) {
+namespace imagestego {
+
+FormatChecker::FormatChecker(int _fmt) noexcept : fmt(_fmt) {
     switch(fmt) {
         case Jpeg:
             formats = std::vector<std::string>({ ".jfif",".jpeg", ".jpg" });
@@ -34,12 +36,14 @@ imagestego::FormatChecker::FormatChecker(int _fmt) noexcept : fmt(_fmt) {
     }
 }
 
-void imagestego::FormatChecker::setFormat(int _fmt) noexcept {
+void FormatChecker::setFormat(int _fmt) noexcept {
     fmt = _fmt;
 }
 
-bool imagestego::FormatChecker::check(const std::string& str) {
+bool FormatChecker::check(const std::string& str) {
     auto n = str.rfind('.');
     auto ext = str.substr(n);
     return binarySearch(formats.begin(), formats.end(), ext); 
 }
+
+} // namespace imagestego
