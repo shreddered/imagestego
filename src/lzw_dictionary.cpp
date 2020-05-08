@@ -64,12 +64,7 @@ int Dictionary::search(const StringElement& s) {
 }
 
 void Dictionary::add(const uint8_t& value, const int& prefixIndex) {
-    codeTable.emplace_back(value, prefixIndex);
-    ++newCode;
+    codeTable[newCode++] = StringElement(value, prefixIndex);
 }
 
 } // namespace imagestego
-
-std::ostream& operator <<(std::ostream& os, const imagestego::StringElement& elem) {
-    os << elem.prefixIndex << ' ' << elem.value << ' ' << elem.first << ' ' << elem.left << ' ' << elem.right;
-}

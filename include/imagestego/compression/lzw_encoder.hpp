@@ -13,7 +13,6 @@ namespace imagestego {
 
 class IMAGESTEGO_EXPORTS LzwEncoder : private Dictionary {
 public:
-    static constexpr uint8_t maxBits = 12;
     explicit LzwEncoder() noexcept;
     explicit LzwEncoder(const std::string& str) noexcept;
     explicit LzwEncoder(std::string&& str) noexcept;

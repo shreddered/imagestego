@@ -34,15 +34,12 @@ std::string LzwDecoder::getDecodedMessage() {
 void LzwDecoder::decode() {
     // reading first 4 bits    
     std::size_t i = 0;
-    std::cout << msg << std::endl;
     uint8_t maxBits = read(msg, i, 4);
-    std::cout << int(maxBits) << std::endl;
     while(i < msg.size()) {
         Dictionary::clear();
         uint8_t currentBitsPerBlock = 8;
         std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
         std::size_t code = read(msg, i, currentBitsPerBlock);
-        std::cout << code << std::endl;
         decodedMsg += code;
         std::size_t oldCode = code;
         while (1) {
@@ -55,7 +52,6 @@ void LzwDecoder::decode() {
                 currentMaxDictionarySize = (1 << currentBitsPerBlock);
             }
             code = read(msg, i, currentBitsPerBlock);
-            std::cout << code << std::endl;
             std::string tmp;
             if (code < Dictionary::size()) {
                 tmp = Dictionary::at(code);

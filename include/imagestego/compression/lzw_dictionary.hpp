@@ -6,8 +6,6 @@
 // c++ headers
 #include <string>
 #include <vector>
-#include <ostream>
-#include <iostream>
 
 
 namespace imagestego {
@@ -39,7 +37,5 @@ private:
 }; // class Dictionary
 
 } // namespace imagestego
-
-std::ostream& operator <<(std::ostream& os, const imagestego::StringElement& elem);
 
 #endif /* __IMAGESTEGO_LZW_DICTIONARY_HPP_INCLUDED__ */
