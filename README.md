@@ -56,5 +56,5 @@ and [_opencv_ releases](https://opencv.org/releases/) for complete guidelines.
 
 # Further development
 - [x] Implement LZW data compression algorithm
-- [ ] Implement at least one more stego algoritm
+- [ ] Implement at least one more stego algorithm
 - [ ] Make DWT-based algorithm format-independent
