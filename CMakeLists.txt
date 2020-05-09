@@ -300,6 +300,8 @@ if (BUILD_TESTS)
     add_test(NAME huffman COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_huffman)
 
     add_test(NAME bitarray COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_bitarray)
+
+    add_test(NAME lzw COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_lzw)
 endif()
 
 #################################################
