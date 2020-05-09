@@ -1,7 +1,6 @@
 addons:
   apt:
     packages:
-      - libopencv-dev
       - cmake-data
       - cmake
   homebrew:
