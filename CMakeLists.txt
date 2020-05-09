@@ -162,7 +162,6 @@ if (BUILD_TESTS)
     )
     target_include_directories(test_prefix
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
     )
     target_link_libraries(test_prefix
         imagestego
@@ -181,8 +180,6 @@ if (BUILD_TESTS)
     )
     target_link_libraries(test_huffman
         imagestego
-        opencv_core
-        opencv_imgcodecs
     )
     set_target_properties(test_huffman PROPERTIES
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
@@ -197,8 +194,6 @@ if (BUILD_TESTS)
     )
     target_link_libraries(test_lzw
         imagestego
-        opencv_core
-        opencv_imgcodecs
     )
     set_target_properties(test_lzw PROPERTIES
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/

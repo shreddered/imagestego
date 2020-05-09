@@ -5,7 +5,6 @@
 #ifdef _DEBUG
 #   include <iostream>
 #endif
-#include <optional>
 #include <utility>
 
 
