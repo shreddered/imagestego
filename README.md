@@ -22,6 +22,8 @@ Also there is a support for data comression:
 
 * [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)
 
+* [LZW](https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch)
+
 # Building
 
 First of all, you need to install _libopenc-dev_, _libjpeg-dev_ and _cmake_ (needed for building).
