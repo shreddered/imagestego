@@ -20,6 +20,7 @@
 #   include <cstdint>
 #endif
 
+
 namespace imagestego {
 
 class IMAGESTEGO_EXPORTS Exception : public std::exception {
