@@ -1,8 +1,7 @@
 #include <iostream>
 
 #include <imagestego/algorithms/lsb.hpp>
-#include <imagestego/compression/huffman_encoder.hpp>
-#include <imagestego/compression/huffman_decoder.hpp>
+#include <imagestego/compression.hpp>
 
 #include <algorithm>
 #include <bitset>
@@ -54,7 +53,7 @@ int main(int argc, char** argv) {
                 "key", &key,
                 "output", &output,
                 "image", &image);
-        imagestego::LsbEmbedder<imagestego::HuffmanEncoder> lsb(image, output, imagestego::LsbOptions::randomBits);
+        imagestego::LsbEmbedder<imagestego::LzwEncoder> lsb(image, output, imagestego::LsbOptions::randomBits);
         lsb.setImage(image);
         lsb.setSecretKey(key);
         lsb.setMessage(msg);
@@ -65,7 +64,7 @@ int main(int argc, char** argv) {
         getopts(argc, argv,
                 "image", &image,
                 "key", &key);
-        imagestego::LsbExtracter<imagestego::HuffmanDecoder> lsb(imagestego::LsbOptions::randomBits);
+        imagestego::LsbExtracter<imagestego::LzwDecoder> lsb(imagestego::LsbOptions::randomBits);
         lsb.setSecretKey(key);
         lsb.setImage(image);
         std::cout << lsb.extractMessage() << std::endl;

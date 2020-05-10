@@ -7,7 +7,19 @@ HuffmanDecoder::HuffmanDecoder() noexcept {}
 
 HuffmanDecoder::HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept : encodedMsg(arr) {}
 
+HuffmanDecoder::~HuffmanDecoder() noexcept {
+    if (root)
+        delete root;
+}
+
 HuffmanDecoder::TreeNode::TreeNode(TreeNode* node) noexcept : parent(node) {}
+
+HuffmanDecoder::TreeNode::~TreeNode() noexcept {
+    if (left)
+        delete left;
+    if (right)
+        delete right;
+}
 
 std::string HuffmanDecoder::getDecodedMessage() {
     if (!root) {

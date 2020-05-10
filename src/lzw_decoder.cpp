@@ -19,11 +19,6 @@ LzwDecoder::LzwDecoder() noexcept : Dictionary() {}
 
 LzwDecoder::LzwDecoder(const BitArray<>& arr) noexcept : Dictionary(), msg(arr) {}
 
-void LzwDecoder::setMessage(const BitArray<>& arr) noexcept {
-    msg = arr;
-    decodedMsg.clear();
-}
-
 std::string LzwDecoder::getDecodedMessage() {
     if (decodedMsg.empty()) {
         decode();

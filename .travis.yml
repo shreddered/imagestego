@@ -43,3 +43,5 @@ script:
   - cmake ..
   - make
   - ctest
+  - cd ../test/
+  - ./test_stego

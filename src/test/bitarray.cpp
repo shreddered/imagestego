@@ -33,5 +33,7 @@ int main() {
     arr2.pushBack(0);
     std::size_t i = 0;
     std::cout << read(arr2, i, 4) << std::endl;
+    imagestego::BitArray<uint32_t> arr3 = imagestego::BitArray<uint32_t>::fromInt(57);
+    std::cout << arr3 << std::endl;
     return 0;
 }

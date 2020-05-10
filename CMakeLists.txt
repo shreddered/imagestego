@@ -206,6 +206,23 @@ if (BUILD_TESTS)
     set_target_properties(test_lzw PROPERTIES
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
     )
+
+    # stego
+    add_executable(test_stego
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/stego.cpp
+    )
+    target_include_directories(test_stego
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+    )
+    target_link_libraries(test_stego
+        imagestego
+        opencv_core
+        opencv_imgcodecs
+    )
+    set_target_properties(test_stego PROPERTIES
+        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
+    )
 endif()
 
 #################################################

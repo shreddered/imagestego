@@ -29,12 +29,13 @@ public:
     }
     virtual ~HuffmanEncoder() noexcept;
 private:
-    struct TreeNode {
+    struct TreeNode final {
         std::string data;
         bool isVisited = false;
         TreeNode* left = nullptr;
         TreeNode* right = nullptr;
         TreeNode(const std::string& data) noexcept : data(data) {}
+        ~TreeNode() noexcept;
     };
     void __buildCode() const;
     void encode() const;

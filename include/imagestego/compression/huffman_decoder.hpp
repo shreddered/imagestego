@@ -16,17 +16,19 @@ class IMAGESTEGO_EXPORTS HuffmanDecoder {
 public:
     explicit HuffmanDecoder() noexcept;
     explicit HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept; 
+    virtual ~HuffmanDecoder() noexcept;
     template<typename Int>
     void setMessage(const BitArray<Int>& arr) {
         encodedMsg = arr;
     }
     std::string getDecodedMessage();
 private:
-    struct TreeNode {
+    struct TreeNode final {
         TreeNode* left = nullptr;
         TreeNode* right = nullptr;
         TreeNode* parent = nullptr;
         explicit TreeNode(TreeNode* node = nullptr) noexcept;
+        ~TreeNode() noexcept;
     }; // TreeNode
     TreeNode* root = nullptr;
     static inline bool isLeftChild(TreeNode* node) {

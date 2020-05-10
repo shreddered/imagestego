@@ -17,7 +17,11 @@ public:
     static constexpr uint8_t maxBits = 12;
     explicit LzwDecoder() noexcept;
     explicit LzwDecoder(const BitArray<>& str) noexcept;
-    void setMessage(const BitArray<>& arr) noexcept;
+    template<typename Int>
+    void setMessage(const BitArray<Int>& arr) noexcept {
+        msg = arr;
+        decodedMsg.clear();
+    }
     std::string getDecodedMessage();
 private:
     std::string decodedMsg;

@@ -118,14 +118,17 @@ public:
         }
         return *this;
     }
-    template<typename Int>
-    static BitArray<Block> fromInt(const Int& num) {
+    template<typename Int> 
+    static typename std::enable_if<(sizeof(Block) != sizeof(Int) && std::is_integral<Int>::value), BitArray<Block> >::type fromInt(const Int& num) {
         BitArray<Block> arr;
-        constexpr auto tmp = sizeof(Int) * CHAR_BIT;
-        for (int i = 0; i != tmp; ++i) {
-            auto mask = 1 << (tmp - i - 1);
-            arr.pushBack((num & mask) != 0); 
-        }
+        arr.pushBack(num, sizeof(Int) * CHAR_BIT);
+        return arr;
+    }
+    template<typename Int>
+    static typename std::enable_if<(sizeof(Block) == sizeof(Int) && std::is_integral<Int>::value), BitArray<Block> >::type fromInt(const Int& num) {
+        BitArray<Block> arr;
+        arr.array.push_back(num);
+        arr.numberOfBits = sizeof(Int);
         return arr;
     }
     BitReference operator [](std::size_t pos) noexcept {
@@ -180,8 +183,10 @@ public:
         tmp = b;
     }
     void pushBack(std::size_t num, uint8_t bits) {
-        while(bits--) 
-            pushBack((num & (1 << bits)) != 0);
+        for (uint8_t i = 0; i != bits; ++i) {
+            const uint8_t offset = bits - 1 - i;
+            pushBack((num & (1 << offset)) != 0);
+        }
     }
     inline Block lastBlock() const noexcept {
         return array[array.size() - 1];

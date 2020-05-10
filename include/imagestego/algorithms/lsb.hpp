@@ -126,7 +126,7 @@ private:
         Route route(std::make_pair(image.cols, image.rows), gen);
         route.create(32);
         auto it = route.begin();
-        BitArray<std::size_t> tmp = BitArray<std::size_t>::fromInt(msg.size());
+        BitArray<uint32_t> tmp = BitArray<uint32_t>::fromInt(msg.size());
         std::size_t currentKeyIndex = 0;
         // writing size
         for (int i = 0; i != 32; ++i, ++it) {
@@ -209,6 +209,7 @@ public:
     }
     void setSecretKey(const std::string& _key) noexcept override {
         key = BitArray<unsigned int>(_key);
+        seed(_key);
     }
     std::string extractMessage() override {
         switch(opts) {
@@ -247,7 +248,7 @@ private:
         if (key.empty())
             throw Exception(Exception::Codes::NoKeyFound);;
         BitArray<uint8_t> arr;
-        BitArray<std::size_t> tmp;
+        BitArray<uint32_t> tmp;
         Route r(std::make_pair(image.cols, image.rows), gen);
         r.create(32);
         std::size_t currentKeyIndex = 0;

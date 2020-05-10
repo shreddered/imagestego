@@ -9,6 +9,13 @@ HuffmanEncoder::HuffmanEncoder(const std::string& str) noexcept : msg(str) {}
 
 HuffmanEncoder::HuffmanEncoder(std::string&& str) noexcept : msg(str) {}
 
+HuffmanEncoder::TreeNode::~TreeNode() noexcept {
+    if (left)
+        delete left;
+    if (right)
+        delete right;
+}
+
 void HuffmanEncoder::setMessage(const std::string& str) noexcept {
     msg = str;
     encodedMsg.clear();
@@ -92,7 +99,7 @@ void HuffmanEncoder::dfs(HuffmanEncoder::TreeNode* node) const {
 
 HuffmanEncoder::~HuffmanEncoder() noexcept {
     if (root)
-        destroyNode(root);
+        delete root;
 }
 
 void HuffmanEncoder::destroyNode(HuffmanEncoder::TreeNode* node) noexcept {
