@@ -69,10 +69,55 @@ The usage is pretty simple. See `imagestego -h` for details.
 ## Library
 
 For a high-level functions you can just `#include <imagestego/imagestego.hpp>` file,
-which has two functions - `embedSecretMessage` and `extractSecretMesage`.
+which has two functions - `embedSecretMessage` and `extractSecretMesage`:
+
+```cpp
+// imagestego/imagestego.hpp
+
+namespace imagestego {
+
+void embedSecretMessage(AbstractStegoEmbeder* embedder, const std::string& input, 
+                        const std::string& output, const std::string& key);
+
+std::string extractSecretMessage(AbstractStegoExtracter* extracter, const std::string& key);
+
+}
+```
+
+Abstract classes is defined like this
+
+```cpp
+// imagestego/core.hpp
+
+namespace imagestego {
+
+class IMAGESTEGO_EXPORTS AbstractStegoEmbedder {
+public:
+    virtual void setImage(const std::string& imageName) = 0;
+    virtual void setOutputName(const std::string& filename) = 0;
+    virtual void setMessage(const std::string& msg) = 0;
+    virtual void setSecretKey(const std::string& key) = 0;
+    virtual void createStegoContainer() const = 0;
+};
+
+class IMAGESTEGO_EXPORTS AbstractStegoExtracter {
+public:
+    virtual void setImage(const std::string& imageName) = 0;
+    virtual void setSecretKey(const std::string& key) = 0;
+    virtual std::string extractMessage() = 0;
+};
+
+}
+```
 
 Alternatively, you can `#include <imagestego/algorithms.hpp>` file to manage classes on your own
 or you can even create another class template to use with LZW/Huffman coders.
+
+For more details see project wiki (it's being updated).
+
+# License
+
+This software is distibuted under GNU GPLv3. For more details see [LICENSE.txt](https://github.com/shreddered/Image-Steganography/blob/master/LICENSE.txt).
 
 # Further development
 - [x] Implement LZW data compression algorithm

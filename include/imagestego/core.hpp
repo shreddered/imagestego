@@ -47,7 +47,8 @@ enum class Mode {
 enum class Algorithm {
     Lsb,
     JpegLsb,
-    Dwt
+    Dwt,
+    UserDefined
 };
 
 class IMAGESTEGO_EXPORTS AbstractStegoEmbedder {
