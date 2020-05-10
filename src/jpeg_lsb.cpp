@@ -3,29 +3,29 @@
 
 namespace imagestego {
 
-JpegLsbEmbedder::JpegLsbEmbedder(const std::string& input, const std::string& _output) 
+JpegLsbEmbedder<void>::JpegLsbEmbedder(const std::string& input, const std::string& _output) 
     : JpegProcessor(input), output(_output) {}
 
-void JpegLsbEmbedder::setImage(const std::string&) {}
+void JpegLsbEmbedder<void>::setImage(const std::string&) {}
 
-void JpegLsbEmbedder::setOutputName(const std::string& str) {
+void JpegLsbEmbedder<void>::setOutputName(const std::string& str) {
     output = str;
 }
 
-void JpegLsbEmbedder::setMessage(const std::string& message) {
+void JpegLsbEmbedder<void>::setMessage(const std::string& message) {
     msg = BitArray<>(message);
 }
 
-void JpegLsbEmbedder::setSecretKey(const std::string& _key) {
+void JpegLsbEmbedder<void>::setSecretKey(const std::string& _key) {
     key = BitArray<>(_key);
 }
 
-void JpegLsbEmbedder::createStegoContainer() const {
+void JpegLsbEmbedder<void>::createStegoContainer() const {
     process();
     writeTo(output);
 }
 
-void JpegLsbEmbedder::process() const {
+void JpegLsbEmbedder<void>::process() const {
     if (key.empty())
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPROT
         setSecretKey(keygen::generate());
@@ -64,15 +64,15 @@ void JpegLsbEmbedder::process() const {
     }
 }
 
-JpegLsbExtracter::JpegLsbExtracter(const std::string& image) : JpegProcessor(image) {}
+JpegLsbExtracter<void>::JpegLsbExtracter(const std::string& image) : JpegProcessor(image) {}
 
-void JpegLsbExtracter::setImage(const std::string& str) {}
+void JpegLsbExtracter<void>::setImage(const std::string& str) {}
 
-void JpegLsbExtracter::setSecretKey(const std::string& _key) {
+void JpegLsbExtracter<void>::setSecretKey(const std::string& _key) {
     key = BitArray<>(_key);
 }
 
-std::string JpegLsbExtracter::extractMessage() {
+std::string JpegLsbExtracter<void>::extractMessage() {
     BitArray<> msg;
     std::size_t currentKeyIndex = 0;
     auto size = getChannelSize(0);
@@ -97,13 +97,13 @@ std::string JpegLsbExtracter::extractMessage() {
         }
 }
 
-void JpegLsbExtracter::process() const {}
+void JpegLsbExtracter<void>::process() const {}
 
-Algorithm JpegLsbEmbedder::getAlgorithm() const noexcept {
+Algorithm JpegLsbEmbedder<void>::getAlgorithm() const noexcept {
     return Algorithm::JpegLsb;
 }
 
-Algorithm JpegLsbExtracter::getAlgorithm() const noexcept {
+Algorithm JpegLsbExtracter<void>::getAlgorithm() const noexcept {
     return Algorithm::JpegLsb;
 }
 

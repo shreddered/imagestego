@@ -4,11 +4,11 @@
 
 
 int main() {
-    imagestego::JpegLsbEmbedder inserter("in.jpg", "out.jpg");
+    imagestego::JpegLsbEmbedder<void> inserter("in.jpg", "out.jpg");
     inserter.setMessage("aa");
     inserter.setSecretKey("bs");
     inserter.createStegoContainer();
-    imagestego::JpegLsbExtracter extracter("out.jpg");
+    imagestego::JpegLsbExtracter<void> extracter("out.jpg");
     extracter.setSecretKey("bs");
     std::cout << extracter.extractMessage() << std::endl;
     return 0;
