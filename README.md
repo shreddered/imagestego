@@ -1,8 +1,6 @@
 # Image-Steganography
 
-[build-bage]: https://img.shields.io/travis/shreddered/Image-Steganography/master.png?style=flat-square
-
-[build]: https://travis-ci.org/shreddered/Image-Steganography
+[![Build Status](https://travis-ci.com/shreddered/Image-Steganography.svg?branch=master)](https://travis-ci.com/shreddered/Image-Steganography)
 
 Image Steganography library written in _c++11_.
 Dependencies - [_libopencv_](https://github.com/opencv/opencv) and [_libjpeg_](http://www.ijg.org/).
