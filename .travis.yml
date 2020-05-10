@@ -1,7 +1,13 @@
+os:
+  - linux
+  - osx
+
 addons:
   apt:
     packages:
       - cmake-data
+      - cmake
+    brew:
       - cmake
 
 language: cpp
