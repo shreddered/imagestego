@@ -10,7 +10,7 @@ JpegProcessor::JpegProcessor(const std::string& src) : input(fopen(src.c_str(), 
 //    jpeg_create_compress(&compressInfo);
     jpeg_stdio_src(&decompressInfo, input); 
 //    jpeg_stdio_dest(&compressInfo, output);
-    jpeg_read_header(&decompressInfo, 1);
+    jpeg_read_header(&decompressInfo, static_cast<boolean>(1));
 //    compressInfo.dct_method = JDCT_ISLOW;
     dctCoeffs = jpeg_read_coefficients(&decompressInfo);
 }
@@ -22,7 +22,8 @@ JpegProcessor::~JpegProcessor() noexcept {
 }
 
 JCOEFPTR JpegProcessor::getBlock(const int& channel, const int& y, const int& x) const {
-    auto buf = (decompressInfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&decompressInfo), dctCoeffs[channel], y, 1, 1);
+    auto buf = (decompressInfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&decompressInfo), dctCoeffs[channel], 
+            y, 1, static_cast<boolean>(1));
     return buf[0][x];
 }
 
