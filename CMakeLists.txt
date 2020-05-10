@@ -6,6 +6,14 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+link_directories(
+    /usr/local/lib/
+)
+
+include_directories(
+    /usr/local/include/opencv4
+)
+
 # build conditions (default)
 if (NOT DEFINED ENABLE_FORMAT_CHECKING)
     set(ENABLE_FORMAT_CHECKING ON)
