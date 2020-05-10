@@ -1,4 +1,5 @@
 #include "imagestego/algorithms/dwt.hpp"
+#include <iostream>
 
 
 namespace {
@@ -46,38 +47,37 @@ void idwt(const cv::Mat& src, cv::Mat& dst) {
     dst.convertTo(dst, CV_8U);
 }
 
-DwtEmbedder::DwtEmbedder() noexcept {}
+DwtEmbedder<void>::DwtEmbedder() noexcept {}
 
-DwtEmbedder::DwtEmbedder(const std::string& imageName, const std::string& output)
+DwtEmbedder<void>::DwtEmbedder(const std::string& imageName, const std::string& output)
     : image(cv::imread(imageName)), outputFile(output) {}
 
 
-void DwtEmbedder::setImage(const std::string& imageName) {
+void DwtEmbedder<void>::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
 }
 
-void DwtEmbedder::setOutputName(const std::string& filename) {
+void DwtEmbedder<void>::setOutputName(const std::string& filename) {
     outputFile = filename;
 }
 
-void DwtEmbedder::setSecretKey(const std::string& _key) {
+void DwtEmbedder<void>::setSecretKey(const std::string& _key) {
     uint32_t tmp[1];
     MurmurHash3_x86_32(_key.data(), _key.size(), 4991, tmp);
     key = tmp[0];
 }
 
-void DwtEmbedder::setMessage(const std::string& _msg) {
+void DwtEmbedder<void>::setMessage(const std::string& _msg) {
     msg = BitArray<>(_msg);
 }
 
-void DwtEmbedder::createStegoContainer() const {
+void DwtEmbedder<void>::createStegoContainer() const {
     if (!key)
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
         setSecretKey(keygen::generate());
 #else
         throw Exception(Exception::Codes::NoKeyFound);
 #endif
-    msg.put(0);
     uint32_t sz = 4 * ceil(sqrt(msg.size())); 
     std::size_t currentMsgIndex = 0;
     auto arr = BitArray<>::fromInt(sz);
@@ -104,11 +104,17 @@ void DwtEmbedder::createStegoContainer() const {
         x0 = gen() % image.cols;
     } while (y0 > image.rows - sz || x0 > image.cols - sz);
     cv::Mat cropped = planes[0](cv::Rect(x0, y0, sz, sz));
+    BitArray<> sizeBitStream;
+    sizeBitStream.pushBack(msg.size(), 32);
+    msg = sizeBitStream + msg;
     // DWT of blue channel
     dwt(cropped, tmp);
     currentMsgIndex = 0;
-    for (int i = tmp.rows >> 1; i != tmp.rows && currentMsgIndex != msg.size(); ++i) {
-        for (int j = tmp.cols >> 1; j != tmp.cols && currentMsgIndex != msg.size(); ++j) {
+    int i = tmp.rows >> 1,
+        j = tmp.cols >> 1;
+    currentMsgIndex = 0;
+    for (i = tmp.rows >> 1; i != tmp.rows && currentMsgIndex != msg.size(); ++i) {
+        for (j = tmp.cols >> 1; j != tmp.cols && currentMsgIndex != msg.size(); ++j) {
             if (msg[currentMsgIndex++])
                 tmp.at<short>(i, j) |= 1;
             else
@@ -121,22 +127,23 @@ void DwtEmbedder::createStegoContainer() const {
     cv::imwrite(outputFile, image);
 }
 
+DwtExtracter<void>::DwtExtracter() noexcept {}
 
-DwtExtracter::DwtExtracter() noexcept {}
+DwtExtracter<void>::DwtExtracter(const std::string& imageName) : image(cv::imread(imageName)) {}
 
-DwtExtracter::DwtExtracter(const std::string& imageName) : image(cv::imread(imageName)) {}
-
-void DwtExtracter::setImage(const std::string& imageName) {
+void DwtExtracter<void>::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
 }
 
-void DwtExtracter::setSecretKey(const std::string& _key) {
+void DwtExtracter<void>::setSecretKey(const std::string& _key) {
     uint32_t tmp[1];
     MurmurHash3_x86_32(_key.data(), _key.size(), 4991, tmp);
     key = tmp[0];
 }
 
-std::string DwtExtracter::extractMessage() {
+std::string DwtExtracter<void>::extractMessage() {
+    if (!key)
+        throw Exception(Exception::Codes::NoKeyFound);
     BitArray<unsigned char> arr;
     std::vector<cv::Mat> planes;
     cv::split(image, planes);
@@ -155,22 +162,32 @@ std::string DwtExtracter::extractMessage() {
         x0 = gen() % image.cols;
     } while (y0 > image.rows - sz || x0 > image.cols - sz);
     cv::Mat cropped = planes[0](cv::Rect(x0, y0, sz, sz));
+    std::size_t currentMsgIndex = 0,
+                msgSize = 0;
+    bool sizeKnown = false;
     // DWT of blue channel
     cv::Mat tmp;
     dwt(cropped, tmp);
     for (int i = tmp.rows >> 1; i != tmp.rows; ++i)
         for (int j = tmp.cols >> 1; j != tmp.cols; ++j) {
-            arr.pushBack((tmp.at<short>(i, j) & 1) != 0);
-            if (arr.size() && arr.size() % 8 == 0 && arr.lastBlock() == 0)
+            ++currentMsgIndex;
+            bool bit = (tmp.at<short>(i, j) & 1) != 0;
+            if (currentMsgIndex > 32) {
+                sizeKnown = true;
+                arr.pushBack(bit);
+            }
+            else
+                msgSize |= bit << (32 - currentMsgIndex);
+            if (sizeKnown && currentMsgIndex - 32 == msgSize)
                 return arr.toString();
         }
 }
 
-Algorithm DwtEmbedder::getAlgorithm() const noexcept {
+Algorithm DwtEmbedder<void>::getAlgorithm() const noexcept {
     return Algorithm::Dwt;
 }
 
-Algorithm DwtExtracter::getAlgorithm() const noexcept {
+Algorithm DwtExtracter<void>::getAlgorithm() const noexcept {
     return Algorithm::Dwt;
 }
 

@@ -119,16 +119,18 @@ public:
         return *this;
     }
     template<typename Int> 
-    static typename std::enable_if<(sizeof(Block) != sizeof(Int) && std::is_integral<Int>::value), BitArray<Block> >::type fromInt(const Int& num) {
+    static typename std::enable_if<(sizeof(Block) != sizeof(Int) && std::is_integral<Int>::value), 
+                    BitArray<Block> >::type fromInt(const Int& num) {
         BitArray<Block> arr;
         arr.pushBack(num, sizeof(Int) * CHAR_BIT);
         return arr;
     }
     template<typename Int>
-    static typename std::enable_if<(sizeof(Block) == sizeof(Int) && std::is_integral<Int>::value), BitArray<Block> >::type fromInt(const Int& num) {
+    static typename std::enable_if<(sizeof(Block) == sizeof(Int) && std::is_integral<Int>::value), 
+                    BitArray<Block> >::type fromInt(const Int& num) {
         BitArray<Block> arr;
         arr.array.push_back(num);
-        arr.numberOfBits = sizeof(Int);
+        arr.numberOfBits = sizeof(Int) * CHAR_BIT;
         return arr;
     }
     BitReference operator [](std::size_t pos) noexcept {
@@ -202,7 +204,7 @@ public:
 } // namespace imagestego
 
 template<class Block>
-std::ostream& operator <<(std::ostream& out, imagestego::BitArray<Block> arr) {
+std::ostream& operator <<(std::ostream& out, const imagestego::BitArray<Block>& arr) {
     for (std::size_t i = 0; i != arr.size(); ++i)
         out << arr[i];
     return out;

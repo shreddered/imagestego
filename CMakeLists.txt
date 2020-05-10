@@ -213,6 +213,7 @@ if (BUILD_TESTS)
     )
     target_include_directories(test_stego
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE /usr/include/opencv4/
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
     target_link_libraries(test_stego
