@@ -4,4 +4,4 @@ lib/*
 *.png
 build/*
 Makefile
-test/*
+test/test_*
