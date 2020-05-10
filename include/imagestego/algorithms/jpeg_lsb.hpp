@@ -21,9 +21,12 @@ namespace imagestego {
 template<class EncoderType>
 class JpegLsbEmbedder : public AbstractStegoEmbedder, private JpegProcessor {
 public:
+    explicit JpegLsbEmbedder() noexcept : JpegProcessor() {}
     explicit JpegLsbEmbedder(const std::string& input, const std::string& _output) 
         : JpegProcessor(input), output(_output) {} 
-    void setImage(const std::string&) override {}
+    void setImage(const std::string& src) override {
+        JpegProcessor::read(src);
+    }
     void setOutputName(const std::string& str) override {
         output = str;
     }
@@ -93,8 +96,11 @@ private:
 template<class DecoderType>
 class JpegLsbExtracter : public AbstractStegoExtracter, private JpegProcessor {
 public:
+    explicit JpegLsbExtracter() noexcept : JpegProcessor() {}
     explicit JpegLsbExtracter(const std::string& image) : JpegProcessor(image) {}
-    void setImage(const std::string& str) override {}
+    void setImage(const std::string& str) override {
+        JpegProcessor::read(str);
+    }
     void setSecretKey(const std::string& _key) override {
         key = BitArray<>(_key);
     }
@@ -155,6 +161,7 @@ private:
 template<>
 class IMAGESTEGO_EXPORTS JpegLsbEmbedder<void> : public AbstractStegoEmbedder, private JpegProcessor {
 public:
+    explicit JpegLsbEmbedder() noexcept;
     explicit JpegLsbEmbedder(const std::string& input, const std::string& _output); 
     void setImage(const std::string&) override;
     void setOutputName(const std::string& str) override;
@@ -171,6 +178,7 @@ private:
 template<>
 class IMAGESTEGO_EXPORTS JpegLsbExtracter<void> : public AbstractStegoExtracter, private JpegProcessor {
 public:
+    explicit JpegLsbExtracter() noexcept;
     explicit JpegLsbExtracter(const std::string& image);
     void setImage(const std::string& str) override;
     void setSecretKey(const std::string& key) override;

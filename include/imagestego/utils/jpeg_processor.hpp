@@ -18,15 +18,17 @@ namespace imagestego {
  */ 
 class JpegProcessor {
 public:
+    explicit JpegProcessor() noexcept;
     explicit JpegProcessor(const std::string& src);
     virtual ~JpegProcessor() noexcept;
     virtual void process() const = 0;
+    void read(const std::string& src);
     void writeTo(const std::string& dst) const;
 protected:
     JCOEFPTR getBlock(const int& channel, const int& y, const int& x) const;
     std::pair<int, int> getChannelSize(const int& channel) const;
 private:
-    FILE* input;
+    FILE* input = nullptr;
     mutable jpeg_decompress_struct decompressInfo;
     jpeg_error_mgr err;
     jvirt_barray_ptr* dctCoeffs;

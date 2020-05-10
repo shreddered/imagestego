@@ -3,15 +3,27 @@
 
 namespace imagestego {
 
+JpegProcessor::JpegProcessor() noexcept {}
+
 JpegProcessor::JpegProcessor(const std::string& src) : input(fopen(src.c_str(), "rb")) {
-//    compressInfo.err = jpeg_std_error(&err);
     decompressInfo.err = jpeg_std_error(&err);
     jpeg_create_decompress(&decompressInfo);
-//    jpeg_create_compress(&compressInfo);
     jpeg_stdio_src(&decompressInfo, input); 
-//    jpeg_stdio_dest(&compressInfo, output);
     jpeg_read_header(&decompressInfo, static_cast<boolean>(1));
-//    compressInfo.dct_method = JDCT_ISLOW;
+    dctCoeffs = jpeg_read_coefficients(&decompressInfo);
+}
+
+void JpegProcessor::read(const std::string& src) {
+    if (input) {
+        jpeg_finish_decompress(&decompressInfo);
+        fclose(input);
+        jpeg_destroy_decompress(&decompressInfo);
+    }
+    input = fopen(src.c_str(), "rb");
+    decompressInfo.err = jpeg_std_error(&err);
+    jpeg_create_decompress(&decompressInfo);
+    jpeg_stdio_src(&decompressInfo, input); 
+    jpeg_read_header(&decompressInfo, static_cast<boolean>(1));
     dctCoeffs = jpeg_read_coefficients(&decompressInfo);
 }
 

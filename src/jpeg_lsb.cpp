@@ -3,10 +3,14 @@
 
 namespace imagestego {
 
+JpegLsbEmbedder<void>::JpegLsbEmbedder() noexcept : JpegProcessor() {}
+
 JpegLsbEmbedder<void>::JpegLsbEmbedder(const std::string& input, const std::string& _output) 
     : JpegProcessor(input), output(_output) {}
 
-void JpegLsbEmbedder<void>::setImage(const std::string&) {}
+void JpegLsbEmbedder<void>::setImage(const std::string& src) {
+    JpegProcessor::read(src);
+}
 
 void JpegLsbEmbedder<void>::setOutputName(const std::string& str) {
     output = str;
@@ -64,9 +68,13 @@ void JpegLsbEmbedder<void>::process() const {
     }
 }
 
+JpegLsbExtracter<void>::JpegLsbExtracter() noexcept : JpegProcessor() {}
+
 JpegLsbExtracter<void>::JpegLsbExtracter(const std::string& image) : JpegProcessor(image) {}
 
-void JpegLsbExtracter<void>::setImage(const std::string& str) {}
+void JpegLsbExtracter<void>::setImage(const std::string& str) {
+    JpegProcessor::read(str);
+}
 
 void JpegLsbExtracter<void>::setSecretKey(const std::string& _key) {
     key = BitArray<>(_key);

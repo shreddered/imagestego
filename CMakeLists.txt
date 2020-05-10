@@ -102,8 +102,7 @@ target_include_directories(imagestego
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
 )
 
-set_target_properties(imagestego 
-    PROPERTIES 
+set_target_properties(imagestego PROPERTIES 
     PREFIX ""
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/
     OUTPUT_NAME "libimagestego"
@@ -126,6 +125,29 @@ if (ENABLE_KEYGEN_SUPPORT)
         PRIVATE ENABLE_KEYGEN_SUPPORT
     )
 endif()
+
+#################################################
+#               imagestego CLI
+#################################################
+
+add_executable(imagestego_cli
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+)
+target_include_directories(imagestego_cli
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    PRIVATE /usr/include/opencv4/
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+)
+target_link_libraries(imagestego_cli
+    imagestego
+    opencv_core
+    opencv_imgcodecs
+    jpeg
+)
+set_target_properties(imagestego_cli PROPERTIES
+    OUTPUT_NAME "imagestego"
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
+)
 
 #################################################
 #               tests
@@ -341,3 +363,5 @@ endif()
 install(TARGETS imagestego DESTINATION ${IMAGESTEGO_PREFIX})
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION /usr/include/)
+
+install(TARGETS imagestego_cli DESTINATION "/usr/bin/")
