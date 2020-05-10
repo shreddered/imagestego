@@ -43,22 +43,37 @@ $ sudo pacman -S cmake libjpeg-dev libopencv-dev
 ## macOS
 Use [_brew_](https://brew.sh/) for installing dependencies.
 ```bash
-$ brew install cmake libjpeg libopencv-dev
+$ brew install cmake libjpeg opencv
 ```
 After that, just run
 ```bash
 $ cmake -Bbuild
 $ cd build/
 $ make -j4
+$ sudo make install
 ```
-`libimagestego.so` will be compiled and placed into `lib/` directory.
+_libimagestego_ will be compiled and placed into `/usr/local/lib` directory.
 
 ## Windows
 
 Please refer to [_cmake_ downloads](https://cmake.org/download/), [_libjpeg_](http://www.ijg.org/)
 and [_opencv_ releases](https://opencv.org/releases/) for complete guidelines.
 
+# Usage
+
+## Command line tool
+
+There is a command line tool called `imagestego` which comes with the library.
+The usage is pretty simple. See `imagestego -h` for details.
+
+## Library
+
+For a high-level functions you can just `#include <imagestego/imagestego.hpp>` file,
+which has two functions - `embedSecretMessage` and `extractSecretMesage`.
+
+Alternatively, you can `#include <imagestego/algorithms.hpp>` file to manage classes on your own
+or you can even create another class template to use with LZW/Huffman coders.
+
 # Further development
 - [x] Implement LZW data compression algorithm
 - [ ] Implement at least one more stego algorithm
-- [ ] Make DWT-based algorithm format-independent
