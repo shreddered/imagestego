@@ -3,12 +3,9 @@
 
 // imagestego headers
 // algorithms
-#include "imagestego/algorithms/dwt.hpp"
-#include "imagestego/algorithms/lsb.hpp"
-#include "imagestego/algorithms/jpeg_lsb.hpp"
+#include "imagestego/algorithms.hpp"
 // compression
-#include "imagestego/compression/huffman_decoder.hpp"
-#include "imagestego/compression/huffman_encoder.hpp"
+#include "imagestego/compression.hpp"
 // c++ headers
 #include <memory>
 #include <string>
