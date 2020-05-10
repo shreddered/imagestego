@@ -357,11 +357,11 @@ endif()
 #################################################
 
 if (NOT DEFINED IMAGESTEGO_PREFIX)
-    set(IMAGESTEGO_PREFIX "/usr/lib/")
+    set(IMAGESTEGO_PREFIX "/usr/local/lib")
 endif()
 
 install(TARGETS imagestego DESTINATION ${IMAGESTEGO_PREFIX})
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION /usr/include/)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION "/usr/local/include")
 
-install(TARGETS imagestego_cli DESTINATION "/usr/bin/")
+install(TARGETS imagestego_cli DESTINATION "/usr/local/bin")
