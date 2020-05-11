@@ -7,6 +7,8 @@
 // c++ headers
 #include <random>
 #include <string>
+// third party
+#include "MurmurHash3.h"
 
 
 namespace imagestego {
@@ -17,10 +19,11 @@ public:
 protected:
     explicit JpegPermutation() noexcept;
     explicit JpegPermutation(const std::string& src);
-    void read(const std::string& src);
+    void seed(const std::string& key);
     void process() const override;
 private:
-    std::mt19937 gen;
+    mutable std::mt19937 gen;
+    uint32_t key;
 }; // class JpegPermutation
 
 } // namespace imagestego
