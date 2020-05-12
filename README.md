@@ -71,7 +71,7 @@ The usage is pretty simple. See `imagestego -h` for details.
 For a high-level functions you can just `#include <imagestego/imagestego.hpp>` file,
 which has two functions - `embedSecretMessage` and `extractSecretMesage`:
 
-```cpp
+```c++
 // imagestego/imagestego.hpp
 
 namespace imagestego {
@@ -86,7 +86,7 @@ std::string extractSecretMessage(AbstractStegoExtracter* extracter, const std::s
 
 Abstract classes is defined like this
 
-```cpp
+```c++
 // imagestego/core.hpp
 
 namespace imagestego {
