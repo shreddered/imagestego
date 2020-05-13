@@ -15,25 +15,15 @@ include_directories(
 )
 
 # build conditions (default)
-if (NOT DEFINED ENABLE_FORMAT_CHECKING)
-    set(ENABLE_FORMAT_CHECKING ON)
-endif()
+option(ENABLE_FORMAT_CHECKING ON)
 
-if (NOT DEFINED BUILD_TYPE)
-    set(BUILD_TYPE DEBUG)
-endif()
+option(BUILD_TYPE DEBUG)
 
-if (NOT DEFINED BUILD_TESTS)
-    set(BUILD_TESTS ON)
-endif()
+option(BUILD_TESTS ON)
 
-if (NOT DEFINED BUILD_EXAMPLES)
-    set(BUILD_EXAMPLES ON)
-endif()
+option(BUILD_EXAMPLES ON)
 
-if (NOT DEFINED ENABLE_KEYGEN_SUPPORT)
-    set(ENABLE_KEYGEN_SUPPORT ON)
-endif()
+option(ENABLE_KEYGEN_SUPPORT ON)
 
 string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 
