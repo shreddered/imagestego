@@ -246,6 +246,24 @@ if (BUILD_TESTS)
     set_target_properties(test_stego PROPERTIES
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
     )
+
+    # shuffle
+    add_executable(test_shuffle
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/shuffle.cpp
+    )
+    target_include_directories(test_shuffle
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE /usr/include/opencv4/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+    )
+    target_link_libraries(test_shuffle
+        imagestego
+        opencv_core
+        opencv_imgcodecs
+    )
+    set_target_properties(test_shuffle PROPERTIES
+        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
+    )
 endif()
 
 #################################################

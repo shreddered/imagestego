@@ -79,6 +79,14 @@ public:
 
 uint8_t log2(unsigned int value) noexcept;
 
+template<class It, class Rng>
+void shuffle(It first, It last, Rng&& gen) {
+    for (auto it = first; it != last; ++it) {
+        auto tmp = gen() % (it - first + 1);
+        std::swap(*(first + tmp), *it);
+    }
+}
+
 } // namespace imagestego
 
 #endif /* __IMAGESTEGO_CORE_HPP_INCLUDED__ */
