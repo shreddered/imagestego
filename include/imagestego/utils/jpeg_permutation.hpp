@@ -9,7 +9,6 @@
 #include <numeric>
 #include <random>
 #include <string>
-#include <thread>
 #include <vector>
 // third party
 #include "MurmurHash3.h"
@@ -25,7 +24,7 @@ public:
     void seed(const std::string& key);
     Permutation inverse();
 private:
-    static void generate(std::vector<int>& v);
+    void generate(std::vector<int>& v);
     std::vector<int> left;
     std::vector<int> right;
     std::mt19937 gen;

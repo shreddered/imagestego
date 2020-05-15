@@ -162,6 +162,7 @@ if (BUILD_TESTS)
     target_include_directories(test_avl
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
 
     target_link_libraries(test_avl
@@ -180,6 +181,7 @@ if (BUILD_TESTS)
     target_include_directories(test_bitarray
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
 
     set_target_properties(test_bitarray PROPERTIES
@@ -192,6 +194,7 @@ if (BUILD_TESTS)
     )
     target_include_directories(test_prefix
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
     target_link_libraries(test_prefix
         imagestego
@@ -207,6 +210,7 @@ if (BUILD_TESTS)
     target_include_directories(test_huffman
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
     target_link_libraries(test_huffman
         imagestego
@@ -221,6 +225,7 @@ if (BUILD_TESTS)
     )
     target_include_directories(test_lzw
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
     target_link_libraries(test_lzw
         imagestego
@@ -321,6 +326,7 @@ if (BUILD_EXAMPLES)
     target_include_directories(jstego
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
         PRIVATE /usr/include/opencv4/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
 
     target_link_libraries(jstego

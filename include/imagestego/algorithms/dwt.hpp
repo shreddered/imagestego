@@ -46,9 +46,7 @@ public:
         msg = encoder.getEncodedMessage();
     }
     void setSecretKey(const std::string& _key) override {
-        uint32_t tmp[1];
-        MurmurHash3_x86_32(_key.data(), _key.size(), 4991, tmp);
-        key = tmp[0];
+        key = hash(_key);
     }
     Algorithm getAlgorithm() const noexcept override {
         return Algorithm::Dwt;
@@ -126,9 +124,7 @@ public:
         image = cv::imread(imageName);
     }
     void setSecretKey(const std::string& _key) override { 
-        uint32_t tmp[1];
-        MurmurHash3_x86_32(_key.data(), _key.size(), 4991, tmp);
-        key = tmp[0];
+        key = hash(_key);
     }
     Algorithm getAlgorithm() const noexcept override {
         return Algorithm::Dwt;
