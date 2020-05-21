@@ -16,18 +16,23 @@
 
 namespace imagestego {
 
+enum Direction : bool {
+    horizontal = false,
+    vertical = true
+};
+
 // Matrix permutation
 class Permutation {
 public:
     explicit Permutation() noexcept;
-    explicit Permutation(const int& rows, const int& cols);
+    explicit Permutation(const int& dim);
     void seed(const std::string& key);
-    Permutation inverse();
+    void inverse();
 private:
     void generate(std::vector<int>& v);
-    std::vector<int> left;
-    std::vector<int> right;
+    std::vector<int> mat;
     std::mt19937 gen;
+    bool dir;
 }; // class Permutation
 
 class JpegPermutation : public Permutation {

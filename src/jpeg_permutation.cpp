@@ -5,16 +5,20 @@ namespace imagestego {
 
 Permutation::Permutation() noexcept {}
 
-Permutation::Permutation(const int& rows, const int& cols) {
-}
+Permutation::Permutation(const int& dim, bool _dir) : mat(dim), dir(_dir) {}
 
 void Permutation::seed(const std::string& key) {
-
+    gen.seed(hash(key));
+    generate();
 }
 
-void Permutation::generate(std::vector<int>& v) {
-    std::iota(v.begin(), v.end(), 0);
-    shuffle(v.begin(), v.end(), gen);
+void Permutation::inverse() {
+    dir = !dir;
+}
+
+void Permutation::generate() {
+    std::iota(mat.begin(), mat.end(), 0);
+    shuffle(mat.begin(), mat.end(), gen);
 }
 
 } // namespace imagestego
