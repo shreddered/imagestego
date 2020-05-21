@@ -62,9 +62,9 @@ void DwtEmbedder<void>::setOutputName(const std::string& filename) {
 }
 
 void DwtEmbedder<void>::setSecretKey(const std::string& _key) {
-    uint32_t tmp[1];
-    MurmurHash3_x86_32(_key.data(), _key.size(), 4991, tmp);
-    key = tmp[0];
+    key = hash(_key);
+    // seeding PRNG
+    gen.seed(key);
 }
 
 void DwtEmbedder<void>::setMessage(const std::string& _msg) {
@@ -96,8 +96,6 @@ void DwtEmbedder<void>::createStegoContainer() const {
     idwt(dwtGreen, tmp);
     tmp.copyTo(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)));
     // after that, perform embedding
-    // seeding PRNG
-    gen.seed(key);
     int x0 = 0, y0 = 0;
     do {
         y0 = gen() % image.rows;
@@ -136,9 +134,9 @@ void DwtExtracter<void>::setImage(const std::string& imageName) {
 }
 
 void DwtExtracter<void>::setSecretKey(const std::string& _key) {
-    uint32_t tmp[1];
-    MurmurHash3_x86_32(_key.data(), _key.size(), 4991, tmp);
-    key = tmp[0];
+    key = hash(_key);
+    // seeding PRNG
+    gen.seed(key);
 }
 
 std::string DwtExtracter<void>::extractMessage() {
@@ -154,8 +152,6 @@ std::string DwtExtracter<void>::extractMessage() {
         for (int j = 0; j != dwtGreen.cols; ++j)
             arr1.pushBack((dwtGreen.at<short>(i, j) & 1) != 0);
     uint32_t sz = arr1.getBlock(0);
-    // seeding PRNG
-    gen.seed(key);
     int x0 = 0, y0 = 0;
     do {
         y0 = gen() % image.rows;

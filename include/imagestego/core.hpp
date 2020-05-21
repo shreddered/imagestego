@@ -4,12 +4,17 @@
 // c++
 #include <exception>
 #include <string>
+// third party
+#include "MurmurHash3.h"
+
 
 #if (defined(WIN32) || defined(_WIN32) || defined (WINCE))
 #   define IMAGESTEGO_EXPORTS __declspec(dllexport)
 #else
 #   define IMAGESTEGO_EXPORTS /* nothing */
 #endif
+
+#define IMAGESTEGO_MURMURHASH_SEED 4991
 
 #if defined(_MSC_VER) && (_MSC_VER < 1600)
     typedef unsigned char uint8_t;
@@ -78,6 +83,20 @@ public:
 }; // class AbstractStegoExtracter
 
 uint8_t log2(unsigned int value) noexcept;
+
+template<class It, class Rng>
+void shuffle(It first, It last, Rng&& gen) {
+    for (auto it = first; it != last; ++it) {
+        auto tmp = gen() % (it - first + 1);
+        std::swap(*(first + tmp), *it);
+    }
+}
+
+inline uint32_t hash(const std::string& _key) {
+    uint32_t tmp[1];
+    MurmurHash3_x86_32(_key.data(), _key.size(), IMAGESTEGO_MURMURHASH_SEED, tmp);
+    return tmp[0];
+}
 
 } // namespace imagestego
 
