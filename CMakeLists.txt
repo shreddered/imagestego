@@ -52,10 +52,12 @@ set(IMAGESTEGO_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/f5.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_decoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_encoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/imagestego.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_lsb.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_permutation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_processor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_decoder.cpp
@@ -257,6 +259,23 @@ if (BUILD_TESTS)
         opencv_imgcodecs
     )
     set_target_properties(test_shuffle PROPERTIES
+        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
+    )
+    # permutation
+    add_executable(test_perm
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/permutation.cpp
+    )
+    target_include_directories(test_perm
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE /usr/include/opencv4/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+    )
+    target_link_libraries(test_perm
+        imagestego
+        opencv_core
+        opencv_imgcodecs
+    )
+    set_target_properties(test_perm PROPERTIES
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
     )
 endif()

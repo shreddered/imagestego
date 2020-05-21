@@ -3,20 +3,20 @@
 
 // imagestego headers
 #include "imagestego/core.hpp"
-#include "imagesteo/utils/jpeg_processor.hpp"
+#include "imagesteo/utils/jpeg_permutation.hpp"
 // c++ headers
 #include <string>
 
 
 namespace imagestego {
 
-class F5Embedder : public AbstractStegoEmbedder, private JpegProcessor {
+class F5Embedder : public AbstractStegoEmbedder, private JpegPermutation {
 public:
     explicit F5Embedder() noexcept;
     explicit F5Embedder(const std::string& imagename, const std::string& output);
 private:
     std::string& outputFile;
-    uint32_t key;
+    BitArray<> msg;
 }; // class F5Embedder
 
 }; //namespace imagestego

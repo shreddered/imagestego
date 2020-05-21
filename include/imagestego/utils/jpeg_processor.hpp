@@ -27,6 +27,7 @@ protected:
     void writeTo(const std::string& dst) const;
     JCOEFPTR getBlock(const int& channel, const int& y, const int& x) const;
     std::pair<int, int> getChannelSize(const int& channel) const;
+    short& at(const int& y, const int& x, const int& channel = 0) const;
 private:
     FILE* input = nullptr;
     mutable jpeg_decompress_struct decompressInfo;

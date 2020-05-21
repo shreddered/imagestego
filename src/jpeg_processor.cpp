@@ -61,4 +61,9 @@ void JpegProcessor::writeTo(const std::string& dst) const {
     jpeg_destroy_compress(&compressInfo);
 }
 
+short& JpegProcessor::at(const int& y, const int& x, const int& channel) const {
+    auto block = getBlock(channel, y >> 3, x >> 3);
+    return block[(y % 8) * 8 + x % 8];
+}
+
 } // namespace imagestego
