@@ -22,14 +22,15 @@ JpegImage::JpegImage(const std::string& src) {
 }
 
 JpegImage::~JpegImage() noexcept {
-    if (in)
-        close();
+    close();
 }
 
 void JpegImage::open(const std::string& src) {
     if (in)
         close();
     in = fopen(src.c_str(), "rb");
+    if (!in)
+        throw Exception(Exception::Codes::NoSuchFile);
     dinfo.err = jpeg_std_error(&err);
     jpeg_create_decompress(&dinfo);
     jpeg_stdio_src(&dinfo, in);
@@ -41,7 +42,8 @@ void JpegImage::open(const std::string& src) {
 
 void JpegImage::close() noexcept {
     jpeg_finish_decompress(&dinfo);
-    fclose(in);
+    if (in)
+        fclose(in);
     in = nullptr;
     jpeg_destroy_decompress(&dinfo);
 }

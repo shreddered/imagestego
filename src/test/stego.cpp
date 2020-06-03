@@ -62,6 +62,7 @@ int main() {
     imagestego::DwtExtracter<imagestego::HuffmanDecoder> extractingTest5("out5.png");
     extractingTest5.setSecretKey("asda");
     assert(msg == extractingTest5.extractMessage());
+
     // DWT embedding with LZW encoder 
     imagestego::DwtEmbedder<imagestego::LzwEncoder> embeddingTest6("in.jpg", "out6.png");
     embeddingTest6.setMessage(msg);
@@ -71,5 +72,15 @@ int main() {
     imagestego::DwtExtracter<imagestego::LzwDecoder> extractingTest6("out6.png");
     extractingTest6.setSecretKey("asda");
     assert(msg == extractingTest6.extractMessage());
+
+    // DWT embedding with LZW encoder 
+    imagestego::F3Embedder<imagestego::LzwEncoder> embeddingTest7("in.jpg", "out2.jpg");
+    embeddingTest7.setMessage(msg);
+    embeddingTest7.setSecretKey("asda");
+    embeddingTest7.createStegoContainer();
+    // DWT extracting with LZW decoder
+    imagestego::F3Extracter<imagestego::LzwDecoder> extractingTest7("out2.jpg");
+    extractingTest7.setSecretKey("asda");
+    assert(msg == extractingTest7.extractMessage());
     return 0;
 }

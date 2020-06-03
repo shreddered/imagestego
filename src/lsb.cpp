@@ -84,6 +84,9 @@ void LsbEmbedder<void>::__sillyLsbInsertion() const {
 }
 
 void LsbEmbedder<void>::__randomLsbInsertion(bool flag) const {
+#ifdef IMAGESTEGO_ENABLE_SPACE_CHECKING
+    spaceCheck(32 + msg.size(), image, Algorithm::Lsb);
+#endif
     if (key.empty()) {
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
         auto s = keygen::generate();
@@ -180,7 +183,7 @@ std::string LsbExtracter<void>::extractMessage() {
         case 0:
             return __sillyLsbExtraction();
         case 1:
-#if __cpluspus >= 201103L
+#if __cpluspus >= 201703L
             [[fallthrough]];
 #endif
         case 3:

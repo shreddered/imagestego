@@ -265,6 +265,25 @@ if (BUILD_TESTS)
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
     )
     
+    # f3
+    add_executable(test_f3
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/f3.cpp
+    )
+    target_include_directories(test_f3
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE /usr/include/opencv4/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+    )
+    target_link_libraries(test_f3
+        imagestego
+        opencv_core
+        opencv_imgcodecs
+        jpeg
+    )
+    set_target_properties(test_f3 PROPERTIES
+        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
+    )
+
 endif()
 
 #################################################

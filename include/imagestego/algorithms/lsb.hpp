@@ -12,6 +12,9 @@
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
 #   include "imagestego/utils/format_checker.hpp"
 #endif
+#ifdef IMAGESTEGO_ENABLE_SPACE_CHECKING
+#   include "imagestego/space_check.hpp"
+#endif
 // c++
 #include <random>
 #include <string>
@@ -91,7 +94,7 @@ public:
         }
     }
     Algorithm getAlgorithm() const noexcept override {
-        return Algorithm::Dwt;
+        return Algorithm::Lsb;
     }
 private:
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
@@ -118,6 +121,9 @@ private:
         cv::imwrite(outputFile, image);
     }
     void __randomLsbInsertion(bool flag) const {
+#ifdef IMAGESTEGO_ENABLE_SPACE_CHECKING
+        spaceCheck(32 + msg.size(), image, Algorithm::Lsb);
+#endif
         if (key.empty()) {
 #ifndef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
             throw Exception(Exception::Codes::NoKeyFound);;
@@ -220,7 +226,7 @@ public:
             case 0:
                 return __sillyLsbExtraction();
             case 1:
-#if __cpluspus >= 201103L
+#if __cpluspus >= 201703L
                 [[fallthrough]];
 #endif
             case 3:
@@ -230,7 +236,7 @@ public:
         }
     }
     Algorithm getAlgorithm() const noexcept override {
-        return Algorithm::Dwt;
+        return Algorithm::Lsb;
     }
 private:
     std::string __sillyLsbExtraction() const {
