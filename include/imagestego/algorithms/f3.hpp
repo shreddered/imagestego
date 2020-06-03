@@ -162,17 +162,36 @@ private:
     DecoderType decoder;
 }; // class F3Extracter
 
-/*template<>
-class F3Embedder<void> : public AbstractStegoEmbedder {
+template<>
+class IMAGESTEGO_EXPORTS F3Embedder<void> : public AbstractStegoEmbedder {
 public:
-
+    explicit F3Embedder() noexcept;
+    explicit F3Embedder(const std::string& input, const std::string& _output);
+    void setImage(const std::string& imageName) override;
+    void setOutputName(const std::string& filename) override;
+    void setMessage(const std::string& msg) override;
+    void setSecretKey(const std::string& key) override;
+    Algorithm getAlgorithm() const noexcept override; 
+    void createStegoContainer() const override;
+private:
+    mutable JpegImage image;
+    std::string output;
+    mutable BitArray<> msg;
 }; // class F3Embedder
 
 template<>
-class F3Extracter<void> : public AbstractStegoExtracter {
-
+class IMAGESTEGO_EXPORTS F3Extracter<void> : public AbstractStegoExtracter {
+public:
+    explicit F3Extracter() noexcept;
+    explicit F3Extracter(const std::string& input);
+    void setImage(const std::string& imageName) override;
+    void setSecretKey(const std::string& key) override;
+    Algorithm getAlgorithm() const noexcept override; 
+    std::string extractMessage() override;
+private:
+    JpegImage image;
 }; // class F3Extracter
-*/
+
 }; // namespace imagestego
 
 #endif /* __IMAGESTEGO_F3_HPP_INCLUDED__ */

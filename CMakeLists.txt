@@ -54,6 +54,7 @@ set(IMAGESTEGO_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/f3.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_decoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_encoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/imagestego.cpp
