@@ -21,7 +21,7 @@
     typedef unsigned short uint16_t
     typedef unsigned int uint32_t;
     typedef unsigned __int64 uint64_t;
-#else	// defined(_MSC_VER)
+#else
 #   include <cstdint>
 #endif
 
@@ -53,7 +53,7 @@ enum class Algorithm {
     Lsb,
     JpegLsb,
     Dwt,
-    F5,
+    F3,
     UserDefined
 };
 

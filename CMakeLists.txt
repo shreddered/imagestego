@@ -25,6 +25,8 @@ option(BUILD_EXAMPLES ON)
 
 option(ENABLE_KEYGEN_SUPPORT ON)
 
+option(ENABLE_SPACE_CHECKING ON)
+
 string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 
 if (NOT BUILD_TYPE STREQUAL RELEASE)
@@ -52,7 +54,6 @@ set(IMAGESTEGO_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
-    #    ${CMAKE_CURRENT_SOURCE_DIR}/src/f5.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_decoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_encoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/imagestego.cpp
@@ -75,6 +76,12 @@ endif()
 if (ENABLE_KEYGEN_SUPPORT)
     set(IMAGESTEGO_SOURCES ${IMAGESTEGO_SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/src/keygen.cpp
+    )
+endif()
+
+if (ENABLE_SPACE_CHECKING)
+    set(IMAGESTEGO_SOURCES ${IMAGESTEGO_SOURCES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/space_check.cpp
     )
 endif()
 
@@ -116,29 +123,6 @@ if (ENABLE_KEYGEN_SUPPORT)
         PRIVATE ENABLE_KEYGEN_SUPPORT
     )
 endif()
-
-#################################################
-#               imagestego CLI
-#################################################
-
-#add_executable(imagestego_cli
-#    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-#)
-#target_include_directories(imagestego_cli
-#    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-#    PRIVATE /usr/include/opencv4/
-#    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-#)
-#target_link_libraries(imagestego_cli
-#    imagestego
-#    opencv_core
-#    opencv_imgcodecs
-#    jpeg
-#)
-#set_target_properties(imagestego_cli PROPERTIES
-#    OUTPUT_NAME "imagestego"
-#    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
-#)
 
 #################################################
 #               tests
@@ -226,22 +210,23 @@ if (BUILD_TESTS)
     )
 
     # stego
-    #    add_executable(test_stego
-    #    ${CMAKE_CURRENT_SOURCE_DIR}/src/test/stego.cpp
-    #)
-    #target_include_directories(test_stego
-    #    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-    #    PRIVATE /usr/include/opencv4/
-    #    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    #)
-    #target_link_libraries(test_stego
-    #    imagestego
-    #    opencv_core
-    #    opencv_imgcodecs
-    #)
-    #set_target_properties(test_stego PROPERTIES
-    #    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
-    #)
+        add_executable(test_stego
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/stego.cpp
+    )
+    target_include_directories(test_stego
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+        PRIVATE /usr/include/opencv4/
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+    )
+    target_link_libraries(test_stego
+        imagestego
+        opencv_core
+        opencv_imgcodecs
+        jpeg
+    )
+    set_target_properties(test_stego PROPERTIES
+        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
+    )
 
     # shuffle
     add_executable(test_shuffle
@@ -398,5 +383,3 @@ endif()
 install(TARGETS imagestego DESTINATION ${IMAGESTEGO_PREFIX})
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION "/usr/local/include")
-
-#install(TARGETS imagestego_cli DESTINATION "/usr/local/bin")

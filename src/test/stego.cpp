@@ -71,15 +71,5 @@ int main() {
     imagestego::DwtExtracter<imagestego::LzwDecoder> extractingTest6("out6.png");
     extractingTest6.setSecretKey("asda");
     assert(msg == extractingTest6.extractMessage());
-    
-    // JPEG LSB embedding with Huffman encoder 
-    imagestego::JpegLsbEmbedder<imagestego::HuffmanEncoder> embeddingTest7("in.jpg", "out7.jpg");
-    embeddingTest7.setMessage(msg);
-    embeddingTest7.setSecretKey("asda");
-    embeddingTest7.createStegoContainer();
-    // DWT extracting with Huffman decoder
-    imagestego::JpegLsbExtracter<imagestego::HuffmanDecoder> extractingTest7("out7.jpg");
-    extractingTest7.setSecretKey("asda");
-    assert(msg == extractingTest7.extractMessage());
     return 0;
 }
