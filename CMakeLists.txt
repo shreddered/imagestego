@@ -52,13 +52,12 @@ set(IMAGESTEGO_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/f5.cpp
+    #    ${CMAKE_CURRENT_SOURCE_DIR}/src/f5.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_decoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_encoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/imagestego.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_image.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_lsb.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_permutation.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_processor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_decoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_dictionary.cpp
@@ -122,24 +121,24 @@ endif()
 #               imagestego CLI
 #################################################
 
-add_executable(imagestego_cli
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-)
-target_include_directories(imagestego_cli
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-    PRIVATE /usr/include/opencv4/
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-)
-target_link_libraries(imagestego_cli
-    imagestego
-    opencv_core
-    opencv_imgcodecs
-    jpeg
-)
-set_target_properties(imagestego_cli PROPERTIES
-    OUTPUT_NAME "imagestego"
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
-)
+#add_executable(imagestego_cli
+#    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+#)
+#target_include_directories(imagestego_cli
+#    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+#    PRIVATE /usr/include/opencv4/
+#    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+#)
+#target_link_libraries(imagestego_cli
+#    imagestego
+#    opencv_core
+#    opencv_imgcodecs
+#    jpeg
+#)
+#set_target_properties(imagestego_cli PROPERTIES
+#    OUTPUT_NAME "imagestego"
+#    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
+#)
 
 #################################################
 #               tests
@@ -227,22 +226,22 @@ if (BUILD_TESTS)
     )
 
     # stego
-    add_executable(test_stego
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/stego.cpp
-    )
-    target_include_directories(test_stego
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-    target_link_libraries(test_stego
-        imagestego
-        opencv_core
-        opencv_imgcodecs
-    )
-    set_target_properties(test_stego PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
-    )
+    #    add_executable(test_stego
+    #    ${CMAKE_CURRENT_SOURCE_DIR}/src/test/stego.cpp
+    #)
+    #target_include_directories(test_stego
+    #    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    #    PRIVATE /usr/include/opencv4/
+    #    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+    #)
+    #target_link_libraries(test_stego
+    #    imagestego
+    #    opencv_core
+    #    opencv_imgcodecs
+    #)
+    #set_target_properties(test_stego PROPERTIES
+    #    PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
+    #)
 
     # shuffle
     add_executable(test_shuffle
@@ -261,23 +260,26 @@ if (BUILD_TESTS)
     set_target_properties(test_shuffle PROPERTIES
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
     )
-    # permutation
-    add_executable(test_perm
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/permutation.cpp
+
+    # shuffle
+    add_executable(test_jpeg
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/jpeg.cpp
     )
-    target_include_directories(test_perm
+    target_include_directories(test_jpeg
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
         PRIVATE /usr/include/opencv4/
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
-    target_link_libraries(test_perm
+    target_link_libraries(test_jpeg
         imagestego
         opencv_core
         opencv_imgcodecs
+        jpeg
     )
-    set_target_properties(test_perm PROPERTIES
+    set_target_properties(test_jpeg PROPERTIES
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
     )
+    
 endif()
 
 #################################################
@@ -397,4 +399,4 @@ install(TARGETS imagestego DESTINATION ${IMAGESTEGO_PREFIX})
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION "/usr/local/include")
 
-install(TARGETS imagestego_cli DESTINATION "/usr/local/bin")
+#install(TARGETS imagestego_cli DESTINATION "/usr/local/bin")

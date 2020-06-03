@@ -6,6 +6,7 @@
 #include "imagestego/utils/bitarray.hpp"
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
 #   include "imagestego/keygen.hpp"
+#   include <iostream>
 #endif
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
 #   include "imagestego/utils/format_checker.hpp"
@@ -52,12 +53,15 @@ public:
         return Algorithm::Dwt;
     }
     void createStegoContainer() const override {
-        if (!key)
+        if (!key) {
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
-            setSecretKey(keygen::generate());
+            auto s = keygen::generate();
+            std::cout << "key = " << s << endl;
+            setSecretKey(s);
 #else
             throw Exception(Exception::Codes::NoKeyFound);
 #endif
+        }
         uint32_t sz = 4 * ceil(sqrt(msg.size())); 
         std::size_t currentMsgIndex = 0;
         auto arr = BitArray<>::fromInt(sz);

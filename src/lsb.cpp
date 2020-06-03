@@ -84,12 +84,15 @@ void LsbEmbedder<void>::__sillyLsbInsertion() const {
 }
 
 void LsbEmbedder<void>::__randomLsbInsertion(bool flag) const {
-    if (key.empty())
+    if (key.empty()) {
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
-        setSecretKey(keygen::generate());
+        auto s = keygen::generate();
+        std::cout << s << std::endl;
+        setSecretKey(s);
 #else
         throw Exception(Exception::Codes::NoKeyFound);
 #endif
+    }
     Route route(std::make_pair(image.cols, image.rows), gen);
     route.create(32);
     auto it = route.begin();

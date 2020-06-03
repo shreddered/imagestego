@@ -53,7 +53,7 @@ void HuffmanDecoder::readDfs() {
                 cameFrom = currentNode;
                 currentNode = currentNode->parent;
                 code.pop_back();
-            } while (currentNode->right == cameFrom && currentNode != root); 
+            } while (currentNode && currentNode->right == cameFrom && currentNode != root); 
             if (isLeftChild(cameFrom)) {
                 currentNode->right = new TreeNode(currentNode);
                 currentNode = currentNode->right;

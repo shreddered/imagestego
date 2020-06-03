@@ -5,7 +5,7 @@ namespace imagestego {
 
 F5Embedder::F5Embedder() noexcept : JpegPermutation() {}
 
-F5Embedder::F5Embedder(const std::string imagename, const std::string& output) 
+F5Embedder::F5Embedder(const std::string& imagename, const std::string& output) 
     : JpegPermutation(imagename), outputFile(output) {}
 
 void F5Embedder::setImage(const std::string& imagename) {
@@ -26,7 +26,12 @@ void F5Embedder::setSecretKey(const std::string& key) {
 
 void F5Embedder::createStegoContainer() const {
     JpegPermutation::process();
+    JpegPermutation::process();
     JpegProcessor::writeTo(outputFile);
+}
+
+Algorithm F5Embedder::getAlgorithm() const {
+    return Algorithm::F5;
 }
 
 } // namespace imagestego

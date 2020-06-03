@@ -3,7 +3,7 @@
 
 // imagestego headers
 #include "imagestego/core.hpp"
-#include "imagestego/utils/jpeg_processor.hpp"
+#include "imagestego/utils/jpeg_image.hpp"
 // c++ headers
 #include <algorithm>
 #include <numeric>
@@ -20,7 +20,7 @@ class Permutation;
 
 }
 
-std::vector<short> operator *(const imagestego::Permutation& p, const std::vector<short>& row);
+std::vector<short> operator *(const imagestego::Permutation& p, const imagestego::JpegImage& im);
 std::vector<short> operator *(const std::vector<short>& col, const imagestego::Permutation& p);
 
 namespace imagestego {
@@ -43,22 +43,6 @@ private:
     mutable std::vector<int> mat;
     bool dir;
 }; // class Permutation
-
-class JpegPermutation : protected JpegProcessor {
-public:
-    virtual ~JpegPermutation() noexcept = default;
-protected:
-    explicit JpegPermutation(const std::string& src);
-    void generate(const std::string& key);
-    void process() const override;
-private:
-    Permutation p1, p2;
-    std::mt19937 gen;
-    std::vector<short> getRow(const int& row, const int& channel = 0) const;
-    void setRow(const int& row, const std::vector<short>& arr, const int& channel = 0) const; 
-    std::vector<short> getCol(const int& row, const int& channel = 0) const;
-    void setCol(const int& col, const std::vector<short>& arr, const int& channel = 0) const; 
-}; // class JpegPermutation
 
 } // namespace imagestego
 

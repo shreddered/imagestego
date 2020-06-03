@@ -53,6 +53,7 @@ enum class Algorithm {
     Lsb,
     JpegLsb,
     Dwt,
+    F5,
     UserDefined
 };
 

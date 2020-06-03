@@ -7,6 +7,7 @@
 #include "imagestego/utils/bitarray.hpp"
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
 #   include "imagestego/keygen.hpp"
+#   include <iostream>
 #endif
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
 #   include "imagestego/utils/format_checker.hpp"
@@ -117,12 +118,15 @@ private:
         cv::imwrite(outputFile, image);
     }
     void __randomLsbInsertion(bool flag) const {
-        if (key.empty())
+        if (key.empty()) {
 #ifndef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
             throw Exception(Exception::Codes::NoKeyFound);;
 #else
-            setSecretKey(imagestego::keygen::generate());
+            auto s = imagestego::keygen::generate();
+            std::cout << "key = " << s << std::endl;
+            setSecretKey(s);
 #endif
+        }
         Route route(std::make_pair(image.cols, image.rows), gen);
         route.create(32);
         auto it = route.begin();
