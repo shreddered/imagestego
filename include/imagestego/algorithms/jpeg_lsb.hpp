@@ -46,8 +46,8 @@ public:
         BitArray<uint32_t> sizeStream;
         sizeStream.pushBack(msg.size(), 32);
         int i = 0, j = 0;
-        for (; i != image.rows && msgIndex != 32; ++i)
-            for (; j != image.cols && msgIndex != 32; ++j) {
+        for (; i != image.rows; ++i) {
+            for (j = 0; j != image.cols && msgIndex != 32; ++j) {
                 auto p = image.at(i, j);
                 if ((p[0] & 1) != key[keyIndex]) {
                     if (p[1] != 1 && p[1]) {
@@ -67,8 +67,16 @@ public:
                 }
                 keyIndex = (keyIndex + 1) % key.size();
             }
+            if (j == image.cols)
+                j = 0;
+            if (msgIndex == 32) {
+                if (!j)
+                    ++i;
+                break;
+            }
+        }
         msgIndex = 0;
-        for (; i != image.rows && msgIndex != msg.size(); ++i)
+        for (; i != image.rows && msgIndex != msg.size(); ++i) {
             for (; j != image.cols && msgIndex != msg.size(); ++j) {
                 auto p = image.at(i, j);
                 if ((p[0] & 1) != key[keyIndex]) {
@@ -89,6 +97,8 @@ public:
                 }
                 keyIndex = (keyIndex + 1) % key.size();
             }
+            j = 0; // well it's important
+        }
         image.writeTo(output);
     }
 private:
@@ -118,7 +128,7 @@ public:
         BitArray<uint32_t> sizeStream;
         BitArray<uint8_t> msg;
         int i = 0, j = 0;
-        for (; i != image.rows && sizeStream.size() != 32; ++i)
+        for (; i != image.rows; ++i) {
             for (; j != image.cols && sizeStream.size() != 32; ++j) {
                 auto p = image.at(i, j);
                 if (lsb(p[0]) != key[keyIndex]) {
@@ -131,6 +141,14 @@ public:
                 }
                 keyIndex = (keyIndex + 1) % key.size();
             }
+            if (j == image.cols)
+                j = 0;
+            if (sizeStream.size() == 32) {
+                if (!j)
+                    ++i;
+                break;
+            }
+        }
         std::size_t sz = sizeStream.getBlock(0);
         for (; i != image.rows && sz; ++i) {
             for (; j != image.cols && sz; ++j) {                
