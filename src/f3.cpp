@@ -19,13 +19,16 @@ void F3Embedder<void>::setMessage(const std::string& _msg) {
     msg = BitArray<>(_msg);
 }
 
-void F3Embedder<void>::setSecretKey(const std::string& key) {}
+void F3Embedder<void>::setSecretKey(const std::string& key) {
+    gen.seed(hash(key));
+}
 
 Algorithm F3Embedder<void>::getAlgorithm() const noexcept {
     return Algorithm::F3;    
 } 
 
-void F3Embedder<void>::createStegoContainer() const {
+void F3Embedder<void>::createStegoContainer() {
+    randomize(msg, gen);
     msg.put('\0');
     auto lsb = [](const short& value) -> bool {
         return (value & 1) != 0;
@@ -70,7 +73,9 @@ void F3Extracter<void>::setImage(const std::string& imageName) {
     image.open(imageName);
 }
 
-void F3Extracter<void>::setSecretKey(const std::string& key) {}
+void F3Extracter<void>::setSecretKey(const std::string& key) {
+    gen.seed(hash(key));
+}
 
 Algorithm F3Extracter<void>::getAlgorithm() const noexcept {
     return Algorithm::F3;
@@ -88,6 +93,7 @@ std::string F3Extracter<void>::extractMessage() {
                 if (p[k])
                     msg.pushBack(lsb(p[k]));
                 if (msg.size() && msg.size() % 8 == 0 && msg.lastBlock() == 0) {
+                    randomize(msg, gen);
                     auto s = msg.toString();
                     s.pop_back();
                     return s;

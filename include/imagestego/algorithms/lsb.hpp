@@ -76,9 +76,9 @@ public:
     }
     void setSecretKey(const std::string& _key) noexcept override {
         key = BitArray<unsigned int>(_key);
-        seed(_key);
+        gen.seed(hash(_key));
     }
-    void createStegoContainer() const override {
+    void createStegoContainer() override {
         switch(opts) {
             case 0:
                 __sillyLsbInsertion();
@@ -103,7 +103,7 @@ private:
             throw Exception(Exception::Codes::NotJpegClass);
     }
 #endif
-    void __sillyLsbInsertion() const {
+    void __sillyLsbInsertion() {
         std::size_t currentBitIndex = 0;
         msg.put('\0');
         for (int row = 0; row != image.rows && currentBitIndex != msg.size(); ++row) {
@@ -120,7 +120,7 @@ private:
         }
         cv::imwrite(outputFile, image);
     }
-    void __randomLsbInsertion(bool flag) const {
+    void __randomLsbInsertion(bool flag) {
 #ifdef IMAGESTEGO_ENABLE_SPACE_CHECKING
         spaceCheck(32 + msg.size(), image, Algorithm::Lsb);
 #endif
@@ -194,17 +194,12 @@ private:
         }
         cv::imwrite(outputFile, image);
     }
-    mutable EncoderType encoder;
-    void seed(const std::string& str) const noexcept {
-        uint32_t tmp[1];
-        MurmurHash3_x86_32(str.data(), str.size(), 4991, tmp);
-        gen.seed(*tmp);
-    }
+    EncoderType encoder;
     int opts;
-    mutable std::mt19937 gen;
-    mutable cv::Mat image;
+    std::mt19937 gen;
+    cv::Mat image;
     std::string outputFile;
-    mutable BitArray<> msg;
+    BitArray<> msg;
     BitArray<unsigned int> key;
 };
 
@@ -219,7 +214,7 @@ public:
     }
     void setSecretKey(const std::string& _key) noexcept override {
         key = BitArray<unsigned int>(_key);
-        seed(_key);
+        gen.seed(hash(_key));
     }
     std::string extractMessage() override {
         switch(opts) {
@@ -239,7 +234,7 @@ public:
         return Algorithm::Lsb;
     }
 private:
-    std::string __sillyLsbExtraction() const {
+    std::string __sillyLsbExtraction() {
         BitArray<unsigned char> arr;
         for (int row = 0; row != image.rows; ++row) {
             for (int col = 0; col != image.cols; ++col) {
@@ -254,7 +249,7 @@ private:
             }
         }
     }
-    std::string __randomLsbExtraction() const {
+    std::string __randomLsbExtraction() {
         if (key.empty())
             throw Exception(Exception::Codes::NoKeyFound);;
         BitArray<uint8_t> arr;
@@ -291,16 +286,11 @@ private:
         decoder.setMessage(arr);
         return decoder.getDecodedMessage();
     }
-    void seed(const std::string& str) const noexcept {
-        uint32_t tmp[1];
-        MurmurHash3_x86_32(str.data(), str.size(), 4991, tmp);
-        gen.seed(*tmp);
-    }
     int opts;
     cv::Mat image;
     BitArray<unsigned int> key;
-    mutable DecoderType decoder;
-    mutable std::mt19937 gen;
+    DecoderType decoder;
+    std::mt19937 gen;
 }; // class
 
 template<>
@@ -312,21 +302,20 @@ public:
     void setOutputName(const std::string& filename) override;
     void setMessage(const std::string& _msg) noexcept override;
     void setSecretKey(const std::string& _key) noexcept override;
-    void createStegoContainer() const override; 
+    void createStegoContainer() override; 
     Algorithm getAlgorithm() const noexcept override;
 private:
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
     void check() const;
     FormatChecker fmt;
 #endif
-    void __sillyLsbInsertion() const;
-    void __randomLsbInsertion(bool flag) const;
-    void seed(const std::string& str) const noexcept;
+    void __sillyLsbInsertion();
+    void __randomLsbInsertion(bool flag);
     int opts;
-    mutable cv::Mat image;
-    mutable std::mt19937 gen;
+    cv::Mat image;
+    std::mt19937 gen;
     std::string outputFile;
-    mutable BitArray<> msg;
+    BitArray<> msg;
     BitArray<unsigned int> key;
 }; // inserter
 
@@ -340,10 +329,9 @@ public:
     std::string extractMessage() override; 
     Algorithm getAlgorithm() const noexcept override;
 private:
-    std::string __sillyLsbExtraction() const;
-    std::string __randomLsbExtraction() const; 
-    void seed(const std::string& str) const noexcept;
-    mutable std::mt19937 gen;
+    std::string __sillyLsbExtraction();
+    std::string __randomLsbExtraction(); 
+    std::mt19937 gen;
     int opts;
     cv::Mat image;
     BitArray<unsigned int> key;

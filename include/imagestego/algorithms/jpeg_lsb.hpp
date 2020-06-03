@@ -40,7 +40,7 @@ public:
     Algorithm getAlgorithm() const noexcept override {
         return Algorithm::JpegLsb;
     }
-    void createStegoContainer() const override {
+    void createStegoContainer() override {
         std::size_t keyIndex = 0,
                     msgIndex = 0;
         BitArray<uint32_t> sizeStream;
@@ -102,9 +102,9 @@ public:
         image.writeTo(output);
     }
 private:
-    mutable BitArray<unsigned char> msg, key;
+    BitArray<unsigned char> msg, key;
     EncoderType encoder;
-    mutable JpegImage image;
+    JpegImage image;
     std::string output;
 }; // class JpegLsbEmbedder
 
@@ -190,10 +190,10 @@ public:
     void setMessage(const std::string& message) override;
     void setSecretKey(const std::string& key) override;
     Algorithm getAlgorithm() const noexcept override;
-    void createStegoContainer() const override; 
+    void createStegoContainer() override; 
 private:
-    mutable BitArray<> msg, key;
-    mutable JpegImage image;
+    BitArray<> msg, key;
+    JpegImage image;
     std::string output;
 }; // class JpegLsbEmbedder
 

@@ -27,7 +27,7 @@ Algorithm JpegLsbEmbedder<void>::getAlgorithm() const noexcept {
     return Algorithm::JpegLsb;
 }
 
-void JpegLsbEmbedder<void>::createStegoContainer() const {
+void JpegLsbEmbedder<void>::createStegoContainer() {
     msg.put('\0');
     std::size_t idx = 0;
     for (int i = 0; i != image.rows && idx < msg.size(); ++i)

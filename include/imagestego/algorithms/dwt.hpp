@@ -52,7 +52,7 @@ public:
     Algorithm getAlgorithm() const noexcept override {
         return Algorithm::Dwt;
     }
-    void createStegoContainer() const override {
+    void createStegoContainer() override {
         if (!key) {
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
             auto s = keygen::generate();
@@ -114,8 +114,8 @@ private:
     EncoderType encoder;
     cv::Mat image;
     std::string outputFile;
-    mutable std::mt19937 gen;
-    mutable BitArray<> msg;
+    std::mt19937 gen;
+    BitArray<> msg;
     uint32_t key;
 }; // class DwtEmbedder
 
@@ -192,13 +192,13 @@ public:
     void setOutputName(const std::string& filename) override;
     void setMessage(const std::string& msg) override;
     void setSecretKey(const std::string& key) override;
-    void createStegoContainer() const override;
+    void createStegoContainer() override;
     Algorithm getAlgorithm() const noexcept override;
 private:
     cv::Mat image;
     std::string outputFile;
-    mutable std::mt19937 gen;
-    mutable BitArray<> msg;
+    std::mt19937 gen;
+    BitArray<> msg;
     uint32_t key;
 }; // class DwtStegoEmbedder
 

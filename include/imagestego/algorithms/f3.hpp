@@ -6,6 +6,7 @@
 #include "imagestego/utils/bitarray.hpp"
 #include "imagestego/utils/jpeg_image.hpp"
 // c++ headers
+#include <random>
 #include <string>
 
 
@@ -26,11 +27,14 @@ public:
         encoder.setMessage(_msg);
         msg = encoder.getEncodedMessage();
     }
-    void setSecretKey(const std::string& key) override {}
+    void setSecretKey(const std::string& key) override {
+        gen.seed(hash(key));
+    }
     Algorithm getAlgorithm() const noexcept override {
         return Algorithm::F3;
     }
-    void createStegoContainer() const override {
+    void createStegoContainer() override {
+        randomize(msg, gen);
         BitArray<> size;
         size.pushBack(msg.size(), 32);
         auto lsb = [](const short& value) -> bool {
@@ -100,9 +104,10 @@ public:
     }
 private:
     std::string output;
-    mutable JpegImage image;
+    JpegImage image;
     EncoderType encoder;
     BitArray<uint8_t> msg;
+    std::mt19937 gen;
 }; // class F3Embedder
 
 template<class DecoderType>
@@ -113,7 +118,9 @@ public:
     void setImage(const std::string& imageName) override {
         image.open(imageName);
     }
-    void setSecretKey(const std::string& key) override {}
+    void setSecretKey(const std::string& key) override {
+        gen.seed(hash(key));
+    }
     Algorithm getAlgorithm() const noexcept override {
         return Algorithm::F3;
     }
@@ -150,6 +157,7 @@ public:
                     if (p[k])
                         msg.pushBack(lsb(p[k]));
                     if (msg.size() == sz) {
+                        randomize(msg, gen);
                         decoder.setMessage(msg);
                         return decoder.getDecodedMessage();
                     }
@@ -160,6 +168,7 @@ public:
 private:
     JpegImage image;
     DecoderType decoder;
+    std::mt19937 gen;
 }; // class F3Extracter
 
 template<>
@@ -172,11 +181,12 @@ public:
     void setMessage(const std::string& msg) override;
     void setSecretKey(const std::string& key) override;
     Algorithm getAlgorithm() const noexcept override; 
-    void createStegoContainer() const override;
+    void createStegoContainer() override;
 private:
-    mutable JpegImage image;
+    JpegImage image;
     std::string output;
-    mutable BitArray<> msg;
+    BitArray<> msg;
+    std::mt19937 gen;
 }; // class F3Embedder
 
 template<>
@@ -190,6 +200,7 @@ public:
     std::string extractMessage() override;
 private:
     JpegImage image;
+    std::mt19937 gen;
 }; // class F3Extracter
 
 }; // namespace imagestego

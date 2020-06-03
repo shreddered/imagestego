@@ -64,7 +64,7 @@ public:
     virtual void setMessage(const std::string& msg) = 0;
     virtual void setSecretKey(const std::string& key) = 0;
     virtual Algorithm getAlgorithm() const = 0; 
-    virtual void createStegoContainer() const = 0;
+    virtual void createStegoContainer() = 0;
     static constexpr inline Mode getMode() noexcept {
         return Mode::embedding;
     }

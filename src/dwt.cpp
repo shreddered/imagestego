@@ -71,7 +71,7 @@ void DwtEmbedder<void>::setMessage(const std::string& _msg) {
     msg = BitArray<>(_msg);
 }
 
-void DwtEmbedder<void>::createStegoContainer() const {
+void DwtEmbedder<void>::createStegoContainer() {
     if (!key)
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
         setSecretKey(keygen::generate());

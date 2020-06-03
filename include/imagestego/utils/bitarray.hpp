@@ -6,6 +6,8 @@
 // c++ headers
 #include <algorithm>
 #include <cstring>
+#include <random>
+#include <stdexcept>
 #include <string>
 #include <type_traits>
 #include <vector>
@@ -201,6 +203,13 @@ public:
     }
 }; // class BitArray
 
+// xoring with random values
+template<typename T>
+void randomize(BitArray<T>& arr, std::mt19937& gen) { 
+    for (std::size_t i = 0; i != arr.size(); ++i)
+        arr[i] = (gen() % 2 != 0) != arr[i];
+}
+
 } // namespace imagestego
 
 template<class Block>
@@ -217,6 +226,17 @@ imagestego::BitArray<T> operator +(const imagestego::BitArray<T1>& arr1, const i
         arr[i] = arr1[i];
     for (std::size_t i = 0; i != arr2.size(); ++i)
         arr[i + arr1.size()] = arr2[i];
+    return arr;
+}
+
+template<typename T1, typename T2, typename T = typename std::common_type<T1, T2>::type>
+imagestego::BitArray<T> operator ^(const imagestego::BitArray<T1>& arr1, const imagestego::BitArray<T2>& arr2) {
+    if (arr1.size() != arr2.size())
+        throw std::runtime_error("^ is defined only for bit arrays of same size");
+    imagestego::BitArray<T> arr(arr1.size());
+    for (std::size_t i = 0; i != arr1.size(); ++i) {
+        arr[i] = arr1[i] != arr2[i];
+    }
     return arr;
 }
 

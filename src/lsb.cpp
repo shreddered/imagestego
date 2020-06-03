@@ -40,16 +40,10 @@ void LsbEmbedder<void>::setMessage(const std::string& _msg) noexcept {
 
 void LsbEmbedder<void>::setSecretKey(const std::string& _key) noexcept{
     key = BitArray<unsigned int>(_key);
-    seed(_key);
+    gen.seed(hash(_key));
 }
 
-void LsbEmbedder<void>::seed(const std::string& str) const noexcept {
-    uint32_t tmp[1];
-    MurmurHash3_x86_32(str.data(), str.size(), 4991, tmp);
-    gen.seed(*tmp); 
-}
-
-void LsbEmbedder<void>::createStegoContainer() const {
+void LsbEmbedder<void>::createStegoContainer() {
     switch(opts) {
         case 0:
             __sillyLsbInsertion();
@@ -65,7 +59,7 @@ void LsbEmbedder<void>::createStegoContainer() const {
     }
 }
 
-void LsbEmbedder<void>::__sillyLsbInsertion() const {
+void LsbEmbedder<void>::__sillyLsbInsertion() {
     std::size_t currentBitIndex = 0;
     msg.put('\0');
     for (int row = 0; row != image.rows && currentBitIndex != msg.size(); ++row) {
@@ -83,7 +77,7 @@ void LsbEmbedder<void>::__sillyLsbInsertion() const {
     cv::imwrite(outputFile, image);
 }
 
-void LsbEmbedder<void>::__randomLsbInsertion(bool flag) const {
+void LsbEmbedder<void>::__randomLsbInsertion(bool flag) {
 #ifdef IMAGESTEGO_ENABLE_SPACE_CHECKING
     spaceCheck(32 + msg.size(), image, Algorithm::Lsb);
 #endif
@@ -169,13 +163,7 @@ void LsbExtracter<void>::setImage(const std::string& imageName) {
 
 void LsbExtracter<void>::setSecretKey(const std::string& _key) noexcept {
     key = BitArray<unsigned int>(_key);
-    seed(_key);
-}
-
-void LsbExtracter<void>::seed(const std::string& str) const noexcept {
-    uint32_t tmp[1];
-    MurmurHash3_x86_32(str.data(), str.size(), 4991, tmp);
-    gen.seed(*tmp); 
+    gen.seed(hash(_key));
 }
 
 std::string LsbExtracter<void>::extractMessage() { 
@@ -193,7 +181,7 @@ std::string LsbExtracter<void>::extractMessage() {
     }
 }
 
-std::string LsbExtracter<void>::__sillyLsbExtraction() const {
+std::string LsbExtracter<void>::__sillyLsbExtraction() {
     BitArray<unsigned char> arr;
     for (int row = 0; row != image.rows; ++row) {
         for (int col = 0; col != image.cols; ++col) {
@@ -209,7 +197,7 @@ std::string LsbExtracter<void>::__sillyLsbExtraction() const {
     }
 }
 
-std::string LsbExtracter<void>::__randomLsbExtraction() const {
+std::string LsbExtracter<void>::__randomLsbExtraction() {
     if (key.empty())
         throw Exception(Exception::Codes::NoKeyFound);
     BitArray<uint8_t> arr;
