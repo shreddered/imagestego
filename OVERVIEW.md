@@ -1,5 +1,6 @@
 # Overview
 
+
 ## LSB algorithm
 
 Algorithm converts message represented as string to bit array and then prepends length of it.
@@ -41,3 +42,7 @@ The embedding process is as follows:
 4. Merge channels and write image.
 
 - [x] **TODO**: add key-dependent cropping.
+
+## F3 algorithm
+
+Classic F3 algorithm. Key is used to randomize message represented as bit array.

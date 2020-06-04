@@ -7,6 +7,7 @@ Dependencies - [_libopencv_](https://github.com/opencv/opencv) and [_libjpeg_](h
 
 # Quick overview
 
+
 In this library several steganographic algorithms are introduced:
 
 * LSB algorithm.
@@ -17,6 +18,8 @@ LSB embedding in JPEG applied after quantization of DCT coefficients.
 * DWT-based algorithm (lossless formats only).
 
 This scheme uses [Integer Wavelet Transform](https://stackoverflow.com/questions/15802827/how-can-dwt-be-used-in-lsb-substitution-steganography) to embed secret message.
+
+* F3 Algorithm
 
 If you want an detailed overview of algorithms please refer to [OVERVIEW.md](https://github.com/shreddered/Image-Steganography/blob/master/OVERVIEW.md).
 
