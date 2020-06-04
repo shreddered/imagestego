@@ -21,6 +21,7 @@ void F3Embedder<void>::setMessage(const std::string& _msg) {
 
 void F3Embedder<void>::setSecretKey(const std::string& key) {
     gen.seed(hash(key));
+    hasKey = true;
 }
 
 Algorithm F3Embedder<void>::getAlgorithm() const noexcept {
@@ -28,6 +29,15 @@ Algorithm F3Embedder<void>::getAlgorithm() const noexcept {
 } 
 
 void F3Embedder<void>::createStegoContainer() {
+    if (!hasKey) {
+#ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
+        auto s = keygen::generate();
+        std::cout << "key = " << s << std::endl;
+        setSecretKey(s);
+#else
+        throw Exception(Exception::Codes::NoKeyFound);
+#endif 
+    }
     randomize(msg, gen);
     msg.put('\0');
     auto lsb = [](const short& value) -> bool {
@@ -75,6 +85,7 @@ void F3Extracter<void>::setImage(const std::string& imageName) {
 
 void F3Extracter<void>::setSecretKey(const std::string& key) {
     gen.seed(hash(key));
+    hasKey = true;
 }
 
 Algorithm F3Extracter<void>::getAlgorithm() const noexcept {
@@ -82,6 +93,8 @@ Algorithm F3Extracter<void>::getAlgorithm() const noexcept {
 }
 
 std::string F3Extracter<void>::extractMessage() {
+    if (!hasKey)
+        throw Exception(Exception::Codes::NoKeyFound);
     auto lsb = [](const short& value) -> bool {
         return (value & 1) != 0;
     };

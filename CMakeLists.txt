@@ -115,13 +115,19 @@ target_link_libraries(imagestego
 
 if (ENABLE_FORMAT_CHECKING)
     target_compile_definitions(imagestego
-        PRIVATE ENABLE_FORMAT_CHECKING
+        PRIVATE IMAGESTEGO_ENABLE_FORMAT_CHECKING
     )
 endif()
 
 if (ENABLE_KEYGEN_SUPPORT)
     target_compile_definitions(imagestego
-        PRIVATE ENABLE_KEYGEN_SUPPORT
+        PRIVATE IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
+    )
+endif()
+
+if (ENABLE_SPACE_CHECKING)
+    target_compile_definitions(imagestego
+        PRIVATE IMAGESTEGO_ENABLE_SPACE_CHECKING
     )
 endif()
 

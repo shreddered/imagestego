@@ -126,7 +126,7 @@ private:
 #endif
         if (key.empty()) {
 #ifndef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
-            throw Exception(Exception::Codes::NoKeyFound);;
+            throw Exception(Exception::Codes::NoKeyFound);
 #else
             auto s = imagestego::keygen::generate();
             std::cout << "key = " << s << std::endl;

@@ -48,15 +48,16 @@ public:
     }
     void setSecretKey(const std::string& _key) override {
         key = hash(_key);
+        hasKey = true;
     }
     Algorithm getAlgorithm() const noexcept override {
         return Algorithm::Dwt;
     }
     void createStegoContainer() override {
-        if (!key) {
+        if (!hasKey) {
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
             auto s = keygen::generate();
-            std::cout << "key = " << s << endl;
+            std::cout << "key = " << s << std::endl;
             setSecretKey(s);
 #else
             throw Exception(Exception::Codes::NoKeyFound);
@@ -117,6 +118,7 @@ private:
     std::mt19937 gen;
     BitArray<> msg;
     uint32_t key;
+    bool hasKey = false;
 }; // class DwtEmbedder
 
 template<class DecoderType>
@@ -129,12 +131,13 @@ public:
     }
     void setSecretKey(const std::string& _key) override { 
         key = hash(_key);
+        hasKey = true;
     }
     Algorithm getAlgorithm() const noexcept override {
         return Algorithm::Dwt;
     }
     std::string extractMessage() override {
-        if (!key)
+        if (!hasKey)
             throw Exception(Exception::Codes::NoKeyFound);
         BitArray<unsigned char> arr;
         std::vector<cv::Mat> planes;
@@ -181,6 +184,7 @@ private:
     cv::Mat image;
     DecoderType decoder;
     uint32_t key;
+    bool hasKey = false;
 }; // class DwtExtracter
 
 template<>
@@ -200,6 +204,7 @@ private:
     std::mt19937 gen;
     BitArray<> msg;
     uint32_t key;
+    bool hasKey = false;
 }; // class DwtStegoEmbedder
 
 template<>
@@ -215,6 +220,7 @@ private:
     std::mt19937 gen;
     cv::Mat image;
     uint32_t key;
+    bool hasKey = false;
 }; // class DwtStegoExtracter
 
 } // namespace imagestego

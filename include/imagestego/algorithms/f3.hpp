@@ -5,6 +5,13 @@
 #include "imagestego/core.hpp"
 #include "imagestego/utils/bitarray.hpp"
 #include "imagestego/utils/jpeg_image.hpp"
+#ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
+#   include "imagestego/keygen.hpp"
+#   include <iostream>
+#endif
+#ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
+#   include "imagestego/utils/format_checker.hpp"
+#endif
 // c++ headers
 #include <random>
 #include <string>
@@ -29,11 +36,21 @@ public:
     }
     void setSecretKey(const std::string& key) override {
         gen.seed(hash(key));
+        hasKey = true;
     }
     Algorithm getAlgorithm() const noexcept override {
         return Algorithm::F3;
     }
     void createStegoContainer() override {
+        if (!hasKey) {
+#ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
+            auto s = keygen::generate();
+            std::cout << "key = " << s << std::endl;
+            setSecretKey(s);
+#else
+            throw Exception(Exception::Codes::NoKeyFound);
+#endif
+        }
         randomize(msg, gen);
         BitArray<> size;
         size.pushBack(msg.size(), 32);
@@ -108,6 +125,7 @@ private:
     EncoderType encoder;
     BitArray<uint8_t> msg;
     std::mt19937 gen;
+    bool hasKey = false;
 }; // class F3Embedder
 
 template<class DecoderType>
@@ -120,11 +138,14 @@ public:
     }
     void setSecretKey(const std::string& key) override {
         gen.seed(hash(key));
+        hasKey = true;
     }
     Algorithm getAlgorithm() const noexcept override {
         return Algorithm::F3;
     }
     std::string extractMessage() override {
+        if (!hasKey)
+            throw Exception(Exception::Codes::NoKeyFound);
         auto lsb = [](const short& value) -> bool {
             return (value & 1) != 0;
         };
@@ -169,6 +190,7 @@ private:
     JpegImage image;
     DecoderType decoder;
     std::mt19937 gen;
+    bool hasKey = false;
 }; // class F3Extracter
 
 template<>
@@ -187,6 +209,7 @@ private:
     std::string output;
     BitArray<> msg;
     std::mt19937 gen;
+    bool hasKey = false;
 }; // class F3Embedder
 
 template<>
@@ -201,6 +224,7 @@ public:
 private:
     JpegImage image;
     std::mt19937 gen;
+    bool hasKey = false;
 }; // class F3Extracter
 
 }; // namespace imagestego

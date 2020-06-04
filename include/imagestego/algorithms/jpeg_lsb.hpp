@@ -41,6 +41,15 @@ public:
         return Algorithm::JpegLsb;
     }
     void createStegoContainer() override {
+        if (key.empty()) {
+#ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
+            auto s = keygen::generate();
+            std::cout << "key = " << s << std::endl;
+            setSecretKey(s);
+#else
+            throw Exception(Exception::Codes::NoKeyFound);
+#endif
+        }
         std::size_t keyIndex = 0,
                     msgIndex = 0;
         BitArray<uint32_t> sizeStream;
@@ -123,6 +132,8 @@ public:
         return Algorithm::JpegLsb;
     }
     std::string extractMessage() override {
+        if (key.empty())
+            throw Exception(Exception::Codes::NoKeyFound);
         std::size_t keyIndex = 0,
                     msgIndex = 0;
         BitArray<uint32_t> sizeStream;

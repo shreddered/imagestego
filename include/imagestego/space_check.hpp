@@ -11,9 +11,6 @@
 
 namespace imagestego {
 
-template<class ImageType>
-void spaceCheck(const std::size_t& msgSize, const ImageType& image, Algorithm alg);
-
 void spaceCheck(const std::size_t& msgSize, const cv::Mat& img, Algorithm alg);
 
 void spaceCheck(const std::size_t& msgSize, const JpegImage& image, Algorithm alg);

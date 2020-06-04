@@ -28,6 +28,15 @@ Algorithm JpegLsbEmbedder<void>::getAlgorithm() const noexcept {
 }
 
 void JpegLsbEmbedder<void>::createStegoContainer() {
+    if (key.empty()) {
+#ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
+        auto s = keygen::generate();
+        std::cout << "key = " << s << std::endl;
+        setSecretKey(s);
+#else
+        throw Exception(Exception::Codes::NoKeyFound);
+#endif
+    }
     msg.put('\0');
     std::size_t idx = 0;
     for (int i = 0; i != image.rows && idx < msg.size(); ++i)
@@ -59,6 +68,8 @@ Algorithm JpegLsbExtracter<void>::getAlgorithm() const noexcept {
 }
 
 std::string JpegLsbExtracter<void>::extractMessage() {
+    if (key.empty())
+        throw Exception(Exception::Codes::NoKeyFound);
     BitArray<unsigned char> arr;
     for (int i = 0; i != image.rows; ++i)
         for (int j = 0; j != image.cols; ++j) {

@@ -65,6 +65,7 @@ void DwtEmbedder<void>::setSecretKey(const std::string& _key) {
     key = hash(_key);
     // seeding PRNG
     gen.seed(key);
+    hasKey = true;
 }
 
 void DwtEmbedder<void>::setMessage(const std::string& _msg) {
@@ -72,12 +73,15 @@ void DwtEmbedder<void>::setMessage(const std::string& _msg) {
 }
 
 void DwtEmbedder<void>::createStegoContainer() {
-    if (!key)
+    if (!hasKey) {
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
-        setSecretKey(keygen::generate());
+        auto s = keygen::generate();
+        std::cout << "key = " << s << std::endl;
+        setSecretKey(s);
 #else
         throw Exception(Exception::Codes::NoKeyFound);
 #endif
+    }
     uint32_t sz = 4 * ceil(sqrt(msg.size())); 
     std::size_t currentMsgIndex = 0;
     auto arr = BitArray<>::fromInt(sz);
@@ -137,6 +141,7 @@ void DwtExtracter<void>::setSecretKey(const std::string& _key) {
     key = hash(_key);
     // seeding PRNG
     gen.seed(key);
+    hasKey = true;
 }
 
 std::string DwtExtracter<void>::extractMessage() {

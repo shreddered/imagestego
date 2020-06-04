@@ -35,17 +35,4 @@ void spaceCheck(const std::size_t& msgSize, const cv::Mat& img, Algorithm alg) {
     }
 }
 
-void spaceCheck(const std::size_t& msgSize, const JpegImage& img, Algorithm alg) {
-    static_if(alg == Algorithm::JpegLsb) {        
-        auto size = img.cols * img.rows;
-        if (msgSize > size)
-            throw Exception(Exception::Codes::BigMessageSize);
-    }
-    else static_if(alg == Algorithm::F3) {
-        auto size = countLsbValid(img);
-        if (msgSize > size)
-            throw Exception(Exception::Codes::BigMessageSize);
-    }
-}
-
 } // namespace imagestego
