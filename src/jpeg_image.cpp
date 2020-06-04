@@ -6,7 +6,18 @@ namespace imagestego {
 
 Point::Point(short& _x, short& _y, short& _z) noexcept : x(_x), y(_y), z(_z) {}
 
-short& Point::operator [](int index) {
+short& Point::operator [](int index) noexcept {
+    if (!index)
+        return x;
+    else if (index - 1)
+        return z;
+    else
+        return y;
+}
+
+Point_::Point_(const short& _x, const short& _y, const short& _z) noexcept : x(_x), y(_y), z(_z) {}
+
+const short& Point_::operator [](int index) const noexcept {
     if (!index)
         return x;
     else if (index - 1)
@@ -56,6 +67,18 @@ Point JpegImage::at(const int& y, const int& x) {
          blue = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[2],
                 y / 8, 1, static_cast<boolean>(true));
     return Point(red[0][x / 8][(y % 8) * 8 + (x % 8)],
+                 green[0][x / 8][(y % 8) * 8 + (x % 8)],
+                 blue[0][x / 8][(y % 8) * 8 + (x % 8)]);
+}
+
+Point_ JpegImage::at(const int& y, const int& x) const {    
+    auto red = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[0],
+                y / 8, 1, static_cast<boolean>(true)),
+         green = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[1],
+                y / 8, 1, static_cast<boolean>(true)),
+         blue = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[2],
+                y / 8, 1, static_cast<boolean>(true));
+    return Point_(red[0][x / 8][(y % 8) * 8 + (x % 8)],
                  green[0][x / 8][(y % 8) * 8 + (x % 8)],
                  blue[0][x / 8][(y % 8) * 8 + (x % 8)]);
 }
