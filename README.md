@@ -64,13 +64,6 @@ and [_opencv_ releases](https://opencv.org/releases/) for complete guidelines.
 
 # Usage
 
-## Command line tool
-
-There is a command line tool called `imagestego` which comes with the library.
-The usage is pretty simple. See `imagestego -h` for details.
-
-## Library
-
 For a high-level functions you can just `#include <imagestego/imagestego.hpp>` file,
 which has two functions - `embedSecretMessage` and `extractSecretMesage`:
 
