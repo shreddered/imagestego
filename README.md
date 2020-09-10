@@ -1,6 +1,6 @@
-# Image-Steganography
-
 [![Build Status](https://travis-ci.com/shreddered/imagestego.svg?branch=master)](https://travis-ci.com/shreddered/imagestego)
+
+# imagestego 
 
 Image Steganography library written in _c++11_.
 Dependencies - [_libopencv_](https://github.com/opencv/opencv) and [_libjpeg_](http://www.ijg.org/).
@@ -31,7 +31,7 @@ Also there is a support for data comression:
 
 # Building
 
-First of all, you need to install _libopenc-dev_, _libjpeg-dev_ and _cmake_ (needed for building).
+First of all, you need to install _libopencv_, _libjpeg_ and _cmake_.
 
 ## Debian
 ```bash
