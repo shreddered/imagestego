@@ -1,8 +1,6 @@
 bin/*
 lib/*
 *.jpg
-!test/in.jpg
 *.png
 build/*
 Makefile
-test/test_*
