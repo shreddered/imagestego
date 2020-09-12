@@ -1,6 +1,8 @@
 image: Visual Studio 2015
 
-platform: x64
+platform:
+  - x86
+  - x64
 
 configuration: Release
 
@@ -9,11 +11,11 @@ build:
 
 before_build:
   - choco install opencv
-  - dir c:\tools\opencv\build\x64
+  - dir c:\tools\opencv\build\bin
   - git submodule update --init --recursive
 
 build_script:
-  - cmake -H. -Bbuild -DIMAGESTEGO_COMPRESSION_SUPPORT=ON -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_BUILD_EXAMPLES=ON 
-    -DOpenCV_DIR=c:\tools\opencv\build\x64\vc14
+  - cmake -G "Visual Studio 12 2013" -H. -Bbuild -DIMAGESTEGO_COMPRESSION_SUPPORT=ON -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_BUILD_EXAMPLES=ON 
+    -DOpenCV_DIR=c:\tools\opencv\build\bin
   - cmake --build build
   - cmake --build build --target test
