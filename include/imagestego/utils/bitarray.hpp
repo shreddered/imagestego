@@ -22,7 +22,7 @@ namespace imagestego {
 class HuffmanDecoder;
 
 template<class Block = uint16_t, class = typename std::enable_if<std::is_integral<Block>::value>::type>
-class IMAGESTEGO_EXPORTS BitArray {
+class BitArray {
     friend class HuffmanDecoder;
 private:
     class BitReference {
