@@ -38,11 +38,6 @@ install:
   - cd ../../
 
 script:
-  - mkdir -p build
-  - cd build
-  - cmake -D ENABLE_KEYGEN_SUPPORT=ON -D ENABLE_FORMAT_CHECKING=ON -D BUILD_TESTS=ON -D BUILD_EXAMPLES=ON -D ENABLE_SPACE_CHECKING=ON ..
-  - make
-  - sudo make install
-  - ctest
-  - cd ../test/
-  - ./test_stego
+  - cmake -Bbuild -DIMAGESTEGO_COMPRESSION_SUPPORT=ON -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_BUILD_EXAMPLES=ON
+  - cmake --build build
+  - cmake --build --target test -- ARGS=--verbose
