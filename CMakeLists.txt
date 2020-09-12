@@ -116,9 +116,9 @@ macro(generate_test)
     )
     set_target_properties(${TEST_NAME} PROPERTIES
         OUTPUT_NAME "test_${TEST_NAME}"
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/test/
     )
-    add_test(NAME ${TEST_NAME} COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/test/test_${TEST_NAME}")
+    add_test(NAME ${TEST_NAME} COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/bin/test/test_${TEST_NAME}")
 endmacro()
 
 # tests
@@ -127,7 +127,7 @@ if (IMAGESTEGO_BUILD_TESTS)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/gtest/)
 
     # should set TEST_DIR
-    set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/test/)
+    set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
     generate_test(NAME avl SOURCES
         ${TEST_DIR}/avl.cpp
