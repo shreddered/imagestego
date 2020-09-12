@@ -46,6 +46,7 @@ void change(uint8_t& val) noexcept;
 
 }
 
+#ifdef IMAGESTEGO_COMPRESSION_SUPPORT
 template<class EncoderType>
 class LsbEmbedder : public AbstractStegoEmbedder {
 public:
@@ -289,7 +290,14 @@ private:
     BitArray<unsigned int> key;
     DecoderType decoder;
     std::mt19937 gen;
-}; // class
+}; // class LsbExtracter
+#else
+template<class EncoderType>
+class LsbEmbedder;
+
+template<class DecoderType>
+class LsbExtracter;
+#endif /* IMAGESTEGO_COMPRESSION_SUPPORT */
 
 template<>
 class IMAGESTEGO_EXPORTS LsbEmbedder<void> : public AbstractStegoEmbedder {

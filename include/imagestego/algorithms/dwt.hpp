@@ -28,6 +28,7 @@ IMAGESTEGO_EXPORTS void dwt(const cv::Mat& src, cv::Mat& dst);
 
 IMAGESTEGO_EXPORTS void idwt(const cv::Mat& src, cv::Mat& dst);
 
+#ifdef IMAGESTEGO_COMPRESSION_SUPPORT
 template<class EncoderType>
 class DwtEmbedder : public AbstractStegoEmbedder {
 public:
@@ -184,6 +185,13 @@ private:
     uint32_t key;
     bool hasKey = false;
 }; // class DwtExtracter
+#else
+template<class EncoderType>
+class DwtEmbedder;
+
+template<class DecoderType>
+class DwtExtracter;
+#endif /* IMAGESTEGO_COMPRESSION_SUPPORT */
 
 template<>
 class IMAGESTEGO_EXPORTS DwtEmbedder<void> : public AbstractStegoEmbedder {

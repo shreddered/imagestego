@@ -19,6 +19,7 @@
 
 namespace imagestego {
 
+#ifdef IMAGESTEGO_COMPRESSION_SUPPORT
 template<typename EncoderType>
 class JpegLsbEmbedder : public AbstractStegoEmbedder {
 public:
@@ -190,6 +191,13 @@ private:
         return (value & 1) != 0;
     }
 }; // class JpegLsbExtracter
+#else
+template<class EncoderType>
+class JpegLsbEmbedder;
+
+template<class DecoderType>
+class JpegLsbExtracter;
+#endif /* IMAGESTEGO_COMPRESSION_SUPPORT */
 
 template<>
 class IMAGESTEGO_EXPORTS JpegLsbEmbedder<void> : public AbstractStegoEmbedder {
