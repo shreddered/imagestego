@@ -68,7 +68,7 @@ target_include_directories(imagestego
 
 target_include_directories(imagestego INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
-    $<INSTALL_INTERFACE:include/imagestego/algorithms/>
+    $<INSTALL_INTERFACE:include/imagestego/algorithms/:include/imagestego/algorithms.hpp>
 )
 
 if (IMAGESTEGO_COMPRESSION_SUPPORT)
@@ -96,9 +96,6 @@ if (IMAGESTEGO_COMPRESSION_SUPPORT)
     target_include_directories(imagestego_compression
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
     )
-    target_link_libraries(imagestego
-        PUBLIC imagestego_compression
-    )
 endif(IMAGESTEGO_COMPRESSION_SUPPORT)
 
 # macro used for generating tests
@@ -114,6 +111,11 @@ macro(generate_test)
         imagestego
         gtest_main
     )
+    if (TARGET imagestego_compression)
+        target_link_libraries(${TEST_NAME}
+            imagestego_compression
+        )
+    endif(TARGET imagestego_compression)
     set_target_properties(${TEST_NAME} PROPERTIES
         OUTPUT_NAME "test_${TEST_NAME}"
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/test/
@@ -149,6 +151,11 @@ macro(generate_example)
     target_link_libraries(${EXAMPLE_NAME}
         imagestego
     )
+    if (TARGET imagestego_compression)
+        target_link_libraries(${EXAMPLE_NAME}
+            imagestego_compression
+        )
+    endif(TARGET imagestego_compression)
     set_target_properties(${EXAMPLE_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/
     )
