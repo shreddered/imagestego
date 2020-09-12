@@ -19,6 +19,7 @@
 
 namespace imagestego {
 
+#ifdef IMAGESTEGO_COMPRESSION_SUPPORT
 template<class EncoderType>
 class F3Embedder : public AbstractStegoEmbedder {
 public:
@@ -192,6 +193,13 @@ private:
     std::mt19937 gen;
     bool hasKey = false;
 }; // class F3Extracter
+#else
+template<class EncoderType>
+class F3Embedder;
+
+template<class DecoderType>
+class F3Extracter;
+#endif /* IMAGESTEGO_COMPRESSION_SUPPORT */
 
 template<>
 class IMAGESTEGO_EXPORTS F3Embedder<void> : public AbstractStegoEmbedder {
@@ -227,6 +235,6 @@ private:
     bool hasKey = false;
 }; // class F3Extracter
 
-}; // namespace imagestego
+} // namespace imagestego
 
 #endif /* __IMAGESTEGO_F3_HPP_INCLUDED__ */
