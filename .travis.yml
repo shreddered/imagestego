@@ -40,4 +40,4 @@ install:
 script:
   - cmake -Bbuild -DIMAGESTEGO_COMPRESSION_SUPPORT=ON -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_BUILD_EXAMPLES=ON
   - cmake --build build
-  - cmake --build --target test -- ARGS=--verbose
+  - cmake --build build --target test -- ARGS=--verbose
