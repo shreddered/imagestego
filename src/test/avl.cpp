@@ -25,7 +25,6 @@ TEST(TestAvl, AvlTree) {
     tree.clear();
     for (auto elem : {3, 7, 10, 6, 7, 0, 2, 4})
         tree.insert(elem);
-    tree.printDfs();
     result = {3, 0, 2, 7, 6, 4, 10};
     EXPECT_EQ(result.size(), tree.size());
     EXPECT_TRUE(isEqual(tree.begin(), tree.end(), result.begin())); 
