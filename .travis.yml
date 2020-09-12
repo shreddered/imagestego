@@ -38,7 +38,7 @@ install:
   - cd ../../
 
 script:
-  - mkdir -p build/
-  - cmake -B build/ -D IMAGESTEGO_COMPRESSION_SUPPORT=ON -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_EXAMPLES=ON
-  - cmake --build build
-  - cmake --build build --target test -- ARGS=--verbose
+  - mkdir -p build/ && cd build/
+  - cmake -D IMAGESTEGO_COMPRESSION_SUPPORT=ON -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_EXAMPLES=ON ..
+  - make -j4
+  - ctest
