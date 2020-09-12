@@ -13,9 +13,9 @@ option(IMAGESTEGO_BUILD_EXAMPLES ON)
 option(IMAGESTEGO_BUILD_TYPE DEBUG)
 option(IMAGESTEGO_COMPRESSION_SUPPORT ON)
 
-if (NOT IMAGESTEGO_BUILD_TYPE STREQUAL RELEASE)
-    string(APPEND CMAKE_CXX_FLAGS " -D_DEBUG")
-endif(NOT IMAGESTEGO_BUILD_TYPE STREQUAL RELEASE)
+if (IMAGESTEGO_BUILD_TYPE STREQUAL DEBUG)
+    add_definitions("-DIMAGESTEGO_DEBUG")
+endif(IMAGESTEGO_BUILD_TYPE STREQUAL DEBUG)
 
 # preparing needed directories
 if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
@@ -62,8 +62,13 @@ target_link_libraries(imagestego
 )
 
 target_include_directories(imagestego
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+)
+
+target_include_directories(imagestego INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+    $<INSTALL_INTERFACE:include/imagestego/algorithms/>
 )
 
 if (IMAGESTEGO_COMPRESSION_SUPPORT)
@@ -81,11 +86,18 @@ if (IMAGESTEGO_COMPRESSION_SUPPORT)
         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/
     )
 
-    target_link_libraries(imagestego
-        PUBLIC imagestego_compression
-    )
     target_compile_definitions(imagestego_compression
         PUBLIC "IMAGESTEGO_COMPRESSION_SUPPORT"
+    )
+    target_include_directories(imagestego_compression INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+        $<INSTALL_INTERFACE:include/imagestego/compression/:include/imagestego/compression.hpp>
+    )
+    target_include_directories(imagestego_compression
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
+    )
+    target_link_libraries(imagestego
+        PUBLIC imagestego_compression
     )
 endif(IMAGESTEGO_COMPRESSION_SUPPORT)
 
@@ -119,6 +131,9 @@ if (IMAGESTEGO_BUILD_TESTS)
 
     generate_test(NAME avl SOURCES
         ${TEST_DIR}/avl.cpp
+    )
+    generate_test(NAME huffman SOURCES
+        ${TEST_DIR}/huffman.cpp
     )
 endif(IMAGESTEGO_BUILD_TESTS)
 

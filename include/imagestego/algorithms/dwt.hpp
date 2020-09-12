@@ -20,8 +20,6 @@
 // opencv
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
-// murmurhash
-#include "MurmurHash3.h"
 
 
 namespace imagestego {

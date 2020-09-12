@@ -2,7 +2,7 @@
 #define __IMAGESTEGO_BINARY_TREE_HPP_INCLUDED__
 
 #include <functional>
-#ifdef _DEBUG
+#ifdef IMAGESTEG0_DEBUG
 #   include <iostream>
 #endif
 #include <utility>
@@ -54,7 +54,7 @@ private:
         else
             return searchImpl(node->right, data);
     }
-#ifdef _DEBUG
+#ifdef IMAGESTEG0_DEBUG
     static void printDfsImpl(const TreeNode* node) {
         std::cout << node->data << std::endl;
         if (node->left)
@@ -87,7 +87,7 @@ public:
     inline std::size_t size() const noexcept {
         return _size;
     }
-#ifdef _DEBUG
+#ifdef IMAGESTEG0_DEBUG
     void printDfs() const noexcept { // for debugging purposes
         if (!isEmpty())
             printDfsImpl(root);
