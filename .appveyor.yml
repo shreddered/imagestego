@@ -10,12 +10,11 @@ build:
   parallel: true
 
 before_build:
-  - choco install opencv
+  - choco upgrade chocolatey
+  - choco install opencv -y
   - refreshenv
-  - git submodule update --init --recursive
 
 build_script:
-  - cmake -H. -Bbuild -DIMAGESTEGO_COMPRESSION_SUPPORT=ON -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_BUILD_EXAMPLES=ON 
-    -DOpenCV_DIR=c:\tools\opencv\build
+  - cmake -H. -Bbuild -DIMAGESTEGO_COMPRESSION_SUPPORT=ON -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_BUILD_EXAMPLES=ON
   - cmake --build build
   - cmake --build build --target test
