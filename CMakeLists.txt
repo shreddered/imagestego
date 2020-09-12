@@ -33,6 +33,9 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
 find_package(OpenCV REQUIRED)
+find_package(PkgConfig REQUIRED)
+
+pkg_search_module(TURBOJPEG REQUIRED libturbojpeg)
 
 # libimagestego
 set(IMAGESTEGO_SOURCES
@@ -59,13 +62,14 @@ set_target_properties(imagestego PROPERTIES
 
 target_link_libraries(imagestego
     PUBLIC opencv_core
-    PUBLIC opencv_imgcodecs
-    PUBLIC jpeg
+    opencv_imgcodecs
+    ${TURBOJPEG_LIBRARIES}
 )
 
 target_include_directories(imagestego
+    PUBLIC ${TURBOJPEG_INCLUDE_DIRS}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
 )
 
 target_include_directories(imagestego INTERFACE
