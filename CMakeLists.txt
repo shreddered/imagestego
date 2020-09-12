@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 
-project(imagestego VERSION 2.0 LANGUAGES CXX)
+project(imagestego VERSION 1.0 LANGUAGES CXX)
 
 # build conditions
 option(IMAGESTEGO_BUILD_TESTS "Build tests" ON)
