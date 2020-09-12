@@ -1,10 +1,6 @@
 #include "imagestego/core.hpp"
 // third party
 #include "MurmurHash3.h"
-#ifdef _MSC_VER
-#   include <intrin.h>
-#   pragma intrinsic(_BitScanReverse)
-#endif
 
 
 namespace imagestego {
@@ -37,7 +33,7 @@ uint8_t log2(unsigned int value) noexcept {
     return value ? 31 - __builtin_clz(value) : 0;
 #elif defined(_MSC_VER)
     unsigned long result = 0;
-    _BitScanReverse(&result, value);
+    BitScanReverse(&result, value);
     return result;
 #else
     uint8_t res = 0;
