@@ -8,8 +8,7 @@ build:
   parallel: true
 
 before_build:
-  - choco install opencv
-  - choco install libjpeg-turbo
+  - choco install opencv libjpeg-turbo pkgconfiglite
   - git submodule update --init --recursive
   - setx -m OPENCV_DIR c:\tools\opencv\build\x64\vc14
 
