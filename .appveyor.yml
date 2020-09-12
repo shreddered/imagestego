@@ -9,8 +9,9 @@ build:
 
 before_build:
   - choco install opencv
-  - dir c:\tools\opencv\build\x64
+  - dir c:\tools\opencv\build\x64\vc14
   - git submodule update --init --recursive
+  - setx -m OPENCV_DIR c:\tools\opencv\build\x64\vc14
 
 build_script:
   - cmake -H. -Bbuild -DIMAGESTEGO_COMPRESSION_SUPPORT=ON -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_BUILD_EXAMPLES=ON 
