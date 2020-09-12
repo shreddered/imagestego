@@ -11,6 +11,7 @@ build:
 
 before_build:
   - choco install opencv
+  - refreshenv
 
 build_script:
   - cmake -H. -Bbuild -DIMAGESTEGO_COMPRESSION_SUPPORT=ON -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_BUILD_EXAMPLES=ON
