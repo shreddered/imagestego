@@ -11,6 +11,7 @@ build:
 
 before_build:
   - choco install opencv
+  - dir c:\tools\opencv\build
   - git submodule update --init --recursive
 
 build_script:
