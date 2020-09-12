@@ -10,7 +10,8 @@ build:
   parallel: true
 
 before_build:
-  - choco install opencv
+  - choco upgrade chocolatey
+  - choco install opencv -y
   - refreshenv
 
 build_script:
