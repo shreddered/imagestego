@@ -1,411 +1,148 @@
-cmake_minimum_required(VERSION 3.4)
-
-project(imagestego VERSION 1.0 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-link_directories(
-    /usr/local/lib/
-)
-
-include_directories(
-    /usr/local/include/opencv4
-)
-
-# build conditions (default)
-option(ENABLE_FORMAT_CHECKING ON)
-
-option(BUILD_TYPE DEBUG)
-
-option(BUILD_TESTS ON)
-
-option(BUILD_EXAMPLES ON)
-
-option(ENABLE_KEYGEN_SUPPORT ON)
-
-option(ENABLE_SPACE_CHECKING ON)
 
 string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 
-if (NOT BUILD_TYPE STREQUAL RELEASE)
-    string(APPEND CMAKE_CXX_FLAGS " -D_DEBUG")
-    string(APPEND CMAKE_CXX_FLAGS " -ggdb")
-endif()
+project(imagestego VERSION 2.0 LANGUAGES CXX)
 
+# build conditions
+option(IMAGESTEGO_BUILD_TESTS ON)
+option(IMAGESTEGO_BUILD_EXAMPLES ON)
+option(IMAGESTEGO_BUILD_TYPE DEBUG)
+option(IMAGESTEGO_COMPRESSION_SUPPORT ON)
+
+if (NOT IMAGESTEGO_BUILD_TYPE STREQUAL RELEASE)
+    string(APPEND CMAKE_CXX_FLAGS " -D_DEBUG")
+endif(NOT IMAGESTEGO_BUILD_TYPE STREQUAL RELEASE)
+
+# preparing needed directories
 if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
     file(MAKE_DIRECTORY lib/)
-endif()
+endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
 
 if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
     file(MAKE_DIRECTORY bin/)
-endif()
+endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
 
 if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
     file(MAKE_DIRECTORY test/)
-endif()
+endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
-#################################################
-#           libimagestego sources
-#################################################
+find_package(OpenCV REQUIRED)
 
+# libimagestego
 set(IMAGESTEGO_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/f3.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_decoder.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_encoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/imagestego.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_image.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_lsb.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_decoder.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_dictionary.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_encoder.cpp
-    # 3rd party
+    # third party
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/MurmurHash3.cpp
 )
-
-if (ENABLE_FORMAT_CHECKING)
-    set(IMAGESTEGO_SOURCES ${IMAGESTEGO_SOURCES}
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/format_checker.cpp
-    )
-endif()
-
-if (ENABLE_KEYGEN_SUPPORT)
-    set(IMAGESTEGO_SOURCES ${IMAGESTEGO_SOURCES}
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/keygen.cpp
-    )
-endif()
-
-if (ENABLE_SPACE_CHECKING)
-    set(IMAGESTEGO_SOURCES ${IMAGESTEGO_SOURCES}
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/space_check.cpp
-    )
-endif()
-
-#################################################
-#               libimagestego
-#################################################
 
 add_library(imagestego SHARED
     ${IMAGESTEGO_SOURCES}
 )
 
+set_target_properties(imagestego PROPERTIES
+    OUTPUT_NAME "imagestego"
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/
+)
+
+target_link_libraries(imagestego
+    PUBLIC opencv_core
+    PUBLIC opencv_imgcodecs
+    PUBLIC jpeg
+)
+
 target_include_directories(imagestego
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/ 
-    PRIVATE /usr/include/opencv4/ 
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
 )
 
-set_target_properties(imagestego PROPERTIES 
-    PREFIX ""
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/
-    OUTPUT_NAME "libimagestego"
-)
-
-target_link_libraries(imagestego 
-    opencv_core
-    opencv_imgcodecs
-    jpeg
-)
-
-if (ENABLE_FORMAT_CHECKING)
-    target_compile_definitions(imagestego
-        PRIVATE IMAGESTEGO_ENABLE_FORMAT_CHECKING
-    )
-endif()
-
-if (ENABLE_KEYGEN_SUPPORT)
-    target_compile_definitions(imagestego
-        PRIVATE IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
-    )
-endif()
-
-if (ENABLE_SPACE_CHECKING)
-    target_compile_definitions(imagestego
-        PRIVATE IMAGESTEGO_ENABLE_SPACE_CHECKING
-    )
-endif()
-
-#################################################
-#               tests
-#################################################
-
-if (BUILD_TESTS)
-    # avl
-    add_executable(test_avl
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/avl.cpp
+if (IMAGESTEGO_COMPRESSION_SUPPORT)
+    add_library(imagestego_compression SHARED
+        # Huffman encoding 
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_decoder.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_encoder.cpp
+        # LZW encoding
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_decoder.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_dictionary.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_encoder.cpp
+    ) 
+    set_target_properties(imagestego_compression PROPERTIES
+        OUTPUT_NAME "imagestego_comp"
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/
     )
 
-    target_include_directories(test_avl
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+    target_link_libraries(imagestego
+        PUBLIC imagestego_compression
     )
+    target_compile_definitions(imagestego_compression
+        PUBLIC "IMAGESTEGO_COMPRESSION_SUPPORT"
+    )
+endif(IMAGESTEGO_COMPRESSION_SUPPORT)
 
-    target_link_libraries(test_avl
+# macro used for generating tests
+macro(generate_test)
+    cmake_parse_arguments(TEST
+        "OPTION"
+        "NAME"
+        "SOURCES"
+        ${ARGN}
+    )
+    add_executable(${TEST_NAME} ${TEST_SOURCES})
+    target_link_libraries(${TEST_NAME}
         imagestego
+        gtest_main
     )
+    set_target_properties(${TEST_NAME} PROPERTIES
+        OUTPUT_NAME "test_${TEST_NAME}"
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/
+    )
+    add_test(NAME ${TEST_NAME} COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/test/test_${TEST_NAME}")
+endmacro()
 
-    set_target_properties(test_avl PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
-    )
-
-    # bitarray
-    add_executable(test_bitarray
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/bitarray.cpp
-    )
-
-    target_include_directories(test_bitarray
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-
-    set_target_properties(test_bitarray PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
-    )
-
-    # prefix
-    add_executable(test_prefix
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/prefix.cpp
-    )
-    target_include_directories(test_prefix
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-    target_link_libraries(test_prefix
-        imagestego
-    )
-    set_target_properties(test_prefix PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
-    )
-
-    # huffman
-    add_executable(test_huffman
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/huffman.cpp
-    )
-    target_include_directories(test_huffman
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-    target_link_libraries(test_huffman
-        imagestego
-    )
-    set_target_properties(test_huffman PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
-    )
-    
-    # lzw
-    add_executable(test_lzw
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/lzw.cpp
-    )
-    target_include_directories(test_lzw
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-    target_link_libraries(test_lzw
-        imagestego
-    )
-    set_target_properties(test_lzw PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
-    )
-
-    # stego
-        add_executable(test_stego
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/stego.cpp
-    )
-    target_include_directories(test_stego
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-    target_link_libraries(test_stego
-        imagestego
-        opencv_core
-        opencv_imgcodecs
-        jpeg
-    )
-    set_target_properties(test_stego PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
-    )
-
-    # shuffle
-    add_executable(test_shuffle
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/shuffle.cpp
-    )
-    target_include_directories(test_shuffle
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-    target_link_libraries(test_shuffle
-        imagestego
-        opencv_core
-        opencv_imgcodecs
-    )
-    set_target_properties(test_shuffle PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
-    )
-
-    # shuffle
-    add_executable(test_jpeg
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/jpeg.cpp
-    )
-    target_include_directories(test_jpeg
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-    target_link_libraries(test_jpeg
-        imagestego
-        opencv_core
-        opencv_imgcodecs
-        jpeg
-    )
-    set_target_properties(test_jpeg PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
-    )
-    
-    # f3
-    add_executable(test_f3
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/test/f3.cpp
-    )
-    target_include_directories(test_f3
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-    target_link_libraries(test_f3
-        imagestego
-        opencv_core
-        opencv_imgcodecs
-        jpeg
-    )
-    set_target_properties(test_f3 PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/test/
-    )
-
-endif()
-
-#################################################
-#               examples
-#################################################
-
-if (BUILD_EXAMPLES)
-    # lsb
-    add_executable(lsb
-        ${CMAKE_CURRENT_SOURCE_DIR}/examples/lsb.cpp
-    )
-
-    target_include_directories(lsb
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-
-    target_link_libraries(lsb
-        imagestego
-        opencv_core
-        opencv_imgcodecs
-    )
-
-    set_target_properties(lsb PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
-    )
-
-    # stego
-    add_executable(stego
-        ${CMAKE_CURRENT_SOURCE_DIR}/examples/archived_data_stego.cpp
-    )
-
-    target_include_directories(stego
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-
-    target_link_libraries(stego
-        imagestego
-        opencv_core
-        opencv_imgcodecs
-    )
-
-    set_target_properties(stego PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
-    )
-
-    # jstego
-    add_executable(jstego
-        ${CMAKE_CURRENT_SOURCE_DIR}/examples/jsteg.cpp
-    )
-
-    target_include_directories(jstego
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-
-    target_link_libraries(jstego
-        imagestego
-        opencv_core
-        opencv_imgcodecs
-        jpeg
-    )
-
-    set_target_properties(jstego PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
-    )
-
-    # dwt
-    add_executable(dwt
-        ${CMAKE_CURRENT_SOURCE_DIR}/examples/dwt.cpp
-    )
-
-    target_include_directories(dwt
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/
-        PRIVATE /usr/include/opencv4/
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-
-    target_link_libraries(dwt
-        imagestego
-        opencv_core
-        opencv_imgcodecs
-    )
-
-    set_target_properties(dwt PROPERTIES
-        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/bin/
-    )
-endif()
-
-if (BUILD_TESTS)
+# tests
+if (IMAGESTEGO_BUILD_TESTS)
     enable_testing()
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/gtest/)
 
-    add_test(NAME avl COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_avl)
+    # should set TEST_DIR
+    set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/test/)
 
-    add_test(NAME prefix COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_prefix)
+    generate_test(NAME avl SOURCES
+        ${TEST_DIR}/avl.cpp
+    )
+endif(IMAGESTEGO_BUILD_TESTS)
 
-    add_test(NAME huffman COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_huffman)
+# macro used for building examples
+macro(generate_example)
+    cmake_parse_arguments(EXAMPLE
+        "OPTION"
+        "NAME"
+        "SOURCES"
+        ${ARGN}
+    )
+    add_executable(${EXAMPLE_NAME} ${EXAMPLE_SOURCES})
+    target_link_libraries(${EXAMPLE_NAME}
+        imagestego
+    )
+    set_target_properties(${EXAMPLE_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/
+    )
+endmacro()
 
-    add_test(NAME bitarray COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_bitarray)
-
-    add_test(NAME lzw COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_lzw)
-endif()
-
-#################################################
-#           installation rules
-#################################################
-
-if (NOT DEFINED IMAGESTEGO_PREFIX)
-    set(IMAGESTEGO_PREFIX "/usr/local/lib")
-endif()
-
-install(TARGETS imagestego DESTINATION ${IMAGESTEGO_PREFIX})
-
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION "/usr/local/include")
+# examples
+if (IMAGESTEGO_BUILD_EXAMPLES)
+    set(EXAMPLE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/examples/)
+    generate_example(NAME lsb SOURCES
+        ${EXAMPLE_DIR}/lsb.cpp
+    )
+endif(IMAGESTEGO_BUILD_EXAMPLES)

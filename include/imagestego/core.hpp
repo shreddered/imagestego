@@ -4,8 +4,6 @@
 // c++
 #include <exception>
 #include <string>
-// third party
-#include "MurmurHash3.h"
 
 
 #if (defined(WIN32) || defined(_WIN32) || defined (WINCE))
@@ -93,11 +91,7 @@ void shuffle(It first, It last, Rng&& gen) {
     }
 }
 
-inline uint32_t hash(const std::string& _key) {
-    uint32_t tmp[1];
-    MurmurHash3_x86_32(_key.data(), _key.size(), IMAGESTEGO_MURMURHASH_SEED, tmp);
-    return tmp[0];
-}
+uint32_t hash(const std::string& _key);
 
 } // namespace imagestego
 
