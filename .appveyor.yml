@@ -12,6 +12,7 @@ before_build:
   - appveyor DownloadFile http://ijg.org/files/jpegsr9d.zip
   - 7z x jpegsr9d.zip
   - copy jpeg-9d\j*.h include 
+  - copy jpeg-9d\jconfig.vc include\jconfig.h
   - git submodule update --init --recursive
   - setx -m OPENCV_DIR c:\tools\opencv\build\x64\vc14
 
