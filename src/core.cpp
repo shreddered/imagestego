@@ -7,7 +7,6 @@ namespace imagestego {
 
 Exception::Exception(const int& _code) noexcept : std::exception(), code(_code) {}
 
-#ifndef _MSC_VER
 const char* Exception::what() const noexcept {
     switch(code) {
         case Codes::NoSuchFile:
@@ -26,7 +25,6 @@ const char* Exception::what() const noexcept {
             return "Unknown Error";
     }
 }
-#endif
 
 uint8_t log2(unsigned int value) noexcept {
 #if defined(__clang__) || defined(__GNUC__)
