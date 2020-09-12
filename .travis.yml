@@ -37,12 +37,12 @@ install:
   - mkdir build
   - cd build
   - cmake -D BUILD_LIST=core,imgcodecs -D CMAKE_BUILD_TYPE=RELEASE -D BUILD_EXAMPLES=OFF -D BUILD_opencv_apps=OFF -D BUILD_DOCS=OFF -D BUILD_PERF_TESTS=OFF -D BUILD_TESTS=OFF -D CMAKE_INSTALL_PREFIX=/usr/local/ ..
-  - make -j4
+  - make -j$(nproc)
   - sudo make install
   - cd ../../
 
 script:
   - mkdir -p build/ && cd build/
-  - cmake -D IMAGESTEGO_COMPRESSION_SUPPORT=ON -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_EXAMPLES=ON ..
-  - make -j4
+  - cmake -DIMAGESTEGO_COMPRESSION_SUPPORT=ON -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_BUILD_EXAMPLES=ON -DIMAGESTEGO_JPEG_SUPPORT=ON -DIMAGESTEGO_LOSSLESS_FORMATS=ON ..
+  - make -j$(nproc)
   - ctest
