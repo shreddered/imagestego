@@ -56,7 +56,6 @@ endif(IMAGESTEGO_JPEG_SUPPORT)
 
 # opencv
 if (IMAGESTEGO_LOSSLESS_FORMATS)
-    hunter_add_package(OpenCV)
     find_package(OpenCV REQUIRED)
 endif(IMAGESTEGO_LOSSLESS_FORMATS)
 
