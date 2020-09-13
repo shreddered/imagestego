@@ -5,6 +5,13 @@ cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include("cmake/HunterGate.cmake")
+
+HunterGate(
+    URL "https://github.com/cpp-pm/hunter/archive/v0.23.269.tar.gz"
+    SHA1 "64024b7b95b4c86d50ae05b926814448c93a70a0"
+)
+
 if (CMAKE_COMPILER_IS_GNUCXX)
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 endif(CMAKE_COMPILER_IS_GNUCXX)
@@ -37,10 +44,17 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
     file(MAKE_DIRECTORY test/)
 endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
-find_package(OpenCV REQUIRED)
+# libjpeg
+if (IMAGESTEGO_JPEG_SUPPORT)
+    hunter_add_package(libjpeg-turbo)
+    find_package(libjpeg-turbo CONFIG REQUIRED)
+endif(IMAGESTEGO_JPEG_SUPPORT)
+
+if (IMAGESTEGO_LOSSLESS_FORMATS)
+    find_package(OpenCV REQUIRED)
+endif(IMAGESTEGO_LOSSLESS_FORMATS)
 
 # libimagestego
-
 add_library(imagestego_core SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
@@ -99,7 +113,7 @@ if (IMAGESTEGO_JPEG_SUPPORT)
     )
 
     target_link_libraries(imagestego_jpeg
-        PUBLIC jpeg
+        PUBLIC libjpeg-turbo::jpeg
         imagestego_core
     )
 
