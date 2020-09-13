@@ -139,6 +139,13 @@ if (IMAGESTEGO_JPEG_SUPPORT)
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
 
+    if (IMAGESTEGO_WITH_LIBJPEG)
+        target_include_directories(imagestego_jpeg PUBLIC
+            $<BUILD_INTERFACE:$<TARGET_PROPERTY:JPEG::jpeg,INCLUDE_DIRECTORIES>>
+            $<INSTALL_INTERFACE:$<TARGET_PROPERTY:JPEG::jpeg,INCLUDE_DIRECTORIES>>
+        )
+    endif(IMAGESTEGO_WITH_LIBJPEG)
+
     list(APPEND IMAGESTEGO_LIBS imagestego_jpeg)
 
     add_definitions("-DIMAGESTEGO_JPEG_SUPPORT")
