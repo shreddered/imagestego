@@ -18,6 +18,11 @@ HunterGate(
 if (CMAKE_COMPILER_IS_GNUCXX)
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 endif(CMAKE_COMPILER_IS_GNUCXX)
+
+if (MSVC)
+    string(APPEND CMAKE_CXX_FLAGS " /MD")
+endif(MSVC)
+
 project(imagestego VERSION 1.0)
 
 # build conditions
