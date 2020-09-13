@@ -2,11 +2,17 @@
 // third party
 #include "MurmurHash3.h"
 
+// intrinsic
+#ifdef _MSC_VER
+#   include <intrin.h>
+#   pragma intrinsic(_BitScanReverse)
+#endif
 
 namespace imagestego {
 
 Exception::Exception(const int& _code) noexcept : std::exception(), code(_code) {}
 
+#ifndef _MSC_VER
 const char* Exception::what() const noexcept {
     switch(code) {
         case Codes::NoSuchFile:
@@ -25,13 +31,14 @@ const char* Exception::what() const noexcept {
             return "Unknown Error";
     }
 }
+#endif
 
 uint8_t log2(unsigned int value) noexcept {
 #if defined(__clang__) || defined(__GNUC__)
     return value ? 31 - __builtin_clz(value) : 0;
 #elif defined(_MSC_VER)
     unsigned long result = 0;
-    BitScanReverse(&result, value);
+    _BitScanReverse(&result, value);
     return result;
 #else
     uint8_t res = 0;
