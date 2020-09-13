@@ -54,10 +54,6 @@ if (IMAGESTEGO_JPEG_SUPPORT)
 
         hunter_add_package(Jpeg)
         find_package(JPEG CONFIG REQUIRED)
-
-        set(libjpeg JPEG::jpeg)
-    else()
-        set(libjpeg jpeg)
     endif(IMAGESTEGO_WITH_LIBJPEG)
 endif(IMAGESTEGO_JPEG_SUPPORT)
 
@@ -125,9 +121,17 @@ if (IMAGESTEGO_JPEG_SUPPORT)
     )
 
     target_link_libraries(imagestego_jpeg
-        PUBLIC ${libjpeg}
-        imagestego_core
+        PUBLIC imagestego_core
     )
+    if (IMAGESTEGO_WITH_LIBJPEG)
+        target_link_libraries(imagestego_jpeg
+            PUBLIC JPEG::jpeg
+        )
+    else()
+        target_link_libraries(imagestego_jpeg
+            PUBLIC jpeg
+        )
+    endif(IMAGESTEGO_WITH_LIBJPEG)
 
     target_include_directories(imagestego_jpeg PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
