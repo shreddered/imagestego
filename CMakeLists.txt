@@ -69,13 +69,13 @@ if (IMAGESTEGO_LOSSLESS_FORMATS)
     )
 
     target_link_libraries(imagestego_lossless
-        PUBLIC imagestego_core
-        opencv_core
+        PUBLIC opencv_core
         opencv_imgcodecs
+        imagestego_core
     )
 
     target_include_directories(imagestego_lossless PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>"
         $<INSTALL_INTERFACE:include/>
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
     )
@@ -182,19 +182,14 @@ endif(IMAGESTEGO_BUILD_TESTS)
 macro(generate_example)
     cmake_parse_arguments(EXAMPLE
         "OPTION"
-        "NAME"
-        "SOURCES"
+        "NAME;FILE"
+        "LIBS"
         ${ARGN}
     )
-    add_executable(${EXAMPLE_NAME} ${EXAMPLE_SOURCES})
+    add_executable(${EXAMPLE_NAME} ${EXAMPLE_FILE})
     target_link_libraries(${EXAMPLE_NAME}
-        imagestego
+        ${EXAMPLE_LIBS} 
     )
-    if (TARGET imagestego_compression)
-        target_link_libraries(${EXAMPLE_NAME}
-            imagestego_compression
-        )
-    endif(TARGET imagestego_compression)
     set_target_properties(${EXAMPLE_NAME} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/
     )
@@ -205,13 +200,12 @@ if (IMAGESTEGO_BUILD_EXAMPLES)
     set(EXAMPLE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/examples/)
 
     if (IMAGESTEGO_LOSSLESS_FORMATS)
-        generate_example(NAME lsb SOURCES
-            ${EXAMPLE_DIR}/lsb.cpp
+        generate_example(NAME lsb 
+            FILE ${EXAMPLE_DIR}/lsb.cpp
+            LIBS imagestego_lossless
         )
     endif(IMAGESTEGO_LOSSLESS_FORMATS)
 endif(IMAGESTEGO_BUILD_EXAMPLES)
-
-message(${IMAGESTEGO_LIBS})
 
 #installation rules
 install(TARGETS ${IMAGESTEGO_LIBS}
