@@ -46,6 +46,7 @@ endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
 # libjpeg
 if (IMAGESTEGO_JPEG_SUPPORT)
+    message("Fetching imagestego_jpeg dependency - libjpeg")
     hunter_add_package(libjpeg-turbo)
     find_package(libjpeg-turbo CONFIG REQUIRED)
 endif(IMAGESTEGO_JPEG_SUPPORT)
