@@ -1,22 +1,25 @@
-# TODO: JPEG module
-
 cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(POLICY CMP0074)
+    cmake_policy(SET CMP0074 NEW)
+endif(POLICY CMP0074)
 
 include("cmake/HunterGate.cmake")
 
 HunterGate(
     URL "https://github.com/cpp-pm/hunter/archive/v0.23.269.tar.gz"
     SHA1 "64024b7b95b4c86d50ae05b926814448c93a70a0"
+    FILEPATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Hunter/config.cmake"
 )
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
-project(imagestego VERSION 1.0 LANGUAGES CXX)
+project(imagestego VERSION 1.0)
 
 # build conditions
 option(IMAGESTEGO_BUILD_TESTS "Build tests" ON)
@@ -46,10 +49,12 @@ endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
 # libjpeg
 if (IMAGESTEGO_JPEG_SUPPORT)
-    hunter_add_package(libjpeg-turbo)
-    find_package(libjpeg-turbo CONFIG REQUIRED)
+    message("Fetching imagestego_jpeg dependency - libjpeg")
+    hunter_add_package(Jpeg)
+    find_package(JPEG CONFIG REQUIRED)
 endif(IMAGESTEGO_JPEG_SUPPORT)
 
+# opencv
 if (IMAGESTEGO_LOSSLESS_FORMATS)
     find_package(OpenCV REQUIRED)
 endif(IMAGESTEGO_LOSSLESS_FORMATS)
@@ -113,7 +118,7 @@ if (IMAGESTEGO_JPEG_SUPPORT)
     )
 
     target_link_libraries(imagestego_jpeg
-        PUBLIC libjpeg-turbo::jpeg
+        PUBLIC JPEG::jpeg
         imagestego_core
     )
 
