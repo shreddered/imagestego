@@ -81,7 +81,7 @@ public:
     virtual ~AbstractStegoExtracter() = default;
 }; // class AbstractStegoExtracter
 
-uint8_t log2(unsigned int value) noexcept;
+IMAGESTEGO_EXPORTS uint8_t log2(unsigned int value) noexcept;
 
 template<class It, class Rng>
 void shuffle(It first, It last, Rng&& gen) {
@@ -91,7 +91,7 @@ void shuffle(It first, It last, Rng&& gen) {
     }
 }
 
-uint32_t hash(const std::string& _key);
+IMAGESTEGO_EXPORTS uint32_t hash(const std::string& _key);
 
 } // namespace imagestego
 
