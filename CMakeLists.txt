@@ -18,12 +18,12 @@ HunterGate(
 if (CMAKE_COMPILER_IS_GNUCXX)
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 endif(CMAKE_COMPILER_IS_GNUCXX)
-
 project(imagestego VERSION 1.0)
 
 # build conditions
 option(IMAGESTEGO_BUILD_TESTS "Build tests" ON)
 option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
+option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
 
 # modules
 option(IMAGESTEGO_COMPRESSION_SUPPORT "Data compression support" ON)
@@ -49,9 +49,16 @@ endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
 # libjpeg
 if (IMAGESTEGO_JPEG_SUPPORT)
-    message("Fetching imagestego_jpeg dependency - libjpeg")
-    hunter_add_package(Jpeg)
-    find_package(JPEG CONFIG REQUIRED)
+    if (IMAGESTEGO_WITH_LIBJPEG)
+        message("Fetching imagestego_jpeg dependency - libjpeg")
+
+        hunter_add_package(Jpeg)
+        find_package(JPEG CONFIG REQUIRED)
+
+        set(libjpeg JPEG::jpeg)
+    else()
+        set(libjpeg jpeg)
+    endif(IMAGESTEGO_WITH_LIBJPEG)
 endif(IMAGESTEGO_JPEG_SUPPORT)
 
 # opencv
@@ -118,7 +125,7 @@ if (IMAGESTEGO_JPEG_SUPPORT)
     )
 
     target_link_libraries(imagestego_jpeg
-        PUBLIC JPEG::jpeg
+        PUBLIC ${libjpeg}
         imagestego_core
     )
 
