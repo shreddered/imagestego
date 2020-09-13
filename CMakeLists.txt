@@ -1,5 +1,3 @@
-# TODO: JPEG module
-
 cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -52,7 +50,9 @@ if (IMAGESTEGO_JPEG_SUPPORT)
     find_package(JPEG CONFIG REQUIRED)
 endif(IMAGESTEGO_JPEG_SUPPORT)
 
+# opencv
 if (IMAGESTEGO_LOSSLESS_FORMATS)
+    hunter_add_package(OpenCV)
     find_package(OpenCV REQUIRED)
 endif(IMAGESTEGO_LOSSLESS_FORMATS)
 
