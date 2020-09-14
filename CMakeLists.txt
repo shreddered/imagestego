@@ -34,6 +34,7 @@ project(imagestego VERSION 1.0)
 option(IMAGESTEGO_BUILD_TESTS "Build tests" ON)
 option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
 option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
+option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
 
 # modules
 option(IMAGESTEGO_COMPRESSION_SUPPORT "Data compression support" ON)
@@ -101,6 +102,12 @@ endif(IMAGESTEGO_JPEG_SUPPORT AND IMAGESTEGO_WITH_LIBJPEG)
 
 # opencv
 if (IMAGESTEGO_LOSSLESS_FORMATS)
+    if (IMAGESTEGO_BUILD_OPENCV)
+        message("Fetching imagestego_lossless dependency - opencv")
+
+        hunter_add_package(OpenCV)
+    endif(IMAGESTEGO_BUILD_OPENCV)
+
     find_package(OpenCV REQUIRED)
 endif(IMAGESTEGO_LOSSLESS_FORMATS)
 

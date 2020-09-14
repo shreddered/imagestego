@@ -14,8 +14,7 @@ target_include_directories(imagestego_lossless PUBLIC
 
 target_link_libraries(imagestego_lossless PUBLIC
     imagestego_core
-    opencv_core
-    opencv_imgcodecs
+    ${OpenCV_LIBS}
 )
 
 target_compile_definitions(imagestego_lossless PUBLIC
