@@ -7,6 +7,9 @@ configuration: Release
 build:
   parallel: true
 
+cache:
+  - c:\.hunter\
+
 before_build:
   - choco install opencv
   - git submodule update --init --recursive
