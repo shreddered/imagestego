@@ -268,7 +268,7 @@ struct PairComparator final {
     }
 };
 
-class Route final : public AvlTree<std::pair<int, int>, PairComparator<int, int> > {
+class IMAGESTEGO_EXPORTS Route final : public AvlTree<std::pair<int, int>, PairComparator<int, int> > {
 private:
     std::pair<int, int> _mapSize;
     std::mt19937& gen;
