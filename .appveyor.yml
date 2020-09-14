@@ -11,7 +11,8 @@ before_build:
   - choco install opencv
   - git submodule update --init --recursive
   - setx -m OPENCV_DIR c:\tools\opencv\build\x64\vc14
-  - setx /M PATH %PATH%;%OPENCV_DIR%\bin
+  - echo %OPENCV_DIR%
+  - setx -m PATH "$ENV:PATH;%OPENCV_DIR%\bin"
   - refreshenv
 
 build_script:
