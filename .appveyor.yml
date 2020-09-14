@@ -9,6 +9,7 @@ build:
 
 cache:
   - c:\.hunter\
+  - c:\tools\opencv\
 
 before_build:
   - choco install opencv
