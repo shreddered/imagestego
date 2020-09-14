@@ -12,8 +12,9 @@ before_build:
   - git submodule update --init --recursive
   - setx -m OPENCV_DIR c:\tools\opencv\build\x64\vc14
     #  - setx -m PATH "$ENV:PATH;c:\tools\opencv\build\x64\vc14\bin"
+  - dir %OPENCV_DIR%\bin
+  - dir %OPENCV_DIR%\lib
   - set PATH=%PATH%;%OPENCV_DIR%\bin
-  - refreshenv
 
 build_script:
   - cmake -H. -Bbuild -DIMAGESTEGO_COMPRESSION_SUPPORT=ON -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_BUILD_EXAMPLES=ON -DIMAGESTEGO_JPEG_SUPPORT=ON -DIMAGESTEGO_LOSSLESS_FORMATS=ON -DIMAGESTEGO_WITH_LIBJPEG=ON -DBUILD_SHARED_LIBS=ON -DOpenCV_DIR=%OPENCV_DIR%\lib -DCMAKE_BUILD_TYPE=Release
