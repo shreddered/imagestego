@@ -15,6 +15,8 @@ HunterGate(
     FILEPATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Hunter/config.cmake"
 )
 
+set(HUNTER_CONFIGURATION_TYPES Release)
+
 if (CMAKE_COMPILER_IS_GNUCXX)
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
 endif(CMAKE_COMPILER_IS_GNUCXX)
