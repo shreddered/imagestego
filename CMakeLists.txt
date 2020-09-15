@@ -23,10 +23,8 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(POLICY CMP0091)
     cmake_policy(SET CMP0091 NEW)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>DLL)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
 endif(POLICY CMP0091)
-
-
 
 project(imagestego VERSION 1.0)
 
