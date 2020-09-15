@@ -29,7 +29,7 @@ endif(POLICY CMP0091)
 project(imagestego VERSION 1.0)
 
 # build conditions
-option(IMAGESTEGO_BUILD_TESTS "Build tests" ON)
+option(IMAGESTEGO_BUILD_TESTS "Build tests" OFF)
 option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
 option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
 option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
