@@ -17,7 +17,7 @@ before_build:
   - cd opencv
   - mkdir build
   - cmake -H. -Bbuild -DBUILD_LIST=core,imgcodecs -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=OFF -DBUILD_opencv_apps=OFF -DCMAKE_INSTALL_PREFIX=install -DBUILD_TESTS=OFF -DBUILD_SHARED_LIBS=ON
-  - cmake --build build
+  - cmake --build build --config Release
   - cmake --build build --target install
   - cd ..
   - git submodule update --init --recursive
