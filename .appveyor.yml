@@ -23,7 +23,7 @@ before_build:
   - git submodule update --init --recursive
 
 build_script:
-  - cmake -H. -Bbuild -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_WITH_LIBJPEG=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DOpenCV_DIR=opencv/install -DGTEST_LINKED_AS_SHARED_LIBRARY=1
+  - cmake -H. -Bbuild -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_WITH_LIBJPEG=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DOpenCV_DIR=opencv/install -DGTEST_CREATE_SHAREDLIBRARY=0
   - cmake --build build
   - cd build
   - ctest -C Release
