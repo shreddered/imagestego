@@ -18,6 +18,7 @@ target_include_directories(imagestego_core PUBLIC
 )
 
 imagestego_lib(imagestego_core)
+imagestego_exports(imagestego_core)
 
 install(TARGETS imagestego_core
     EXPORT imagestego-config

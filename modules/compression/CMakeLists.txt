@@ -25,6 +25,7 @@ target_compile_definitions(imagestego_compression PUBLIC
 )
 
 imagestego_lib(imagestego_compression)
+imagestego_exports(imagestego_compression)
 
 install(TARGETS imagestego_compression
     EXPORT imagestego-config

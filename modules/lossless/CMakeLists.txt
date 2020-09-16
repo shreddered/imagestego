@@ -22,6 +22,7 @@ target_compile_definitions(imagestego_lossless PUBLIC
 )
 
 imagestego_lib(imagestego_lossless)
+imagestego_exports(imagestego_lossless)
 
 install(TARGETS imagestego_lossless
     EXPORT imagestego-config

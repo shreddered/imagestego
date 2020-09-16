@@ -25,6 +25,7 @@ target_compile_definitions(imagestego_jpeg PUBLIC
 )
 
 imagestego_lib(imagestego_jpeg)
+imagestego_exports(imagestego_jpeg)
 
 install(TARGETS imagestego_jpeg
     EXPORT imagestego-config
