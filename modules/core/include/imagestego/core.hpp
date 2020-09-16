@@ -7,7 +7,7 @@
 
 
 #if (defined(WIN32) || defined(_WIN32) || defined (WINCE))
-#   ifdef (IMAGESTEGO_EXPORT)
+#   ifdef IMAGESTEGO_EXPORT
 #       define IMAGESTEGO_EXPORTS __declspec(dllexport)
 #   else
 #       define IMAGESTEGO_EXPORTS __declspec(dllimport)
