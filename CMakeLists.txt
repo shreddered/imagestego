@@ -43,6 +43,10 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions("-DIMAGESTEGO_DEBUG")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
+if (WIN32)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+endif(WIN32)
+
 # preparing needed directories
 if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
     file(MAKE_DIRECTORY lib/)
@@ -69,22 +73,22 @@ function(imagestego_test)
         "LIBS"
         ${ARGN}
     )
-    
+
     foreach(OPT CORE COMPRESSION JPEG LOSSLESS)
         if (${TEST_${OPT}})
             set(DIR $<LOWER_CASE:${OPT}>)
         endif()
     endforeach()
-    
+
     # test executable
     add_executable(${TEST_NAME} ${TEST_FILE})
-    target_link_libraries(${TEST_NAME} 
+    target_link_libraries(${TEST_NAME}
         ${TEST_LIBS}
         gtest_main
     )
     set_target_properties(${TEST_NAME} PROPERTIES
-        OUTPUT_NAME "test_${TEST_NAME}"
-        RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/test/${DIR}"
+        OUTPUT_NAME "test_${DIR}_${TEST_NAME}"
+        #RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/"
     )
 endfunction(imagestego_test)
 
@@ -148,7 +152,7 @@ function(imagestego_add_test)
     endforeach()
 
     add_test(NAME ${TEST_NAME}
-        COMMAND "${PROJECT_SOURCE_DIR}/bin/test/${DIR}/test_${TEST_NAME}"
+        COMMAND "${PROJECT_SOURCE_DIR}/bin/test_${DIR}_${TEST_NAME}"
     )
 endfunction(imagestego_add_test)
 
