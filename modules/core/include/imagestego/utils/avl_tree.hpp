@@ -271,20 +271,39 @@ struct PairComparator final {
     }
 };
 
-class IMAGESTEGO_EXPORTS Route final : public AvlTree<std::pair<int, int>, PairComparator<int, int> > {
+class IMAGESTEGO_EXPORTS Route {
 private:
-    std::pair<int, int> _mapSize;
-    std::mt19937& gen;
+    class RouteImpl final : public AvlTree<std::pair<int, int>, PairComparator<int, int> > {
+    private:
+        std::pair<int, int> _mapSize;
+        std::mt19937& gen;
+    public:
+        explicit RouteImpl(const std::pair<int, int>& mapSize, std::mt19937&) noexcept;
+        template<class It>
+        explicit RouteImpl(It begin, It end, std::mt19937& _gen) : AvlTree(begin, end), gen(_gen) {}
+        inline void setMapSize(const std::pair<int, int>& mapSize) {
+            _mapSize = mapSize;
+        }
+        void create(const int&);
+        void add();
+    }; // class RouteImpl
+    RouteImpl* route;
 public:
-    explicit Route(const std::pair<int, int>& mapSize, std::mt19937&) noexcept;
+    typedef typename RouteImpl::iterator iterator;
+    explicit Route(const std::pair<int, int>& mapSize, std::mt19937&);
     template<class It>
-    explicit Route(It begin, It end, std::mt19937& _gen) : AvlTree(begin, end), gen(_gen) {}
+    explicit Route(It begin, It end, std::mt19937& gen) : route(new RouteImpl(begin, end, gen)) {}
     inline void setMapSize(const std::pair<int, int>& mapSize) {
-        _mapSize = mapSize;
+        route->setMapSize(mapSize);
     }
     void create(const int&);
     void add();
+    bool search(const std::pair<int, int>& pair);
+    iterator begin();
+    iterator end();
+    virtual ~Route() noexcept;
 }; // class Route
+
 
 } // namespace imagestego
 
