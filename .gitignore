@@ -1,6 +1,6 @@
-bin/*
-lib/*
+*bin*/*
+*lib*/*
 *.jpg
 *.png
-build/*
+*build*/
 Makefile
