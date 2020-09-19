@@ -20,6 +20,21 @@ target_include_directories(imagestego_core PUBLIC
 imagestego_lib(imagestego_core)
 imagestego_exports(imagestego_core)
 
+include(TestBigEndian)
+test_big_endian(BIG_ENDIAN)
+
+if (BIG_ENDIAN)
+    message("big endian")
+    target_compile_definitions(imagestego_core PUBLIC
+        "IMAGESTEGO_BIG_ENDIAN"
+    )
+else()
+    message("little endian")
+    target_compile_definitions(imagestego_core PUBLIC
+        "IMAGESTEGO_LITTLE_ENDIAN"
+    )
+endif(BIG_ENDIAN)
+
 install(TARGETS imagestego_core
     EXPORT imagestego-config
     ARCHIVE DESTINATION lib/
