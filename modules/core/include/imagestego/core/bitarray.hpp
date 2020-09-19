@@ -1,7 +1,9 @@
 #ifndef __IMAGESTEGO_BITARRAY_HPP_INCLUDED__
 #define __IMAGESTEGO_BITARRAY_HPP_INCLUDED__
 
-// c++
+// imagestego headers
+#include "imagestego/core/config.hpp"
+// c++ headers
 #include <ostream>
 #include <string>
 #include <vector>
@@ -17,7 +19,7 @@ class BitArray;
 
 } // namespace imagestego
 
-std::ostream& operator <<(std::ostream& os, const imagestego::BitArray& arr);
+IMAGESTEGO_EXPORTS std::ostream& operator <<(std::ostream& os, const imagestego::BitArray& arr);
 
 namespace imagestego {
 
