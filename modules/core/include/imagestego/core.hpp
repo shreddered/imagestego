@@ -6,56 +6,11 @@
 //#include "imagestego/core/bitarray.hpp"
 #include "imagestego/core/config.hpp"
 #include "imagestego/core/exception.hpp"
+#include "imagestego/core/interfaces.hpp"
 #include "imagestego/core/intrinsic.hpp"
-// c++
-#include <exception>
-#include <string>
 
 
 namespace imagestego {
-
-enum class Mode {
-    embedding,
-    extraction
-};
-
-enum class Algorithm {
-    Lsb,
-    JpegLsb,
-    Dwt,
-    F3,
-    UserDefined
-};
-
-class IMAGESTEGO_EXPORTS AbstractStegoEmbedder {
-public:
-    virtual void setImage(const std::string& imageName) = 0;
-    virtual void setOutputName(const std::string& filename) = 0;
-    virtual void setMessage(const std::string& msg) = 0;
-    virtual void setSecretKey(const std::string& key) = 0;
-    virtual Algorithm getAlgorithm() const {
-        return Algorithm::UserDefined;
-    } 
-    virtual void createStegoContainer() = 0;
-    static constexpr inline Mode getMode() noexcept {
-        return Mode::embedding;
-    }
-    virtual ~AbstractStegoEmbedder() = default;
-}; // class AbstractStegoEmbedder
-
-class IMAGESTEGO_EXPORTS AbstractStegoExtracter {
-public:
-    virtual void setImage(const std::string& imageName) = 0;
-    virtual void setSecretKey(const std::string& key) = 0;
-    virtual Algorithm getAlgorithm() const {
-        return Algorithm::UserDefined;
-    }
-    virtual std::string extractMessage() = 0;
-    static constexpr inline Mode getMode() noexcept {
-        return Mode::extraction;
-    }
-    virtual ~AbstractStegoExtracter() = default;
-}; // class AbstractStegoExtracter
 
 template<class It, class Rng>
 void shuffle(It first, It last, Rng&& gen) {
