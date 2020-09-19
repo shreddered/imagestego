@@ -25,29 +25,47 @@ public:
     BitArray<unsigned char> getEncodedMessage() const;
     std::string getHuffmanTree() const;
     std::string getAlphabet() const noexcept {
-        return alphabet;
+        return encoder->getAlphabet();
     }
     virtual ~HuffmanEncoder() noexcept;
 private:
-    struct TreeNode final {
-        std::string data;
-        bool isVisited = false;
-        TreeNode* left = nullptr;
-        TreeNode* right = nullptr;
-        TreeNode(const std::string& data) noexcept : data(data) {}
-        ~TreeNode() noexcept;
-    };
-    void __buildCode() const;
-    void encode() const;
-    void dfs(TreeNode* node) const;
-    void destroyNode(TreeNode* node) noexcept;
-    std::string msg;
-    mutable TreeNode* root = nullptr;
-    mutable std::string encodedMsg = ""; // mutable bc of caching
-    mutable std::map<char, std::string> codeTable; 
-    mutable std::string route = "";
-    mutable std::string alphabet;
-}; // class HuffmanEncoder
+    class HuffmanEncoderImpl final {
+    public:
+        explicit HuffmanEncoderImpl() noexcept;
+        explicit HuffmanEncoderImpl(const std::string& str) noexcept;
+        explicit HuffmanEncoderImpl(std::string&& str) noexcept;
+        HuffmanEncoderImpl(const HuffmanEncoderImpl&) = delete;
+        HuffmanEncoderImpl& operator =(const HuffmanEncoderImpl&) = delete;
+        void setMessage(const std::string& str) noexcept;
+        void setMessage(std::string&& str) noexcept;
+        BitArray<unsigned char> getEncodedMessage() const;
+        std::string getHuffmanTree() const;
+        std::string getAlphabet() const noexcept {
+            return alphabet;
+        }
+        virtual ~HuffmanEncoderImpl() noexcept;
+    private:
+        struct TreeNode final {
+            std::string data;
+            bool isVisited = false;
+            TreeNode* left = nullptr;
+            TreeNode* right = nullptr;
+            TreeNode(const std::string& data) noexcept : data(data) {}
+            ~TreeNode() noexcept;
+        };
+        void __buildCode() const;
+        void encode() const;
+        void dfs(TreeNode* node) const;
+        void destroyNode(TreeNode* node) noexcept;
+        std::string msg;
+        mutable TreeNode* root = nullptr;
+        mutable std::string encodedMsg = ""; // mutable bc of caching
+        mutable std::map<char, std::string> codeTable; 
+        mutable std::string route = "";
+        mutable std::string alphabet;
+    }; // class HuffmanEncoderImpl
+    HuffmanEncoderImpl* encoder;
+}; // class HuffmanEncoder 
 
 } // namespace imagestego
 

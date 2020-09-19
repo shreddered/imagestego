@@ -3,36 +3,36 @@
  
 namespace imagestego {
 
-HuffmanEncoder::HuffmanEncoder() noexcept {}
+HuffmanEncoder::HuffmanEncoderImpl::HuffmanEncoderImpl() noexcept {}
 
-HuffmanEncoder::HuffmanEncoder(const std::string& str) noexcept : msg(str) {}
+HuffmanEncoder::HuffmanEncoderImpl::HuffmanEncoderImpl(const std::string& str) noexcept : msg(str) {}
 
-HuffmanEncoder::HuffmanEncoder(std::string&& str) noexcept : msg(str) {}
+HuffmanEncoder::HuffmanEncoderImpl::HuffmanEncoderImpl(std::string&& str) noexcept : msg(str) {}
 
-HuffmanEncoder::TreeNode::~TreeNode() noexcept {
+HuffmanEncoder::HuffmanEncoderImpl::TreeNode::~TreeNode() noexcept {
     if (left)
         delete left;
     if (right)
         delete right;
 }
 
-void HuffmanEncoder::setMessage(const std::string& str) noexcept {
+void HuffmanEncoder::HuffmanEncoderImpl::setMessage(const std::string& str) noexcept {
     msg = str;
     encodedMsg.clear();
 }
 
-void HuffmanEncoder::setMessage(std::string&& str) noexcept {
+void HuffmanEncoder::HuffmanEncoderImpl::setMessage(std::string&& str) noexcept {
     msg = str;
     encodedMsg.clear();
 }
 
-BitArray<unsigned char> HuffmanEncoder::getEncodedMessage() const {
+BitArray<unsigned char> HuffmanEncoder::HuffmanEncoderImpl::getEncodedMessage() const {
     auto tree = BitArray<unsigned char>(getHuffmanTree(), 0);
     encode();
     return tree + BitArray<unsigned char>(alphabet) + BitArray<unsigned char>(encodedMsg, 0);
 }
 
-void HuffmanEncoder::encode() const {
+void HuffmanEncoder::HuffmanEncoderImpl::encode() const {
     if (codeTable.empty())
         __buildCode();
     if (encodedMsg.empty()) {
@@ -42,7 +42,7 @@ void HuffmanEncoder::encode() const {
     }
 }
 
-void HuffmanEncoder::__buildCode() const {
+void HuffmanEncoder::HuffmanEncoderImpl::__buildCode() const {
     std::map<char, std::size_t> weight;
     std::for_each(msg.begin(), msg.end(), [&weight](const char& c) mutable {
         ++weight[c];
@@ -71,7 +71,7 @@ void HuffmanEncoder::__buildCode() const {
     root = node.begin()->second;
 }
 
-std::string HuffmanEncoder::getHuffmanTree() const {
+std::string HuffmanEncoder::HuffmanEncoderImpl::getHuffmanTree() const {
     if (codeTable.empty()) {
         __buildCode();
     }
@@ -83,7 +83,7 @@ std::string HuffmanEncoder::getHuffmanTree() const {
     return route;
 }
 
-void HuffmanEncoder::dfs(HuffmanEncoder::TreeNode* node) const {
+void HuffmanEncoder::HuffmanEncoderImpl::dfs(TreeNode* node) const {
     if (node->left) {
         route += '1';
         dfs(node->left);
@@ -97,17 +97,43 @@ void HuffmanEncoder::dfs(HuffmanEncoder::TreeNode* node) const {
     }
 }
 
-HuffmanEncoder::~HuffmanEncoder() noexcept {
+HuffmanEncoder::HuffmanEncoderImpl::~HuffmanEncoderImpl() noexcept {
     if (root)
         delete root;
 }
 
-void HuffmanEncoder::destroyNode(HuffmanEncoder::TreeNode* node) noexcept {
+void HuffmanEncoder::HuffmanEncoderImpl::destroyNode(TreeNode* node) noexcept {
     if (node->left) {
         destroyNode(node->left);
         destroyNode(node->right);
         delete node;
     }
+}
+
+HuffmanEncoder::HuffmanEncoder() noexcept : encoder(new HuffmanEncoderImpl()) {}
+
+HuffmanEncoder::HuffmanEncoder(const std::string& str) noexcept : encoder(new HuffmanEncoderImpl(str)) {}
+
+HuffmanEncoder::HuffmanEncoder(std::string&& str) noexcept : encoder(new HuffmanEncoderImpl(str)) {}
+
+void HuffmanEncoder::setMessage(const std::string& str) noexcept {
+    encoder->setMessage(str);
+}
+
+void HuffmanEncoder::setMessage(std::string&& str) noexcept {
+    encoder->setMessage(str);
+}
+
+BitArray<unsigned char> HuffmanEncoder::getEncodedMessage() const {
+    return encoder->getEncodedMessage();
+}
+
+std::string HuffmanEncoder::getHuffmanTree() const {
+    return encoder->getHuffmanTree();
+}
+
+HuffmanEncoder::~HuffmanEncoder() noexcept {
+    delete encoder;
 }
 
 } // namespace imagestego
