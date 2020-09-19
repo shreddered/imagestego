@@ -51,4 +51,9 @@ if(IMAGESTEGO_BUILD_TESTS)
         FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/avl.cpp
         LIBS imagestego_core
     )
+    imagestego_test(CORE
+        NAME bitarray
+        FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/bitarray.cpp
+        LIBS imagestego_core
+    )
 endif(IMAGESTEGO_BUILD_TESTS)

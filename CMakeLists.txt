@@ -164,6 +164,7 @@ if (IMAGESTEGO_BUILD_TESTS)
 
     # core tests
     imagestego_add_test(CORE NAME avl)
+    imagestego_add_test(CORE NAME bitarray)
 
     # compression tests
     imagestego_add_test(COMPRESSION NAME huffman)
