@@ -3,7 +3,7 @@
 
 // imagestego
 #include "imagestego/core.hpp"
-#include "imagestego/utils/avl_tree.hpp"
+#include "imagestego/core/avl_tree.hpp"
 #include "imagestego/utils/bitarray.hpp"
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
 #   include "imagestego/keygen.hpp"

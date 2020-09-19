@@ -1,4 +1,4 @@
-#include "imagestego/utils/avl_tree.hpp"
+#include "imagestego/core/avl_tree.hpp"
 
 
 namespace imagestego {

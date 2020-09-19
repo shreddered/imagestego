@@ -1,7 +1,8 @@
-#include <imagestego/utils/avl_tree.hpp>
-
+// imagestego headers
+#include <imagestego/core/avl_tree.hpp>
+// c++ headers
 #include <vector>
-
+// gtest
 #include <gtest/gtest.h>
 
 
