@@ -88,7 +88,7 @@ function(imagestego_test)
     )
     set_target_properties(${TEST_NAME} PROPERTIES
         OUTPUT_NAME "test_${DIR}_${TEST_NAME}"
-        #RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/"
+        RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/"
     )
 endfunction(imagestego_test)
 
