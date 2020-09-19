@@ -69,8 +69,6 @@ public:
     virtual ~AbstractStegoExtracter() = default;
 }; // class AbstractStegoExtracter
 
-IMAGESTEGO_EXPORTS uint8_t log2(unsigned int value) noexcept;
-
 template<class It, class Rng>
 void shuffle(It first, It last, Rng&& gen) {
     for (auto it = first; it != last; ++it) {
