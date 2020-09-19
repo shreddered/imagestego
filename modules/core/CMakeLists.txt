@@ -3,6 +3,7 @@ add_library(imagestego_core SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/bitarray.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/exception.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/intrinsic.cpp
     # third party
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/MurmurHash3.cpp
