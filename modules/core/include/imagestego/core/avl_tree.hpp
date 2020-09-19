@@ -1,8 +1,6 @@
 #ifndef __IMAGESTEGO_AVL_TREE_HPP_INCLUDED__
 #define __IMAGESTEGO_AVL_TREE_HPP_INCLUDED__
 
-// imagestego
-#include "imagestego/core.hpp"
 // c++
 #include <algorithm>
 #include <functional>

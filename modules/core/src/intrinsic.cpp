@@ -1,6 +1,7 @@
 #include "imagestego/core/intrinsic.hpp"
 #ifdef _MSC_VER
 #   include <stdlib.h>
+#   pragma intrinsic(_BitScanReverse)
 #elif !(defined(__GNUC__) || defined(__INTEL_COMPILER) || defined(__clang__))
 #   include <algorithm>
 #endif

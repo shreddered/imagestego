@@ -1,6 +1,7 @@
 #ifndef __IMAGESTEGO_BITARRAY_HPP_INCLUDED__
 #define __IMAGESTEGO_BITARRAY_HPP_INCLUDED__
 
+// c++
 #include <ostream>
 #include <string>
 #include <vector>
