@@ -2,7 +2,7 @@
 #define __IMAGESTEGO_CORE_HPP_INCLUDED__
 
 // imagestego headers
-#include <imagestego/core/config.hpp>
+#include "imagestego/core/config.hpp"
 // c++
 #include <exception>
 #include <string>

@@ -14,7 +14,7 @@ bool isEqual(It1 begin, It1 end, It2 _begin) {
     return true;
 }
 
-TEST(TestAvl, AvlTree) {
+TEST(Core, AvlTree) {
     auto v = {1, 3, 7, 1, 5, 8, 6};
     imagestego::AvlTree<int> tree;
     for (auto elem : v)
