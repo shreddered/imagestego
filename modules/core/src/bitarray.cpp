@@ -1,7 +1,8 @@
 #include "imagestego/core/bitarray.hpp"
-
-#include <algorithm>
-#include <bits/c++config.h>
+#ifdef IMAGESTEGO_BIG_ENDIAN
+#   include "imagestego/core/intrinsic.hpp"
+#   include <algorithm>
+#endif
 #include <cstring>
 #include <ostream>
 
@@ -127,12 +128,17 @@ std::size_t BitArrayImpl::size() const noexcept {
 BitArrayImpl BitArrayImpl::fromByteString(std::string str) {
     BitArrayImpl arr(str.size() * CHAR_BIT);
     str.append((sizeof(BlockType) - str.size()) % sizeof(BlockType), '\0');
-#ifdef IMAGESTEGO_BIG_ENDIAN
+/*#ifdef IMAGESTEGO_BIG_ENDIAN
     for (std::size_t i = 0; i != str.length(); i += sizeof(BlockType)) {
         std::reverse(str.begin() + i, str.begin() + i + sizeof(BlockType));
     }
-#endif
+#endif*/
     memcpy(&arr._blocks[0], str.data(), str.size());
+#ifdef IMAGESTEGO_BIG_ENDIAN
+    std::for_each(arr._blocks.begin(), arr._blocks.end(), [](uint32_t& value) {
+        value = bswap(value);
+    });
+#endif
     return arr;
 }
 
