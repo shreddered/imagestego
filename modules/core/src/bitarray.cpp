@@ -128,11 +128,6 @@ std::size_t BitArrayImpl::size() const noexcept {
 BitArrayImpl BitArrayImpl::fromByteString(std::string str) {
     BitArrayImpl arr(str.size() * CHAR_BIT);
     str.append((sizeof(BlockType) - str.size()) % sizeof(BlockType), '\0');
-/*#ifdef IMAGESTEGO_BIG_ENDIAN
-    for (std::size_t i = 0; i != str.length(); i += sizeof(BlockType)) {
-        std::reverse(str.begin() + i, str.begin() + i + sizeof(BlockType));
-    }
-#endif*/
     memcpy(&arr._blocks[0], str.data(), str.size());
 #ifdef IMAGESTEGO_BIG_ENDIAN
     std::for_each(arr._blocks.begin(), arr._blocks.end(), [](uint32_t& value) {
