@@ -5,3 +5,4 @@
 *build*/
 Makefile
 .clangd/
+compile_commands.json
