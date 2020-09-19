@@ -9,7 +9,7 @@
 using imagestego::BitArray;
 
 
-TEST(Core, BitArray) { 
+TEST(Core, BitArray1) { 
     uint32_t temp = 53;
     char buf[4];
     memcpy(buf, &temp, sizeof(temp));
