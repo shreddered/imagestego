@@ -4,10 +4,6 @@ add_library(imagestego_jpeg SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_lsb.cpp
 )
 
-set_target_properties(imagestego_jpeg PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY lib/
-)
-
 target_include_directories(imagestego_jpeg PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
     $<INSTALL_INTERFACE:include/>

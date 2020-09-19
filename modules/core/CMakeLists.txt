@@ -9,10 +9,6 @@ add_library(imagestego_core SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/MurmurHash3.cpp
 )
 
-set_target_properties(imagestego_core PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY lib/
-)
-
 target_include_directories(imagestego_core PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
     $<INSTALL_INTERFACE:include/>

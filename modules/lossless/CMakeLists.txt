@@ -3,10 +3,6 @@ add_library(imagestego_lossless SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
 )
 
-set_target_properties(imagestego_lossless PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY lib/
-)
-
 target_include_directories(imagestego_lossless PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
     $<INSTALL_INTERFACE:include/>

@@ -8,7 +8,6 @@ add_library(imagestego_compression
 
 set_target_properties(imagestego_compression PROPERTIES
     OUTPUT_NAME "imagestego_comp"
-    LIBRARY_OUTPUT_DIRECTORY lib/
 )
 
 target_include_directories(imagestego_compression PUBLIC
