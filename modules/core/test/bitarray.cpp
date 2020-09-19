@@ -22,3 +22,9 @@ TEST(Core, BitArray1) {
     ss << copy;
     EXPECT_EQ(ss.str(), std::bitset<32>(temp).to_string());
 }
+
+TEST(Core, BitArray2) {
+    std::string msg = "asdasd";
+    BitArray arr = BitArray::fromByteString(msg);
+    EXPECT_EQ(msg, arr.toByteString());
+}
