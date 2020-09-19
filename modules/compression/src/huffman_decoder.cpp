@@ -3,25 +3,25 @@
 
 namespace imagestego {
 
-HuffmanDecoder::HuffmanDecoder() noexcept {}
+HuffmanDecoder::HuffmanDecoderImpl::HuffmanDecoderImpl() noexcept {}
 
-HuffmanDecoder::HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept : encodedMsg(arr) {}
+HuffmanDecoder::HuffmanDecoderImpl::HuffmanDecoderImpl(const BitArray<unsigned char>& arr) noexcept : encodedMsg(arr) {}
 
-HuffmanDecoder::~HuffmanDecoder() noexcept {
+HuffmanDecoder::HuffmanDecoderImpl::~HuffmanDecoderImpl() noexcept {
     if (root)
         delete root;
 }
 
-HuffmanDecoder::TreeNode::TreeNode(TreeNode* node) noexcept : parent(node) {}
+HuffmanDecoder::HuffmanDecoderImpl::TreeNode::TreeNode(TreeNode* node) noexcept : parent(node) {}
 
-HuffmanDecoder::TreeNode::~TreeNode() noexcept {
+HuffmanDecoder::HuffmanDecoderImpl::TreeNode::~TreeNode() noexcept {
     if (left)
         delete left;
     if (right)
         delete right;
 }
 
-std::string HuffmanDecoder::getDecodedMessage() {
+std::string HuffmanDecoder::HuffmanDecoderImpl::getDecodedMessage() {
     if (!root) {
         readDfs();
         readAlphabet();
@@ -31,7 +31,7 @@ std::string HuffmanDecoder::getDecodedMessage() {
     return decodedMsg;
 }
 
-void HuffmanDecoder::readDfs() {
+void HuffmanDecoder::HuffmanDecoderImpl::readDfs() {
     root = new TreeNode();
     auto currentNode = root;
     it = 0;
@@ -74,19 +74,19 @@ unsigned char takeChar(const BitArray<unsigned char>& arr, const std::size_t& po
     return tmp;
 }
 
-void HuffmanDecoder::readAlphabet() {
+void HuffmanDecoder::HuffmanDecoderImpl::readAlphabet() {
     for (std::size_t i = 0; i != codes.size(); ++i) {
         alphabet += takeChar(encodedMsg, it);
         it += 8;
     }
 }
 
-void HuffmanDecoder::createCodeTable() {
+void HuffmanDecoder::HuffmanDecoderImpl::createCodeTable() {
     for (std::size_t i = 0; i != codes.size(); ++i)
         codeTable.emplace(codes[i], alphabet[i]);
 }
 
-void HuffmanDecoder::decode() {
+void HuffmanDecoder::HuffmanDecoderImpl::decode() {
     auto currNode = root;
     std::string code;
     for ( ; it != encodedMsg.size(); ++it) {
@@ -104,6 +104,18 @@ void HuffmanDecoder::decode() {
             currNode = root;
         }
     }
+}
+
+HuffmanDecoder::HuffmanDecoder() noexcept : decoder(new HuffmanDecoderImpl()) {}
+
+HuffmanDecoder::HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept : decoder(new HuffmanDecoderImpl(arr)) {}
+
+HuffmanDecoder::~HuffmanDecoder() noexcept {
+    delete decoder;
+}
+
+std::string HuffmanDecoder::getDecodedMessage() {
+    return decoder->getDecodedMessage();
 }
 
 } // namespace imagestego
