@@ -12,6 +12,7 @@ add_library(imagestego_core SHARED
 target_include_directories(imagestego_core PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
     $<INSTALL_INTERFACE:include/>
+    /usr/include/opencv4
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
 )
 
@@ -22,12 +23,10 @@ include(TestBigEndian)
 test_big_endian(BIG_ENDIAN)
 
 if (BIG_ENDIAN)
-    message("big endian")
     target_compile_definitions(imagestego_core PUBLIC
         "IMAGESTEGO_BIG_ENDIAN"
     )
 else()
-    message("little endian")
     target_compile_definitions(imagestego_core PUBLIC
         "IMAGESTEGO_LITTLE_ENDIAN"
     )
