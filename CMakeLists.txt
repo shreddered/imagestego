@@ -83,15 +83,14 @@ function(imagestego_test)
         gtest_main
     )
 
-    if (IMAGESTEGO_COVERAGE)
-        target_compile_options(${TEST_NAME} PRIVATE --coverage)
-        target_link_libraries(${TEST_NAME} PRIVATE --coverage)
-    endif(IMAGESTEGO_COVERAGE)
-
     set_target_properties(${TEST_NAME} PROPERTIES
         OUTPUT_NAME "test_${DIR}_${TEST_NAME}"
         RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/"
     )
+    if (IMAGESTEGO_COVERAGE)
+        target_compile_options(${TEST_NAME} PRIVATE --coverage)
+        target_link_libraries(${TEST_NAME} --coverage)
+    endif(IMAGESTEGO_COVERAGE)
 endfunction(imagestego_test)
 
 function(imagestego_exports target)
