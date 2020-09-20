@@ -4,9 +4,6 @@ platform: x64
 
 configuration: Release
 
-build:
-  parallel: true
-
 install:
   - git submodule update --init --recursive
 
@@ -19,7 +16,7 @@ before_build:
   # - cmake --build build --config Release
   # - cmake --build build --target install --config Release
   # - cd ..
-  - cmake -G "Visual Studio 15 2017" -A x64
+  - cmake -G "Visual Studio 15 2017" -A x64 -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_MODULES=core,comp
 
 build:
   project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
