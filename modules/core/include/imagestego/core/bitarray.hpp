@@ -34,7 +34,8 @@ public:
     BitArrayImpl(const std::string& str);
     explicit BitArrayImpl(std::size_t sz);
     static BitArrayImpl fromByteString(std::string s);
-    std::string toByteString();
+    std::string toByteString() const;
+    std::string toString() const;
     std::size_t size() const noexcept;
     BitReference operator [](std::size_t i);
     bool operator [](std::size_t i) const;
@@ -102,7 +103,8 @@ public:
     BitArray& operator =(BitArray&& other) noexcept;
     virtual ~BitArray() noexcept;
     static BitArray fromByteString(std::string str);
-    std::string toByteString();
+    std::string toByteString() const;
+    std::string toString() const;
     typename BitArrayImpl::reference operator[](std::size_t i);
     std::size_t size() const noexcept;
     bool operator[](std::size_t i) const;

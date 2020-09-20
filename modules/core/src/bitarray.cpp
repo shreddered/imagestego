@@ -153,7 +153,7 @@ typename BitArrayImpl::iterator BitArrayImpl::end() {
         ? BitIterator(BitReference(*(&_blocks.back() + 1), 0)) : BitIterator(operator [](_sz));
 }
 
-std::string BitArrayImpl::toByteString() {
+std::string BitArrayImpl::toByteString() const {
     std::string str(_sz / CHAR_BIT, '\0');
 #if IMAGESTEGO_BIG_ENDIAN
     auto tmp = _blocks;
@@ -164,6 +164,14 @@ std::string BitArrayImpl::toByteString() {
 #else
     memcpy(&str[0], &_blocks[0], _blocks.size() * sizeof(BlockType));
 #endif
+    return str;
+}
+
+std::string BitArrayImpl::toString() const {
+    std::string str;
+    str.reserve(_sz);
+    for (std::size_t i = 0; i != _sz; ++i)
+        str.push_back((operator [](i)) ? '1' : '0');
     return str;
 }
 
@@ -229,8 +237,12 @@ typename BitArray::iterator BitArray::end() {
     return _arr->end();
 }
 
-std::string BitArray::toByteString() {
+std::string BitArray::toByteString() const {
     return _arr->toByteString();
+}
+
+std::string BitArray::toString() const {
+    return _arr->toString();
 }
 
 } // namespace imagestego
