@@ -92,7 +92,7 @@ void HuffmanEncoder::HuffmanEncoderImpl::__buildCode() const {
     root = node.begin()->second;
 }
 
-std::string HuffmanEncoder::HuffmanEncoderImpl::getHuffmanTree() const {
+void HuffmanEncoder::HuffmanEncoderImpl::getHuffmanTree() const {
     if (codeTable.empty()) {
         __buildCode();
     }
@@ -101,7 +101,6 @@ std::string HuffmanEncoder::HuffmanEncoderImpl::getHuffmanTree() const {
     // creating DFS string
     dfs(root);
     route += '0';
-    return route;
 }
 
 void HuffmanEncoder::HuffmanEncoderImpl::dfs(TreeNode* node) const {
