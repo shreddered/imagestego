@@ -1,9 +1,28 @@
+/*
+ * This file is a part of imagestego library.
+ *
+ * Copyright (C) 2020 Dmitry Kalinin <x.shreddered.x@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>
+ */
+
 #ifndef __IMAGESTEGO_DWT_HPP_INCLUDED__
 #define __IMAGESTEGO_DWT_HPP_INCLUDED__
 
-// imagestego
+// imagestego headers
 #include "imagestego/core.hpp"
-#include "imagestego/utils/bitarray.hpp"
+// #include "imagestego/utils/bitarray.hpp"
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
 #   include "imagestego/keygen.hpp"
 #   include <iostream>
@@ -11,7 +30,7 @@
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
 #   include "imagestego/utils/format_checker.hpp"
 #endif
-// c++
+// c++ headers
 #include <cmath>
 #include <algorithm>
 #include <random>
@@ -24,8 +43,20 @@
 
 namespace imagestego {
 
+/**
+ * One-dimensional Integer Wavelet Transform.
+ *
+ * @param src Matrix to be transformed.
+ * @param dst Transformed matrix.
+ */
 IMAGESTEGO_EXPORTS void dwt(const cv::Mat& src, cv::Mat& dst);
 
+/**
+ * One-dimensional inverse Integer Wavelet Transform.
+ *
+ * @param src Matrix to be transformed.
+ * @param dst Transformed matrix.
+ */
 IMAGESTEGO_EXPORTS void idwt(const cv::Mat& src, cv::Mat& dst);
 
 #ifdef IMAGESTEGO_COMPRESSION_SUPPORT
@@ -208,7 +239,7 @@ private:
     cv::Mat image;
     std::string outputFile;
     std::mt19937 gen;
-    BitArray<> msg;
+    BitArray msg;
     uint32_t key;
     bool hasKey = false;
 }; // class DwtStegoEmbedder
