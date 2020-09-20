@@ -1,4 +1,4 @@
-image: Visual Studio 2019
+image: Visual Studio 2017
 
 platform: x64
 
@@ -21,9 +21,10 @@ before_build:
   # - cmake --build build --target install --config Release
   # - cd ..
   - git submodule update --init --recursive
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
 
 build_script:
-  - cmake -H. -Bbuild -G "Visual Studio 16 2019" -A "x64" -DIMAGESTEGO_BUILD_TESTS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DIMAGESTEGO_MODULES=core,comp
+  - cmake -H. -Bbuild -G "Visual Studio 15 2017" -A "x64" -DIMAGESTEGO_BUILD_TESTS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DIMAGESTEGO_MODULES=core,comp
   - cmake --build build --config Release
   - cd build
   - ctest --verbose -C Release
