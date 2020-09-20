@@ -39,4 +39,4 @@ script:
   - cd ..
 
 after_success:
-  - coveralls --root . -E ".*gtest.*" -E ".*CMakeFiles.*" -E "third_party"
+  - coveralls --root . -E ".*gtest.*" -E ".*CMakeFiles.*" -E ".*third_party.*" -E ".*examples.*
