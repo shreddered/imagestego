@@ -32,16 +32,15 @@
 
 namespace imagestego {
 
-class IMAGESTEGO_EXPORTS HuffmanEncoder {
+class IMAGESTEGO_EXPORTS HuffmanEncoder : public AbstractEncoder {
 public:
     explicit HuffmanEncoder() noexcept;
     explicit HuffmanEncoder(const std::string& str) noexcept;
     explicit HuffmanEncoder(std::string&& str) noexcept;
     HuffmanEncoder(const HuffmanEncoder&) = delete;
     HuffmanEncoder& operator =(const HuffmanEncoder&) = delete;
-    void setMessage(const std::string& str) noexcept;
-    void setMessage(std::string&& str) noexcept;
-    BitArray getEncodedMessage() const;
+    void setMessage(const std::string& str) override;
+    BitArray getEncodedMessage() override;
     std::string getAlphabet() const noexcept {
         return encoder->getAlphabet();
     }
@@ -51,11 +50,9 @@ private:
     public:
         explicit HuffmanEncoderImpl() noexcept;
         explicit HuffmanEncoderImpl(const std::string& str) noexcept;
-        explicit HuffmanEncoderImpl(std::string&& str) noexcept;
         HuffmanEncoderImpl(const HuffmanEncoderImpl&) = delete;
         HuffmanEncoderImpl& operator =(const HuffmanEncoderImpl&) = delete;
         void setMessage(const std::string& str) noexcept;
-        void setMessage(std::string&& str) noexcept;
         BitArray getEncodedMessage() const;
         void getHuffmanTree() const;
         std::string getAlphabet() const noexcept {

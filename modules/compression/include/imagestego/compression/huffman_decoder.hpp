@@ -20,9 +20,9 @@
 #ifndef __IMAGESTEGO_HUFFMAN_DECODER_HPP_INCLUDED__
 #define __IMAGESTEGO_HUFFMAN_DECODER_HPP_INCLUDED__
 
-// imagestego
+// imagestego headers
 #include "imagestego/core.hpp"
-// c++
+// c++ headers
 #include <unordered_map>
 #include <string>
 #include <vector>

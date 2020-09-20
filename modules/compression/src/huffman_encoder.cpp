@@ -26,8 +26,6 @@ HuffmanEncoder::HuffmanEncoderImpl::HuffmanEncoderImpl() noexcept {}
 
 HuffmanEncoder::HuffmanEncoderImpl::HuffmanEncoderImpl(const std::string& str) noexcept : msg(str) {}
 
-HuffmanEncoder::HuffmanEncoderImpl::HuffmanEncoderImpl(std::string&& str) noexcept : msg(str) {}
-
 HuffmanEncoder::HuffmanEncoderImpl::TreeNode::~TreeNode() noexcept {
     if (left)
         delete left;
@@ -36,11 +34,6 @@ HuffmanEncoder::HuffmanEncoderImpl::TreeNode::~TreeNode() noexcept {
 }
 
 void HuffmanEncoder::HuffmanEncoderImpl::setMessage(const std::string& str) noexcept {
-    msg = str;
-    encodedMsg.clear();
-}
-
-void HuffmanEncoder::HuffmanEncoderImpl::setMessage(std::string&& str) noexcept {
     msg = str;
     encodedMsg.clear();
 }
