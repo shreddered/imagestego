@@ -19,9 +19,10 @@ set(HUNTER_CONFIGURATION_TYPES Release)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
+    string(APPEND CMAKE_CXX_FLAGS " -ggdb")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
-if(POLICY CMP0091)
+if (POLICY CMP0091)
     cmake_policy(SET CMP0091 NEW)
     set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>DLL)
 endif(POLICY CMP0091)
@@ -46,10 +47,6 @@ if (WIN32)
 endif(WIN32)
 
 # preparing needed directories
-if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
-    file(MAKE_DIRECTORY lib/)
-endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
-
 if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
     file(MAKE_DIRECTORY bin/)
 endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
