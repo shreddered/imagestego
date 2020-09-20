@@ -142,8 +142,16 @@ public:
      */
     void pushBack(bool val);
 
-    void pushBack(int num, size_t bits);
-    void pushBack(uint32_t num, size_t bits);
+    /**
+     * Puts n bits from number to array.
+     *
+     * This method has several overloads for different integer types.
+     *
+     * @param num Number from which bits are taken.
+     * @param n Nubmer of bits to take from num.
+     */
+    void put(int num, size_t n);
+    void put(size_t num, size_t n);
 
     /**
      * Clears array.
@@ -449,6 +457,17 @@ public:
      * @return Size of array
      */
     size_t size() const noexcept;
+
+    /**
+     * Puts n bits from number to array.
+     *
+     * This method has several overloads for different integer types.
+     *
+     * @param num Number from which bits are taken.
+     * @param n Nubmer of bits to take from num.
+     */
+    void put(int num, size_t n);
+    void put(size_t num, size_t n);
 
     /**
      * Adds element to the end.

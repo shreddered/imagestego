@@ -163,6 +163,20 @@ void BitArrayImpl::pushBack(bool val) {
     ++_sz;
 }
 
+void BitArrayImpl::put(int num, size_t n) {
+    for(; n != 0; --n) {
+        const size_t offset = n - 1;
+        pushBack((num & (1 << offset)) != 0);
+    }
+}
+
+void BitArrayImpl::put(size_t num, size_t n) {
+    for(; n != 0; --n) {
+        const size_t offset = n - 1;
+        pushBack((num & (1 << offset)) != 0);
+    }
+}
+
 void BitArrayImpl::clear() {
     _blocks.clear();
     _sz = 0;
@@ -279,6 +293,14 @@ std::string BitArray::toByteString() const {
 
 std::string BitArray::toString() const {
     return _arr->toString();
+}
+
+void BitArray::put(int num, size_t n) {
+    _arr->put(num, n);
+}
+
+void BitArray::put(size_t num, size_t n) {
+    _arr->put(num, n);
 }
 
 } // namespace imagestego
