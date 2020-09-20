@@ -7,9 +7,8 @@ configuration: Release
 build:
   parallel: true
 
-cache:
-  - c:\.hunter\
-  - c:\tools\opencv\
+install:
+  - git submodule update --init --recursive
 
 before_build:
   # - git clone https://github.com/opencv/opencv.git
@@ -20,11 +19,10 @@ before_build:
   # - cmake --build build --config Release
   # - cmake --build build --target install --config Release
   # - cd ..
-  - git submodule update --init --recursive
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+  - cmake -G "Visual Studio 15 2017" -A x64
 
-build_script:
-  - cmake -H. -Bbuild -G "Visual Studio 15 2017" -A "x64" -DIMAGESTEGO_BUILD_TESTS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DIMAGESTEGO_MODULES=core,comp
-  - cmake --build build --config Release
-  - cd build
-  - ctest --verbose -C Release
+build:
+  project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
+
+test_script:
+  - %APPVEYOR_BUILD_FOLDER%\bin\%CONFIGURATION%\test_core_bitarray.exe
