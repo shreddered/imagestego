@@ -17,8 +17,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
+// imagestego headers
+#include "imagestego/core/bitarray.hpp"
 #include <imagestego/compression/huffman_decoder.hpp>
 #include <imagestego/compression/huffman_encoder.hpp>
+// gtest
+#include <gtest/gtest.h>
+
+using imagestego::BitArray;
 
 
 TEST(TestHuffman, HuffmanEncoder) {
