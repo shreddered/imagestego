@@ -34,6 +34,7 @@ option(IMAGESTEGO_BUILD_TESTS "Build tests" OFF)
 option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
 option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
 option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
+option(IMAGESTEGO_COVERAGE "Check coverage" OFF)
 
 # modules
 option(IMAGESTEGO_MODULES "imagestego modules" "core,jpeg,lossless,comp")
@@ -81,6 +82,12 @@ function(imagestego_test)
         ${TEST_LIBS}
         gtest_main
     )
+
+    if (IMAGESTEGO_COVERAGE)
+        target_compile_options(${TEST_NAME} PRIVATE --coverage)
+        target_link_libraries(${TEST_NAME} PRIVATE --coverage)
+    endif(IMAGESTEGO_COVERAGE)
+
     set_target_properties(${TEST_NAME} PROPERTIES
         OUTPUT_NAME "test_${DIR}_${TEST_NAME}"
         RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/"
