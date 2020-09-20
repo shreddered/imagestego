@@ -22,4 +22,13 @@
 #   include <cstdint>
 #endif
 
+namespace imagestego {
+
+/**
+ * Type definition provided for convenient usage.
+ */
+typedef uint32_t size_t;
+
+} // namespace imagestego
+
 #endif /* __IMAGESTEGO_CONFIG_HPP_INCLUDED__ */
