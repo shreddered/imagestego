@@ -17,19 +17,19 @@ language: cpp
 
 sudo: required
 
-install:
-  - git clone https://github.com/opencv/opencv.git
-  - git clone https://github.com/opencv/opencv_contrib.git
-  - cd opencv
-  - mkdir build
-  - cd build
-  - cmake -D BUILD_LIST=core,imgcodecs -D CMAKE_BUILD_TYPE=RELEASE -D BUILD_EXAMPLES=OFF -D BUILD_opencv_apps=OFF -D BUILD_DOCS=OFF -D BUILD_PERF_TESTS=OFF -D BUILD_TESTS=OFF -D CMAKE_INSTALL_PREFIX=/usr/local/ ..
-  - make -j$(nproc)
-  - sudo make install
-  - cd ../../
+# install:
+  # - git clone https://github.com/opencv/opencv.git
+  # - git clone https://github.com/opencv/opencv_contrib.git
+  # - cd opencv
+  # - mkdir build
+  # - cd build
+  # - cmake -D BUILD_LIST=core,imgcodecs -D CMAKE_BUILD_TYPE=RELEASE -D BUILD_EXAMPLES=OFF -D BUILD_opencv_apps=OFF -D BUILD_DOCS=OFF -D BUILD_PERF_TESTS=OFF -D BUILD_TESTS=OFF -D CMAKE_INSTALL_PREFIX=/usr/local/ ..
+  # - make -j$(nproc)
+  # - sudo make install
+  # - cd ../../
 
 script:
   - mkdir -p build/ && cd build/
-  - cmake -DIMAGESTEGO_COMPRESSION_SUPPORT=ON -DIMAGESTEGO_BUILD_TESTS=ON -DIMAGESTEGO_BUILD_EXAMPLES=ON -DIMAGESTEGO_JPEG_SUPPORT=ON -DIMAGESTEGO_LOSSLESS_FORMATS=ON ..
+  - cmake -DIMAGESTEGO_BUILD_TESTS=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DIMAGESTEGO_MODULES=core,comp ..
   - make -j$(nproc)
   - ctest
