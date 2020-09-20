@@ -25,30 +25,23 @@
 
 namespace imagestego {
 
-LzwEncoder::LzwEncoder() noexcept : Dictionary() {}
+LzwEncoderImpl::LzwEncoderImpl() noexcept : Dictionary() {}
 
-LzwEncoder::LzwEncoder(const std::string& str) noexcept : Dictionary(), msg(str) {}
+LzwEncoderImpl::LzwEncoderImpl(const std::string& str) noexcept : Dictionary(), msg(str) {}
 
-LzwEncoder::LzwEncoder(std::string&& str) noexcept : Dictionary(), msg(str) {}
-
-void LzwEncoder::setMessage(const std::string& str) noexcept {
+void LzwEncoderImpl::setMessage(const std::string& str) noexcept {
     msg = str;
     encodedMsg.clear();
 }
 
-void LzwEncoder::setMessage(std::string&& str) noexcept {
-    msg = str;
-    encodedMsg.clear();
-}
-
-BitArray LzwEncoder::getEncodedMessage() {
+BitArray LzwEncoderImpl::getEncodedMessage() {
     if (encodedMsg.empty() && msg.size() != 1) {
         encode();
     }
     return encodedMsg;
 }
 
-void LzwEncoder::encode() {
+void LzwEncoderImpl::encode() {
     StringElement s;
     uint8_t currentBitsPerBlock = 8;
     std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
@@ -74,6 +67,23 @@ void LzwEncoder::encode() {
         }
     }
     encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
+}
+
+LzwEncoder::LzwEncoder() : _encoder(new LzwEncoderImpl) {}
+
+LzwEncoder::LzwEncoder(const std::string& str) : _encoder(new LzwEncoderImpl(str)) {}
+
+LzwEncoder::~LzwEncoder() noexcept {
+    if (_encoder)
+        delete _encoder;
+}
+
+void LzwEncoder::setMessage(const std::string& str) {
+    _encoder->setMessage(str);
+}
+
+BitArray LzwEncoder::getEncodedMessage() {
+    return _encoder->getEncodedMessage();
 }
 
 } // namespace imagestego

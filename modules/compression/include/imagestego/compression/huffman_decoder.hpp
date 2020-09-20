@@ -30,7 +30,15 @@
 
 namespace imagestego {
 
-class IMAGESTEGO_EXPORTS HuffmanDecoder {
+class IMAGESTEGO_EXPORTS HuffmanDecoder : public AbstractDecoder {
+public:
+    explicit HuffmanDecoder() noexcept;
+    explicit HuffmanDecoder(const BitArray& arr) noexcept; 
+    virtual ~HuffmanDecoder() noexcept;
+    void setMessage(const BitArray& arr) override {
+        decoder->setMessage(arr);
+    }
+    std::string getDecodedMessage() override;
 private:
     class HuffmanDecoderImpl {
     public:
@@ -77,14 +85,6 @@ private:
         std::unordered_map<std::string, char> codeTable;
     }; // class HuffmanDecoderImpl
     HuffmanDecoderImpl* decoder;
-public:
-    explicit HuffmanDecoder() noexcept;
-    explicit HuffmanDecoder(const BitArray& arr) noexcept; 
-    virtual ~HuffmanDecoder() noexcept;
-    void setMessage(const BitArray& arr) {
-        decoder->setMessage(arr);
-    }
-    std::string getDecodedMessage();
 }; // class HuffmanDecoder
 
 } // namespace imagestego

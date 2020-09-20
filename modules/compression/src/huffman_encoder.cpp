@@ -136,15 +136,11 @@ HuffmanEncoder::HuffmanEncoder(const std::string& str) noexcept : encoder(new Hu
 
 HuffmanEncoder::HuffmanEncoder(std::string&& str) noexcept : encoder(new HuffmanEncoderImpl(str)) {}
 
-void HuffmanEncoder::setMessage(const std::string& str) noexcept {
+void HuffmanEncoder::setMessage(const std::string& str) {
     encoder->setMessage(str);
 }
 
-void HuffmanEncoder::setMessage(std::string&& str) noexcept {
-    encoder->setMessage(str);
-}
-
-BitArray HuffmanEncoder::getEncodedMessage() const {
+BitArray HuffmanEncoder::getEncodedMessage() {
     return encoder->getEncodedMessage();
 }
 

@@ -33,18 +33,18 @@ int read(const imagestego::BitArray& arr, std::size_t& i, uint8_t bits) {
 
 namespace imagestego {
 
-LzwDecoder::LzwDecoder() noexcept : Dictionary() {}
+LzwDecoderImpl::LzwDecoderImpl() noexcept : Dictionary() {}
 
-LzwDecoder::LzwDecoder(const BitArray& arr) noexcept : Dictionary(), msg(arr) {}
+LzwDecoderImpl::LzwDecoderImpl(const BitArray& arr) noexcept : Dictionary(), msg(arr) {}
 
-std::string LzwDecoder::getDecodedMessage() {
+std::string LzwDecoderImpl::getDecodedMessage() {
     if (decodedMsg.empty()) {
         decode();
     }
     return decodedMsg;
 }
 
-void LzwDecoder::decode() {
+void LzwDecoderImpl::decode() {
     // reading first 4 bits    
     std::size_t i = 0;
     uint8_t maxBits = read(msg, i, 4);
@@ -78,6 +78,22 @@ void LzwDecoder::decode() {
             oldCode = code;
         }
     }
+}
+
+LzwDecoder::LzwDecoder() : _decoder(new LzwDecoderImpl) {}
+
+LzwDecoder::LzwDecoder(const BitArray& arr) : _decoder(new LzwDecoderImpl(arr)) {}
+
+LzwDecoder::~LzwDecoder() noexcept {
+    delete _decoder;
+}
+
+void LzwDecoder::setMessage(const BitArray& arr) {
+    _decoder->setMessage(arr);
+}
+
+std::string LzwDecoder::getDecodedMessage() {
+    return _decoder->getDecodedMessage();
 }
 
 } // namespace imagestego
