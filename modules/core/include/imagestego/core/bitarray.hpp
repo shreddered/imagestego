@@ -191,7 +191,7 @@ private:
     /**
      * Proxy class for read-write access on elements.
      */
-    class BitReference final {
+    class IMAGESTEGO_EXPORTS BitReference final {
     private:
         friend class BitArrayImpl;
         friend class BitIterator;
