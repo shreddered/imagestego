@@ -18,7 +18,7 @@
  */
 
 #include "imagestego/core/bitarray.hpp"
-#ifdef IMAGESTEGO_BIG_ENDIAN
+#ifdef IMAGESTEGO_LITTLE_ENDIAN
 #   include "imagestego/core/intrinsic.hpp"
 #   include <algorithm>
 #endif
@@ -148,7 +148,7 @@ BitArrayImpl BitArrayImpl::fromByteString(std::string str) {
     BitArrayImpl arr(str.size() * CHAR_BIT);
     str.append((sizeof(BlockType) - str.size()) % sizeof(BlockType), '\0');
     memcpy(&arr._blocks[0], str.data(), str.size());
-#ifdef IMAGESTEGO_BIG_ENDIAN
+#ifdef IMAGESTEGO_LITTLE_ENDIAN
     std::for_each(arr._blocks.begin(), arr._blocks.end(), [](uint32_t& value) {
         value = bswap(value);
     });
@@ -197,7 +197,7 @@ typename BitArrayImpl::iterator BitArrayImpl::end() {
 
 std::string BitArrayImpl::toByteString() const {
     std::string str(_sz / CHAR_BIT, '\0');
-#if IMAGESTEGO_BIG_ENDIAN
+#if IMAGESTEGO_LITTLE_ENDIAN
     auto tmp = _blocks;
     std::for_each(tmp.begin(), tmp.end(), [](uint32_t& value) {
         value = bswap(value);

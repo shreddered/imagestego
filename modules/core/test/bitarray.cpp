@@ -19,6 +19,7 @@
 
 // imagestego
 #include "imagestego/core/bitarray.hpp"
+#include "imagestego/core/intrinsic.hpp"
 // c++ headers
 #include <bitset>
 #include <sstream>
@@ -26,6 +27,11 @@
 #include <gtest/gtest.h>
 
 using imagestego::BitArray;
+
+std::bitset<32> reverse32(const std::bitset<32>& set) {
+    const imagestego::size_t n = static_cast<imagestego::size_t>(set.to_ulong());
+    return std::bitset<32>(imagestego::bswap(n));
+}
 
 
 TEST(Core, BitArray1) { 
@@ -35,12 +41,12 @@ TEST(Core, BitArray1) {
     BitArray arr = BitArray::fromByteString(std::string(buf, 4));
     std::ostringstream ss;
     ss << arr;
-    EXPECT_EQ(std::bitset<32>(temp).to_string(), ss.str());
+    EXPECT_EQ(reverse32(std::bitset<32>(temp)).to_string(), ss.str());
     EXPECT_EQ(ss.str(), arr.toString());
     std::ostringstream().swap(ss);
     BitArray copy = arr;
     ss << copy;
-    EXPECT_EQ(ss.str(), std::bitset<32>(temp).to_string());
+    EXPECT_EQ(ss.str(), reverse32(std::bitset<32>(temp)).to_string());
 }
 
 TEST(Core, BitArray2) {
