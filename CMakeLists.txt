@@ -35,9 +35,7 @@ option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
 option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
 
 # modules
-option(IMAGESTEGO_COMPRESSION_SUPPORT "Data compression support" ON)
-option(IMAGESTEGO_JPEG_SUPPORT "Enable JPEG steganography" ON)
-option(IMAGESTEGO_LOSSLESS_FORMATS "Enable lossless steganography" ON)
+option(IMAGESTEGO_MODULES "imagestego modules" "core,jpeg,lossless,comp")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions("-DIMAGESTEGO_DEBUG")
@@ -119,23 +117,25 @@ if (IMAGESTEGO_LOSSLESS_FORMATS)
     find_package(OpenCV REQUIRED)
 endif(IMAGESTEGO_LOSSLESS_FORMATS)
 
+string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
+
 # core module
 add_subdirectory("modules/core/")
 
 # compression module
-if (IMAGESTEGO_COMPRESSION_SUPPORT)
+if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/compression")
-endif(IMAGESTEGO_COMPRESSION_SUPPORT)
+endif("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 # lossless module
-if (IMAGESTEGO_LOSSLESS_FORMATS)
+if ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/lossless")
-endif(IMAGESTEGO_LOSSLESS_FORMATS)
+endif("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 # jpeg module
-if (IMAGESTEGO_JPEG_SUPPORT)
+if ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/jpeg")
-endif(IMAGESTEGO_JPEG_SUPPORT)
+endif("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 function(imagestego_add_test)
     cmake_parse_arguments(TEST
