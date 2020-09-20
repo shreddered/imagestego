@@ -18,23 +18,39 @@
  */
 
 #include "imagestego/core/avl_tree.hpp"
+#include <random>
 
 
 namespace imagestego {
 
-Route::Route(const std::pair<int, int>& mapSize, std::mt19937& _gen) noexcept : AvlTree(), _mapSize(mapSize), gen(_gen) {}
+RouteImpl::RouteImpl(const std::pair<int, int>& mapSize, std::mt19937& _gen) noexcept : AvlTree(), _mapSize(mapSize), gen(_gen) {}
 
-void Route::create(const int& n) {
+void RouteImpl::create(const int& n) {
     while(size() != n) {
         insert({gen() % _mapSize.first, gen() % _mapSize.second});
     }
 }
 
-void Route::add() {
+void RouteImpl::add() {
     auto sz = size();
     while(size() != sz + 1) {
         insert({gen() % _mapSize.first, gen() % _mapSize.second});
     }
+}
+
+Route::Route(const std::pair<int, int>& mapSize, std::mt19937& gen) : _route(new RouteImpl(mapSize, gen)) {}
+
+Route::~Route() noexcept {
+    if (_route)
+        delete _route;
+}
+
+void Route::create(const int& n) {
+    _route->create(n);
+}
+
+void Route::add() {
+    _route->add();
 }
 
 } // namespace imagestego
