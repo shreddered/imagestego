@@ -49,3 +49,7 @@ TEST(Core, AvlTree) {
     EXPECT_EQ(result.size(), tree.size());
     EXPECT_TRUE(isEqual(tree.begin(), tree.end(), result.begin())); 
 }
+
+TEST(Core, Route) { 
+    // TODO: write Route tests
+}
