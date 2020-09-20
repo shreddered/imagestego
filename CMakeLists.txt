@@ -168,4 +168,5 @@ if (IMAGESTEGO_BUILD_TESTS)
 
     # compression tests
     imagestego_add_test(COMPRESSION NAME huffman)
+    imagestego_add_test(COMPRESSION NAME lzw)
 endif(IMAGESTEGO_BUILD_TESTS)
