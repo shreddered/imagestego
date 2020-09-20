@@ -20,6 +20,12 @@
 #ifndef __IMAGESTEGO_EXCEPTION_HPP_INCLUDED__
 #define __IMAGESTEGO_EXCEPTION_HPP_INCLUDED__
 
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable:4251)
+#   pragma warning(pop)
+#endif
+
 // imagestego headers
 #include "imagestego/core/config.hpp"
 // c++ headers
