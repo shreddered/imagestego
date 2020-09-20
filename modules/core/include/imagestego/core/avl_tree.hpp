@@ -36,6 +36,69 @@ namespace imagestego {
 
 template<typename T, class Comp = std::less<T> >
 class AvlTree {
+    class Iterator;
+public:
+    typedef T              value_type;
+    typedef T&             const_reference;
+    typedef Iterator       iterator;
+    typedef const Iterator const_iterator;
+    explicit AvlTree() noexcept {}
+    template<class It>
+    explicit AvlTree(It begin, It end) {
+        for (auto it = begin; it != end; ++it)
+            insert(*it);
+    }
+    AvlTree(const AvlTree<T, Comp>& other) : _size(other._size) {
+        copy(other.root, root);
+    }
+    AvlTree(AvlTree<T, Comp>&& other) noexcept : root(other.root), _size(other._size) {
+        other.root = nullptr;
+    }
+    virtual ~AvlTree() noexcept {
+        if (!isEmpty())
+            delete root;
+    }
+    AvlTree<T, Comp>& operator =(AvlTree<T, Comp>&& other) noexcept {
+        root = other.root;
+        _size = other._size;
+        other.root = nullptr;
+        return *this;
+    }
+    AvlTree<T, Comp>& operator =(const AvlTree<T, Comp>& other) {
+        if (this != &other)
+            copy(other.root, root);
+        return *this;
+    }
+    void insert(const T& data) noexcept {
+        root = insertImpl(root, data);
+    }
+    inline bool isEmpty() const noexcept {
+        return root == nullptr;
+    }
+    bool search(const T& data) const noexcept {
+        return searchImpl(root, data);
+    }
+    inline void clear() noexcept {
+        if (!isEmpty())
+            delete root;
+        root = nullptr;
+        _size = 0;
+    }
+    inline std::size_t size() const noexcept {
+        return _size;
+    }
+#ifdef IMAGESTEG0_DEBUG
+    void printDfs() const noexcept { // for debugging purposes
+        if (!isEmpty())
+            printDfsImpl(root);
+    }
+#endif
+    const_iterator begin() noexcept {
+        return Iterator(this, root, false);
+    }
+    const_iterator end() noexcept {
+        return Iterator(this, root, true);
+    }
 private:
     class TreeNode {
         friend class AvlTree<T, Comp>;
@@ -219,68 +282,6 @@ private:
     TreeNode* root = nullptr;
     std::size_t _size = 0; // for O(1) size()
     Comp cmp = Comp();
-public:
-    typedef T              value_type;
-    typedef T&             const_reference;
-    typedef Iterator       iterator;
-    typedef const Iterator const_iterator;
-    explicit AvlTree() noexcept {}
-    template<class It>
-    explicit AvlTree(It begin, It end) {
-        for (auto it = begin; it != end; ++it)
-            insert(*it);
-    }
-    AvlTree(const AvlTree<T, Comp>& other) : _size(other._size) {
-        copy(other.root, root);
-    }
-    AvlTree(AvlTree<T, Comp>&& other) noexcept : root(other.root), _size(other._size) {
-        other.root = nullptr;
-    }
-    virtual ~AvlTree() noexcept {
-        if (!isEmpty())
-            delete root;
-    }
-    AvlTree<T, Comp>& operator =(AvlTree<T, Comp>&& other) noexcept {
-        root = other.root;
-        _size = other._size;
-        other.root = nullptr;
-        return *this;
-    }
-    AvlTree<T, Comp>& operator =(const AvlTree<T, Comp>& other) {
-        if (this != &other)
-            copy(other.root, root);
-        return *this;
-    }
-    void insert(const T& data) noexcept {
-        root = insertImpl(root, data);
-    }
-    inline bool isEmpty() const noexcept {
-        return root == nullptr;
-    }
-    bool search(const T& data) const noexcept {
-        return searchImpl(root, data);
-    }
-    inline void clear() noexcept {
-        if (!isEmpty())
-            delete root;
-        root = nullptr;
-        _size = 0;
-    }
-    inline std::size_t size() const noexcept {
-        return _size;
-    }
-#ifdef IMAGESTEG0_DEBUG
-    void printDfs() const noexcept { // for debugging purposes
-        if (!isEmpty())
-            printDfsImpl(root);
-    }
-#endif
-    const_iterator begin() noexcept {
-        return Iterator(this, root, false);
-    }
-    const_iterator end() noexcept {
-        return Iterator(this, root, true);
-    }
 }; // class AvlTree
 
 template<class T1, class T2, class Pair = std::pair<T1, T2> >
