@@ -22,8 +22,7 @@
 #include <iostream>
 
 
-template<typename Int>
-int read(const imagestego::BitArray<Int>& arr, std::size_t& i, uint8_t bits) {
+int read(const imagestego::BitArray& arr, std::size_t& i, uint8_t bits) {
     int block = 0;
     std::size_t it;
     for (it = i; it != i + bits; ++it)
@@ -36,7 +35,7 @@ namespace imagestego {
 
 LzwDecoder::LzwDecoder() noexcept : Dictionary() {}
 
-LzwDecoder::LzwDecoder(const BitArray<>& arr) noexcept : Dictionary(), msg(arr) {}
+LzwDecoder::LzwDecoder(const BitArray& arr) noexcept : Dictionary(), msg(arr) {}
 
 std::string LzwDecoder::getDecodedMessage() {
     if (decodedMsg.empty()) {

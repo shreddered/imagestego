@@ -23,7 +23,6 @@
 // imagestego headers
 #include "imagestego/core.hpp"
 #include "imagestego/compression/lzw_dictionary.hpp"
-#include "imagestego/utils/bitarray.hpp"
 // c++ headers
 #include <string>
 
@@ -34,16 +33,15 @@ class IMAGESTEGO_EXPORTS LzwDecoder : private Dictionary {
 public:
     static constexpr uint8_t maxBits = 12;
     explicit LzwDecoder() noexcept;
-    explicit LzwDecoder(const BitArray<>& str) noexcept;
-    template<typename Int>
-    void setMessage(const BitArray<Int>& arr) noexcept {
+    explicit LzwDecoder(const BitArray& str) noexcept;
+    void setMessage(const BitArray& arr) noexcept {
         msg = arr;
         decodedMsg.clear();
     }
     std::string getDecodedMessage();
 private:
     std::string decodedMsg;
-    mutable BitArray<> msg;
+    mutable BitArray msg;
     void decode();
 }; // class LzwDecoder
 

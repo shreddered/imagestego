@@ -22,7 +22,6 @@
 
 // imagestego
 #include "imagestego/core.hpp"
-#include "imagestego/utils/bitarray.hpp"
 // c++
 #include <unordered_map>
 #include <string>
@@ -36,10 +35,9 @@ private:
     class HuffmanDecoderImpl {
     public:
         explicit HuffmanDecoderImpl() noexcept;
-        explicit HuffmanDecoderImpl(const BitArray<unsigned char>& arr) noexcept; 
+        explicit HuffmanDecoderImpl(const BitArray& arr) noexcept; 
         virtual ~HuffmanDecoderImpl() noexcept;
-        template<typename Int>
-        void setMessage(const BitArray<Int>& arr) {
+        void setMessage(const BitArray& arr) {
             encodedMsg = arr;
         }
         std::string getDecodedMessage();
@@ -73,7 +71,7 @@ private:
         void decode();
         std::vector<std::string> codes;
         std::size_t it;
-        BitArray<unsigned char> encodedMsg;
+        BitArray encodedMsg;
         std::string alphabet;
         std::string decodedMsg;
         std::unordered_map<std::string, char> codeTable;
@@ -81,10 +79,9 @@ private:
     HuffmanDecoderImpl* decoder;
 public:
     explicit HuffmanDecoder() noexcept;
-    explicit HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept; 
+    explicit HuffmanDecoder(const BitArray& arr) noexcept; 
     virtual ~HuffmanDecoder() noexcept;
-    template<typename Int>
-    void setMessage(const BitArray<Int>& arr) {
+    void setMessage(const BitArray& arr) {
         decoder->setMessage(arr);
     }
     std::string getDecodedMessage();

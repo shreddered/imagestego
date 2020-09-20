@@ -22,7 +22,7 @@
 
 // imagestego 
 #include "imagestego/core.hpp"
-#include "imagestego/utils/bitarray.hpp"
+//#include "imagestego/utils/bitarray.hpp"
 // c++
 #include <algorithm>
 #include <cstddef>
@@ -41,8 +41,7 @@ public:
     HuffmanEncoder& operator =(const HuffmanEncoder&) = delete;
     void setMessage(const std::string& str) noexcept;
     void setMessage(std::string&& str) noexcept;
-    BitArray<unsigned char> getEncodedMessage() const;
-    std::string getHuffmanTree() const;
+    BitArray getEncodedMessage() const;
     std::string getAlphabet() const noexcept {
         return encoder->getAlphabet();
     }
@@ -57,8 +56,8 @@ private:
         HuffmanEncoderImpl& operator =(const HuffmanEncoderImpl&) = delete;
         void setMessage(const std::string& str) noexcept;
         void setMessage(std::string&& str) noexcept;
-        BitArray<unsigned char> getEncodedMessage() const;
-        std::string getHuffmanTree() const;
+        BitArray getEncodedMessage() const;
+        void getHuffmanTree() const;
         std::string getAlphabet() const noexcept {
             return alphabet;
         }

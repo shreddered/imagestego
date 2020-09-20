@@ -45,16 +45,18 @@ void HuffmanEncoder::HuffmanEncoderImpl::setMessage(std::string&& str) noexcept 
     encodedMsg.clear();
 }
 
-BitArray<unsigned char> HuffmanEncoder::HuffmanEncoderImpl::getEncodedMessage() const {
-    auto tree = BitArray<unsigned char>(getHuffmanTree(), 0);
+BitArray HuffmanEncoder::HuffmanEncoderImpl::getEncodedMessage() const {
     encode();
-    return tree + BitArray<unsigned char>(alphabet) + BitArray<unsigned char>(encodedMsg, 0);
+    return BitArray(encodedMsg);
 }
 
 void HuffmanEncoder::HuffmanEncoderImpl::encode() const {
     if (codeTable.empty())
         __buildCode();
     if (encodedMsg.empty()) {
+        getHuffmanTree();
+        encodedMsg.insert(0, BitArray::fromByteString(alphabet).toString());
+        encodedMsg.insert(0, route);
         for (std::size_t i = 0; i != msg.length(); ++i) {
             encodedMsg += codeTable[msg[i]];
         }
@@ -143,12 +145,8 @@ void HuffmanEncoder::setMessage(std::string&& str) noexcept {
     encoder->setMessage(str);
 }
 
-BitArray<unsigned char> HuffmanEncoder::getEncodedMessage() const {
+BitArray HuffmanEncoder::getEncodedMessage() const {
     return encoder->getEncodedMessage();
-}
-
-std::string HuffmanEncoder::getHuffmanTree() const {
-    return encoder->getHuffmanTree();
 }
 
 HuffmanEncoder::~HuffmanEncoder() noexcept {

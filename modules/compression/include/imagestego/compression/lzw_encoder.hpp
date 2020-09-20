@@ -23,7 +23,6 @@
 // imagestego headers
 #include "imagestego/core.hpp"
 #include "imagestego/compression/lzw_dictionary.hpp"
-#include "imagestego/utils/bitarray.hpp"
 // c++ headers
 #include <string>
 
@@ -37,11 +36,11 @@ public:
     explicit LzwEncoder(std::string&& str) noexcept;
     void setMessage(const std::string& str) noexcept;
     void setMessage(std::string&& str) noexcept;
-    BitArray<> getEncodedMessage();
+    BitArray getEncodedMessage();
 private:
     static constexpr std::size_t maxDictionarySize = (1 << maxBits) - 1; 
     std::string msg;
-    mutable BitArray<> encodedMsg;
+    mutable BitArray encodedMsg;
     void encode();
 }; // class LzwEncoder
 

@@ -41,7 +41,7 @@ void LzwEncoder::setMessage(std::string&& str) noexcept {
     encodedMsg.clear();
 }
 
-BitArray<> LzwEncoder::getEncodedMessage() {
+BitArray LzwEncoder::getEncodedMessage() {
     if (encodedMsg.empty() && msg.size() != 1) {
         encode();
     }
@@ -52,7 +52,7 @@ void LzwEncoder::encode() {
     StringElement s;
     uint8_t currentBitsPerBlock = 8;
     std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
-    encodedMsg.pushBack(maxBits, 4); 
+    encodedMsg.put(maxBits, 4); 
     for (std::size_t i = 0; i != msg.size(); ++i) {
         s.value = msg[i];
         int index = Dictionary::search(s);
@@ -60,7 +60,7 @@ void LzwEncoder::encode() {
             s.prefixIndex = index;
         }
         else {
-            encodedMsg.pushBack(s.prefixIndex, currentBitsPerBlock);
+            encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
             s.prefixIndex = s.value;
             if (Dictionary::size() > currentMaxDictionarySize) { 
                 if (currentBitsPerBlock == maxBits) {
@@ -73,7 +73,7 @@ void LzwEncoder::encode() {
             }
         }
     }
-    encodedMsg.pushBack(s.prefixIndex, currentBitsPerBlock);
+    encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
 }
 
 } // namespace imagestego

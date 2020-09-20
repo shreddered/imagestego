@@ -24,7 +24,7 @@ namespace imagestego {
 
 HuffmanDecoder::HuffmanDecoderImpl::HuffmanDecoderImpl() noexcept {}
 
-HuffmanDecoder::HuffmanDecoderImpl::HuffmanDecoderImpl(const BitArray<unsigned char>& arr) noexcept : encodedMsg(arr) {}
+HuffmanDecoder::HuffmanDecoderImpl::HuffmanDecoderImpl(const BitArray& arr) noexcept : encodedMsg(arr) {}
 
 HuffmanDecoder::HuffmanDecoderImpl::~HuffmanDecoderImpl() noexcept {
     if (root)
@@ -85,7 +85,8 @@ void HuffmanDecoder::HuffmanDecoderImpl::readDfs() {
     } while (currentNode != root);
 }
 
-unsigned char takeChar(const BitArray<unsigned char>& arr, const std::size_t& pos) {
+// TODO: optimize this
+unsigned char takeChar(const BitArray& arr, const std::size_t& pos) {
     unsigned char tmp = 0;
     for (unsigned short i = 0; i != 8; ++i) {
         tmp |= arr[pos + i] << (7 - i);
@@ -127,7 +128,7 @@ void HuffmanDecoder::HuffmanDecoderImpl::decode() {
 
 HuffmanDecoder::HuffmanDecoder() noexcept : decoder(new HuffmanDecoderImpl()) {}
 
-HuffmanDecoder::HuffmanDecoder(const BitArray<unsigned char>& arr) noexcept : decoder(new HuffmanDecoderImpl(arr)) {}
+HuffmanDecoder::HuffmanDecoder(const BitArray& arr) noexcept : decoder(new HuffmanDecoderImpl(arr)) {}
 
 HuffmanDecoder::~HuffmanDecoder() noexcept {
     delete decoder;
