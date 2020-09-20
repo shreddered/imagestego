@@ -144,6 +144,15 @@ void BitArrayImpl::pushBack(bool val) {
     ++_sz;
 }
 
+void BitArrayImpl::clear() {
+    _blocks.clear();
+    _sz = 0;
+}
+
+bool BitArrayImpl::empty() const noexcept {
+    return _sz == 0;
+}
+
 typename BitArrayImpl::iterator BitArrayImpl::begin() {
     return BitIterator(operator[](0));
 }
@@ -227,6 +236,14 @@ bool BitArray::operator[](std::size_t i) const {
 
 void BitArray::pushBack(bool val) {
     _arr->pushBack(val);
+}
+
+void BitArray::clear() {
+    _arr->clear();
+}
+
+bool BitArray::empty() const noexcept {
+    return _arr->empty();
 }
 
 typename BitArray::iterator BitArray::begin() {

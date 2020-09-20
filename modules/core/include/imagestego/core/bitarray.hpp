@@ -40,6 +40,8 @@ public:
     BitReference operator [](std::size_t i);
     bool operator [](std::size_t i) const;
     void pushBack(bool val);
+    void clear();
+    bool empty() const noexcept;
     iterator begin();
     iterator end();
 private:
@@ -109,6 +111,8 @@ public:
     std::size_t size() const noexcept;
     bool operator[](std::size_t i) const;
     void pushBack(bool val);
+    void clear();
+    bool empty() const noexcept;
     friend std::ostream& (::operator <<)(std::ostream& os, const imagestego::BitArray& arr);
     iterator begin();
     iterator end();
