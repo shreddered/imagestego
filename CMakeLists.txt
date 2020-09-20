@@ -167,6 +167,8 @@ if (IMAGESTEGO_BUILD_TESTS)
     imagestego_add_test(CORE NAME bitarray)
 
     # compression tests
-    imagestego_add_test(COMPRESSION NAME huffman)
-    imagestego_add_test(COMPRESSION NAME lzw)
+    if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
+        imagestego_add_test(COMPRESSION NAME huffman)
+        imagestego_add_test(COMPRESSION NAME lzw)
+    endif("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
 endif(IMAGESTEGO_BUILD_TESTS)
