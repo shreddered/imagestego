@@ -17,8 +17,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
+// imagestego headers
 #include "imagestego/core.hpp"
-// third party
+// third party headers
 #include "MurmurHash3.h"
 
 

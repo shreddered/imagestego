@@ -29,7 +29,7 @@
 
 namespace imagestego {
 
-struct StringElement {
+struct StringElement final {
     int prefixIndex; // index of prefix string
     uint8_t value; // last byte value stored instead of string
     int first = -1; // index of first string which has *this as prefix
