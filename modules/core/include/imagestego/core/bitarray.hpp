@@ -69,7 +69,7 @@ public:
      *
      * @param sz Size of array.
      */
-    explicit BitArrayImpl(std::size_t sz);
+    explicit BitArrayImpl(size_t sz);
 
     /**
      * Converter from byte sequence to bit array.
@@ -98,7 +98,7 @@ public:
      *
      * @return Size of array
      */
-    std::size_t size() const noexcept;
+    size_t size() const noexcept;
 
     /**
      * Operator [] overloading.
@@ -106,7 +106,7 @@ public:
      * @param i Index of element in array.
      * @return Instance of proxy class representing element.
      */
-    BitReference operator [](std::size_t i);
+    BitReference operator [](size_t i);
 
     /**
      * Operator [] overloading.
@@ -114,7 +114,7 @@ public:
      * @param i Index of element in array.
      * @return Read-only element of array.
      */
-    bool operator [](std::size_t i) const;
+    bool operator [](size_t i) const;
 
     /**
      * Adds element to the end.
@@ -122,6 +122,9 @@ public:
      * @param val Value to be added
      */
     void pushBack(bool val);
+
+    void pushBack(int num, size_t bits);
+    void pushBack(uint32_t num, size_t bits);
 
     /**
      * Clears array.
@@ -178,7 +181,7 @@ private:
          * @param block Block reference containing element.
          * @param pos Bit index of block.
          */
-        explicit BitReference(BlockType& block, std::size_t pos) noexcept;
+        explicit BitReference(BlockType& block, size_t pos) noexcept;
     public:
 
         /**
@@ -265,13 +268,13 @@ private:
          */
         BitIterator operator --(int);
 
-        BitIterator& operator +=(std::size_t i);
+        BitIterator& operator +=(size_t i);
 
-        BitIterator& operator -=(std::size_t i);
+        BitIterator& operator -=(size_t i);
 
-        BitIterator operator +(std::size_t i);
+        BitIterator operator +(size_t i);
 
-        BitIterator operator -(std::size_t i);
+        BitIterator operator -(size_t i);
 
         /**
          * Iterator comparison.
@@ -284,10 +287,10 @@ private:
     std::vector<BlockType> _blocks;
 
     /** Size of array. */
-    std::size_t _sz;
+    size_t _sz;
 
     /** Number of bits per block. */
-    static constexpr std::size_t bitsPerBlock = CHAR_BIT * sizeof(BlockType);
+    static constexpr size_t bitsPerBlock = CHAR_BIT * sizeof(BlockType);
 
     /**
      * Number of blocks needed to store sz bits.
@@ -295,7 +298,7 @@ private:
      * @param sz Number of bits.
      * @return Number of blocks needed to store sz bits.
      */
-    inline static constexpr std::size_t numberOfBlocks(std::size_t sz) {
+    inline static constexpr size_t numberOfBlocks(size_t sz) {
         return sz / bitsPerBlock + ((sz % bitsPerBlock != 0) ? 1 : 0);
     }
 
@@ -305,7 +308,7 @@ private:
      * @param i Index of an element.
      * @return Index of block containing i-th element.
      */
-    inline static constexpr std::size_t blockIndex(std::size_t i) {
+    inline static constexpr size_t blockIndex(size_t i) {
         return i / bitsPerBlock;
     }
 
@@ -315,7 +318,7 @@ private:
      * @param i index of an element.
      * @return Index of bit in the block with i-th element.
      */
-    inline static constexpr std::size_t bitIndex(std::size_t i) {
+    inline static constexpr size_t bitIndex(size_t i) {
         return i % bitsPerBlock;
     }
 }; // class BitArrayImpl
@@ -356,7 +359,7 @@ public:
      *
      * @param sz Size of array.
      */
-    explicit BitArray(std::size_t sz);
+    explicit BitArray(size_t sz);
 
     /**
      * imagestego::BitArray copy constructor.
@@ -411,7 +414,7 @@ public:
      * @param i Index of element in array.
      * @return Instance of proxy class representing element.
      */
-    typename BitArrayImpl::reference operator[](std::size_t i);
+    typename BitArrayImpl::reference operator[](size_t i);
 
     /**
      * Operator [] overloading.
@@ -419,14 +422,14 @@ public:
      * @param i Index of element in array.
      * @return Read-only element of array.
      */
-    bool operator [](std::size_t i) const;
+    bool operator [](size_t i) const;
 
     /**
      * Size of array.
      *
      * @return Size of array
      */
-    std::size_t size() const noexcept;
+    size_t size() const noexcept;
 
     /**
      * Adds element to the end.
