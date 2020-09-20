@@ -39,4 +39,4 @@ script:
   - cd ..
 
 after_success:
-  - coveralls --root . -E ".*gtest.*" -E ".*CMakeFiles.*"
+  - coveralls --root . --include modules/core/include/imagestego --include modules/compression/include/imagestego --gcov-options '\-lp'
