@@ -17,6 +17,7 @@ target_include_directories(imagestego_compression PUBLIC
 
 target_link_libraries(imagestego_compression PUBLIC
     imagestego_core
+    coverage_config
 )
 
 target_compile_definitions(imagestego_compression PUBLIC

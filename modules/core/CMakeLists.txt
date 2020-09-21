@@ -19,6 +19,8 @@ target_include_directories(imagestego_core PUBLIC
 imagestego_lib(imagestego_core)
 imagestego_exports(imagestego_core)
 
+target_link_libraries(imagestego_core PUBLIC coverage_config)
+
 include(TestBigEndian)
 test_big_endian(BIG_ENDIAN)
 

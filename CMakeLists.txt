@@ -61,6 +61,21 @@ macro(imagestego_lib)
     list(APPEND IMAGESTEGO_LIBS ${ARGV})
 endmacro()
 
+add_library(coverage_config INTERFACE)
+
+if (IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
+    target_compile_options(coverage_config INTERFACE
+        -O0
+        -g
+        --coverage
+    )
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+        target_link_options(coverage_config INTERFACE --coverage)
+    else()
+        target_link_libraries(coverage_config INTERFACE --coverage)
+    endif()
+endif(IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
+
 # function for test generation
 function(imagestego_test)
     cmake_parse_arguments(TEST
@@ -87,15 +102,6 @@ function(imagestego_test)
         OUTPUT_NAME "test_${DIR}_${TEST_NAME}"
         RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/"
     )
-    if (IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
-        target_compile_options(${TEST_NAME} PRIVATE 
-            -O0
-            --coverage
-            -fprofile-arcs
-            -ftest-coverage
-        )
-        target_link_libraries(${TEST_NAME} gcov)
-    endif(IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
 endfunction(imagestego_test)
 
 function(imagestego_exports target)
