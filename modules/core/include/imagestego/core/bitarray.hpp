@@ -295,13 +295,13 @@ private:
          */
         BitIterator operator --(int);
 
-        BitIterator& operator +=(size_t i);
+        // BitIterator& operator +=(size_t i);
 
-        BitIterator& operator -=(size_t i);
+        // BitIterator& operator -=(size_t i);
 
-        BitIterator operator +(size_t i);
+        // BitIterator operator +(size_t i);
 
-        BitIterator operator -(size_t i);
+        // BitIterator operator -(size_t i);
 
         /**
          * Iterator comparison.
