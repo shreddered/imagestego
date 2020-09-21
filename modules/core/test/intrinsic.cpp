@@ -24,8 +24,8 @@
 
 
 TEST(Core, ByteSwap) {
-    uint32_t n = 0xABCD; 
-    EXPECT_EQ(imagestego::bswap(n), 0xDCBA);
+    uint32_t n = 0x01020304; 
+    EXPECT_EQ(imagestego::bswap(n), 0x04030201);
 }
 
 TEST(Core, BinaryLogarithm) {
