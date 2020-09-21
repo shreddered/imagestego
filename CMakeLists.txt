@@ -89,6 +89,7 @@ function(imagestego_test)
     )
     if (IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
         target_compile_options(${TEST_NAME} PRIVATE 
+            -O0
             --coverage
             -fprofile-arcs
             -ftest-coverage
