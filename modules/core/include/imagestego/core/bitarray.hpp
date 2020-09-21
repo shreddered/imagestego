@@ -245,7 +245,7 @@ private:
     /**
      * Bit array iterator class.
      */
-    class BitIterator final {
+    class IMAGESTEGO_EXPORTS BitIterator final {
     private:
         friend class BitArrayImpl;
 
