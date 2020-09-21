@@ -179,6 +179,7 @@ if (IMAGESTEGO_BUILD_TESTS)
     # core tests
     imagestego_add_test(CORE NAME avl)
     imagestego_add_test(CORE NAME bitarray)
+    imagestego_add_test(CORE NAME intrinsics)
 
     # compression tests
     if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
