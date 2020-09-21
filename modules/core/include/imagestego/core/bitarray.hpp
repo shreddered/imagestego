@@ -512,4 +512,13 @@ public:
 
 std::ostream& operator <<(std::ostream& os, const imagestego::BitArrayImpl& arr);
 
+/**
+ * Operator == overloading.
+ *
+ * @param lhs Left-hand side array.
+ * @param rhs Right-hand side array.
+ * @return true iff lhs and rhs are equal.
+ */
+//bool operator ==(const imagestego::BitArray& lhs, const imagestego::BitArray& rhs);
+
 #endif /* __IMAGESTEGO_BITARRAY_HPP_INCLUDED__ */

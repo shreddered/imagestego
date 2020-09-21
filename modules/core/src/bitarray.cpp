@@ -52,8 +52,8 @@ BitArrayImpl::BitReference& BitArrayImpl::BitReference::operator =(const BitRefe
     return *this;
 }
 
-bool BitArrayImpl::BitReference::operator==(const BitArrayImpl::BitReference& other) noexcept {
-    return &other._block == &_block && other._mask == _mask;
+bool BitArrayImpl::BitReference::operator ==(const BitArrayImpl::BitReference& other) noexcept {
+    return bool(other) == bool(*this);
 }
 
 // BitIterator
@@ -91,31 +91,31 @@ BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator --() {
 
 BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator --(int) {
     BitIterator it = *this;
-    operator ++();
+    operator --();
     return it;
 }
 
-BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator +=(size_t i) {
-    return *this;
-}
+// BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator +=(size_t i) {
+    // return *this;
+// }
 
-BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator -=(size_t i) {
-    _ref._block = *(&_ref._block - i);
-    return *this;
-}
+// BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator -=(size_t i) {
+    // _ref._block = *(&_ref._block - i);
+    // return *this;
+// }
 
-BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator +(size_t i) {
-    BitIterator it = *this;
-    return it += i;
-}
+// BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator +(size_t i) {
+    // BitIterator it = *this;
+    // return it += i;
+// }
 
-BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator -(size_t i) {
-    BitIterator it = *this;
-    return it -= i;
-}
+// BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator -(size_t i) {
+    // BitIterator it = *this;
+    // return it -= i;
+// }
 
 bool BitArrayImpl::BitIterator::operator==(const BitIterator& other) noexcept {
-    return _ref == other._ref;
+    return &_ref._block == &other._ref._block && other._ref._mask == _ref._mask;
 }
 
 bool BitArrayImpl::BitIterator::operator!=(const BitIterator& other) noexcept {
