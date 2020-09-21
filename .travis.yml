@@ -1,3 +1,5 @@
+language: cpp
+
 os:
   - linux
   - osx
@@ -12,8 +14,7 @@ addons:
       - cmake-data
       - cmake
       - git
-
-language: cpp
+      - lcov
 
 sudo: required
 
@@ -28,8 +29,8 @@ sudo: required
   # - sudo make install
   # - cd ../../
 
-before_install:
-  - pip install --user cpp-coveralls
+# before_install:
+  # - pip install --user cpp-coveralls
 
 script:
   - mkdir -p build/ && cd build/
@@ -39,4 +40,6 @@ script:
   - cd ..
 
 after_success:
-  - coveralls --root . -E ".*gtest.*" -E ".*CMakeFiles.*" 
+  - lcov --directory . --capture --output-file coverage.info
+  - lcov --remove coverage.info '/usr/*' "${HOME}"'/.cache/*' "$(pwd)"'/third_party/*' --output-file coverage.info
+  - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"

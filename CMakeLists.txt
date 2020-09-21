@@ -87,10 +87,14 @@ function(imagestego_test)
         OUTPUT_NAME "test_${DIR}_${TEST_NAME}"
         RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/"
     )
-    if (IMAGESTEGO_COVERAGE)
-        target_compile_options(${TEST_NAME} PRIVATE --coverage)
-        target_link_libraries(${TEST_NAME} --coverage)
-    endif(IMAGESTEGO_COVERAGE)
+    if (IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
+        target_compile_options(${TEST_NAME} PRIVATE 
+            --coverage
+            -fprofile-arcs
+            -ftest-coverage
+        )
+        target_link_libraries(${TEST_NAME} gcov)
+    endif(IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
 endfunction(imagestego_test)
 
 function(imagestego_exports target)
