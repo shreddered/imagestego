@@ -24,5 +24,6 @@ build:
 test_script:
   - '%APPVEYOR_BUILD_FOLDER%\bin\%CONFIGURATION%\test_core_avl.exe'
   - '%APPVEYOR_BUILD_FOLDER%\bin\%CONFIGURATION%\test_core_bitarray.exe'
+  - '%APPVEYOR_BUILD_FOLDER%\bin\%CONFIGURATION%\test_core_intrinsics.exe'
   - '%APPVEYOR_BUILD_FOLDER%\bin\%CONFIGURATION%\test_compression_huffman.exe'
   - '%APPVEYOR_BUILD_FOLDER%\bin\%CONFIGURATION%\test_compression_lzw.exe'
