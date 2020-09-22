@@ -82,11 +82,13 @@ namespace imagestego {
 class BitArrayImpl final {
     class BitReference;
     class BitIterator;
-    friend bool (::operator ==)(const imagestego::BitArrayImpl& lhs, const imagestego::BitArrayImpl& rhs);
 public:
     typedef BitReference reference;
     typedef BitIterator iterator;
     typedef const BitIterator const_iterator;
+
+    /** friend declaration of operator == overloading */
+    friend bool (::operator ==)(const imagestego::BitArrayImpl& lhs, const imagestego::BitArrayImpl& rhs);
 
     /**
      * Constructor of BitArrayImpl.

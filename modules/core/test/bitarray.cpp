@@ -21,6 +21,7 @@
 #include "imagestego/core/bitarray.hpp"
 #include "imagestego/core/intrinsic.hpp"
 // c++ headers
+#include <algorithm>
 #include <bitset>
 #include <sstream>
 // gtest

@@ -321,3 +321,7 @@ std::ostream& operator <<(std::ostream& os, const imagestego::BitArray& arr) {
 bool operator ==(const imagestego::BitArrayImpl& lhs, const imagestego::BitArrayImpl& rhs) {
     return lhs._sz == rhs._sz && std::equal(lhs._blocks.begin(), lhs._blocks.end(), rhs._blocks.begin());
 }
+
+bool operator ==(const imagestego::BitArray& lhs, const imagestego::BitArray& rhs) {
+    return *lhs._arr == *rhs._arr;
+}
