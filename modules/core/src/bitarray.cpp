@@ -150,7 +150,7 @@ BitArrayImpl BitArrayImpl::fromByteString(std::string str) {
 }
 
 void BitArrayImpl::pushBack(bool val) {
-    if (_sz / CHAR_BIT == _blocks.size())
+    if (_sz / CHAR_BIT == _blocks.size() * sizeof(BlockType) && _sz % CHAR_BIT == 0)
         _blocks.push_back(0);
     BitReference(_blocks[blockIndex(_sz)], bitIndex(_sz)) = val;
     ++_sz;
