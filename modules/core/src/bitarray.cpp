@@ -118,7 +118,7 @@ bool BitArrayImpl::BitIterator::operator!=(const BitIterator& other) noexcept {
 // BitArrayImpl
 BitArrayImpl::BitArrayImpl() noexcept : _sz(0) {}
 
-BitArrayImpl::BitArrayImpl(size_t sz) : _blocks(numberOfBlocks(sz)), _sz(sz) {}
+BitArrayImpl::BitArrayImpl(size_t sz) : _blocks(numberOfBlocks(sz), 0), _sz(sz) {}
 
 BitArrayImpl::BitArrayImpl(const std::string& str) : _blocks(numberOfBlocks(str.size())), _sz(str.size()) {
     for (size_t i = 0; i != _sz; ++i)
