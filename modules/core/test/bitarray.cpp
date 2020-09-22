@@ -71,7 +71,7 @@ TEST(Core, BitArray4) {
     BitArray arr = std::string("1001"), tmp = std::string("1100");
     EXPECT_EQ(arr[0], tmp[0]);
     arr[1] = tmp[1];
-    arr[3] = false;
+    arr[3] = tmp[3];
     std::ostringstream ss;
     for (auto it = arr.begin(); it != arr.end(); ++it)
         ss << *it;
@@ -80,4 +80,5 @@ TEST(Core, BitArray4) {
     for (auto it = arr.begin(); it != arr.end(); it++)
         ss << *it;
     EXPECT_EQ(ss.str(), arr.toString());
+    EXPECT_EQ(arr, tmp);
 }
