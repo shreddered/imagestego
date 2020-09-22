@@ -93,3 +93,13 @@ TEST(Core, BitArrayIterator) {
     it--;
     EXPECT_TRUE(*it);
 }
+
+TEST(Core, BitArrayCopyMove) {
+    BitArray arr("10001010100100101010100101001010101");
+    BitArray copy = arr;
+    EXPECT_TRUE(copy == arr);
+    BitArray arr1 = std::move(copy);
+    EXPECT_TRUE(arr1 == arr);
+    BitArray arr2(std::move(arr1));
+    EXPECT_TRUE(arr2 == arr);
+}
