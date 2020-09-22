@@ -171,7 +171,7 @@ function(imagestego_add_test)
 endfunction(imagestego_add_test)
 
 if (IMAGESTEGO_BUILD_TESTS)
-    enable_testing()
+    include(CTest)
 
     # gtest
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/gtest)
