@@ -251,15 +251,19 @@ private:
     private:
         friend class BitArrayImpl;
 
-        /** Reference iterator points to. */
-        BitReference _ref;
+        /** Iterator's owner. */
+        BitArrayImpl* _owner;
+
+        /** Current position. */
+        size_t _pos;
 
         /**
          * Constructs iterator.
          *
-         * @param ref Reference iterator points to.
+         * @param owner Iterator's owner.
+         * @param pos Position of element iterator points to.
          */
-        explicit BitIterator(BitReference ref) noexcept;
+        explicit BitIterator(BitArrayImpl* owner, imagestego::size_t pos) noexcept;
     public:
 
         /**

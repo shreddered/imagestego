@@ -59,19 +59,15 @@ bool BitArrayImpl::BitReference::operator ==(const BitArrayImpl::BitReference& o
 }
 
 // BitIterator
-BitArrayImpl::BitIterator::BitIterator(typename BitArrayImpl::reference ref) noexcept : _ref(ref) {}
+BitArrayImpl::BitIterator::BitIterator(BitArrayImpl* owner, imagestego::size_t pos) noexcept 
+    : _owner(owner), _pos(pos) {}
 
 BitArrayImpl::BitReference BitArrayImpl::BitIterator::operator *() {
-    return _ref;
+    return (*_owner)[_pos];
 }
 
 BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator ++() {
-    if (_ref._mask == 1) {
-        _ref._block = *(&_ref._block + 1);
-        _ref._mask = 1 << (bitsPerBlock - 1);
-    }
-    else
-        _ref._mask >>= 1;
+    ++_pos;
     return *this;
 }
 
@@ -82,12 +78,7 @@ BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator ++(int) {
 }
 
 BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator --() {
-    if (_ref._mask == 1 << (bitsPerBlock - 1)) {
-        _ref._block = *(&_ref._block - 1);
-        _ref._mask = 1;
-    }
-    else
-        _ref._mask <<= 1;
+    --_pos;
     return *this;
 }
 
@@ -117,7 +108,7 @@ BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator --(int) {
 // }
 
 bool BitArrayImpl::BitIterator::operator==(const BitIterator& other) noexcept {
-    return &_ref._block == &other._ref._block && other._ref._mask == _ref._mask;
+    return _owner == other._owner && _pos == other._pos;
 }
 
 bool BitArrayImpl::BitIterator::operator!=(const BitIterator& other) noexcept {
@@ -189,12 +180,11 @@ bool BitArrayImpl::empty() const noexcept {
 }
 
 typename BitArrayImpl::iterator BitArrayImpl::begin() {
-    return BitIterator(operator[](0));
+    return BitIterator(this, 0);
 }
 
 typename BitArrayImpl::iterator BitArrayImpl::end() {
-    return (_sz / CHAR_BIT == _blocks.size()) 
-        ? BitIterator(BitReference(*(&_blocks.back() + 1), 0)) : BitIterator(operator [](_sz));
+    return BitIterator(this, _sz);
 }
 
 std::string BitArrayImpl::toByteString() const {
