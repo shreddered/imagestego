@@ -17,11 +17,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
+// imagestego headers
 #include "imagestego/core/bitarray.hpp"
 #ifdef IMAGESTEGO_LITTLE_ENDIAN
 #   include "imagestego/core/intrinsic.hpp"
-#   include <algorithm>
 #endif
+// c++ headers
+#include <algorithm>
 #include <cstring>
 #include <ostream>
 
@@ -314,4 +316,8 @@ std::ostream& operator <<(std::ostream& os, const imagestego::BitArrayImpl& arr)
 
 std::ostream& operator <<(std::ostream& os, const imagestego::BitArray& arr) {
     return os << (*arr._arr);
+}
+
+bool operator ==(const imagestego::BitArrayImpl& lhs, const imagestego::BitArrayImpl& rhs) {
+    return lhs._sz == rhs._sz && std::equal(lhs._blocks.begin(), lhs._blocks.end(), rhs._blocks.begin());
 }

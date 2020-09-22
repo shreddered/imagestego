@@ -34,9 +34,20 @@
 // forward declarations (needed for operator <<)
 namespace imagestego {
 
+class BitArrayImpl;
+
 class BitArray;
 
 } // namespace imagestego
+
+/**
+ * Operator == overloading.
+ *
+ * @param lhs Left-hand side array.
+ * @param rhs Right-hand side array.
+ * @return true iff lhs and rhs are equal.
+ */
+IMAGESTEGO_EXPORTS bool operator ==(const imagestego::BitArray& lhs, const imagestego::BitArray& rhs);
 
 /** 
  * Operator << overloading.
@@ -49,6 +60,17 @@ class BitArray;
  */
 IMAGESTEGO_EXPORTS std::ostream& operator <<(std::ostream& os, const imagestego::BitArray& arr);
 
+/**
+ * Operator == overloading.
+ *
+ * Compares two bit arrays.
+ *
+ * @param lhs First array.
+ * @param rhs Second array.
+ * @return true iff lhs and rhs are equal.
+ */
+bool operator ==(const imagestego::BitArrayImpl& lhs, const imagestego::BitArrayImpl& rhs);
+
 namespace imagestego {
 
 /**
@@ -60,6 +82,7 @@ namespace imagestego {
 class BitArrayImpl final {
     class BitReference;
     class BitIterator;
+    friend bool (::operator ==)(const imagestego::BitArrayImpl& lhs, const imagestego::BitArrayImpl& rhs);
 public:
     typedef BitReference reference;
     typedef BitIterator iterator;
@@ -493,6 +516,9 @@ public:
     /** friend declaration of operator << overloading. */
     friend std::ostream& (::operator <<)(std::ostream& os, const imagestego::BitArray& arr);
 
+    /** friend declaration of operator == overloading */
+    friend bool (:: operator ==)(const imagestego::BitArray& lhs, const imagestego::BitArray& rhs);
+
     /**
      * Iterator to beginning. 
      *
@@ -506,19 +532,14 @@ public:
      * @return Iterator pointing to past-the-end element in array.
      */
     iterator end();
+private:
+
+    /** Pointer to implementation. */
+    BitArrayImpl* _arr;
 }; // class BitArray
 
 } // namespace imagestego
 
 std::ostream& operator <<(std::ostream& os, const imagestego::BitArrayImpl& arr);
-
-/**
- * Operator == overloading.
- *
- * @param lhs Left-hand side array.
- * @param rhs Right-hand side array.
- * @return true iff lhs and rhs are equal.
- */
-//bool operator ==(const imagestego::BitArray& lhs, const imagestego::BitArray& rhs);
 
 #endif /* __IMAGESTEGO_BITARRAY_HPP_INCLUDED__ */
