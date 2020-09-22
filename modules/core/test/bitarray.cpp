@@ -128,4 +128,8 @@ TEST(Core, BitArrayPut) {
     arr1.put(1 << 5, 32);
     tmp = BitArray("00000000000000000000000000100000");
     EXPECT_TRUE(arr1 == tmp);
+    BitArray arr2;
+    arr2.put(64u, 32);
+    tmp = BitArray("00000000000000000000000001000000");
+    EXPECT_TRUE(arr2 == tmp);
 }
