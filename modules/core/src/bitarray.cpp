@@ -31,7 +31,7 @@
 namespace imagestego {
 
 // BitReference
-BitArrayImpl::BitReference::BitReference(typename BitArrayImpl::BlockType& block, size_t pos) noexcept 
+BitArrayImpl::BitReference::BitReference(typename BitArrayImpl::BlockType& block, imagestego::size_t pos) noexcept 
     : _block(block), _mask(1 << (bitsPerBlock - pos - 1)) {}
 
 BitArrayImpl::BitReference::operator bool() const {
@@ -88,21 +88,21 @@ BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator --(int) {
     return it;
 }
 
-// BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator +=(size_t i) {
+// BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator +=(imagestego::size_t i) {
     // return *this;
 // }
 
-// BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator -=(size_t i) {
+// BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator -=(imagestego::size_t i) {
     // _ref._block = *(&_ref._block - i);
     // return *this;
 // }
 
-// BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator +(size_t i) {
+// BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator +(imagestego::size_t i) {
     // BitIterator it = *this;
     // return it += i;
 // }
 
-// BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator -(size_t i) {
+// BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator -(imagestego::size_t i) {
     // BitIterator it = *this;
     // return it -= i;
 // }
@@ -118,22 +118,22 @@ bool BitArrayImpl::BitIterator::operator!=(const BitIterator& other) noexcept {
 // BitArrayImpl
 BitArrayImpl::BitArrayImpl() noexcept : _sz(0) {}
 
-BitArrayImpl::BitArrayImpl(size_t sz) : _blocks(numberOfBlocks(sz), 0), _sz(sz) {}
+BitArrayImpl::BitArrayImpl(imagestego::size_t sz) : _blocks(numberOfBlocks(sz), 0), _sz(sz) {}
 
 BitArrayImpl::BitArrayImpl(const std::string& str) : _blocks(numberOfBlocks(str.size())), _sz(str.size()) {
-    for (size_t i = 0; i != _sz; ++i)
+    for (imagestego::size_t i = 0; i != _sz; ++i)
         operator [](i) = str[i] - '0' != 0;
 }
 
-BitArrayImpl::BitReference BitArrayImpl::operator[](size_t i) {
+BitArrayImpl::BitReference BitArrayImpl::operator [](imagestego::size_t i) {
     return BitReference(_blocks[blockIndex(i)], bitIndex(i));
 }
 
-bool BitArrayImpl::operator[](size_t i) const {
+bool BitArrayImpl::operator[](imagestego::size_t i) const {
     return (_blocks[blockIndex(i)] & (1 << (bitsPerBlock - bitIndex(i) - 1))) != 0;
 }
 
-size_t BitArrayImpl::size() const noexcept {
+imagestego::size_t BitArrayImpl::size() const noexcept {
     return _sz;
 }
 
@@ -156,16 +156,16 @@ void BitArrayImpl::pushBack(bool val) {
     ++_sz;
 }
 
-void BitArrayImpl::put(int num, size_t n) {
+void BitArrayImpl::put(int num, imagestego::size_t n) {
     for(; n != 0; --n) {
-        const size_t offset = n - 1;
+        const imagestego::size_t offset = n - 1;
         pushBack((num & (1 << offset)) != 0);
     }
 }
 
-void BitArrayImpl::put(size_t num, size_t n) {
+void BitArrayImpl::put(imagestego::size_t num, imagestego::size_t n) {
     for(; n != 0; --n) {
-        const size_t offset = n - 1;
+        const imagestego::size_t offset = n - 1;
         pushBack((num & (1 << offset)) != 0);
     }
 }
@@ -204,7 +204,7 @@ std::string BitArrayImpl::toByteString() const {
 std::string BitArrayImpl::toString() const {
     std::string str;
     str.reserve(_sz);
-    for (size_t i = 0; i != _sz; ++i)
+    for (imagestego::size_t i = 0; i != _sz; ++i)
         str.push_back((operator [](i)) ? '1' : '0');
     return str;
 }
@@ -218,7 +218,7 @@ BitArray::BitArray() : _arr(new BitArrayImpl()) {}
 
 BitArray::BitArray(const std::string& str) : _arr(new BitArrayImpl(str)) {}
 
-BitArray::BitArray(size_t sz) : _arr(new BitArrayImpl(sz)) {}
+BitArray::BitArray(imagestego::size_t sz) : _arr(new BitArrayImpl(sz)) {}
 
 BitArray::~BitArray() noexcept {
     if (_arr)
@@ -251,15 +251,15 @@ BitArray BitArray::fromByteString(std::string str) {
     return arr;
 }
 
-typename BitArrayImpl::reference BitArray::operator[](size_t i) {
+typename BitArrayImpl::reference BitArray::operator[](imagestego::size_t i) {
     return (*_arr)[i];
 }
 
-size_t BitArray::size() const noexcept {
+imagestego::size_t BitArray::size() const noexcept {
     return _arr->size();
 }
 
-bool BitArray::operator[](size_t i) const {
+bool BitArray::operator[](imagestego::size_t i) const {
     return (*_arr)[i];
 }
 
@@ -291,11 +291,11 @@ std::string BitArray::toString() const {
     return _arr->toString();
 }
 
-void BitArray::put(int num, size_t n) {
+void BitArray::put(int num, imagestego::size_t n) {
     _arr->put(num, n);
 }
 
-void BitArray::put(size_t num, size_t n) {
+void BitArray::put(imagestego::size_t num, imagestego::size_t n) {
     _arr->put(num, n);
 }
 
@@ -306,7 +306,7 @@ bool BitArray::operator ==(const BitArray& other) {
 } // namespace imagestego
 
 std::ostream& operator <<(std::ostream& os, const imagestego::BitArrayImpl& arr) {
-    for (size_t i = 0; i != arr.size(); ++i) {
+    for (imagestego::size_t i = 0; i != arr.size(); ++i) {
         os << arr[i];
     }
     return os;

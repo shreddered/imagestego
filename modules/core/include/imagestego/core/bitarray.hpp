@@ -90,7 +90,7 @@ public:
      *
      * @param sz Size of array.
      */
-    explicit BitArrayImpl(size_t sz);
+    explicit BitArrayImpl(imagestego::size_t sz);
 
     /**
      * Converter from byte sequence to bit array.
@@ -119,7 +119,7 @@ public:
      *
      * @return Size of array
      */
-    size_t size() const noexcept;
+    imagestego::size_t size() const noexcept;
 
     /**
      * Operator [] overloading.
@@ -127,7 +127,7 @@ public:
      * @param i Index of element in array.
      * @return Instance of proxy class representing element.
      */
-    BitReference operator [](size_t i);
+    BitReference operator [](imagestego::size_t i);
 
     /**
      * Operator [] overloading.
@@ -135,7 +135,7 @@ public:
      * @param i Index of element in array.
      * @return Read-only element of array.
      */
-    bool operator [](size_t i) const;
+    bool operator [](imagestego::size_t i) const;
 
     /**
      * Adds element to the end.
@@ -152,8 +152,8 @@ public:
      * @param num Number from which bits are taken.
      * @param n Nubmer of bits to take from num.
      */
-    void put(int num, size_t n);
-    void put(size_t num, size_t n);
+    void put(int num, imagestego::size_t n);
+    void put(imagestego::size_t num, imagestego::size_t n);
 
     /**
      * Clears array.
@@ -210,7 +210,7 @@ private:
          * @param block Block reference containing element.
          * @param pos Bit index of block.
          */
-        explicit BitReference(BlockType& block, size_t pos) noexcept;
+        explicit BitReference(BlockType& block, imagestego::size_t pos) noexcept;
     public:
 
         /**
@@ -255,7 +255,7 @@ private:
         BitArrayImpl* _owner;
 
         /** Current position. */
-        size_t _pos;
+        imagestego::size_t _pos;
 
         /**
          * Constructs iterator.
@@ -301,13 +301,13 @@ private:
          */
         BitIterator operator --(int);
 
-        // BitIterator& operator +=(size_t i);
+        // BitIterator& operator +=(imagestego::size_t i);
 
-        // BitIterator& operator -=(size_t i);
+        // BitIterator& operator -=(imagestego::size_t i);
 
-        // BitIterator operator +(size_t i);
+        // BitIterator operator +(imagestego::size_t i);
 
-        // BitIterator operator -(size_t i);
+        // BitIterator operator -(imagestego::size_t i);
 
         /**
          * Iterator comparison.
@@ -320,10 +320,10 @@ private:
     std::vector<BlockType> _blocks;
 
     /** Size of array. */
-    size_t _sz;
+    imagestego::size_t _sz;
 
     /** Number of bits per block. */
-    static constexpr size_t bitsPerBlock = CHAR_BIT * sizeof(BlockType);
+    static constexpr imagestego::size_t bitsPerBlock = CHAR_BIT * sizeof(BlockType);
 
     /**
      * Number of blocks needed to store sz bits.
@@ -331,7 +331,7 @@ private:
      * @param sz Number of bits.
      * @return Number of blocks needed to store sz bits.
      */
-    inline static constexpr size_t numberOfBlocks(size_t sz) {
+    inline static constexpr imagestego::size_t numberOfBlocks(imagestego::size_t sz) {
         return sz / bitsPerBlock + ((sz % bitsPerBlock != 0) ? 1 : 0);
     }
 
@@ -341,7 +341,7 @@ private:
      * @param i Index of an element.
      * @return Index of block containing i-th element.
      */
-    inline static constexpr size_t blockIndex(size_t i) {
+    inline static constexpr imagestego::size_t blockIndex(imagestego::size_t i) {
         return i / bitsPerBlock;
     }
 
@@ -351,7 +351,7 @@ private:
      * @param i index of an element.
      * @return Index of bit in the block with i-th element.
      */
-    inline static constexpr size_t bitIndex(size_t i) {
+    inline static constexpr imagestego::size_t bitIndex(imagestego::size_t i) {
         return i % bitsPerBlock;
     }
 }; // class BitArrayImpl
@@ -388,7 +388,7 @@ public:
      *
      * @param sz Size of array.
      */
-    explicit BitArray(size_t sz);
+    explicit BitArray(imagestego::size_t sz);
 
     /**
      * imagestego::BitArray copy constructor.
@@ -443,7 +443,7 @@ public:
      * @param i Index of element in array.
      * @return Instance of proxy class representing element.
      */
-    typename BitArrayImpl::reference operator[](size_t i);
+    typename BitArrayImpl::reference operator[](imagestego::size_t i);
 
     /**
      * Operator [] overloading.
@@ -451,14 +451,14 @@ public:
      * @param i Index of element in array.
      * @return Read-only element of array.
      */
-    bool operator [](size_t i) const;
+    bool operator [](imagestego::size_t i) const;
 
     /**
      * Size of array.
      *
      * @return Size of array
      */
-    size_t size() const noexcept;
+    imagestego::size_t size() const noexcept;
 
     /**
      * Puts n bits from number to array.
@@ -468,8 +468,8 @@ public:
      * @param num Number from which bits are taken.
      * @param n Nubmer of bits to take from num.
      */
-    void put(int num, size_t n);
-    void put(size_t num, size_t n);
+    void put(int num, imagestego::size_t n);
+    void put(imagestego::size_t num, imagestego::size_t n);
 
     /**
      * Adds element to the end.

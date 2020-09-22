@@ -22,9 +22,9 @@
 #include <iostream>
 
 
-int read(const imagestego::BitArray& arr, std::size_t& i, uint8_t bits) {
+int read(const imagestego::BitArray& arr, imagestego::size_t& i, uint8_t bits) {
     int block = 0;
-    std::size_t it;
+    imagestego::size_t it;
     for (it = i; it != i + bits; ++it)
         block |= arr[it] << (bits - 1 - (it - i)); 
     i = it;
@@ -46,15 +46,15 @@ std::string LzwDecoderImpl::getDecodedMessage() {
 
 void LzwDecoderImpl::decode() {
     // reading first 4 bits    
-    std::size_t i = 0;
+    imagestego::size_t i = 0;
     uint8_t maxBits = read(msg, i, 4);
     while(i < msg.size()) {
         Dictionary::clear();
         uint8_t currentBitsPerBlock = 8;
-        std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
-        std::size_t code = read(msg, i, currentBitsPerBlock);
+        imagestego::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
+        imagestego::size_t code = read(msg, i, currentBitsPerBlock);
         decodedMsg += code;
-        std::size_t oldCode = code;
+        imagestego::size_t oldCode = code;
         while (1) {
             if (i >= msg.size())
                 break;

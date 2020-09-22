@@ -86,7 +86,7 @@ void HuffmanDecoder::HuffmanDecoderImpl::readDfs() {
 }
 
 // TODO: optimize this
-unsigned char takeChar(const BitArray& arr, const std::size_t& pos) {
+unsigned char takeChar(const BitArray& arr, const imagestego::size_t& pos) {
     unsigned char tmp = 0;
     for (unsigned short i = 0; i != 8; ++i) {
         tmp |= arr[pos + i] << (7 - i);
@@ -95,14 +95,14 @@ unsigned char takeChar(const BitArray& arr, const std::size_t& pos) {
 }
 
 void HuffmanDecoder::HuffmanDecoderImpl::readAlphabet() {
-    for (std::size_t i = 0; i != codes.size(); ++i) {
+    for (imagestego::size_t i = 0; i != codes.size(); ++i) {
         alphabet += takeChar(encodedMsg, it);
         it += 8;
     }
 }
 
 void HuffmanDecoder::HuffmanDecoderImpl::createCodeTable() {
-    for (std::size_t i = 0; i != codes.size(); ++i)
+    for (imagestego::size_t i = 0; i != codes.size(); ++i)
         codeTable.emplace(codes[i], alphabet[i]);
 }
 

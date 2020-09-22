@@ -78,7 +78,7 @@ private:
         void createCodeTable();
         void decode();
         std::vector<std::string> codes;
-        std::size_t it;
+        imagestego::size_t it;
         BitArray encodedMsg;
         std::string alphabet;
         std::string decodedMsg;
