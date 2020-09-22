@@ -119,3 +119,13 @@ TEST(Core, BitArrayCopyMove) {
     arr3 = std::move(arr1);
     EXPECT_TRUE(arr == arr3);
 }
+
+TEST(Core, BitArrayPut) {
+    BitArray arr(32);
+    BitArray tmp = BitArray::fromByteString(std::string(4, '\0'));
+    EXPECT_TRUE(arr == tmp);
+    BitArray arr1;
+    arr1.put(1 << 5, 32);
+    tmp = BitArray("00000000000000000000000000100000");
+    EXPECT_TRUE(arr1 == tmp);
+}
