@@ -1,6 +1,9 @@
-bin/*
-lib/*
+*bin*/*
+*lib*/*
 *.jpg
 *.png
-build/*
+*build*/
 Makefile
+.clangd/
+compile_commands.json
+*.info

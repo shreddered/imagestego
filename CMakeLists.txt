@@ -15,30 +15,39 @@ HunterGate(
     FILEPATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Hunter/config.cmake"
 )
 
+set(HUNTER_CONFIGURATION_TYPES Release)
+
 if (CMAKE_COMPILER_IS_GNUCXX)
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
+    string(APPEND CMAKE_CXX_FLAGS " -ggdb")
 endif(CMAKE_COMPILER_IS_GNUCXX)
+
+if (POLICY CMP0091)
+    cmake_policy(SET CMP0091 NEW)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>DLL)
+endif(POLICY CMP0091)
 
 project(imagestego VERSION 1.0)
 
 # build conditions
-option(IMAGESTEGO_BUILD_TESTS "Build tests" ON)
+option(IMAGESTEGO_BUILD_TESTS "Build tests" OFF)
 option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
+option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
+option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
+option(IMAGESTEGO_COVERAGE "Check coverage" OFF)
 
 # modules
-option(IMAGESTEGO_COMPRESSION_SUPPORT "Data compression support" ON)
-option(IMAGESTEGO_JPEG_SUPPORT "Enable JPEG steganography" ON)
-option(IMAGESTEGO_LOSSLESS_FORMATS "Enable lossless steganography" ON)
+option(IMAGESTEGO_MODULES "imagestego modules" "core,jpeg,lossless,comp")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions("-DIMAGESTEGO_DEBUG")
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
-# preparing needed directories
-if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
-    file(MAKE_DIRECTORY lib/)
-endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/)
+if (WIN32)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+endif(WIN32)
 
+# preparing needed directories
 if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
     file(MAKE_DIRECTORY bin/)
 endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
@@ -47,191 +56,134 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
     file(MAKE_DIRECTORY test/)
 endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
+# important
+macro(imagestego_lib)
+    list(APPEND IMAGESTEGO_LIBS ${ARGV})
+endmacro()
+
+add_library(coverage_config INTERFACE)
+
+if (IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
+    target_compile_options(coverage_config INTERFACE
+        -O0
+        -g
+        --coverage
+    )
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+        target_link_options(coverage_config INTERFACE --coverage)
+    else()
+        target_link_libraries(coverage_config INTERFACE --coverage)
+    endif()
+endif(IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
+
+# function for test generation
+function(imagestego_test)
+    cmake_parse_arguments(TEST
+        "CORE;COMPRESSION;JPEG;LOSSLESS"
+        "NAME;FILE"
+        "LIBS"
+        ${ARGN}
+    )
+
+    foreach(OPT CORE COMPRESSION JPEG LOSSLESS)
+        if (${TEST_${OPT}})
+            set(DIR $<LOWER_CASE:${OPT}>)
+        endif()
+    endforeach()
+
+    # test executable
+    add_executable(${TEST_NAME} ${TEST_FILE})
+    target_link_libraries(${TEST_NAME}
+        ${TEST_LIBS}
+        gtest_main
+    )
+
+    set_target_properties(${TEST_NAME} PROPERTIES
+        OUTPUT_NAME "test_${DIR}_${TEST_NAME}"
+        RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/"
+    )
+endfunction(imagestego_test)
+
+function(imagestego_exports target)
+    target_compile_definitions(${target} PRIVATE
+        "-DIMAGESTEGO_EXPORT"
+    )
+endfunction(imagestego_exports target)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
+
 # libjpeg
-if (IMAGESTEGO_JPEG_SUPPORT)
+if (IMAGESTEGO_JPEG_SUPPORT AND IMAGESTEGO_WITH_LIBJPEG)
     message("Fetching imagestego_jpeg dependency - libjpeg")
+
     hunter_add_package(Jpeg)
     find_package(JPEG CONFIG REQUIRED)
-endif(IMAGESTEGO_JPEG_SUPPORT)
+endif(IMAGESTEGO_JPEG_SUPPORT AND IMAGESTEGO_WITH_LIBJPEG)
 
 # opencv
 if (IMAGESTEGO_LOSSLESS_FORMATS)
+    if (IMAGESTEGO_BUILD_OPENCV)
+        message("Fetching imagestego_lossless dependency - opencv")
+
+        hunter_add_package(OpenCV)
+    endif(IMAGESTEGO_BUILD_OPENCV)
+
     find_package(OpenCV REQUIRED)
 endif(IMAGESTEGO_LOSSLESS_FORMATS)
 
-# libimagestego
-add_library(imagestego_core SHARED
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
-    # third party
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/MurmurHash3.cpp
-)
+string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
 
-target_include_directories(imagestego_core PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
-    $<INSTALL_INTERFACE:include/>
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-)
+# core module
+add_subdirectory("modules/core/")
 
-list(APPEND IMAGESTEGO_LIBS imagestego_core)
+# compression module
+if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
+    add_subdirectory("modules/compression")
+endif("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
 
-if (IMAGESTEGO_LOSSLESS_FORMATS)
-    add_library(imagestego_lossless SHARED
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/imagestego.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
-    )
+# lossless module
+if ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
+    add_subdirectory("modules/lossless")
+endif("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
 
-    set_target_properties(imagestego_lossless PROPERTIES
-        OUTPUT_NAME "imagestego_lossless"
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/
-    )
+# jpeg module
+if ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
+    add_subdirectory("modules/jpeg")
+endif("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
 
-    target_link_libraries(imagestego_lossless
-        PUBLIC opencv_core
-        opencv_imgcodecs
-        imagestego_core
-    )
-
-    target_include_directories(imagestego_lossless PUBLIC
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>"
-        $<INSTALL_INTERFACE:include/>
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-
-    list(APPEND IMAGESTEGO_LIBS imagestego_lossless)
-
-    add_definitions("-DIMAGESTEGO_LOSSLESS_FORMATS")
-endif(IMAGESTEGO_LOSSLESS_FORMATS)
-
-if (IMAGESTEGO_JPEG_SUPPORT)
-    add_library(imagestego_jpeg SHARED
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/f3.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_image.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_lsb.cpp
-        # third party
-        ${CMAKE_CURRENT_SOURCE_DIR}/third_party/MurmurHash3.cpp
-    )
-    set_target_properties(imagestego_jpeg PROPERTIES
-        OUTPUT_NAME "imagestego_jpeg"
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/
-    )
-
-    target_link_libraries(imagestego_jpeg
-        PUBLIC JPEG::jpeg
-        imagestego_core
-    )
-
-    target_include_directories(imagestego_jpeg PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
-        $<INSTALL_INTERFACE:include/>
-        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
-    )
-
-    list(APPEND IMAGESTEGO_LIBS imagestego_jpeg)
-
-    add_definitions("-DIMAGESTEGO_JPEG_SUPPORT")
-endif(IMAGESTEGO_JPEG_SUPPORT)
-
-# libimagestego_comp
-if (IMAGESTEGO_COMPRESSION_SUPPORT)
-    add_library(imagestego_compression SHARED
-        # Huffman encoding 
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_decoder.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_encoder.cpp
-        # LZW encoding
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_decoder.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_dictionary.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_encoder.cpp
-    ) 
-    set_target_properties(imagestego_compression PROPERTIES
-        OUTPUT_NAME "imagestego_comp"
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/
-    )
-    target_link_libraries(imagestego_compression
-        PUBLIC imagestego_core
-    )
-
-    add_definitions("-DIMAGESTEGO_COMPRESSION_SUPPORT")
-    target_include_directories(imagestego_compression PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
-        $<INSTALL_INTERFACE:include/>
-    )
-
-    list(APPEND IMAGESTEGO_LIBS imagestego_compression)
-endif(IMAGESTEGO_COMPRESSION_SUPPORT)
-
-# macro used for generating tests
-macro(generate_test)
+function(imagestego_add_test)
     cmake_parse_arguments(TEST
-        "OPTION"
-        "NAME;FILE"
-        "LIBS"
+        "CORE;COMPRESSION;JPEG;LOSSLESS"
+        "NAME"
+        ""
         ${ARGN}
     )
-    add_executable(${TEST_NAME} ${TEST_FILE})
-    target_link_libraries(${TEST_NAME} 
-        ${IMAGESTEGO_LIBS}
-        gtest_main
-    )
-    set_target_properties(${TEST_NAME} PROPERTIES
-        OUTPUT_NAME "test_${TEST_NAME}"
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/test/
-    )
-    add_test(NAME ${TEST_NAME} COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/bin/test/test_${TEST_NAME}")
-endmacro()
 
-# tests
+    foreach(OPT CORE COMPRESSION JPEG LOSSLESS)
+        if (${TEST_${OPT}})
+            set(DIR $<LOWER_CASE:${OPT}>)
+        endif()
+    endforeach()
+
+    add_test(NAME ${TEST_NAME}
+        COMMAND "${PROJECT_SOURCE_DIR}/bin/test_${DIR}_${TEST_NAME}"
+    )
+endfunction(imagestego_add_test)
+
 if (IMAGESTEGO_BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/gtest/)
+    include(CTest)
 
-    # should set TEST_DIR
-    set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test/)
+    # gtest
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/gtest)
 
-    generate_test(NAME avl 
-        FILE ${TEST_DIR}/avl.cpp
-    )
-    generate_test(NAME huffman
-        FILE ${TEST_DIR}/huffman.cpp
-    )
+    # core tests
+    imagestego_add_test(CORE NAME avl)
+    imagestego_add_test(CORE NAME bitarray)
+    imagestego_add_test(CORE NAME intrinsics)
+
+    # compression tests
+    if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
+        imagestego_add_test(COMPRESSION NAME huffman)
+        imagestego_add_test(COMPRESSION NAME lzw)
+    endif("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
 endif(IMAGESTEGO_BUILD_TESTS)
-
-# macro used for building examples
-macro(generate_example)
-    cmake_parse_arguments(EXAMPLE
-        "OPTION"
-        "NAME;FILE"
-        "LIBS"
-        ${ARGN}
-    )
-    add_executable(${EXAMPLE_NAME} ${EXAMPLE_FILE})
-    target_link_libraries(${EXAMPLE_NAME}
-        ${EXAMPLE_LIBS} 
-    )
-    set_target_properties(${EXAMPLE_NAME} PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/
-    )
-endmacro()
-
-# examples
-if (IMAGESTEGO_BUILD_EXAMPLES)
-    set(EXAMPLE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/examples/)
-
-    if (IMAGESTEGO_LOSSLESS_FORMATS)
-        generate_example(NAME lsb 
-            FILE ${EXAMPLE_DIR}/lsb.cpp
-            LIBS imagestego_lossless
-        )
-    endif(IMAGESTEGO_LOSSLESS_FORMATS)
-endif(IMAGESTEGO_BUILD_EXAMPLES)
-
-#installation rules
-install(TARGETS ${IMAGESTEGO_LIBS}
-    EXPORT imagestego-config
-    ARCHIVE DESTINATION lib/
-    LIBRARY DESTINATION lib/
-)
-
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include/)
-install(EXPORT imagestego-config DESTINATION cmake/)

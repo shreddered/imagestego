@@ -1,0 +1,29 @@
+image: Visual Studio 2017
+
+platform: x64
+
+configuration: Release
+
+install:
+  - git submodule update --init --recursive
+
+before_build:
+  # - git clone https://github.com/opencv/opencv.git
+  # - git clone https://github.com/opencv/opencv_contrib.git
+  # - cd opencv
+  # - mkdir build
+  # - cmake -H. -Bbuild -DBUILD_LIST=core,imgcodecs -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=OFF -DBUILD_opencv_apps=OFF -DCMAKE_INSTALL_PREFIX=install -DBUILD_TESTS=OFF -DBUILD_SHARED_LIBS=ON
+  # - cmake --build build --config Release
+  # - cmake --build build --target install --config Release
+  # - cd ..
+  - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,comp .
+
+build:
+  project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
+
+test_script:
+  - '%APPVEYOR_BUILD_FOLDER%\bin\%CONFIGURATION%\test_core_avl.exe'
+  - '%APPVEYOR_BUILD_FOLDER%\bin\%CONFIGURATION%\test_core_bitarray.exe'
+  - '%APPVEYOR_BUILD_FOLDER%\bin\%CONFIGURATION%\test_core_intrinsics.exe'
+  - '%APPVEYOR_BUILD_FOLDER%\bin\%CONFIGURATION%\test_compression_huffman.exe'
+  - '%APPVEYOR_BUILD_FOLDER%\bin\%CONFIGURATION%\test_compression_lzw.exe'
