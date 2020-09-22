@@ -379,10 +379,6 @@ private:
  * This class uses PImpl technique.
  */
 class IMAGESTEGO_EXPORTS BitArray {
-private:
-
-    /** Pointer to implementation. */
-    BitArrayImpl* _arr;
 public:
 
     /**

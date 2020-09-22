@@ -17,7 +17,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
+// imagestego headers
 #include "imagestego/algorithms/dwt.hpp"
+// c++ headers
 #include <iostream>
 
 
