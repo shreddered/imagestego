@@ -68,6 +68,13 @@ TEST(Core, BitArray3) {
     EXPECT_EQ(arr.toString(), s);
 }
 
+TEST(Core, BitArray4) {
+    BitArray arr("10001010"),
+             arr1("1010101010");
+    EXPECT_TRUE(arr[0] == arr1[0]);
+    EXPECT_TRUE(arr[0] != arr[1]);
+}
+
 TEST(Core, BitArrayComparison) {
     BitArray arr = std::string("1001"), tmp = std::string("1100");
     EXPECT_EQ(arr[0], tmp[0]);
@@ -92,6 +99,12 @@ TEST(Core, BitArrayIterator) {
     EXPECT_TRUE(!*it);
     it--;
     EXPECT_TRUE(*it);
+    BitArray tmp("1010101010100101010100100101010010100001001010100101010010101000010101");
+    std::ostringstream().swap(ss);
+    for (auto it = tmp.begin(); it != tmp.end(); ++it) {
+        ss << *it;
+    }
+    EXPECT_EQ(ss.str(), tmp.toString());
 }
 
 TEST(Core, BitArrayCopyMove) {
