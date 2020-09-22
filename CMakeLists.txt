@@ -18,7 +18,7 @@ HunterGate(
 set(HUNTER_CONFIGURATION_TYPES Release)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-    string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra")
+    string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wpedantic")
     string(APPEND CMAKE_CXX_FLAGS " -ggdb")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
