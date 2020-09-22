@@ -68,18 +68,28 @@ TEST(Core, BitArray3) {
     EXPECT_EQ(arr.toString(), s);
 }
 
-TEST(Core, BitArray4) {
+TEST(Core, BitArrayComparison) {
     BitArray arr = std::string("1001"), tmp = std::string("1100");
     EXPECT_EQ(arr[0], tmp[0]);
     arr[1] = tmp[1];
     arr[3] = tmp[3];
+    EXPECT_TRUE(arr == tmp);
+}
+
+TEST(Core, BitArrayIterator) {
+    BitArray arr = std::string("11010100101001001010");
     std::ostringstream ss;
     for (auto it = arr.begin(); it != arr.end(); ++it)
         ss << *it;
-    EXPECT_EQ(ss.str(), tmp.toString());
+    EXPECT_EQ(ss.str(), arr.toString());
+    std::string s = ss.str();
     std::ostringstream().swap(ss);
     for (auto it = arr.begin(); it != arr.end(); it++)
         ss << *it;
-    EXPECT_EQ(ss.str(), arr.toString());
-    EXPECT_EQ(arr, tmp);
+    EXPECT_EQ(ss.str(), s);
+    auto it = arr.end();
+    --it;
+    EXPECT_TRUE(!*it);
+    it--;
+    EXPECT_TRUE(*it);
 }
