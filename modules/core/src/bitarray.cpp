@@ -116,13 +116,19 @@ bool BitArrayImpl::BitIterator::operator!=(const BitIterator& other) noexcept {
 }
 
 // BitArrayImpl
-BitArrayImpl::BitArrayImpl() noexcept : _sz(0) {}
+BitArrayImpl::BitArrayImpl() noexcept : _blocks(), _sz(0) {}
 
 BitArrayImpl::BitArrayImpl(imagestego::size_t sz) : _blocks(numberOfBlocks(sz), 0), _sz(sz) {}
 
 BitArrayImpl::BitArrayImpl(const std::string& str) : _blocks(numberOfBlocks(str.size())), _sz(str.size()) {
-    for (imagestego::size_t i = 0; i != _sz; ++i)
-        operator [](i) = str[i] - '0' != 0;
+    for (imagestego::size_t i = 0; i != _sz; ++i) {
+        BlockType& block = _blocks[blockIndex(i)];
+        BlockType mask = 1 << (bitsPerBlock - bitIndex(i) - 1);
+        if (str[i] - '0' == 0)
+            block &= ~mask;
+        else
+            block |= mask;
+    }
 }
 
 BitArrayImpl::BitReference BitArrayImpl::operator [](imagestego::size_t i) {
@@ -139,8 +145,9 @@ imagestego::size_t BitArrayImpl::size() const noexcept {
 
 BitArrayImpl BitArrayImpl::fromByteString(std::string str) {
     BitArrayImpl arr(str.size() * CHAR_BIT);
-    str.append(sizeof(BlockType) - str.size() % sizeof(BlockType), '\0');
-    memcpy(&arr._blocks[0], str.data(), str.size());
+    if (str.size() % sizeof(BlockType) != 0)
+        str.append(sizeof(BlockType) - str.size() % sizeof(BlockType), '\0');
+    memcpy(&arr._blocks[0], str.data(), str.size() * sizeof(char));
 #ifdef IMAGESTEGO_LITTLE_ENDIAN
     std::for_each(arr._blocks.begin(), arr._blocks.end(), [](uint32_t& value) {
         value = bswap(value);
@@ -221,6 +228,8 @@ bool BitArrayImpl::operator ==(const BitArrayImpl& other) {
 }
 
 // BitArray
+BitArray::BitArray(BitArrayImpl* arr) noexcept : _arr(arr) {}
+
 BitArray::BitArray() : _arr(new BitArrayImpl()) {} 
 
 BitArray::BitArray(const std::string& str) : _arr(new BitArrayImpl(str)) {}
@@ -246,21 +255,20 @@ BitArray::BitArray(BitArray&& other) noexcept : _arr(other._arr) {
     other._arr = nullptr;
 }
 
-BitArray& BitArray::operator=(BitArray&& other) noexcept {
+BitArray& BitArray::operator =(BitArray&& other) noexcept {
+    delete _arr;
     _arr = other._arr;
     other._arr = nullptr;
     return *this;
 }
 
-BitArray BitArray::fromByteString(std::string str) {
-    BitArray arr;
-    arr._arr = new BitArrayImpl(BitArrayImpl::fromByteString(std::move(str)));
+BitArray BitArray::fromByteString(const std::string& str) {
+    BitArray arr(new BitArrayImpl(BitArrayImpl::fromByteString(str)));
     return arr;
 }
 
 BitArray BitArray::fromInt(imagestego::size_t num) {
-    BitArray arr;
-    arr._arr = new BitArrayImpl(BitArrayImpl::fromInt(num));
+    BitArray arr(new BitArrayImpl(BitArrayImpl::fromInt(num)));
     return arr;
 }
 

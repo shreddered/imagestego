@@ -528,6 +528,13 @@ public:
     iterator end();
 private:
 
+    /**
+     * Constructs array from implementation pointer.
+     *
+     * @param arr Pointer to implementation.
+     */
+    explicit BitArray(BitArrayImpl* arr) noexcept;
+
     /** Pointer to implementation. */
     BitArrayImpl* _arr;
 }; // class BitArray
