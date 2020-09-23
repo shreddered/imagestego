@@ -20,7 +20,7 @@
 #ifndef __IMAGESTEGO_CONFIG_HPP_INCLUDED__
 #define __IMAGESTEGO_CONFIG_HPP_INCLUDED__
 
-#if (defined(WIN32) || defined(_WIN32) || defined (WINCE))
+#if (defined(WIN32) || defined(_WIN32) || defined (WINCE)) && defined(IMAGESTEGO_DLL)
 #   ifdef IMAGESTEGO_EXPORT
 #       define IMAGESTEGO_EXPORTS __declspec(dllexport)
 #   else

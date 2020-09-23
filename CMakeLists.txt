@@ -106,9 +106,14 @@ endfunction(imagestego_test)
 
 function(imagestego_exports target)
     if (WIN32 AND BUILD_SHARED_LIBS)
-        target_compile_definitions(${target} PRIVATE
-            "-DIMAGESTEGO_EXPORT"
+        target_compile_definitions(${target} PUBLIC
+            "-DIMAGESTEGO_DLL"
         )
+        if (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
+            target_compile_definitions(${target PRIVATE
+                "-DIMAGESTEGO_EXPORTS"
+            )
+        endif(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
     endif(WIN32 AND BUILD_SHARED_LIBS)
 endfunction(imagestego_exports target)
 
