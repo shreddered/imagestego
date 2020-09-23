@@ -16,7 +16,7 @@ before_build:
   # - cmake --build build --config Release
   # - cmake --build build --target install --config Release
   # - cd ..
-  - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,comp .
+  - cmake -G "Visual Studio 15 2017" -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,comp .
 
 build:
   parallel: true
