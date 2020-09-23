@@ -105,9 +105,11 @@ function(imagestego_test)
 endfunction(imagestego_test)
 
 function(imagestego_exports target)
-    target_compile_definitions(${target} PRIVATE
-        "-DIMAGESTEGO_EXPORT"
-    )
+    if (WIN32 AND BUILD_SHARED_LIBS)
+        target_compile_definitions(${target} PRIVATE
+            "-DIMAGESTEGO_EXPORT"
+        )
+    endif(WIN32 AND BUILD_SHARED_LIBS)
 endfunction(imagestego_exports target)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
