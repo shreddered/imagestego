@@ -243,7 +243,7 @@ BitArray::~BitArray() noexcept {
 
 BitArray::BitArray(const BitArray& other) : _arr(new BitArrayImpl(*other._arr)) {}
 
-BitArray& BitArray::operator=(const BitArray& other) {
+BitArray& BitArray::operator =(const BitArray& other) {
     if (this != & other) {
         delete _arr;
         _arr = new BitArrayImpl(*other._arr);

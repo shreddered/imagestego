@@ -429,7 +429,7 @@ public:
      * @param str Byte array to be converted to bit sequence.
      * @return Bit array converted from str.
      */
-    static BitArray fromByteString(std::string str);
+    static BitArray fromByteString(const std::string& str);
 
     /** 
      * Creates array from unsigned 32-bit integer type. 
