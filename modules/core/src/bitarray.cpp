@@ -149,6 +149,13 @@ BitArrayImpl BitArrayImpl::fromByteString(std::string str) {
     return arr;
 }
 
+BitArrayImpl BitArrayImpl::fromInt(imagestego::size_t num) {
+    BitArrayImpl arr;
+    arr._blocks.push_back(num);
+    arr._sz = sizeof(num) * CHAR_BIT;
+    return arr;
+}
+
 void BitArrayImpl::pushBack(bool val) {
     if (_sz / CHAR_BIT == _blocks.size() * sizeof(BlockType) && _sz % CHAR_BIT == 0)
         _blocks.push_back(0);
@@ -248,6 +255,12 @@ BitArray& BitArray::operator=(BitArray&& other) noexcept {
 BitArray BitArray::fromByteString(std::string str) {
     BitArray arr;
     arr._arr = new BitArrayImpl(BitArrayImpl::fromByteString(std::move(str)));
+    return arr;
+}
+
+BitArray BitArray::fromInt(imagestego::size_t num) {
+    BitArray arr;
+    arr._arr = new BitArrayImpl(BitArrayImpl::fromInt(num));
     return arr;
 }
 

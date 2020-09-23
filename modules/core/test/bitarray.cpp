@@ -133,3 +133,9 @@ TEST(Core, BitArrayPut) {
     tmp = BitArray("00000000000000000000000001000000");
     EXPECT_TRUE(arr2 == tmp);
 }
+
+TEST(Core, BitArrayFromInt) {
+    BitArray arr = BitArray::fromInt(32),
+             tmp("00000000000000000000000000100000");
+    EXPECT_TRUE(arr == tmp);
+}

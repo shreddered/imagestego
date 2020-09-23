@@ -100,6 +100,14 @@ public:
      */
     static BitArrayImpl fromByteString(std::string str);
 
+    /** 
+     * Creates array from unsigned 32-bit integer type. 
+     *
+     * @param num Number to be converted to bit array.
+     * @return Created array.
+     */
+    static BitArrayImpl fromInt(imagestego::size_t num); 
+
     /**
      * Converter from bit array to byte string.
      *
@@ -422,6 +430,14 @@ public:
      * @return Bit array converted from str.
      */
     static BitArray fromByteString(std::string str);
+
+    /** 
+     * Creates array from unsigned 32-bit integer type. 
+     *
+     * @param num Number to be converted to bit array.
+     * @return Created array.
+     */
+    static BitArray fromInt(imagestego::size_t num); 
 
     /**
      * Converter from bit array to byte string.
