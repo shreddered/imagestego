@@ -1,4 +1,4 @@
-add_library(imagestego_jpeg SHARED
+add_library(imagestego_jpeg
     ${CMAKE_CURRENT_SOURCE_DIR}/src/f3.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_image.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jpeg_lsb.cpp

@@ -1,4 +1,4 @@
-add_library(imagestego_compression SHARED
+add_library(imagestego_compression
     ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_decoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_encoder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_decoder.cpp

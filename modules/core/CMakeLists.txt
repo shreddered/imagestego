@@ -1,5 +1,5 @@
 # imagestego_core
-add_library(imagestego_core SHARED
+add_library(imagestego_core
     ${CMAKE_CURRENT_SOURCE_DIR}/src/avl_tree.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/bitarray.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp

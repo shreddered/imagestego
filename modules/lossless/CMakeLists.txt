@@ -1,4 +1,4 @@
-add_library(imagestego_lossless SHARED
+add_library(imagestego_lossless
     ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
 )
