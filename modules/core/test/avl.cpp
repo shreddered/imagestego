@@ -33,7 +33,7 @@ bool isEqual(It1 begin, It1 end, It2 _begin) {
     return true;
 }
 
-TEST(Core, AvlTree) {
+TEST(Core, AvlTree1) {
     auto v = {1, 3, 7, 1, 5, 8, 6};
     imagestego::AvlTree<int> tree;
     for (auto elem : v)
@@ -48,6 +48,13 @@ TEST(Core, AvlTree) {
     result = {3, 0, 2, 7, 6, 4, 10};
     EXPECT_EQ(result.size(), tree.size());
     EXPECT_TRUE(isEqual(tree.begin(), tree.end(), result.begin())); 
+}
+
+TEST(Core, AvlTree2) {
+    std::vector<int> v = {5, 3, 4, 1};
+    imagestego::AvlTree<int> tree(v.begin(), v.end());
+    v = {4, 3, 1, 5};
+    EXPECT_TRUE(isEqual(tree.begin(), tree.end(), v.begin()));
 }
 
 TEST(Core, Route) { 
