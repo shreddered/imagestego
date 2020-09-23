@@ -27,7 +27,7 @@
 using imagestego::BitArray;
 
 
-TEST(TestHuffman, HuffmanEncoder) {
+TEST(Compression, HuffmanEncoding) {
     imagestego::HuffmanEncoder encoder("beep boop beer");
     auto tmp = encoder.getEncodedMessage();
     BitArray arr = tmp;

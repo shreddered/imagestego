@@ -27,7 +27,7 @@
 using imagestego::BitArray;
 
 
-TEST(Compression, LZW) {
+TEST(Compression, LzwEncoding) {
     imagestego::LzwEncoder enc("asdasdasdad");
     auto arr = enc.getEncodedMessage();
     imagestego::LzwDecoder dec(arr);
