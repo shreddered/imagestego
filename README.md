@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/shreddered/imagestego.svg?branch=master)](https://travis-ci.com/shreddered/imagestego)
 [![Build status](https://ci.appveyor.com/api/projects/status/stugi74mkai6x44q/branch/master?svg=true)](https://ci.appveyor.com/project/shreddered/imagestego/branch/master)
-
+[![codecov](https://codecov.io/gh/shreddered/imagestego/branch/master/graph/badge.svg)](https://codecov.io/gh/shreddered/imagestego)
 
 # imagestego 
 
