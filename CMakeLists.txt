@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(POLICY CMP0074)
     cmake_policy(SET CMP0074 NEW)
-endif(POLICY CMP0074)
+endif (POLICY CMP0074)
 
 include("cmake/HunterGate.cmake")
 
@@ -20,12 +20,12 @@ set(HUNTER_CONFIGURATION_TYPES Release)
 if (CMAKE_COMPILER_IS_GNUCXX)
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wpedantic")
     string(APPEND CMAKE_CXX_FLAGS " -ggdb")
-endif(CMAKE_COMPILER_IS_GNUCXX)
+endif (CMAKE_COMPILER_IS_GNUCXX)
 
 if (POLICY CMP0091)
     cmake_policy(SET CMP0091 NEW)
     set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
-endif(POLICY CMP0091)
+endif (POLICY CMP0091)
 
 project(imagestego VERSION 1.0)
 
@@ -41,20 +41,20 @@ option(IMAGESTEGO_MODULES "imagestego modules" "core,jpeg,lossless,comp")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions("-DIMAGESTEGO_DEBUG")
-endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 if (WIN32)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
-endif(WIN32)
+endif (WIN32)
 
 # preparing needed directories
 if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
     file(MAKE_DIRECTORY bin/)
-endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
+endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
 
 if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
     file(MAKE_DIRECTORY test/)
-endif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
+endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
 # important
 macro(imagestego_lib)
@@ -73,8 +73,8 @@ if (IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
         target_link_options(coverage_config INTERFACE --coverage)
     else()
         target_link_libraries(coverage_config INTERFACE --coverage)
-    endif()
-endif(IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
+    endif ()
+endif (IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
 
 # function for test generation
 function(imagestego_test)
@@ -88,7 +88,7 @@ function(imagestego_test)
     foreach(OPT CORE COMPRESSION JPEG LOSSLESS)
         if (${TEST_${OPT}})
             set(DIR $<LOWER_CASE:${OPT}>)
-        endif()
+        endif ()
     endforeach()
 
     # test executable
@@ -113,8 +113,8 @@ function(imagestego_exports target)
             target_compile_definitions(${target PRIVATE
                 "-DIMAGESTEGO_EXPORTS"
             )
-        endif(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
-    endif(WIN32 AND BUILD_SHARED_LIBS)
+        endif (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
+    endif (WIN32 AND BUILD_SHARED_LIBS)
 endfunction(imagestego_exports target)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
@@ -125,7 +125,7 @@ if (IMAGESTEGO_JPEG_SUPPORT AND IMAGESTEGO_WITH_LIBJPEG)
 
     hunter_add_package(Jpeg)
     find_package(JPEG CONFIG REQUIRED)
-endif(IMAGESTEGO_JPEG_SUPPORT AND IMAGESTEGO_WITH_LIBJPEG)
+endif (IMAGESTEGO_JPEG_SUPPORT AND IMAGESTEGO_WITH_LIBJPEG)
 
 # opencv
 if (IMAGESTEGO_LOSSLESS_FORMATS)
@@ -133,10 +133,10 @@ if (IMAGESTEGO_LOSSLESS_FORMATS)
         message("Fetching imagestego_lossless dependency - opencv")
 
         hunter_add_package(OpenCV)
-    endif(IMAGESTEGO_BUILD_OPENCV)
+    endif (IMAGESTEGO_BUILD_OPENCV)
 
     find_package(OpenCV REQUIRED)
-endif(IMAGESTEGO_LOSSLESS_FORMATS)
+endif (IMAGESTEGO_LOSSLESS_FORMATS)
 
 string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
 
@@ -146,17 +146,17 @@ add_subdirectory("modules/core/")
 # compression module
 if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/compression")
-endif("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
+endif ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 # lossless module
 if ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/lossless")
-endif("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
+endif ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 # jpeg module
 if ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/jpeg")
-endif("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
+endif ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 function(imagestego_add_test)
     cmake_parse_arguments(TEST
@@ -169,7 +169,7 @@ function(imagestego_add_test)
     foreach(OPT CORE COMPRESSION JPEG LOSSLESS)
         if (${TEST_${OPT}})
             set(DIR $<LOWER_CASE:${OPT}>)
-        endif()
+        endif ()
     endforeach()
 
     add_test(NAME ${TEST_NAME}
@@ -192,5 +192,5 @@ if (IMAGESTEGO_BUILD_TESTS)
     if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
         imagestego_add_test(COMPRESSION NAME huffman)
         imagestego_add_test(COMPRESSION NAME lzw)
-    endif("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
-endif(IMAGESTEGO_BUILD_TESTS)
+    endif ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
+endif (IMAGESTEGO_BUILD_TESTS)
