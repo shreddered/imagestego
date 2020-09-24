@@ -190,7 +190,6 @@ public:
      * @return Iterator pointing to past-the-end element in array.
      */
     iterator end();
-
 private:
 
     /**
