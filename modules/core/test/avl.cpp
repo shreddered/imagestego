@@ -56,7 +56,3 @@ TEST(Core, AvlTree2) {
     v = {4, 3, 1, 5};
     EXPECT_TRUE(isEqual(tree.begin(), tree.end(), v.begin()));
 }
-
-TEST(Core, Route) { 
-    // TODO: write Route tests
-}
