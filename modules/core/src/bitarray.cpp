@@ -19,6 +19,7 @@
 
 // imagestego headers
 #include "imagestego/core/bitarray.hpp"
+#include "imagestego/core/config.hpp"
 #ifdef IMAGESTEGO_LITTLE_ENDIAN
 #   include "imagestego/core/intrinsic.hpp"
 #endif
