@@ -145,3 +145,9 @@ TEST(Core, BitArrayToByteString) {
     std::string s = arr.toByteString();
     EXPECT_EQ(s, std::string("asdss"));
 }
+
+TEST(Core, BitArrayPushFront) {
+    BitArray arr, tmp("00000000000000000000000000100000");
+    arr.pushFront(32);
+    EXPECT_TRUE(arr == tmp);
+}
