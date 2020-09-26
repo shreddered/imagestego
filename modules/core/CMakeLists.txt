@@ -60,4 +60,9 @@ if(IMAGESTEGO_BUILD_TESTS)
         FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/intrinsic.cpp
         LIBS imagestego_core
     )
+    imagestego_test(CORE
+        NAME route
+        FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/route.cpp
+        LIBS imagestego_core
+    )
 endif(IMAGESTEGO_BUILD_TESTS)
