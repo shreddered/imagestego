@@ -115,14 +115,6 @@ HuffmanEncoder::HuffmanEncoderImpl::~HuffmanEncoderImpl() noexcept {
         delete root;
 }
 
-void HuffmanEncoder::HuffmanEncoderImpl::destroyNode(TreeNode* node) noexcept {
-    if (node->left) {
-        destroyNode(node->left);
-        destroyNode(node->right);
-        delete node;
-    }
-}
-
 HuffmanEncoder::HuffmanEncoder() noexcept : encoder(new HuffmanEncoderImpl()) {}
 
 HuffmanEncoder::HuffmanEncoder(const std::string& str) noexcept : encoder(new HuffmanEncoderImpl(str)) {}

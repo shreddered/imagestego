@@ -71,7 +71,6 @@ private:
         void __buildCode() const;
         void encode() const;
         void dfs(TreeNode* node) const;
-        void destroyNode(TreeNode* node) noexcept;
         std::string msg;
         mutable TreeNode* root = nullptr;
         mutable std::string encodedMsg = ""; // mutable bc of caching
