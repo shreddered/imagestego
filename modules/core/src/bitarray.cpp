@@ -184,6 +184,10 @@ void BitArrayImpl::put(imagestego::size_t num, imagestego::size_t n) {
     }
 }
 
+void BitArrayImpl::pushFront(imagestego::size_t num) {
+    _blocks.insert(_blocks.begin(), num);
+}
+
 void BitArrayImpl::clear() {
     _blocks.clear();
     _sz = 0;
@@ -286,6 +290,10 @@ bool BitArray::operator[](imagestego::size_t i) const {
 
 void BitArray::pushBack(bool val) {
     _arr->pushBack(val);
+}
+
+void BitArray::pushFront(imagestego::size_t num) {
+    _arr->pushFront(num);
 }
 
 void BitArray::clear() {

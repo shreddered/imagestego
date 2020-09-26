@@ -164,6 +164,13 @@ public:
     void put(imagestego::size_t num, imagestego::size_t n);
 
     /**
+     * Pushes unsigned 32-bit integer in the beginning of the array.
+     *
+     * @param num number to be pushed.
+     */
+    void pushFront(imagestego::size_t num);
+
+    /**
      * Clears array.
      *
      * Sets empty() value to true.
@@ -485,6 +492,13 @@ public:
      */
     void put(int num, imagestego::size_t n);
     void put(imagestego::size_t num, imagestego::size_t n);
+
+    /**
+     * Pushes unsigned 32-bit integer in the beginning of the array.
+     *
+     * @param num number to be pushed.
+     */
+    void pushFront(imagestego::size_t num);
 
     /**
      * Adds element to the end.
