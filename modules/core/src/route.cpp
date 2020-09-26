@@ -53,4 +53,12 @@ void Route::add() {
     _route->add();
 }
 
+typename Route::iterator Route::begin() {
+    return _route->begin();
+}
+
+typename Route::iterator Route::end() {
+    return _route->end();
+}
+
 } // namespace imagestego
