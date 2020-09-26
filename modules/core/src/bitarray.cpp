@@ -186,6 +186,7 @@ void BitArrayImpl::put(imagestego::size_t num, imagestego::size_t n) {
 
 void BitArrayImpl::pushFront(imagestego::size_t num) {
     _blocks.insert(_blocks.begin(), num);
+    _sz += 32;
 }
 
 void BitArrayImpl::clear() {
