@@ -19,7 +19,7 @@ public:
         Bmp = 1 << 2,
         Tiff = 1 << 3,
         Gif = 1 << 4,
-    }; 
+    };
     explicit FormatChecker(int _fmt) noexcept;
     void setFormat(int _fmt) noexcept;
     bool check(const std::string& str);

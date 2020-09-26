@@ -25,8 +25,8 @@ void F3Embedder<void>::setSecretKey(const std::string& key) {
 }
 
 Algorithm F3Embedder<void>::getAlgorithm() const noexcept {
-    return Algorithm::F3;    
-} 
+    return Algorithm::F3;
+}
 
 void F3Embedder<void>::createStegoContainer() {
     if (!hasKey) {
@@ -36,7 +36,7 @@ void F3Embedder<void>::createStegoContainer() {
         setSecretKey(s);
 #else
         throw Exception(Exception::Codes::NoKeyFound);
-#endif 
+#endif
     }
     randomize(msg, gen);
     msg.put('\0');

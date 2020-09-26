@@ -24,7 +24,7 @@ template<typename EncoderType>
 class JpegLsbEmbedder : public AbstractStegoEmbedder {
 public:
     explicit JpegLsbEmbedder() noexcept {}
-    explicit JpegLsbEmbedder(const std::string& input, const std::string& _output) : image(input), output(_output) {} 
+    explicit JpegLsbEmbedder(const std::string& input, const std::string& _output) : image(input), output(_output) {}
     void setImage(const std::string& img) override {
         image.open(img);
     }
@@ -163,7 +163,7 @@ public:
         }
         std::size_t sz = sizeStream.getBlock(0);
         for (; i != image.rows && sz; ++i) {
-            for (; j != image.cols && sz; ++j) {                
+            for (; j != image.cols && sz; ++j) {
                 auto p = image.at(i, j);
                 if (lsb(p[0]) != key[keyIndex]) {
                     if (p[1] != 1 && p[1]) {
@@ -203,13 +203,13 @@ template<>
 class IMAGESTEGO_EXPORTS JpegLsbEmbedder<void> : public AbstractStegoEmbedder {
 public:
     explicit JpegLsbEmbedder() noexcept;
-    explicit JpegLsbEmbedder(const std::string& input, const std::string& _output); 
+    explicit JpegLsbEmbedder(const std::string& input, const std::string& _output);
     void setImage(const std::string&) override;
     void setOutputName(const std::string& str) override;
     void setMessage(const std::string& message) override;
     void setSecretKey(const std::string& key) override;
     Algorithm getAlgorithm() const noexcept override;
-    void createStegoContainer() override; 
+    void createStegoContainer() override;
 private:
     BitArray<> msg, key;
     JpegImage image;

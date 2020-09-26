@@ -50,7 +50,7 @@ public:
     virtual void setSecretKey(const std::string& key) = 0;
     virtual Algorithm getAlgorithm() const {
         return Algorithm::UserDefined;
-    } 
+    }
     virtual void createStegoContainer() = 0;
     static constexpr inline Mode getMode() noexcept {
         return Mode::embedding;
@@ -75,7 +75,7 @@ public:
 class IMAGESTEGO_EXPORTS AbstractEncoder {
 public:
     virtual void setMessage(const std::string& msg) = 0;
-    virtual BitArray getEncodedMessage() = 0; 
+    virtual BitArray getEncodedMessage() = 0;
 }; // class AbstractEncoder
 
 class IMAGESTEGO_EXPORTS AbstractDecoder {

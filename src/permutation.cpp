@@ -15,7 +15,7 @@ void JpegPermutation::seed(const std::string& _key) {
     key = tmp[0];
 }
 
-void JpegPermutation::process() const {    
+void JpegPermutation::process() const {
 }
 
 }

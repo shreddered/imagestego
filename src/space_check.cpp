@@ -4,7 +4,7 @@
 #   define static_if(cond) if constexpr (cond)
 #else
 #   define static_if(cond) if (cond)
-#endif 
+#endif
 
 
 std::size_t countLsbValid(const imagestego::JpegImage& image) {

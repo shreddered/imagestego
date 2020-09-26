@@ -45,7 +45,7 @@ void LzwEncoderImpl::encode() {
     StringElement s;
     uint8_t currentBitsPerBlock = 8;
     std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
-    encodedMsg.put(maxBits, 4); 
+    encodedMsg.put(maxBits, 4);
     for (std::size_t i = 0; i != msg.size(); ++i) {
         s.value = msg[i];
         int index = Dictionary::search(s);
@@ -55,7 +55,7 @@ void LzwEncoderImpl::encode() {
         else {
             encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
             s.prefixIndex = s.value;
-            if (Dictionary::size() > currentMaxDictionarySize) { 
+            if (Dictionary::size() > currentMaxDictionarySize) {
                 if (currentBitsPerBlock == maxBits) {
                     currentBitsPerBlock = 8;
                     Dictionary::clear();

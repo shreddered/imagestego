@@ -71,10 +71,10 @@ class LsbEmbedder : public AbstractStegoEmbedder {
 public:
     explicit LsbEmbedder(const int& _opts = LsbOptions::silly) noexcept : opts(_opts) {}
 #ifndef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
-    explicit LsbEmbedder(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly) 
+    explicit LsbEmbedder(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly)
         : image(cv::imread(imageName)), outputFile(output), opts(_opts) {}
 #else
-    explicit LsbEmbedder(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly) 
+    explicit LsbEmbedder(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly)
         : image(cv::imread(imageName)), outputFile(output), opts(_opts), fmt(FormatChecker::Jpeg) {
         check();
     }
@@ -225,7 +225,7 @@ template<class DecoderType>
 class LsbExtracter : public AbstractStegoExtracter {
 public:
     explicit LsbExtracter(const int& _opts = LsbOptions::silly) noexcept : opts(_opts) {}
-    explicit LsbExtracter(const std::string& imageName, const int& _opts = LsbOptions::silly) 
+    explicit LsbExtracter(const std::string& imageName, const int& _opts = LsbOptions::silly)
         : image(cv::imread(imageName)), opts(_opts) {}
     void setImage(const std::string& imageName) override {
         image = cv::imread(imageName);
@@ -281,7 +281,7 @@ private:
             bool b = (pixel.val[0] & 1u) != 0;
             if (key[currentKeyIndex] != b) // green case
                 tmp.pushBack((pixel.val[1] & 1u) != 0);
-            else 
+            else
                 tmp.pushBack((pixel.val[2] & 1u) != 0);
             currentKeyIndex = (currentKeyIndex + 1) % key.size();
         }
@@ -322,12 +322,12 @@ template<>
 class IMAGESTEGO_EXPORTS LsbEmbedder<void> : public AbstractStegoEmbedder {
 public:
     explicit LsbEmbedder(const int& _opts = LsbOptions::silly) noexcept;
-    explicit LsbEmbedder(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly); 
-    void setImage(const std::string& imageName) override; 
+    explicit LsbEmbedder(const std::string& imageName, const std::string& output, const int& _opts = LsbOptions::silly);
+    void setImage(const std::string& imageName) override;
     void setOutputName(const std::string& filename) override;
     void setMessage(const std::string& _msg) noexcept override;
     void setSecretKey(const std::string& _key) noexcept override;
-    void createStegoContainer() override; 
+    void createStegoContainer() override;
     Algorithm getAlgorithm() const noexcept override;
 private:
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
@@ -348,14 +348,14 @@ template<>
 class IMAGESTEGO_EXPORTS LsbExtracter<void> : public AbstractStegoExtracter {
 public:
     explicit LsbExtracter(const int& _opts = LsbOptions::silly) noexcept;
-    explicit LsbExtracter(const std::string& imageName, const int& _opts = LsbOptions::silly); 
+    explicit LsbExtracter(const std::string& imageName, const int& _opts = LsbOptions::silly);
     void setImage(const std::string& imageName) override;
-    void setSecretKey(const std::string& _key) noexcept override; 
-    std::string extractMessage() override; 
+    void setSecretKey(const std::string& _key) noexcept override;
+    std::string extractMessage() override;
     Algorithm getAlgorithm() const noexcept override;
 private:
     std::string __sillyLsbExtraction();
-    std::string __randomLsbExtraction(); 
+    std::string __randomLsbExtraction();
     std::mt19937 gen;
     int opts;
     cv::Mat image;

@@ -19,7 +19,7 @@
 
 #include "imagestego/compression/huffman_encoder.hpp"
 
- 
+
 namespace imagestego {
 
 HuffmanEncoder::HuffmanEncoderImpl::HuffmanEncoderImpl() noexcept {}
@@ -64,7 +64,7 @@ void HuffmanEncoder::HuffmanEncoderImpl::__buildCode() const {
     std::multimap<std::size_t, TreeNode*> node;
     std::for_each(weight.begin(), weight.end(), [&node](const typename decltype(weight)::value_type& p) mutable {
         node.emplace(p.second, new TreeNode(p.first + std::string("")));
-    }); 
+    });
     while(node.size() > 1) {
         auto it2 = node.begin(),
              it1 = it2++;

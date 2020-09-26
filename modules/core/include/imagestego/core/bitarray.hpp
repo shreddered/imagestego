@@ -38,11 +38,11 @@ class BitArray;
 
 } // namespace imagestego
 
-/** 
+/**
  * Operator << overloading.
  *
  * Operator << overloading for printing bit array.
- * 
+ *
  * @param os std::ostream instace.
  * @param arr Bit array to be printed.
  * @return std::ostream instance.
@@ -54,7 +54,7 @@ namespace imagestego {
 /**
  * Implementation of class BitArray for working with bit sequences.
  *
- * Implementation of this class is similar to std::vector<bool>. Also several methods 
+ * Implementation of this class is similar to std::vector<bool>. Also several methods
  * provided for convenient usage with other classes.
  */
 class BitArrayImpl final {
@@ -100,13 +100,13 @@ public:
      */
     static BitArrayImpl fromByteString(std::string str);
 
-    /** 
-     * Creates array from unsigned 32-bit integer type. 
+    /**
+     * Creates array from unsigned 32-bit integer type.
      *
      * @param num Number to be converted to bit array.
      * @return Created array.
      */
-    static BitArrayImpl fromInt(imagestego::size_t num); 
+    static BitArrayImpl fromInt(imagestego::size_t num);
 
     /**
      * Converter from bit array to byte string.
@@ -177,7 +177,7 @@ public:
      */
     void clear();
 
-    /** 
+    /**
      * Checks if array is empty.
      *
      * @return true if array is empty, false otherwise.
@@ -185,14 +185,14 @@ public:
     bool empty() const noexcept;
 
     /**
-     * Iterator to beginning. 
+     * Iterator to beginning.
      *
      * @return Iterator pointing to the first element of array.
      */
     iterator begin();
 
     /**
-     * Iterator to end. 
+     * Iterator to end.
      *
      * @return Iterator pointing to past-the-end element in array.
      */
@@ -437,13 +437,13 @@ public:
      */
     static BitArray fromByteString(const std::string& str);
 
-    /** 
-     * Creates array from unsigned 32-bit integer type. 
+    /**
+     * Creates array from unsigned 32-bit integer type.
      *
      * @param num Number to be converted to bit array.
      * @return Created array.
      */
-    static BitArray fromInt(imagestego::size_t num); 
+    static BitArray fromInt(imagestego::size_t num);
 
     /**
      * Converter from bit array to byte string.
@@ -514,7 +514,7 @@ public:
      */
     void clear();
 
-    /** 
+    /**
      * Checks if array is empty.
      *
      * @return true if array is empty, false otherwise.
@@ -527,14 +527,14 @@ public:
     bool operator ==(const BitArray& other);
 
     /**
-     * Iterator to beginning. 
+     * Iterator to beginning.
      *
      * @return Iterator pointing to the first element of array.
      */
     iterator begin();
 
     /**
-     * Iterator to end. 
+     * Iterator to end.
      *
      * @return Iterator pointing to past-the-end element in array.
      */

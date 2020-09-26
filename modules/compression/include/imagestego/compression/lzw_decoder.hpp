@@ -56,6 +56,6 @@ private:
     LzwDecoderImpl* _decoder;
 }; // class LzwDecoder
 
-} // namespace imagestego 
+} // namespace imagestego
 
 #endif /* __LZW_DECODER_HPP_INCLUDED__ */

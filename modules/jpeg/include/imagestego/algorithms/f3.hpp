@@ -24,7 +24,7 @@ template<class EncoderType>
 class F3Embedder : public AbstractStegoEmbedder {
 public:
     explicit F3Embedder() noexcept {}
-    explicit F3Embedder(const std::string& input, const std::string& _output) : image(input), output(_output) {} 
+    explicit F3Embedder(const std::string& input, const std::string& _output) : image(input), output(_output) {}
     void setImage(const std::string& imageName) override {
         image.open(imageName);
     }
@@ -67,7 +67,7 @@ public:
         int i = 0, j = 0;
         std::size_t msgIndex = 0;
         bool flag = true;
-        for (; i != image.rows; ++i) { 
+        for (; i != image.rows; ++i) {
             for (; j != image.cols && flag; ++j) {
                 auto p = image.at(i, j);
                 for (char k = 0; k != 3 && flag; ++k) {
@@ -210,7 +210,7 @@ public:
     void setOutputName(const std::string& filename) override;
     void setMessage(const std::string& msg) override;
     void setSecretKey(const std::string& key) override;
-    Algorithm getAlgorithm() const noexcept override; 
+    Algorithm getAlgorithm() const noexcept override;
     void createStegoContainer() override;
 private:
     JpegImage image;
@@ -227,7 +227,7 @@ public:
     explicit F3Extracter(const std::string& input);
     void setImage(const std::string& imageName) override;
     void setSecretKey(const std::string& key) override;
-    Algorithm getAlgorithm() const noexcept override; 
+    Algorithm getAlgorithm() const noexcept override;
     std::string extractMessage() override;
 private:
     JpegImage image;

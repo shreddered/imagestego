@@ -40,14 +40,14 @@ TEST(Core, AvlTree1) {
         tree.insert(elem);
     EXPECT_EQ(tree.size(), 6);
     assert(tree.size() == 6);
-    std::vector<int> result = {5, 3, 1, 7, 6, 8}; 
+    std::vector<int> result = {5, 3, 1, 7, 6, 8};
     EXPECT_TRUE(isEqual(tree.begin(), tree.end(), result.begin()));
     tree.clear();
     for (auto elem : {3, 7, 10, 6, 7, 0, 2, 4})
         tree.insert(elem);
     result = {3, 0, 2, 7, 6, 4, 10};
     EXPECT_EQ(result.size(), tree.size());
-    EXPECT_TRUE(isEqual(tree.begin(), tree.end(), result.begin())); 
+    EXPECT_TRUE(isEqual(tree.begin(), tree.end(), result.begin()));
 }
 
 TEST(Core, AvlTree2) {

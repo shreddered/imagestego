@@ -59,7 +59,7 @@ int Dictionary::search(const StringElement& s) {
         while(1) {
               uint8_t val = codeTable[index].value;
               if (s.value == val)
-                  return index; 
+                  return index;
               if (s.value < val) {
                   int left = codeTable[index].left;
                   if (left == -1) { // left insertion case

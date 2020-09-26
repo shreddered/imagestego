@@ -57,7 +57,7 @@ void HuffmanDecoder::HuffmanDecoderImpl::readDfs() {
     std::string code;
     do {
         // 1 - go down
-        // 0 - up 
+        // 0 - up
         if (encodedMsg[it]) {
             currentNode->left = new TreeNode(currentNode);
             currentNode = currentNode->left;
@@ -72,7 +72,7 @@ void HuffmanDecoder::HuffmanDecoderImpl::readDfs() {
                 cameFrom = currentNode;
                 currentNode = currentNode->parent;
                 code.pop_back();
-            } while (currentNode && currentNode->right == cameFrom && currentNode != root); 
+            } while (currentNode && currentNode->right == cameFrom && currentNode != root);
             if (isLeftChild(cameFrom)) {
                 currentNode->right = new TreeNode(currentNode);
                 currentNode = currentNode->right;

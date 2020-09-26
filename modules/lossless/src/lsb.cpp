@@ -173,7 +173,7 @@ void LsbEmbedder<void>::__randomLsbInsertion(bool flag) {
 
 LsbExtracter<void>::LsbExtracter(const int& _opts) noexcept : opts(_opts) {}
 
-LsbExtracter<void>::LsbExtracter(const std::string& imageName, const int& _opts) 
+LsbExtracter<void>::LsbExtracter(const std::string& imageName, const int& _opts)
     : image(cv::imread(imageName)), opts(_opts) {}
 
 void LsbExtracter<void>::setImage(const std::string& imageName) {
@@ -185,7 +185,7 @@ void LsbExtracter<void>::setSecretKey(const std::string& _key) noexcept {
     gen.seed(hash(_key));
 }
 
-std::string LsbExtracter<void>::extractMessage() { 
+std::string LsbExtracter<void>::extractMessage() {
     switch(opts) {
         case 0:
             return __sillyLsbExtraction();
@@ -230,7 +230,7 @@ std::string LsbExtracter<void>::__randomLsbExtraction() {
         bool b = (pixel.val[0] & 1u) != 0;
         if (key[currentKeyIndex] != b) // green case
             tmp.pushBack((pixel.val[1] & 1u) != 0);
-        else 
+        else
             tmp.pushBack((pixel.val[2] & 1u) != 0);
         currentKeyIndex = (currentKeyIndex + 1) % key.size();
     }

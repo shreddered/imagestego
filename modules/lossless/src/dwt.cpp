@@ -103,7 +103,7 @@ void DwtEmbedder<void>::createStegoContainer() {
         throw Exception(Exception::Codes::NoKeyFound);
 #endif
     }
-    uint32_t sz = 4 * ceil(sqrt(msg.size())); 
+    uint32_t sz = 4 * ceil(sqrt(msg.size()));
     std::size_t currentMsgIndex = 0;
     auto arr = BitArray<>::fromInt(sz);
     std::vector<cv::Mat> planes;
@@ -111,7 +111,7 @@ void DwtEmbedder<void>::createStegoContainer() {
     cv::Mat dwtGreen;
     dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)), dwtGreen);
     for (int i = 0; i != dwtGreen.rows && currentMsgIndex != 32; ++i)
-        for (int j = 0; j != dwtGreen.cols && currentMsgIndex != 32; ++j) { 
+        for (int j = 0; j != dwtGreen.cols && currentMsgIndex != 32; ++j) {
             if (arr[currentMsgIndex++])
                 dwtGreen.at<short>(i, j) |= 1;
             else

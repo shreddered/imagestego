@@ -10,7 +10,7 @@ template<typename Int>
 int read(const imagestego::BitArray<Int>& arr, std::size_t& i, uint8_t bits) {
     int block = 0;
     for (auto it = i; i != it + bits; ++i)
-        block |= arr[i] << (bits - 1 - i + it); 
+        block |= arr[i] << (bits - 1 - i + it);
     return block;
 }
 

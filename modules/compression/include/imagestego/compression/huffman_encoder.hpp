@@ -20,7 +20,7 @@
 #ifndef __IMAGESTEGO_HUFFMAN_ENCODER_HPP_INCLUDED__
 #define __IMAGESTEGO_HUFFMAN_ENCODER_HPP_INCLUDED__
 
-// imagestego 
+// imagestego
 #include "imagestego/core.hpp"
 //#include "imagestego/utils/bitarray.hpp"
 // c++
@@ -75,12 +75,12 @@ private:
         std::string msg;
         mutable TreeNode* root = nullptr;
         mutable std::string encodedMsg = ""; // mutable bc of caching
-        mutable std::map<char, std::string> codeTable; 
+        mutable std::map<char, std::string> codeTable;
         mutable std::string route = "";
         mutable std::string alphabet;
     }; // class HuffmanEncoderImpl
     HuffmanEncoderImpl* encoder;
-}; // class HuffmanEncoder 
+}; // class HuffmanEncoder
 
 } // namespace imagestego
 

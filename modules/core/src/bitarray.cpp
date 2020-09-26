@@ -32,7 +32,7 @@
 namespace imagestego {
 
 // BitReference
-BitArrayImpl::BitReference::BitReference(typename BitArrayImpl::BlockType& block, imagestego::size_t pos) noexcept 
+BitArrayImpl::BitReference::BitReference(typename BitArrayImpl::BlockType& block, imagestego::size_t pos) noexcept
     : _block(block), _mask(1 << (bitsPerBlock - pos - 1)) {}
 
 BitArrayImpl::BitReference::operator bool() const {
@@ -60,7 +60,7 @@ bool BitArrayImpl::BitReference::operator ==(const BitArrayImpl::BitReference& o
 }
 
 // BitIterator
-BitArrayImpl::BitIterator::BitIterator(BitArrayImpl* owner, imagestego::size_t pos) noexcept 
+BitArrayImpl::BitIterator::BitIterator(BitArrayImpl* owner, imagestego::size_t pos) noexcept
     : _owner(owner), _pos(pos) {}
 
 BitArrayImpl::BitReference BitArrayImpl::BitIterator::operator *() {
@@ -236,7 +236,7 @@ bool BitArrayImpl::operator ==(const BitArrayImpl& other) {
 // BitArray
 BitArray::BitArray(BitArrayImpl* arr) noexcept : _arr(arr) {}
 
-BitArray::BitArray() : _arr(new BitArrayImpl()) {} 
+BitArray::BitArray() : _arr(new BitArrayImpl()) {}
 
 BitArray::BitArray(const std::string& str) : _arr(new BitArrayImpl(str)) {}
 

@@ -71,7 +71,7 @@ Point JpegImage::at(const int& y, const int& x) {
                  blue[0][x / 8][(y % 8) * 8 + (x % 8)]);
 }
 
-Point_ JpegImage::at(const int& y, const int& x) const {    
+Point_ JpegImage::at(const int& y, const int& x) const {
     auto red = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[0],
                 y / 8, 1, static_cast<boolean>(true)),
          green = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[1],

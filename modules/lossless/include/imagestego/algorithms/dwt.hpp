@@ -64,10 +64,10 @@ template<class EncoderType>
 class DwtEmbedder : public AbstractStegoEmbedder {
 public:
     explicit DwtEmbedder() noexcept {}
-    explicit DwtEmbedder(const std::string& imageName, const std::string& output) 
+    explicit DwtEmbedder(const std::string& imageName, const std::string& output)
         : image(cv::imread(imageName)), outputFile(output) {}
     void setImage(const std::string& imageName) override {
-        image = cv::imread(imageName); 
+        image = cv::imread(imageName);
     }
     void setOutputName(const std::string& filename) override {
         outputFile = filename;
@@ -93,7 +93,7 @@ public:
             throw Exception(Exception::Codes::NoKeyFound);
 #endif
         }
-        uint32_t sz = 4 * ceil(sqrt(msg.size())); 
+        uint32_t sz = 4 * ceil(sqrt(msg.size()));
         std::size_t currentMsgIndex = 0;
         auto arr = BitArray<>::fromInt(sz);
         std::vector<cv::Mat> planes;
@@ -101,7 +101,7 @@ public:
         cv::Mat dwtGreen;
         dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)), dwtGreen);
         for (int i = 0; i != dwtGreen.rows && currentMsgIndex != 32; ++i)
-            for (int j = 0; j != dwtGreen.cols && currentMsgIndex != 32; ++j) { 
+            for (int j = 0; j != dwtGreen.cols && currentMsgIndex != 32; ++j) {
                 if (arr[currentMsgIndex++])
                     dwtGreen.at<short>(i, j) |= 1;
                 else
@@ -155,11 +155,11 @@ template<class DecoderType>
 class DwtExtracter : public AbstractStegoExtracter {
 public:
     explicit DwtExtracter() noexcept {}
-    explicit DwtExtracter(const std::string& imageName) : image(cv::imread(imageName)) {} 
+    explicit DwtExtracter(const std::string& imageName) : image(cv::imread(imageName)) {}
     void setImage(const std::string& imageName) override {
         image = cv::imread(imageName);
     }
-    void setSecretKey(const std::string& _key) override { 
+    void setSecretKey(const std::string& _key) override {
         key = hash(_key);
         hasKey = true;
     }

@@ -43,7 +43,7 @@ void FormatChecker::setFormat(int _fmt) noexcept {
 bool FormatChecker::check(const std::string& str) {
     auto n = str.rfind('.');
     auto ext = str.substr(n);
-    return binarySearch(formats.begin(), formats.end(), ext); 
+    return binarySearch(formats.begin(), formats.end(), ext);
 }
 
 } // namespace imagestego

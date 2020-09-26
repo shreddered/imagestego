@@ -31,7 +31,7 @@ int main() {
     extractingTest2.setSecretKey("poasdi");
     assert(msg == extractingTest2.extractMessage());
 
-    // LSB embedding with no encoder 
+    // LSB embedding with no encoder
     imagestego::LsbEmbedder<void> embeddingTest3("in.jpg", "out3.png",
             imagestego::LsbOptions::randomBits);
     embeddingTest3.setMessage(msg);
@@ -43,7 +43,7 @@ int main() {
     extractingTest3.setSecretKey("asda");
     assert(msg == extractingTest3.extractMessage());
 
-    // DWT embedding with no encoder 
+    // DWT embedding with no encoder
     imagestego::DwtEmbedder<void> embeddingTest4("in.jpg", "out4.png");
     embeddingTest4.setMessage(msg);
     embeddingTest4.setSecretKey("asda");
@@ -53,7 +53,7 @@ int main() {
     extractingTest4.setSecretKey("asda");
     assert(msg == extractingTest4.extractMessage());
 
-    // DWT embedding with Huffman encoder 
+    // DWT embedding with Huffman encoder
     imagestego::DwtEmbedder<imagestego::HuffmanEncoder> embeddingTest5("in.jpg", "out5.png");
     embeddingTest5.setMessage(msg);
     embeddingTest5.setSecretKey("asda");
@@ -63,7 +63,7 @@ int main() {
     extractingTest5.setSecretKey("asda");
     assert(msg == extractingTest5.extractMessage());
 
-    // DWT embedding with LZW encoder 
+    // DWT embedding with LZW encoder
     imagestego::DwtEmbedder<imagestego::LzwEncoder> embeddingTest6("in.jpg", "out6.png");
     embeddingTest6.setMessage(msg);
     embeddingTest6.setSecretKey("asda");
@@ -73,7 +73,7 @@ int main() {
     extractingTest6.setSecretKey("asda");
     assert(msg == extractingTest6.extractMessage());
 
-    // F3 embedding with LZW encoder 
+    // F3 embedding with LZW encoder
     imagestego::F3Embedder<imagestego::LzwEncoder> embeddingTest7("in.jpg", "out2.jpg");
     embeddingTest7.setMessage(msg);
     embeddingTest7.setSecretKey("asda");
@@ -83,7 +83,7 @@ int main() {
     extractingTest7.setSecretKey("asda");
     assert(msg == extractingTest7.extractMessage());
 
-    // F3 embedding with no encoder 
+    // F3 embedding with no encoder
     imagestego::F3Embedder<void> embeddingTest8("in.jpg", "out3.jpg");
     embeddingTest8.setMessage(msg);
     embeddingTest8.setSecretKey("asda");

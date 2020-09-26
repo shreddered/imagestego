@@ -38,7 +38,7 @@ private:
             ++_size;
             return new TreeNode(data);
         }
-        if (cmp(data, node->data)) 
+        if (cmp(data, node->data))
             node->left = insertImpl(node->left, data);
         else if (data != node->data)
             node->right = insertImpl(node->right, data);

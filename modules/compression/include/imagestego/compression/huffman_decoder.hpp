@@ -33,7 +33,7 @@ namespace imagestego {
 class IMAGESTEGO_EXPORTS HuffmanDecoder : public AbstractDecoder {
 public:
     explicit HuffmanDecoder() noexcept;
-    explicit HuffmanDecoder(const BitArray& arr) noexcept; 
+    explicit HuffmanDecoder(const BitArray& arr) noexcept;
     virtual ~HuffmanDecoder() noexcept;
     void setMessage(const BitArray& arr) override {
         decoder->setMessage(arr);
@@ -43,7 +43,7 @@ private:
     class HuffmanDecoderImpl {
     public:
         explicit HuffmanDecoderImpl() noexcept;
-        explicit HuffmanDecoderImpl(const BitArray& arr) noexcept; 
+        explicit HuffmanDecoderImpl(const BitArray& arr) noexcept;
         virtual ~HuffmanDecoderImpl() noexcept;
         void setMessage(const BitArray& arr) {
             encodedMsg = arr;

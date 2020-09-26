@@ -35,7 +35,7 @@ std::bitset<32> reverse32(const std::bitset<32>& set) {
     return std::bitset<32>(imagestego::bswap(n));
 }
 
-TEST(Core, BitArray1) { 
+TEST(Core, BitArray1) {
     uint32_t temp = 53;
     char buf[4];
     memcpy(buf, &temp, sizeof(temp));

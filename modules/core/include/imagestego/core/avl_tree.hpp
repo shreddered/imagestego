@@ -211,11 +211,11 @@ private:
             copy(from->leftChild, to->leftChild);
             copy(from->rightChild, to->rightChild);
         }
-        else 
+        else
             to = nullptr;
     }
     // Base class representing tree iterator
-    // Operator ++ stands for going to the next 
+    // Operator ++ stands for going to the next
     // node in DFS algorithm
     class Iterator { // ForwardIterator
         friend class AvlTree<T, Comp>;

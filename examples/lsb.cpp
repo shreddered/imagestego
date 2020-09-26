@@ -13,7 +13,7 @@ std::string startsWith(const std::string& str, const std::string& prefix) {
         if (str[i] != prefix[i])
             return "";
     return std::string(str.begin() + i, str.end());
-    
+
 }
 
 template<typename T>
@@ -39,7 +39,7 @@ void getopts(const int& argc, char** argv, const std::string& arg, T* value, Arg
             *value = fromString<T>(s);
     });
     getopts(argc, argv, args...);
-} 
+}
 
 int main(int argc, char** argv) {
     if (argv[1] == std::string("insert")) {
@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
     }
     else if (argv[1] == std::string("extract")) {
         std::string container, msg, key;
-        getopts(argc, argv, 
+        getopts(argc, argv,
                 "image", &container,
                 "key", &key);
         imagestego::LsbExtracter<void> lsb(imagestego::LsbOptions::randomBits);

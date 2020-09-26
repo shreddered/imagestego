@@ -26,7 +26,7 @@ int read(const imagestego::BitArray& arr, imagestego::size_t& i, uint8_t bits) {
     int block = 0;
     imagestego::size_t it;
     for (it = i; it != i + bits; ++it)
-        block |= arr[it] << (bits - 1 - (it - i)); 
+        block |= arr[it] << (bits - 1 - (it - i));
     i = it;
     return block;
 }
@@ -45,7 +45,7 @@ std::string LzwDecoderImpl::getDecodedMessage() {
 }
 
 void LzwDecoderImpl::decode() {
-    // reading first 4 bits    
+    // reading first 4 bits
     imagestego::size_t i = 0;
     uint8_t maxBits = read(msg, i, 4);
     while(i < msg.size()) {
