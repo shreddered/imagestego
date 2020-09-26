@@ -3,6 +3,9 @@
 
 // imagestego headers
 #include "imagestego/core/avl_tree.hpp"
+// c++ headers
+#include <random>
+#include <utility>
 
 
 namespace imagestego {

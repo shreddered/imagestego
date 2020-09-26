@@ -223,7 +223,8 @@ private:
         TreeNode* node;
         AvlTree<T, Comp>* owner;
         bool isEnd = false;
-        explicit Iterator(AvlTree<T, Comp>* owner, TreeNode* node, bool flag) noexcept : owner(owner), node(node), isEnd(flag) {}
+        explicit Iterator(AvlTree<T, Comp>* owner, TreeNode* node, bool flag) noexcept
+            : owner(owner), node(node), isEnd(flag) {}
     public:
         typedef T value_type;
         inline T operator *() {
