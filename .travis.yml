@@ -36,7 +36,7 @@ install:
 
 script:
   - mkdir -p build/ && cd build/
-  - cmake -DIMAGESTEGO_BUILD_TESTS=ON -DBUILD_SHARED_LIBS=ON -DIMAGESTEGO_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release 
+  - cmake -DIMAGESTEGO_BUILD_TESTS=ON -DBUILD_SHARED_LIBS=ON -DIMAGESTEGO_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release
     -DIMAGESTEGO_MODULES=core,comp,lossless ..
   - make -j$(nproc)
   - cp ../test/test.jpg .
@@ -45,12 +45,14 @@ script:
 
 after_success:
   - lcov --directory . --capture --output-file coverage.info
-  - lcov --remove coverage.info 
-    '/usr/*' 
-    "${HOME}"'/.cache/*' 
-    "$(pwd)"'/third_party/*' 
-    "$(pwd)"'/modules/core/third_party/*' 
-    "$(pwd)"'/modules/core/test/*' 
-    "$(pwd)"'/modules/compression/test/*' 
+  - lcov --remove coverage.info
+    "/usr/*"
+    "${HOME}/.cache/*"
+    "$(pwd)/third_party/*"
+    "$(pwd)/modules/core/third_party/*"
+    "$(pwd)/modules/core/test/*"
+    "$(pwd)/modules/compression/test/*"
+    "$(pwd)/modules/lossless/test/*"
+
     --output-file coverage.info
   - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
