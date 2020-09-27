@@ -22,6 +22,7 @@
 #include "imagestego/core/interfaces.hpp"
 #include <imagestego/algorithms/lsb.hpp>
 #include <imagestego/compression/huffman_encoder.hpp>
+#include <imagestego/compression/huffman_decoder.hpp>
 // gtest headers
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -81,4 +82,17 @@ TEST(Lossless, LsbType) {
 
     LsbExtracter ext;
     EXPECT_EQ(ext.getAlgorithm(), imagestego::Algorithm::Lsb);
+}
+
+TEST(Lossless, LsbHuffman) {
+    LsbEmbedder emb(new HuffmanEncoder);
+    emb.setImage("test.jpg");
+    emb.setMessage("asdasfnsfjhasjdhhjasgdasdasdasdasdasdaaasdasd");
+    emb.setSecretKey("key");
+    emb.createStegoContainer("out1.png");
+
+    LsbExtracter ext(new HuffmanDecoder);
+    ext.setImage("out1.png");
+    ext.setSecretKey("key");
+    EXPECT_EQ("asdasfnsfjhasjdhhjasgdasdasdasdasdasdaaasdasd", ext.extractMessage());
 }
