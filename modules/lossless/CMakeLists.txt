@@ -10,8 +10,16 @@ target_include_directories(imagestego_lossless PUBLIC
 
 target_link_libraries(imagestego_lossless PUBLIC
     imagestego_core
-    ${OpenCV_LIBS}
+    opencv_core
+    opencv_imgcodecs
+    coverage_config
 )
+
+if (TARGET imagestego_compression)
+    target_link_libraries(imagestego_lossless PUBLIC
+        imagestego_compression
+    )
+endif (TARGET imagestego_compression)
 
 target_compile_definitions(imagestego_lossless PUBLIC
     "-DIMAGESTEGO_LOSSLESS_FORMATS"
