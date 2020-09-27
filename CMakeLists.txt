@@ -96,6 +96,7 @@ function(imagestego_test)
     target_link_libraries(${TEST_NAME}
         ${TEST_LIBS}
         gtest_main
+        gmock_main
     )
 
     set_target_properties(${TEST_NAME} PROPERTIES
@@ -194,4 +195,8 @@ if (IMAGESTEGO_BUILD_TESTS)
         imagestego_add_test(COMPRESSION NAME huffman)
         imagestego_add_test(COMPRESSION NAME lzw)
     endif ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
+
+    if ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
+        imagestego_add_test(LOSSLESS NAME lsb)
+    endif ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
 endif (IMAGESTEGO_BUILD_TESTS)

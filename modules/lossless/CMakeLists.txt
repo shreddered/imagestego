@@ -27,3 +27,11 @@ install(TARGETS imagestego_lossless
 )
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include/)
+
+if (IMAGESTEGO_BUILD_TESTS)
+    imagestego_test(LOSSLESS
+        NAME lsb
+        FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/lsb.cpp
+        LIBS imagestego_lossless
+    )
+endif (IMAGESTEGO_BUILD_TESTS)
