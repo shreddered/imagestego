@@ -151,3 +151,9 @@ TEST(Core, BitArrayPushFront) {
     arr.pushFront(32);
     EXPECT_TRUE(arr == tmp);
 }
+
+TEST(Core, BitArrayToInt) {
+    BitArray arr;
+    arr.pushFront(32);
+    EXPECT_EQ(arr.toInt(), 32);
+}
