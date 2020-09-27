@@ -76,12 +76,14 @@ class IMAGESTEGO_EXPORTS AbstractEncoder {
 public:
     virtual void setMessage(const std::string& msg) = 0;
     virtual BitArray getEncodedMessage() = 0;
+    virtual ~AbstractEncoder() noexcept = default;
 }; // class AbstractEncoder
 
 class IMAGESTEGO_EXPORTS AbstractDecoder {
 public:
     virtual void setMessage(const BitArray& arr) = 0;
     virtual std::string getDecodedMessage() = 0;
+    virtual ~AbstractDecoder() noexcept = default;
 }; // class AbstractDecoder
 
 } // namespace imagestego
