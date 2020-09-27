@@ -52,7 +52,7 @@ TEST(Lossless, LsbEmbedderMock) {
 
 TEST(Lossless, LsbEmbedder) {
     LsbEmbedder emb;
-    emb.setImage("rare-combinaties.jpg");
+    emb.setImage("test.jpg");
     emb.setMessage("message!");
     emb.setSecretKey("key");
     emb.createStegoContainer("out.png");
