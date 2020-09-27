@@ -19,6 +19,7 @@
 
 // imagestego headers
 #include "imagestego/core/exception.hpp"
+#include "imagestego/core/interfaces.hpp"
 #include <imagestego/algorithms/lsb.hpp>
 #include <imagestego/compression/huffman_encoder.hpp>
 // gtest headers
@@ -72,4 +73,12 @@ TEST(Lossless, LsbExceptions) {
     LsbExtracter ext;
     ext.setImage("out.png");
     EXPECT_THROW(ext.extractMessage(), imagestego::Exception);
+}
+
+TEST(Lossless, LsbType) {
+    LsbEmbedder emb;
+    EXPECT_EQ(emb.getAlgorithm(), imagestego::Algorithm::Lsb);
+
+    LsbExtracter ext;
+    EXPECT_EQ(ext.getAlgorithm(), imagestego::Algorithm::Lsb);
 }
