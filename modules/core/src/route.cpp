@@ -61,4 +61,8 @@ typename Route::iterator Route::end() {
     return _route->end();
 }
 
+bool Route::search(const std::pair<int, int>& p) {
+    return _route->search(p);
+}
+
 } // namespace imagestego

@@ -35,6 +35,7 @@ public:
     void setMapSize(const std::pair<int, int>& mapSize);
     void create(const int&);
     void add();
+    bool search(const std::pair<int, int>& p);
     iterator begin();
     iterator end();
 private:
