@@ -203,6 +203,15 @@ public:
     virtual ~LsbExtracter() noexcept;
 
     /**
+     * Algorithm provider.
+     *
+     * @return Algorithm::Lsb.
+     */
+    Algorithm getAlgorithm() const noexcept override {
+        return Algorithm::Lsb;
+    }
+
+    /**
      * Setter for stego container.
      *
      * @param src Path to image with stego message.
