@@ -45,13 +45,12 @@ enum class Algorithm {
 class IMAGESTEGO_EXPORTS AbstractStegoEmbedder {
 public:
     virtual void setImage(const std::string& imageName) = 0;
-    virtual void setOutputName(const std::string& filename) = 0;
     virtual void setMessage(const std::string& msg) = 0;
     virtual void setSecretKey(const std::string& key) = 0;
     virtual Algorithm getAlgorithm() const {
         return Algorithm::UserDefined;
     }
-    virtual void createStegoContainer() = 0;
+    virtual void createStegoContainer(const std::string& dst) = 0;
     static constexpr inline Mode getMode() noexcept {
         return Mode::embedding;
     }
