@@ -6,7 +6,7 @@ add_library(imagestego_lossless
 target_include_directories(imagestego_lossless PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
     $<INSTALL_INTERFACE:include/>
-    /usr/local/opencv4/
+    /usr/local/include/opencv4/
 )
 
 target_link_libraries(imagestego_lossless PUBLIC
