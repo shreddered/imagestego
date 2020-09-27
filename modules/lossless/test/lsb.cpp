@@ -62,3 +62,14 @@ TEST(Lossless, LsbEmbedder) {
     ext.setSecretKey("key");
     EXPECT_EQ("message!", ext.extractMessage());
 }
+
+TEST(Lossless, LsbExceptions) {
+    LsbEmbedder emb;
+    emb.setImage("test.jpg");
+    emb.setMessage("message!");
+    EXPECT_THROW(emb.createStegoContainer("foo.png"), imagestego::Exception);
+
+    LsbExtracter ext;
+    ext.setImage("out.png");
+    EXPECT_THROW(ext.extractMessage(), imagestego::Exception);
+}
