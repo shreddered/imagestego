@@ -37,6 +37,7 @@ script:
   - cmake -DIMAGESTEGO_BUILD_TESTS=ON -DBUILD_SHARED_LIBS=ON -DIMAGESTEGO_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release 
     -DIMAGESTEGO_MODULES=core,comp,lossless ..
   - make -j$(nproc)
+  - cp ../test/test.jpg .
   - ctest --verbose
   - cd ..
 
