@@ -229,6 +229,10 @@ std::string BitArrayImpl::toString() const {
     return str;
 }
 
+imagestego::size_t BitArrayImpl::toInt() const {
+    return (_blocks.empty()) ? 0 : _blocks[0];
+}
+
 bool BitArrayImpl::operator ==(const BitArrayImpl& other) {
     return _sz == other._sz && std::equal(_blocks.begin(), _blocks.end(), other._blocks.begin());
 }
@@ -320,6 +324,10 @@ std::string BitArray::toByteString() const {
 
 std::string BitArray::toString() const {
     return _arr->toString();
+}
+
+imagestego::size_t BitArray::toInt() const {
+    return _arr->toInt();
 }
 
 void BitArray::put(int num, imagestego::size_t n) {

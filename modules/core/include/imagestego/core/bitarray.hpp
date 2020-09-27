@@ -123,6 +123,13 @@ public:
     std::string toString() const;
 
     /**
+     * Converts bit array to int.
+     *
+     * @return Unsigned 32-bit integer.
+     */
+    imagestego::size_t toInt() const;
+
+    /**
      * Size of array.
      *
      * @return Size of array
@@ -458,6 +465,13 @@ public:
      * @return String representation of array containing '1' and '0'.
      */
     std::string toString() const;
+
+    /**
+     * Converts bit array to int.
+     *
+     * @return Unsigned 32-bit integer.
+     */
+    imagestego::size_t toInt() const;
 
     /**
      * Operator [] overloading.
