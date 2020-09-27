@@ -44,7 +44,7 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
     DESTINATION include/
 )
 
-if(IMAGESTEGO_BUILD_TESTS)
+if (IMAGESTEGO_BUILD_TESTS)
     imagestego_test(CORE 
         NAME avl
         FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/avl.cpp
@@ -65,4 +65,4 @@ if(IMAGESTEGO_BUILD_TESTS)
         FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/route.cpp
         LIBS imagestego_core
     )
-endif(IMAGESTEGO_BUILD_TESTS)
+endif (IMAGESTEGO_BUILD_TESTS)
