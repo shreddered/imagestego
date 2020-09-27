@@ -1,6 +1,7 @@
 *bin*/*
 *lib*/*
 *.jpg
+!test/test.jpg
 *.png
 *build*/
 Makefile
