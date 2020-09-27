@@ -31,9 +31,6 @@ install:
   - sudo ldconfig
   - cd ../../
 
-# before_install:
-  # - pip install --user cpp-coveralls
-
 script:
   - mkdir -p build/ && cd build/
   - cmake -DIMAGESTEGO_BUILD_TESTS=ON -DBUILD_SHARED_LIBS=ON -DIMAGESTEGO_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release
@@ -53,6 +50,5 @@ after_success:
     "$(pwd)"'/modules/core/test/*'
     "$(pwd)"'/modules/compression/test/*'
     "$(pwd)"'/modules/lossless/test/*'
-
     --output-file coverage.info
   - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
