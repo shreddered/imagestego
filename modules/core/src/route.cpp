@@ -38,6 +38,10 @@ void RouteImpl::add() {
     }
 }
 
+void Route::setMapSize(const std::pair<int, int>& p) {
+    _route->setMapSize(p);
+}
+
 Route::Route(const std::pair<int, int>& mapSize, std::mt19937& gen) : _route(new RouteImpl(mapSize, gen)) {}
 
 Route::~Route() noexcept {

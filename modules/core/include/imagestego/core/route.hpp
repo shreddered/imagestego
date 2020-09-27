@@ -30,7 +30,7 @@ public:
     typedef RouteImpl::iterator iterator;
     explicit Route(const std::pair<int, int>& mapSize, std::mt19937& gen);
     template<class It>
-    explicit Route(It begin, It end, std::mt19937& _gen);
+    explicit Route(It begin, It end, std::mt19937& _gen) : _route(new RouteImpl(begin, end, _gen)) {}
     virtual ~Route() noexcept;
     void setMapSize(const std::pair<int, int>& mapSize);
     void create(const int&);
