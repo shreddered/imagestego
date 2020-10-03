@@ -43,7 +43,6 @@ public:
     HuffmanEncoder& operator =(const HuffmanEncoder&) = delete;
     void setMessage(const std::string& str) override;
     BitArray getEncodedMessage() override;
-    std::string getAlphabet() const noexcept;
     virtual ~HuffmanEncoder() noexcept;
 private:
     HuffmanEncoderImpl* encoder;
