@@ -22,69 +22,6 @@
 
 namespace imagestego {
 
-HuffmanDecoder::HuffmanDecoderImpl::HuffmanDecoderImpl() noexcept {}
-
-HuffmanDecoder::HuffmanDecoderImpl::HuffmanDecoderImpl(const BitArray& arr) noexcept : encodedMsg(arr) {}
-
-HuffmanDecoder::HuffmanDecoderImpl::~HuffmanDecoderImpl() noexcept {
-    if (root)
-        delete root;
-}
-
-HuffmanDecoder::HuffmanDecoderImpl::TreeNode::TreeNode(TreeNode* node) noexcept : parent(node) {}
-
-HuffmanDecoder::HuffmanDecoderImpl::TreeNode::~TreeNode() noexcept {
-    if (left)
-        delete left;
-    if (right)
-        delete right;
-}
-
-std::string HuffmanDecoder::HuffmanDecoderImpl::getDecodedMessage() {
-    if (!root) {
-        readDfs();
-        readAlphabet();
-        createCodeTable();
-        decode();
-    }
-    return decodedMsg;
-}
-
-void HuffmanDecoder::HuffmanDecoderImpl::readDfs() {
-    root = new TreeNode();
-    auto currentNode = root;
-    it = 0;
-    std::string code;
-    do {
-        // 1 - go down
-        // 0 - up
-        if (encodedMsg[it]) {
-            currentNode->left = new TreeNode(currentNode);
-            currentNode = currentNode->left;
-            code += '0';
-            if (!encodedMsg[it + 1]) {
-                codes.push_back(code);
-            }
-        }
-        else {
-            TreeNode* cameFrom;
-            do {
-                cameFrom = currentNode;
-                currentNode = currentNode->parent;
-                code.pop_back();
-            } while (currentNode && currentNode->right == cameFrom && currentNode != root);
-            if (isLeftChild(cameFrom)) {
-                currentNode->right = new TreeNode(currentNode);
-                currentNode = currentNode->right;
-                code += '1';
-            }
-            if (!encodedMsg[it + 1] && currentNode != root)
-                codes.push_back(code);
-        }
-        ++it;
-    } while (currentNode != root);
-}
-
 // TODO: optimize this
 unsigned char takeChar(const BitArray& arr, const imagestego::size_t& pos) {
     unsigned char tmp = 0;
@@ -94,37 +31,126 @@ unsigned char takeChar(const BitArray& arr, const imagestego::size_t& pos) {
     return tmp;
 }
 
-void HuffmanDecoder::HuffmanDecoderImpl::readAlphabet() {
-    for (imagestego::size_t i = 0; i != codes.size(); ++i) {
-        alphabet += takeChar(encodedMsg, it);
-        it += 8;
-    }
-}
 
-void HuffmanDecoder::HuffmanDecoderImpl::createCodeTable() {
-    for (imagestego::size_t i = 0; i != codes.size(); ++i)
-        codeTable.emplace(codes[i], alphabet[i]);
-}
-
-void HuffmanDecoder::HuffmanDecoderImpl::decode() {
-    auto currNode = root;
-    std::string code;
-    for ( ; it != encodedMsg.size(); ++it) {
-        if (encodedMsg[it]) {
-            currNode = currNode->right;
-            code.push_back('1');
+class HuffmanDecoderImpl {
+public:
+    explicit HuffmanDecoderImpl() noexcept {}
+    explicit HuffmanDecoderImpl(const BitArray& arr) noexcept : encodedMsg(arr) {}
+    virtual ~HuffmanDecoderImpl() noexcept {
+        if (root)
+            delete root;
+    }
+    void setMessage(const BitArray& arr) {
+        encodedMsg = arr;
+    }
+    std::string getDecodedMessage() {
+        if (!root) {
+            readDfs();
+            readAlphabet();
+            createCodeTable();
+            decode();
         }
-        else {
-            currNode = currNode->left;
-            code.push_back('0');
+        return decodedMsg;
+    }
+private:
+    struct TreeNode final {
+        TreeNode* left = nullptr;
+        TreeNode* right = nullptr;
+        TreeNode* parent = nullptr;
+        explicit TreeNode(TreeNode* node = nullptr) noexcept : parent(node) {}
+        ~TreeNode() noexcept {
+            if (left)
+                delete left;
+            if (right)
+                delete right;
         }
-        if (!currNode->left) {
-            decodedMsg += codeTable[code];
-            code.clear();
-            currNode = root;
+    }; // TreeNode
+    TreeNode* root = nullptr;
+    static inline bool isLeftChild(TreeNode* node) {
+        if (node == nullptr)
+            return false;
+        if (node->parent == nullptr)
+            return false;
+        return node->parent->left == node;
+    }
+    static inline bool isRightChild(TreeNode* node) {
+        if (node == nullptr)
+            return false;
+        if (node->parent == nullptr)
+            return false;
+        return node->parent->right == node;
+    }
+    void readDfs() {
+        root = new TreeNode();
+        auto currentNode = root;
+        it = 0;
+        std::string code;
+        do {
+            // 1 - go down
+            // 0 - up
+            if (encodedMsg[it]) {
+                currentNode->left = new TreeNode(currentNode);
+                currentNode = currentNode->left;
+                code += '0';
+                if (!encodedMsg[it + 1]) {
+                    codes.push_back(code);
+                }
+            }
+            else {
+                TreeNode* cameFrom;
+                do {
+                    cameFrom = currentNode;
+                    currentNode = currentNode->parent;
+                    code.pop_back();
+                } while (currentNode && currentNode->right == cameFrom && currentNode != root);
+                if (isLeftChild(cameFrom)) {
+                    currentNode->right = new TreeNode(currentNode);
+                    currentNode = currentNode->right;
+                    code += '1';
+                }
+                if (!encodedMsg[it + 1] && currentNode != root)
+                    codes.push_back(code);
+            }
+            ++it;
+        } while (currentNode != root);
+    }
+    void readAlphabet() {
+        for (imagestego::size_t i = 0; i != codes.size(); ++i) {
+            alphabet += takeChar(encodedMsg, it);
+            it += 8;
         }
     }
-}
+    void buildCode();
+    void createCodeTable() {
+        for (imagestego::size_t i = 0; i != codes.size(); ++i)
+            codeTable.emplace(codes[i], alphabet[i]);
+    }
+    void decode() {
+        auto currNode = root;
+        std::string code;
+        for ( ; it != encodedMsg.size(); ++it) {
+            if (encodedMsg[it]) {
+                currNode = currNode->right;
+                code.push_back('1');
+            }
+            else {
+                currNode = currNode->left;
+                code.push_back('0');
+            }
+            if (!currNode->left) {
+                decodedMsg += codeTable[code];
+                code.clear();
+                currNode = root;
+            }
+        }
+    }
+    std::vector<std::string> codes;
+    imagestego::size_t it;
+    BitArray encodedMsg;
+    std::string alphabet;
+    std::string decodedMsg;
+    std::unordered_map<std::string, char> codeTable;
+}; // class HuffmanDecoderImpl
 
 HuffmanDecoder::HuffmanDecoder() noexcept : decoder(new HuffmanDecoderImpl()) {}
 
@@ -132,6 +158,10 @@ HuffmanDecoder::HuffmanDecoder(const BitArray& arr) noexcept : decoder(new Huffm
 
 HuffmanDecoder::~HuffmanDecoder() noexcept {
     delete decoder;
+}
+
+void HuffmanDecoder::setMessage(const BitArray& arr) {
+    decoder->setMessage(arr);
 }
 
 std::string HuffmanDecoder::getDecodedMessage() {

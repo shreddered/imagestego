@@ -17,94 +17,160 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
+// imagestego headers
 #include "imagestego/algorithms/lsb.hpp"
-#include "opencv2/core/matx.hpp"
-#include <ios>
-#include <iostream>
-#include <utility>
+#include "imagestego/core/route.hpp"
+// opencv headers
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
 
 
 namespace imagestego {
 
-// LsbEmbedderImpl
-LsbEmbedderImpl::LsbEmbedderImpl(AbstractEncoder* encoder) noexcept : _encoder(encoder) {}
-
-LsbEmbedderImpl::~LsbEmbedderImpl() noexcept {
-    if (_encoder)
-        delete _encoder;
-}
-
-void LsbEmbedderImpl::setImage(const std::string& src) {
-    _image = cv::imread(src);
-}
-
-void LsbEmbedderImpl::setMessage(const std::string& msg) {
-    if (_encoder) {
-        _encoder->setMessage(msg);
-        _msg = _encoder->getEncodedMessage();
+class LsbEmbedderImpl final {
+public:
+    explicit LsbEmbedderImpl(AbstractEncoder* encoder = nullptr) noexcept : _encoder(encoder) {}
+    virtual ~LsbEmbedderImpl() noexcept {
+        if (_encoder)
+            delete _encoder;
     }
-    else {
-        _msg = BitArray::fromByteString(msg);
+    void setImage(const std::string& src) {
+        _image = cv::imread(src);
     }
-}
-
-void LsbEmbedderImpl::setSecretKey(const std::string& key) {
-    _key = BitArray::fromByteString(key);
-    _gen.seed(hash(key));
-}
-
-void LsbEmbedderImpl::createStegoContainer(const std::string& dst) {
-    if (_key.empty())
-        throw Exception(Exception::Codes::NoKeyFound);
-    BitArray sz = BitArray::fromInt(_msg.size());
-    imagestego::size_t idx = 0, i = 0;
-    Route r(std::make_pair(_image.cols, _image.rows), _gen);
-    r.create(32);
-    for (auto it = r.begin(); it != r.end(); ++it) {
-        auto& pix = _image.at<cv::Vec3b>(it->second, it->first);
-        bool b = (pix.val[0] & 1u) != 0;
-        if (b != _key[idx]) {
-            if (sz[i])
-                pix.val[1] |= 1u;
-            else
-                pix.val[1] &= ~1u;
+    void setMessage(const std::string& msg) {
+        if (_encoder) {
+            _encoder->setMessage(msg);
+            _msg = _encoder->getEncodedMessage();
         }
         else {
-            if (sz[i])
-                pix.val[2] |= 1u;
-            else
-                pix.val[2] &= ~1u;
+            _msg = BitArray::fromByteString(msg);
         }
-        idx = (idx + 1) % _key.size();
-        ++i;
     }
+    void setSecretKey(const std::string& key) {
+        _key = BitArray::fromByteString(key);
+        _gen.seed(hash(key));
+    }
+    void createStegoContainer(const std::string& dst) {
+        if (_key.empty())
+            throw Exception(Exception::Codes::NoKeyFound);
+        BitArray sz = BitArray::fromInt(_msg.size());
+        imagestego::size_t idx = 0, i = 0;
+        Route r(std::make_pair(_image.cols, _image.rows), _gen);
+        r.create(32);
+        for (auto it = r.begin(); it != r.end(); ++it) {
+            auto& pix = _image.at<cv::Vec3b>(it->second, it->first);
+            bool b = (pix.val[0] & 1u) != 0;
+            if (b != _key[idx]) {
+                if (sz[i])
+                    pix.val[1] |= 1u;
+                else
+                    pix.val[1] &= ~1u;
+            }
+            else {
+                if (sz[i])
+                    pix.val[2] |= 1u;
+                else
+                    pix.val[2] &= ~1u;
+            }
+            idx = (idx + 1) % _key.size();
+            ++i;
+        }
 
-    Route r1(r.begin(), r.end(), _gen);
-    r1.setMapSize(std::make_pair(_image.cols, _image.rows));
-    r1.create(32 + _msg.size());
-    i = 0;
-    for (auto it = r1.begin(); it != r1.end(); ++it) {
-        if (r.search(*it))
-            continue;
-        auto& pixel = _image.at<cv::Vec3b>(it->second, it->first);
-        bool b = (pixel.val[0] & 1) != 0;
-        if (b != _key[idx]) {
-            if (_msg[i])
-                pixel.val[1] |= 1;
+        Route r1(r.begin(), r.end(), _gen);
+        r1.setMapSize(std::make_pair(_image.cols, _image.rows));
+        r1.create(32 + _msg.size());
+        i = 0;
+        for (auto it = r1.begin(); it != r1.end(); ++it) {
+            if (r.search(*it))
+                continue;
+            auto& pixel = _image.at<cv::Vec3b>(it->second, it->first);
+            bool b = (pixel.val[0] & 1) != 0;
+            if (b != _key[idx]) {
+                if (_msg[i])
+                    pixel.val[1] |= 1;
+                else
+                    pixel.val[1] &= ~1u;
+            }
+            else {
+                if (_msg[i])
+                    pixel.val[2] |= 1u;
+                else
+                    pixel.val[2] &= ~1u;
+            }
+            idx = (idx + 1) % _key.size();
+            ++i;
+        }
+        cv::imwrite(dst, _image);
+    }
+private:
+    AbstractEncoder* _encoder = nullptr;
+    /** PRNG */
+    std::mt19937 _gen;
+    /** image */
+    cv::Mat _image;
+    BitArray _key, _msg;
+}; // class LsbEmbedderImpl
+
+class LsbExtracterImpl final {
+public:
+    explicit LsbExtracterImpl(AbstractDecoder* decoder = nullptr) noexcept : _decoder(decoder) {}
+    virtual ~LsbExtracterImpl() noexcept {
+        if (_decoder)
+            delete _decoder;
+    }
+    void setImage(const std::string& src) {
+        _image = cv::imread(src);
+    }
+    void setSecretKey(const std::string& key) {
+        _key = BitArray::fromByteString(key);
+        _gen.seed(hash(key));
+    }
+    std::string extractMessage() {
+        if (_key.empty())
+            throw Exception(Exception::Codes::NoKeyFound);
+        BitArray sz;
+        imagestego::size_t idx = 0;
+        Route r(std::make_pair(_image.cols, _image.rows), _gen);
+        r.create(32);
+        for (auto it = r.begin(); it != r.end(); ++it) {
+            auto pix = _image.at<cv::Vec3b>(it->second, it->first);
+            bool b = (pix.val[0] & 1u) != 0;
+            if (_key[idx] != b)
+                sz.pushBack((pix.val[1] & 1u) != 0);
             else
-                pixel.val[1] &= ~1u;
+                sz.pushBack((pix.val[2] & 1u) != 0);
+            idx = (idx + 1) % _key.size();
+        }
+        auto size = sz.toInt();
+        BitArray msg;
+        Route r1(r.begin(), r.end(), _gen);
+        r1.setMapSize(std::make_pair(_image.cols, _image.rows));
+        r1.create(32 + size);
+        for (auto it = r1.begin(); it != r1.end(); ++it) {
+            if (r.search(*it))
+                continue;
+            auto pixel = _image.at<cv::Vec3b>(it->second, it->first);
+            bool b = (pixel.val[0] & 1u) != 0;
+            if (_key[idx] != b)
+                msg.pushBack((pixel.val[1] & 1u) != 0);
+            else
+                msg.pushBack((pixel.val[2] & 1u) != 0);
+            idx = (idx + 1) % _key.size();
+        }
+        if (_decoder) {
+            _decoder->setMessage(msg);
+            return _decoder->getDecodedMessage();
         }
         else {
-            if (_msg[i])
-                pixel.val[2] |= 1u;
-            else
-                pixel.val[2] &= ~1u;
+            return msg.toByteString();
         }
-        idx = (idx + 1) % _key.size();
-        ++i;
     }
-    cv::imwrite(dst, _image);
-}
+private:
+    AbstractDecoder* _decoder;
+    std::mt19937 _gen;
+    cv::Mat _image;
+    BitArray _key;
+}; // class LsbExtracterImpl
 
 // LsbEmbedder
 LsbEmbedder::LsbEmbedder(AbstractEncoder* encoder)
@@ -129,64 +195,6 @@ void LsbEmbedder::setSecretKey(const std::string& key) {
 
 void LsbEmbedder::createStegoContainer(const std::string& dst) {
     _embedder->createStegoContainer(dst);
-}
-
-// LsbExtracterImpl
-LsbExtracterImpl::LsbExtracterImpl(AbstractDecoder* decoder) noexcept : _decoder(decoder) {}
-
-LsbExtracterImpl::~LsbExtracterImpl() noexcept {
-    if (_decoder)
-        delete _decoder;
-}
-
-void LsbExtracterImpl::setImage(const std::string& src) {
-    _image = cv::imread(src);
-}
-
-void LsbExtracterImpl::setSecretKey(const std::string& key) {
-    _key = BitArray::fromByteString(key);
-    _gen.seed(hash(key));
-}
-
-std::string LsbExtracterImpl::extractMessage() {
-    if (_key.empty())
-        throw Exception(Exception::Codes::NoKeyFound);
-    BitArray sz;
-    imagestego::size_t idx = 0;
-    Route r(std::make_pair(_image.cols, _image.rows), _gen);
-    r.create(32);
-    for (auto it = r.begin(); it != r.end(); ++it) {
-        auto pix = _image.at<cv::Vec3b>(it->second, it->first);
-        bool b = (pix.val[0] & 1u) != 0;
-        if (_key[idx] != b)
-            sz.pushBack((pix.val[1] & 1u) != 0);
-        else
-            sz.pushBack((pix.val[2] & 1u) != 0);
-        idx = (idx + 1) % _key.size();
-    }
-    auto size = sz.toInt();
-    BitArray msg;
-    Route r1(r.begin(), r.end(), _gen);
-    r1.setMapSize(std::make_pair(_image.cols, _image.rows));
-    r1.create(32 + size);
-    for (auto it = r1.begin(); it != r1.end(); ++it) {
-        if (r.search(*it))
-            continue;
-        auto pixel = _image.at<cv::Vec3b>(it->second, it->first);
-        bool b = (pixel.val[0] & 1u) != 0;
-        if (_key[idx] != b)
-            msg.pushBack((pixel.val[1] & 1u) != 0);
-        else
-            msg.pushBack((pixel.val[2] & 1u) != 0);
-        idx = (idx + 1) % _key.size();
-    }
-    if (_decoder) {
-        _decoder->setMessage(msg);
-        return _decoder->getDecodedMessage();
-    }
-    else {
-        return msg.toByteString();
-    }
 }
 
 // LsbExtracter

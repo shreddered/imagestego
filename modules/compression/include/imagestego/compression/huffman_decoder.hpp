@@ -30,60 +30,16 @@
 
 namespace imagestego {
 
+class HuffmanDecoderImpl;
+
 class IMAGESTEGO_EXPORTS HuffmanDecoder : public AbstractDecoder {
 public:
     explicit HuffmanDecoder() noexcept;
     explicit HuffmanDecoder(const BitArray& arr) noexcept;
     virtual ~HuffmanDecoder() noexcept;
-    void setMessage(const BitArray& arr) override {
-        decoder->setMessage(arr);
-    }
+    void setMessage(const BitArray& arr) override;
     std::string getDecodedMessage() override;
 private:
-    class HuffmanDecoderImpl {
-    public:
-        explicit HuffmanDecoderImpl() noexcept;
-        explicit HuffmanDecoderImpl(const BitArray& arr) noexcept;
-        virtual ~HuffmanDecoderImpl() noexcept;
-        void setMessage(const BitArray& arr) {
-            encodedMsg = arr;
-        }
-        std::string getDecodedMessage();
-    private:
-        struct TreeNode final {
-            TreeNode* left = nullptr;
-            TreeNode* right = nullptr;
-            TreeNode* parent = nullptr;
-            explicit TreeNode(TreeNode* node = nullptr) noexcept;
-            ~TreeNode() noexcept;
-        }; // TreeNode
-        TreeNode* root = nullptr;
-        static inline bool isLeftChild(TreeNode* node) {
-            if (node == nullptr)
-                return false;
-            if (node->parent == nullptr)
-                return false;
-            return node->parent->left == node;
-        }
-        static inline bool isRightChild(TreeNode* node) {
-            if (node == nullptr)
-                return false;
-            if (node->parent == nullptr)
-                return false;
-            return node->parent->right == node;
-        }
-        void readDfs();
-        void readAlphabet();
-        void buildCode();
-        void createCodeTable();
-        void decode();
-        std::vector<std::string> codes;
-        imagestego::size_t it;
-        BitArray encodedMsg;
-        std::string alphabet;
-        std::string decodedMsg;
-        std::unordered_map<std::string, char> codeTable;
-    }; // class HuffmanDecoderImpl
     HuffmanDecoderImpl* decoder;
 }; // class HuffmanDecoder
 

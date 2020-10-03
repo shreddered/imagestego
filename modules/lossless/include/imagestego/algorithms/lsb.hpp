@@ -24,68 +24,17 @@
 #include "imagestego/core.hpp"
 #include "imagestego/core/bitarray.hpp"
 #include "imagestego/core/interfaces.hpp"
-#include "imagestego/core/route.hpp"
 // c++ headers
 #include <random>
 #include <string>
 #include <type_traits>
-// opencv headers
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
 
 
 namespace imagestego {
 
-class LsbEmbedderImpl final {
-public:
+class LsbEmbedderImpl;
 
-    /**
-     * Constructs embedder with given encoder.
-     *
-     * @param encoder Encoder which will process data.
-     */
-    explicit LsbEmbedderImpl(AbstractEncoder* encoder = nullptr) noexcept;
-
-    /**
-     * LsbEmbedderImpl destructror.
-     */
-    virtual ~LsbEmbedderImpl() noexcept;
-
-    /**
-     * Setter for source image.
-     *
-     * @param src Path to image.
-     */
-    void setImage(const std::string& src);
-
-    /**
-     * Setter for message.
-     *
-     * @param msg Message string.
-     */
-    void setMessage(const std::string& msg);
-
-    /**
-     * Setter for secret key.
-     *
-     * @param src Secret key string.
-     */
-    void setSecretKey(const std::string& key);
-
-    /**
-     * Performs embedding.
-     *
-     * @param dst Path to new image.
-     */
-    void createStegoContainer(const std::string& dst);
-private:
-    AbstractEncoder* _encoder = nullptr;
-    /** PRNG */
-    std::mt19937 _gen;
-    /** image */
-    cv::Mat _image;
-    BitArray _key, _msg;
-}; // class LsbEmbedderImpl
+class LsbExtracterImpl;
 
 /**
  * Class for performing LSB-based embedding.
@@ -144,48 +93,6 @@ public:
 private:
     LsbEmbedderImpl* _embedder;
 }; // class LsbEmbedder
-
-class LsbExtracterImpl final {
-public:
-
-    /**
-     * Constructs extracter with given decoder.
-     *
-     * @param decoder Decoder of extracted data.
-     */
-    explicit LsbExtracterImpl(AbstractDecoder* decoder = nullptr) noexcept;
-
-    /**
-     * LsbExtracterImpl destructror.
-     */
-    virtual ~LsbExtracterImpl() noexcept;
-
-    /**
-     * Setter for stego container.
-     *
-     * @param src Path to image with stego message.
-     */
-    void setImage(const std::string& dst);
-
-    /**
-     * Sets secret key.
-     *
-     * @param key Secret key.
-     */
-    void setSecretKey(const std::string& key);
-
-    /**
-     * Extracts message from image.
-     *
-     * @return Extracted message.
-     */
-    std::string extractMessage();
-private:
-    AbstractDecoder* _decoder;
-    std::mt19937 _gen;
-    cv::Mat _image;
-    BitArray _key;
-}; // class LsbExtracterImpl
 
 class IMAGESTEGO_EXPORTS LsbExtracter : public AbstractStegoExtracter {
 public:

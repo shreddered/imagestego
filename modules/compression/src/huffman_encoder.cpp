@@ -17,103 +17,120 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
+// imagestego headers
 #include "imagestego/compression/huffman_encoder.hpp"
+// c++ headers
+#include <string>
+#include <unordered_map>
 
 
 namespace imagestego {
 
-HuffmanEncoder::HuffmanEncoderImpl::HuffmanEncoderImpl() noexcept {}
-
-HuffmanEncoder::HuffmanEncoderImpl::HuffmanEncoderImpl(const std::string& str) noexcept : msg(str) {}
-
-HuffmanEncoder::HuffmanEncoderImpl::TreeNode::~TreeNode() noexcept {
-    if (left)
-        delete left;
-    if (right)
-        delete right;
-}
-
-void HuffmanEncoder::HuffmanEncoderImpl::setMessage(const std::string& str) noexcept {
-    msg = str;
-    encodedMsg.clear();
-}
-
-BitArray HuffmanEncoder::HuffmanEncoderImpl::getEncodedMessage() const {
-    encode();
-    return BitArray(encodedMsg);
-}
-
-void HuffmanEncoder::HuffmanEncoderImpl::encode() const {
-    if (codeTable.empty())
-        __buildCode();
-    if (encodedMsg.empty()) {
-        getHuffmanTree();
-        encodedMsg.insert(0, BitArray::fromByteString(alphabet).toString());
-        encodedMsg.insert(0, route);
-        for (std::size_t i = 0; i != msg.length(); ++i) {
-            encodedMsg += codeTable[msg[i]];
+class HuffmanEncoderImpl final {
+public:
+    explicit HuffmanEncoderImpl() noexcept {}
+    explicit HuffmanEncoderImpl(const std::string& str) noexcept : msg(str) {}
+    HuffmanEncoderImpl(const HuffmanEncoderImpl&) = delete;
+    HuffmanEncoderImpl& operator =(const HuffmanEncoderImpl&) = delete;
+    void setMessage(const std::string& str) noexcept {
+        msg = str;
+        encodedMsg.clear();
+    }
+    BitArray getEncodedMessage() {
+        encode();
+        return BitArray(encodedMsg);
+    }
+    void getHuffmanTree() {
+        if (codeTable.empty()) {
+            __buildCode();
+        }
+        route.clear();
+        alphabet.clear();
+        // creating DFS string
+        dfs(root);
+        route += '0';
+    }
+    std::string getAlphabet() const noexcept {
+        return alphabet;
+    }
+    virtual ~HuffmanEncoderImpl() noexcept {
+        if (root)
+            delete root;
+    }
+private:
+    struct TreeNode final {
+        std::string data;
+        bool isVisited = false;
+        TreeNode* left = nullptr;
+        TreeNode* right = nullptr;
+        TreeNode(const std::string& data) noexcept : data(data) {}
+        ~TreeNode() noexcept {
+            if (left)
+                delete left;
+            if (right)
+                delete right;
+        }
+    };
+    void __buildCode() {
+        std::unordered_map<char, std::size_t> weight;
+        std::for_each(msg.begin(), msg.end(), [&weight](const char& c) mutable {
+            ++weight[c];
+        });
+        std::multimap<std::size_t, TreeNode*> node;
+        std::for_each(weight.begin(), weight.end(), [&node](const typename decltype(weight)::value_type& p) mutable {
+            node.emplace(p.second, new TreeNode(p.first + std::string("")));
+        });
+        while(node.size() > 1) {
+            auto it2 = node.begin(),
+                 it1 = it2++;
+            std::for_each(it1->second->data.begin(), it1->second->data.end(), [this](const char& c) {
+                codeTable[c].insert(0, 1, '0');
+            });
+            std::for_each(it2->second->data.begin(), it2->second->data.end(), [this](const char& c) {
+                codeTable[c].insert(0, 1, '1');
+            });
+            typename decltype(node)::value_type pair = {it1->first + it2->first,
+                new TreeNode(it1->second->data + it2->second->data)};
+            pair.second->right = it2->second;
+            pair.second->left = it1->second;
+            node.erase(it1);
+            node.erase(it2);
+            node.insert(pair);
+        }
+        root = node.begin()->second;
+    }
+    void encode() {
+        if (codeTable.empty())
+            __buildCode();
+        if (encodedMsg.empty()) {
+            getHuffmanTree();
+            encodedMsg.insert(0, BitArray::fromByteString(alphabet).toString());
+            encodedMsg.insert(0, route);
+            for (std::size_t i = 0; i != msg.length(); ++i) {
+                encodedMsg += codeTable[msg[i]];
+            }
         }
     }
-}
-
-void HuffmanEncoder::HuffmanEncoderImpl::__buildCode() const {
-    std::map<char, std::size_t> weight;
-    std::for_each(msg.begin(), msg.end(), [&weight](const char& c) mutable {
-        ++weight[c];
-    });
-    std::multimap<std::size_t, TreeNode*> node;
-    std::for_each(weight.begin(), weight.end(), [&node](const typename decltype(weight)::value_type& p) mutable {
-        node.emplace(p.second, new TreeNode(p.first + std::string("")));
-    });
-    while(node.size() > 1) {
-        auto it2 = node.begin(),
-             it1 = it2++;
-        std::for_each(it1->second->data.begin(), it1->second->data.end(), [this](const char& c) {
-            codeTable[c].insert(0, 1, '0');
-        });
-        std::for_each(it2->second->data.begin(), it2->second->data.end(), [this](const char& c) {
-            codeTable[c].insert(0, 1, '1');
-        });
-        typename decltype(node)::value_type pair = {it1->first + it2->first,
-            new TreeNode(it1->second->data + it2->second->data)};
-        pair.second->right = it2->second;
-        pair.second->left = it1->second;
-        node.erase(it1);
-        node.erase(it2);
-        node.insert(pair);
-    }
-    root = node.begin()->second;
-}
-
-void HuffmanEncoder::HuffmanEncoderImpl::getHuffmanTree() const {
-    if (codeTable.empty()) {
-        __buildCode();
-    }
-    route.clear();
-    alphabet.clear();
-    // creating DFS string
-    dfs(root);
-    route += '0';
-}
-
-void HuffmanEncoder::HuffmanEncoderImpl::dfs(TreeNode* node) const {
-    if (node->left) {
-        route += '1';
-        dfs(node->left);
-        route += '0';
-        dfs(node->right);
-        if (route.back() != '0')
+    void dfs(TreeNode* node) {
+        if (node->left) {
+            route += '1';
+            dfs(node->left);
             route += '0';
+            dfs(node->right);
+            if (route.back() != '0')
+                route += '0';
+        }
+        else {
+            alphabet += node->data;
+        }
     }
-    else {
-        alphabet += node->data;
-    }
-}
-
-HuffmanEncoder::HuffmanEncoderImpl::~HuffmanEncoderImpl() noexcept {
-    if (root)
-        delete root;
-}
+    std::string msg;
+    TreeNode* root = nullptr;
+    std::string encodedMsg = ""; // mutable bc of caching
+    std::unordered_map<char, std::string> codeTable;
+    std::string route = "";
+    std::string alphabet;
+}; // class HuffmanEncoderImpl
 
 HuffmanEncoder::HuffmanEncoder() noexcept : encoder(new HuffmanEncoderImpl()) {}
 
