@@ -36,7 +36,7 @@ class LzwDecoderImpl : private Dictionary {
 public:
     static constexpr uint8_t maxBits = 12;
     explicit LzwDecoderImpl() noexcept : Dictionary() {}
-    explicit LzwDecoderImpl(const BitArray& str) noexcept : Dictionary(), msg(arr) {}
+    explicit LzwDecoderImpl(const BitArray& arr) noexcept : Dictionary(), msg(arr) {}
     void setMessage(const BitArray& arr) noexcept {
         msg = arr;
         decodedMsg.clear();
