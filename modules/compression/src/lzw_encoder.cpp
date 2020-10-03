@@ -19,8 +19,7 @@
 
 // imagestego headers
 #include "imagestego/compression/lzw_encoder.hpp"
-// c++ headers
-#include <iostream>
+#include "imagestego/compression/lzw_dictionary.hpp"
 
 
 namespace imagestego {

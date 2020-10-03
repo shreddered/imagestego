@@ -22,7 +22,6 @@
 
 // imagestego headers
 #include "imagestego/core.hpp"
-#include "imagestego/compression/lzw_dictionary.hpp"
 // c++ headers
 #include <string>
 

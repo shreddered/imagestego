@@ -18,8 +18,7 @@
  */
 
 #include "imagestego/compression/lzw_decoder.hpp"
-
-#include <iostream>
+#include "imagestego/compression/lzw_dictionary.hpp"
 
 
 int read(const imagestego::BitArray& arr, imagestego::size_t& i, uint8_t bits) {
