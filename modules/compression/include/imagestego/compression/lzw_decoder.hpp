@@ -29,21 +29,7 @@
 
 namespace imagestego {
 
-class LzwDecoderImpl : private Dictionary {
-public:
-    static constexpr uint8_t maxBits = 12;
-    explicit LzwDecoderImpl() noexcept;
-    explicit LzwDecoderImpl(const BitArray& str) noexcept;
-    void setMessage(const BitArray& arr) noexcept {
-        msg = arr;
-        decodedMsg.clear();
-    }
-    std::string getDecodedMessage();
-private:
-    std::string decodedMsg;
-    mutable BitArray msg;
-    void decode();
-}; // class LzwDecoderImpl
+class LzwDecoderImpl;
 
 class IMAGESTEGO_EXPORTS LzwDecoder : public AbstractDecoder {
 public:

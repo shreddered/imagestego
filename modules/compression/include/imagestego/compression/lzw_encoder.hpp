@@ -29,18 +29,7 @@
 
 namespace imagestego {
 
-class LzwEncoderImpl : private Dictionary {
-public:
-    explicit LzwEncoderImpl() noexcept;
-    explicit LzwEncoderImpl(const std::string& str) noexcept;
-    void setMessage(const std::string& str) noexcept;
-    BitArray getEncodedMessage();
-private:
-    static constexpr std::size_t maxDictionarySize = (1 << maxBits) - 1;
-    std::string msg;
-    mutable BitArray encodedMsg;
-    void encode();
-}; // class LzwEncoderImpl
+class LzwEncoderImpl;
 
 class IMAGESTEGO_EXPORTS LzwEncoder : public AbstractEncoder {
 public:

@@ -33,52 +33,60 @@ int read(const imagestego::BitArray& arr, imagestego::size_t& i, uint8_t bits) {
 
 namespace imagestego {
 
-LzwDecoderImpl::LzwDecoderImpl() noexcept : Dictionary() {}
-
-LzwDecoderImpl::LzwDecoderImpl(const BitArray& arr) noexcept : Dictionary(), msg(arr) {}
-
-std::string LzwDecoderImpl::getDecodedMessage() {
-    if (decodedMsg.empty()) {
-        decode();
+class LzwDecoderImpl : private Dictionary {
+public:
+    static constexpr uint8_t maxBits = 12;
+    explicit LzwDecoderImpl() noexcept : Dictionary() {}
+    explicit LzwDecoderImpl(const BitArray& str) noexcept : Dictionary(), msg(arr) {}
+    void setMessage(const BitArray& arr) noexcept {
+        msg = arr;
+        decodedMsg.clear();
     }
-    return decodedMsg;
-}
-
-void LzwDecoderImpl::decode() {
-    // reading first 4 bits
-    imagestego::size_t i = 0;
-    uint8_t maxBits = read(msg, i, 4);
-    while(i < msg.size()) {
-        Dictionary::clear();
-        uint8_t currentBitsPerBlock = 8;
-        imagestego::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
-        imagestego::size_t code = read(msg, i, currentBitsPerBlock);
-        decodedMsg += code;
-        imagestego::size_t oldCode = code;
-        while (1) {
-            if (i >= msg.size())
-                break;
-            if (size() == currentMaxDictionarySize) {
-                if (currentBitsPerBlock == maxBits)
+    std::string getDecodedMessage() {
+        if (decodedMsg.empty()) {
+            decode();
+        }
+        return decodedMsg;
+    }
+private:
+    std::string decodedMsg;
+    BitArray msg;
+    void decode() {
+        // reading first 4 bits
+        imagestego::size_t i = 0;
+        uint8_t maxBits = read(msg, i, 4);
+        while(i < msg.size()) {
+            Dictionary::clear();
+            uint8_t currentBitsPerBlock = 8;
+            imagestego::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
+            imagestego::size_t code = read(msg, i, currentBitsPerBlock);
+            decodedMsg += code;
+            imagestego::size_t oldCode = code;
+            while (1) {
+                if (i >= msg.size())
                     break;
-                ++currentBitsPerBlock;
-                currentMaxDictionarySize = (1 << currentBitsPerBlock);
+                if (size() == currentMaxDictionarySize) {
+                    if (currentBitsPerBlock == maxBits)
+                        break;
+                    ++currentBitsPerBlock;
+                    currentMaxDictionarySize = (1 << currentBitsPerBlock);
+                }
+                code = read(msg, i, currentBitsPerBlock);
+                std::string tmp;
+                if (code < Dictionary::size()) {
+                    tmp = Dictionary::at(code);
+                    decodedMsg += tmp;
+                }
+                else {
+                    tmp = Dictionary::at(oldCode);
+                    decodedMsg += tmp + tmp[0];
+                }
+                Dictionary::add(tmp[0], oldCode);
+                oldCode = code;
             }
-            code = read(msg, i, currentBitsPerBlock);
-            std::string tmp;
-            if (code < Dictionary::size()) {
-                tmp = Dictionary::at(code);
-                decodedMsg += tmp;
-            }
-            else {
-                tmp = Dictionary::at(oldCode);
-                decodedMsg += tmp + tmp[0];
-            }
-            Dictionary::add(tmp[0], oldCode);
-            oldCode = code;
         }
     }
-}
+}; // class LzwDecoderImpl
 
 LzwDecoder::LzwDecoder() : _decoder(new LzwDecoderImpl) {}
 

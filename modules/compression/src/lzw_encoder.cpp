@@ -25,49 +25,52 @@
 
 namespace imagestego {
 
-LzwEncoderImpl::LzwEncoderImpl() noexcept : Dictionary() {}
-
-LzwEncoderImpl::LzwEncoderImpl(const std::string& str) noexcept : Dictionary(), msg(str) {}
-
-void LzwEncoderImpl::setMessage(const std::string& str) noexcept {
-    msg = str;
-    encodedMsg.clear();
-}
-
-BitArray LzwEncoderImpl::getEncodedMessage() {
-    if (encodedMsg.empty() && msg.size() != 1) {
-        encode();
+class LzwEncoderImpl : private Dictionary {
+public:
+    explicit LzwEncoderImpl() noexcept : Dictionary() {}
+    explicit LzwEncoderImpl(const std::string& str) noexcept : Dictionary(), msg(str) {}
+    void setMessage(const std::string& str) noexcept {
+        msg = str;
+        encodedMsg.clear();
     }
-    return encodedMsg;
-}
-
-void LzwEncoderImpl::encode() {
-    StringElement s;
-    uint8_t currentBitsPerBlock = 8;
-    std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
-    encodedMsg.put(maxBits, 4);
-    for (std::size_t i = 0; i != msg.size(); ++i) {
-        s.value = msg[i];
-        int index = Dictionary::search(s);
-        if (index != -1) {
-            s.prefixIndex = index;
+    BitArray getEncodedMessage() {
+        if (encodedMsg.empty() && msg.size() != 1) {
+            encode();
         }
-        else {
-            encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
-            s.prefixIndex = s.value;
-            if (Dictionary::size() > currentMaxDictionarySize) {
-                if (currentBitsPerBlock == maxBits) {
-                    currentBitsPerBlock = 8;
-                    Dictionary::clear();
+        return encodedMsg;
+    }
+private:
+    static constexpr std::size_t maxDictionarySize = (1 << maxBits) - 1;
+    std::string msg;
+    BitArray encodedMsg;
+    void encode() {
+        StringElement s;
+        uint8_t currentBitsPerBlock = 8;
+        std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
+        encodedMsg.put(maxBits, 4);
+        for (std::size_t i = 0; i != msg.size(); ++i) {
+            s.value = msg[i];
+            int index = Dictionary::search(s);
+            if (index != -1) {
+                s.prefixIndex = index;
+            }
+            else {
+                encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
+                s.prefixIndex = s.value;
+                if (Dictionary::size() > currentMaxDictionarySize) {
+                    if (currentBitsPerBlock == maxBits) {
+                        currentBitsPerBlock = 8;
+                        Dictionary::clear();
+                    }
+                    else
+                        ++currentBitsPerBlock;
+                    currentMaxDictionarySize = (1 << currentBitsPerBlock);
                 }
-                else
-                    ++currentBitsPerBlock;
-                currentMaxDictionarySize = (1 << currentBitsPerBlock);
             }
         }
+        encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
     }
-    encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
-}
+}; // class LzwEncoderImpl
 
 LzwEncoder::LzwEncoder() : _encoder(new LzwEncoderImpl) {}
 
