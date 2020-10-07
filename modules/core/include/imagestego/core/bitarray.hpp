@@ -17,8 +17,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
-#ifndef __IMAGESTEGO_BITARRAY_HPP_INCLUDED__
-#define __IMAGESTEGO_BITARRAY_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_CORE_BITARRAY_HPP_INCLUDED__
+#define __IMAGESTEGO_CORE_BITARRAY_HPP_INCLUDED__
 
 // imagestego headers
 #include "imagestego/core/bitarrayimpl.hpp"
@@ -48,8 +48,6 @@ namespace imagestego {
 
 /**
  * Class representing bit array.
- *
- * This class uses PImpl technique.
  */
 class IMAGESTEGO_EXPORTS BitArray {
 public:
