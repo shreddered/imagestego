@@ -1,6 +1,7 @@
 # imagestego_core
 add_library(imagestego_core
     ${CMAKE_CURRENT_SOURCE_DIR}/src/bitarray.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/bitarrayimpl.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/exception.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/intrinsic.cpp
