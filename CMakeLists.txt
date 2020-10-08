@@ -141,22 +141,28 @@ endif (IMAGESTEGO_LOSSLESS_FORMATS)
 
 string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
 
+add_library(imagestego INTERFACE)
+
 # core module
 add_subdirectory("modules/core/")
+target_link_libraries(imagestego PUBLIC imagestego_core)
 
 # compression module
 if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/compression")
+    target_link_libraries(imagestego PUBLIC imagestego_compression)
 endif ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 # lossless module
 if ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/lossless")
+    target_link_libraries(imagestego PUBLIC imagestego_lossless)
 endif ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 # jpeg module
 if ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/jpeg")
+    target_link_libraries(imagestego PUBLIC imagestego_jpeg)
 endif ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 function(imagestego_add_test)
