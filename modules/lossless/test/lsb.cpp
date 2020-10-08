@@ -20,7 +20,7 @@
 // imagestego headers
 #include "imagestego/core/exception.hpp"
 #include "imagestego/core/interfaces.hpp"
-#include <imagestego/algorithms/lsb.hpp>
+#include <imagestego/algorithm/lsb.hpp>
 #include <imagestego/compression/huffman_encoder.hpp>
 #include <imagestego/compression/huffman_decoder.hpp>
 // gtest headers
