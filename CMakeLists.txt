@@ -145,24 +145,24 @@ add_library(imagestego INTERFACE)
 
 # core module
 add_subdirectory("modules/core/")
-target_link_libraries(imagestego PUBLIC imagestego_core)
+target_link_libraries(imagestego INTERFACE imagestego_core)
 
 # compression module
 if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/compression")
-    target_link_libraries(imagestego PUBLIC imagestego_compression)
+    target_link_libraries(imagestego INTERFACE imagestego_compression)
 endif ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 # lossless module
 if ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/lossless")
-    target_link_libraries(imagestego PUBLIC imagestego_lossless)
+    target_link_libraries(imagestego INTERFACE imagestego_lossless)
 endif ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 # jpeg module
 if ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
     add_subdirectory("modules/jpeg")
-    target_link_libraries(imagestego PUBLIC imagestego_jpeg)
+    target_link_libraries(imagestego INTERFACE imagestego_jpeg)
 endif ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
 
 function(imagestego_add_test)
