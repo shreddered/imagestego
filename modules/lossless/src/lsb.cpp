@@ -18,7 +18,7 @@
  */
 
 // imagestego headers
-#include "imagestego/algorithms/lsb.hpp"
+#include "imagestego/algorithm/lsb.hpp"
 #include "imagestego/core/route.hpp"
 // opencv headers
 #include <opencv2/core.hpp>
