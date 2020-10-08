@@ -1,5 +1,5 @@
-#ifndef __IMAGESTEGO__ALGORITHMS_HPP_INCLUDED__
-#define __IMAGESTEGO__ALGORITHMS_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_ALGORITHM_HPP_INCLUDED__
+#define __IMAGESTEGO_ALGORITHM_HPP_INCLUDED__
 
 #ifdef IMAGESTEGO_LOSSLESS_FORMATS
 #   include "imagestego/algorithms/dwt.hpp"
@@ -11,4 +11,4 @@
 #   include "imagestego/algorithms/f3.hpp"
 #endif /* IMAGESTEGO_JPEG_SUPPORT */
 
-#endif /* __IMAGESTEGO__ALGORITHMS_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_ALGORITHM_HPP_INCLUDED__ */
