@@ -2,37 +2,28 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/stugi74mkai6x44q/branch/master?svg=true)](https://ci.appveyor.com/project/shreddered/imagestego/branch/master)
 [![codecov](https://codecov.io/gh/shreddered/imagestego/branch/master/graph/badge.svg)](https://codecov.io/gh/shreddered/imagestego)
 
-# imagestego 
+# imagestego
 
 Image Steganography library written in _c++11_.
 Dependencies - [_opencv_](https://github.com/opencv/opencv) and [_libjpeg_](http://www.ijg.org/).
 
 - [Overview](#overview)
 - [Integration](#integration)
+- [Build at your own](#build-at-your-own)
 - [License](#license)
 
 # Overview
 
-In this library several steganographic algorithms are introduced:
+This library has several modules.
 
-- LSB algorithm
+The _core_ module is the main module of this library, which introduces a lot of types/functions/etc needed for other modules to work.
 
-This algorithm uses LSB technique to embed secret message.
-LSB embedding in JPEG applied after quantization of DCT coefficients.
+The _compression_ module introduces data compression algorithms.
 
-- DWT-based algorithm (lossless formats only)
+The _lossless_ module contains steganographic schemes with lossless destination.
 
-This scheme uses [Integer Wavelet Transform](https://stackoverflow.com/questions/15802827/how-can-dwt-be-used-in-lsb-substitution-steganography) to embed secret message.
+The _jpeg_ module contains steganographic schemes with JPEG writer.
 
-- F3 Algorithm
-
-If you want an detailed overview of algorithms please refer to [OVERVIEW.md](https://github.com/shreddered/Image-Steganography/blob/master/OVERVIEW.md).
-
-Also there is a support for data comression:
-
-- [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding)
-
-- [LZW](https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch)
 
 # Integration
 
@@ -47,6 +38,19 @@ add_executable(foo
 add_subdirectory(path/to/imagestego/directory)
 
 target_link_libraries(foo imagestego)
+```
+
+# Build at your own
+
+If you want to build this library, then you have to do several steps.
+```bash
+$ git clone https://github.com/shreddered/imagestego.git
+$ cd imagestego/
+$ mkdir build/ && cd build/
+$ cmake ..
+$ make
+# if you want to install it
+$ sudo make install
 ```
 
 # License
