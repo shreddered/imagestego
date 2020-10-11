@@ -76,15 +76,6 @@ public:
     void setSecretKey(const std::string& key) override;
 
     /**
-     * Algorithm provider.
-     *
-     * @return Algorithm::Lsb.
-     */
-    Algorithm getAlgorithm() const noexcept override {
-        return Algorithm::Lsb;
-    }
-
-    /**
      * Performs embedding.
      *
      * @param dst Path to new image.
@@ -108,15 +99,6 @@ public:
      * LsbExtracter destructror.
      */
     virtual ~LsbExtracter() noexcept;
-
-    /**
-     * Algorithm provider.
-     *
-     * @return Algorithm::Lsb.
-     */
-    Algorithm getAlgorithm() const noexcept override {
-        return Algorithm::Lsb;
-    }
 
     /**
      * Setter for stego container.

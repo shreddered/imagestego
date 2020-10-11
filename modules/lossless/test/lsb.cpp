@@ -76,14 +76,6 @@ TEST(Lossless, LsbExceptions) {
     EXPECT_THROW(ext.extractMessage(), imagestego::Exception);
 }
 
-TEST(Lossless, LsbType) {
-    LsbEmbedder emb;
-    EXPECT_EQ(emb.getAlgorithm(), imagestego::Algorithm::Lsb);
-
-    LsbExtracter ext;
-    EXPECT_EQ(ext.getAlgorithm(), imagestego::Algorithm::Lsb);
-}
-
 TEST(Lossless, LsbHuffman) {
     LsbEmbedder emb(new HuffmanEncoder);
     emb.setImage("test.jpg");
