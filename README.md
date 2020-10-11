@@ -54,5 +54,4 @@ target_link_libraries(foo imagestego)
 This software is distibuted under GNU GPLv3. For more details see [LICENSE.txt](LICENSE.txt).
 
 # Further development
-- [x] Implement LZW data compression algorithm
-- [ ] Implement at least one more stego algorithm
+- [ ] Wavelet module
