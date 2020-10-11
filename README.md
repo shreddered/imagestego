@@ -7,8 +7,10 @@
 Image Steganography library written in _c++11_.
 Dependencies - [_opencv_](https://github.com/opencv/opencv) and [_libjpeg_](http://www.ijg.org/).
 
+# Contents
 - [Overview](#overview)
 - [Integration](#integration)
+- [Usage](#usage)
 - [Build at your own](#build-at-your-own)
 - [Contributing](#contributing)
 - [License](#license)
@@ -39,6 +41,21 @@ add_executable(foo
 add_subdirectory(path/to/imagestego/directory)
 
 target_link_libraries(foo imagestego)
+```
+
+# Usage
+The basic usage is:
+
+```cpp
+// ...
+// imagestego
+#include <imagestego/imagestego.hpp>
+
+int main(int argc, char** argv) {
+    imagestego::embedSecretMessage(new imagestego::LsbEmbedder, "in.png",
+                                   "out.png", "message", "key");
+    return 0;
+}
 ```
 
 # Build at your own
