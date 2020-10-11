@@ -10,6 +10,7 @@ Dependencies - [_opencv_](https://github.com/opencv/opencv) and [_libjpeg_](http
 - [Overview](#overview)
 - [Integration](#integration)
 - [Build at your own](#build-at-your-own)
+- [Contributing](#contributing)
 - [License](#license)
 
 # Overview
@@ -52,6 +53,10 @@ $ make
 # if you want to install it
 $ sudo make install
 ```
+
+# Contributing
+
+Please see [Contributing](https://github.com/shreddered/imagestego/wiki/Contributing) wiki page for more information.
 
 # License
 
