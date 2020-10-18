@@ -111,7 +111,7 @@ function(imagestego_exports target)
             "-DIMAGESTEGO_DLL"
         )
         if (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
-            target_compile_definitions(${target PRIVATE
+            target_compile_definitions(${target} PRIVATE
                 "-DIMAGESTEGO_EXPORTS"
             )
         endif (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
