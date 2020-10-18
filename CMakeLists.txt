@@ -7,20 +7,11 @@ if(POLICY CMP0074)
     cmake_policy(SET CMP0074 NEW)
 endif (POLICY CMP0074)
 
-include("cmake/HunterGate.cmake")
-
-HunterGate(
-    URL "https://github.com/cpp-pm/hunter/archive/v0.23.269.tar.gz"
-    SHA1 "64024b7b95b4c86d50ae05b926814448c93a70a0"
-    FILEPATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Hunter/config.cmake"
-)
-
-set(HUNTER_CONFIGURATION_TYPES Release)
-
-if (CMAKE_COMPILER_IS_GNUCXX)
+# TODO: get rid of these flags
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wpedantic")
     string(APPEND CMAKE_CXX_FLAGS " -ggdb")
-endif (CMAKE_COMPILER_IS_GNUCXX)
+endif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
 if (POLICY CMP0091)
     cmake_policy(SET CMP0091 NEW)
@@ -118,30 +109,14 @@ function(imagestego_exports target)
     endif (WIN32 AND BUILD_SHARED_LIBS)
 endfunction(imagestego_exports target)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
-
-# libjpeg
-if (IMAGESTEGO_JPEG_SUPPORT AND IMAGESTEGO_WITH_LIBJPEG)
-    message("Fetching imagestego_jpeg dependency - libjpeg")
-
-    hunter_add_package(Jpeg)
-    find_package(JPEG CONFIG REQUIRED)
-endif (IMAGESTEGO_JPEG_SUPPORT AND IMAGESTEGO_WITH_LIBJPEG)
-
-# opencv
-if (IMAGESTEGO_LOSSLESS_FORMATS)
-    if (IMAGESTEGO_BUILD_OPENCV)
-        message("Fetching imagestego_lossless dependency - opencv")
-
-        hunter_add_package(OpenCV)
-    endif (IMAGESTEGO_BUILD_OPENCV)
-
-    find_package(OpenCV REQUIRED)
-endif (IMAGESTEGO_LOSSLESS_FORMATS)
-
 string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
 
 add_library(imagestego INTERFACE)
+
+target_link_libraries(imagestego INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+    $<INSTALL_INTERFACE:include/>
+)
 
 # core module
 add_subdirectory("modules/core/")
