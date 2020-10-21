@@ -17,8 +17,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
-#ifndef __IMAGESTEGO_AVL_TREE_HPP_INCLUDED__
-#define __IMAGESTEGO_AVL_TREE_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_CORE_AVL_TREE_HPP_INCLUDED__
+#define __IMAGESTEGO_CORE_AVL_TREE_HPP_INCLUDED__
 
 // imagestego headers
 #include "imagestego/core/config.hpp"
@@ -294,4 +294,4 @@ struct PairComparator final {
 
 } // namespace imagestego
 
-#endif /* __IMAGESTEGO_AVL_TREE_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_CORE_AVL_TREE_HPP_INCLUDED__ */

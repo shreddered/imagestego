@@ -17,8 +17,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
-#ifndef __IMAGESTEGO_INTERFACES_HPP_INCLUDED__
-#define __IMAGESTEGO_INTERFACES_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_CORE_INTERFACES_HPP_INCLUDED__
+#define __IMAGESTEGO_CORE_INTERFACES_HPP_INCLUDED__
 
 // imagestego headers
 #include "imagestego/core/bitarray.hpp"
@@ -62,4 +62,4 @@ public:
 
 } // namespace imagestego
 
-#endif /* __IMAGESTEGO_INTERFACES_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_CORE_INTERFACES_HPP_INCLUDED__ */

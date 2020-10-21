@@ -13,7 +13,6 @@ add_library(imagestego_core
 target_include_directories(imagestego_core PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
     $<INSTALL_INTERFACE:include/>
-    /usr/include/opencv4
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
 )
 

@@ -7,10 +7,18 @@ if(POLICY CMP0074)
     cmake_policy(SET CMP0074 NEW)
 endif (POLICY CMP0074)
 
-# TODO: get rid of these flags
+if (POLICY CMP0042)
+    cmake_policy(SET CMP0042 NEW)
+endif (POLICY CMP0042)
+
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wpedantic")
-    string(APPEND CMAKE_CXX_FLAGS " -ggdb")
 endif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
 if (POLICY CMP0091)
@@ -18,7 +26,11 @@ if (POLICY CMP0091)
     set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
 endif (POLICY CMP0091)
 
-project(imagestego VERSION 1.0)
+project(imagestego VERSION 1.0 LANGUAGES CXX)
+
+set(IMAGESTEGO_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-simd-detection.cmake")
 
 # build conditions
 option(IMAGESTEGO_BUILD_TESTS "Build tests" OFF)
@@ -54,7 +66,7 @@ endmacro()
 
 add_library(coverage_config INTERFACE)
 
-if (IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
+if (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     target_compile_options(coverage_config INTERFACE
         -O0
         -g
@@ -65,18 +77,18 @@ if (IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
     else()
         target_link_libraries(coverage_config INTERFACE --coverage)
     endif ()
-endif (IMAGESTEGO_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
+endif (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
 # function for test generation
 function(imagestego_test)
     cmake_parse_arguments(TEST
-        "CORE;COMPRESSION;JPEG;LOSSLESS"
+        "CORE;COMPRESSION;JPEG;LOSSLESS;WAVELET"
         "NAME;FILE"
         "LIBS"
         ${ARGN}
     )
 
-    foreach(OPT CORE COMPRESSION JPEG LOSSLESS)
+    foreach(OPT CORE COMPRESSION JPEG LOSSLESS WAVELET)
         if (${TEST_${OPT}})
             set(DIR $<LOWER_CASE:${OPT}>)
         endif ()
@@ -140,15 +152,19 @@ if ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
     target_link_libraries(imagestego INTERFACE imagestego_jpeg)
 endif ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
 
+if ("wavelet" IN_LIST IMAGESTEGO_BUILD_LIST)
+    add_subdirectory("modules/wavelet")
+endif ("wavelet" IN_LIST IMAGESTEGO_BUILD_LIST)
+
 function(imagestego_add_test)
     cmake_parse_arguments(TEST
-        "CORE;COMPRESSION;JPEG;LOSSLESS"
+        "CORE;COMPRESSION;JPEG;LOSSLESS;WAVELET"
         "NAME"
         ""
         ${ARGN}
     )
 
-    foreach(OPT CORE COMPRESSION JPEG LOSSLESS)
+    foreach(OPT CORE COMPRESSION JPEG LOSSLESS WAVELET)
         if (${TEST_${OPT}})
             set(DIR $<LOWER_CASE:${OPT}>)
         endif ()
@@ -177,7 +193,13 @@ if (IMAGESTEGO_BUILD_TESTS)
         imagestego_add_test(COMPRESSION NAME lzw)
     endif ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
 
+    # lossless tests
     if ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
         imagestego_add_test(LOSSLESS NAME lsb)
     endif ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
+
+    # wavelet tests
+    if ("wavelet" IN_LIST IMAGESTEGO_BUILD_LIST)
+        imagestego_add_test(WAVELET NAME haar)
+    endif ("wavelet" IN_LIST IMAGESTEGO_BUILD_LIST)
 endif (IMAGESTEGO_BUILD_TESTS)

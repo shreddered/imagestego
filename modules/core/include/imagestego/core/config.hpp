@@ -17,8 +17,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
-#ifndef __IMAGESTEGO_CONFIG_HPP_INCLUDED__
-#define __IMAGESTEGO_CONFIG_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_CORE_CONFIG_HPP_INCLUDED__
+#define __IMAGESTEGO_CORE_CONFIG_HPP_INCLUDED__
 
 #if (defined(WIN32) || defined(_WIN32) || defined (WINCE)) && defined(IMAGESTEGO_DLL)
 #   ifdef IMAGESTEGO_EXPORT
@@ -50,4 +50,4 @@ typedef uint32_t size_t;
 
 } // namespace imagestego
 
-#endif /* __IMAGESTEGO_CONFIG_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_CORE_CONFIG_HPP_INCLUDED__ */

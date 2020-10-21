@@ -17,18 +17,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
-#ifndef __IMAGESTEGO_CORE_INTRINSIC_HPP_INCLUDED__
-#define __IMAGESTEGO_CORE_INTRINSIC_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_WAVELET_HAAR_FAST_HPP_INCLUDED__
+#define __IMAGESTEGO_WAVELET_HAAR_FAST_HPP_INCLUDED__
 
+#include "imagestego/wavelet/interfaces.hpp"
 #include "imagestego/core/config.hpp"
 
 
 namespace imagestego {
 
-IMAGESTEGO_EXPORTS uint8_t log2(uint32_t value) noexcept;
+class HaarFastWaveletImpl;
 
-IMAGESTEGO_EXPORTS uint32_t bswap(uint32_t) noexcept;
+class IMAGESTEGO_EXPORTS HaarFastWavelet : public AbstractWavelet {
+public:
+    explicit HaarFastWavelet();
+    void setMatrix(const cv::Mat& src) override;
+    cv::Mat transform() override;
+    virtual ~HaarFastWavelet() noexcept;
+private:
+    HaarFastWaveletImpl* pImpl;
+};
 
 } // namespace imagestego
 
-#endif /* __IMAGESTEGO_CORE_INTRINSIC_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_WAVELET_HAAR_FAST_HPP_INCLUDED__ */
