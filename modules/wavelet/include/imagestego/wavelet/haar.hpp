@@ -20,8 +20,8 @@
 #ifndef __IMAGESTEGO_WAVELET_HAAR_HPP_INCLUDED__
 #define __IMAGESTEGO_WAVELET_HAAR_HPP_INCLUDED__
 
-#include "imagestego/wavelet/interfaces.hpp"
 #include "imagestego/core/config.hpp"
+#include "imagestego/wavelet/interfaces.hpp"
 
 
 namespace imagestego {
