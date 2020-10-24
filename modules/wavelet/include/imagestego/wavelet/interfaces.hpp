@@ -1,7 +1,9 @@
 #ifndef __IMAGESTEGO_WAVELET_INTERFACES_HPP_INCLUDED__
 #define __IMAGESTEGO_WAVELET_INTERFACES_HPP_INCLUDED__
 
+// imagestego headers
 #include "imagestego/core.hpp"
+// opencv headers
 #include <opencv2/core/mat.hpp>
 
 
