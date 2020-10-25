@@ -26,7 +26,7 @@
 #include <vector>
 // opencv
 #include <opencv2/core.hpp>
- // x86 intrinsics
+// x86 intrinsics
 #include <x86intrin.h>
 
 
@@ -55,7 +55,6 @@ public:
         return dst;
     }
 private:
-    // TODO: fix this
     static cv::Mat horizontalLifting(const cv::Mat& src) {
         cv::Mat dst(src.size(), CV_16SC1);
         const __m256i mask = _mm256_set_epi32(7, 6, 3, 2, 5, 4, 1, 0);
@@ -114,7 +113,6 @@ private:
         }
         _mm256_zeroupper();
         return dst;
-        // return horizontalLifting(src.t()).t();
     }
     static inline int align32(int num) {
         return num & ~0x1F;
