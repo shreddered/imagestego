@@ -32,6 +32,8 @@
 
 namespace imagestego {
 
+namespace experimental {
+
 class HaarFastWaveletImpl {
 public:
     explicit HaarFastWaveletImpl() noexcept {}
@@ -137,5 +139,7 @@ void HaarFastWavelet::setMatrix(const cv::Mat& src) {
 cv::Mat HaarFastWavelet::transform() {
     return pImpl->transform();
 }
+
+} // namespace experimental
 
 } // namespace imagestego

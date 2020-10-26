@@ -26,6 +26,8 @@
 
 namespace imagestego {
 
+namespace experimental {
+
 class HaarFastWaveletImpl;
 
 class IMAGESTEGO_EXPORTS HaarFastWavelet : public AbstractWavelet {
@@ -37,6 +39,8 @@ public:
 private:
     HaarFastWaveletImpl* pImpl;
 };
+
+} // namespace experimental
 
 } // namespace imagestego
 
