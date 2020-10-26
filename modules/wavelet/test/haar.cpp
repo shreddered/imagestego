@@ -48,7 +48,7 @@ TEST(Wavelet, HaarWavelet256x256) {
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
-    imagestego::experimental::HaarFastWavelet w2;
+    imagestego::experimental::HaarWavelet w2;
     w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
@@ -75,7 +75,7 @@ TEST(Wavelet, HaarWavelet320x320) {
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
-    imagestego::experimental::HaarFastWavelet w2;
+    imagestego::experimental::HaarWavelet w2;
     w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
@@ -102,7 +102,7 @@ TEST(Wavelet, HaarWaveletHD) {
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
-    imagestego::experimental::HaarFastWavelet w2;
+    imagestego::experimental::HaarWavelet w2;
     w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
@@ -129,7 +129,7 @@ TEST(Wavelet, HaarWaveletFullHD) {
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
-    imagestego::experimental::HaarFastWavelet w2;
+    imagestego::experimental::HaarWavelet w2;
     w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
@@ -156,7 +156,7 @@ TEST(Wavelet, HaarWavelet2K) {
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
-    imagestego::experimental::HaarFastWavelet w2;
+    imagestego::experimental::HaarWavelet w2;
     w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
@@ -183,7 +183,7 @@ TEST(Wavelet, HaarWavelet4K) {
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
-    imagestego::experimental::HaarFastWavelet w2;
+    imagestego::experimental::HaarWavelet w2;
     w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
@@ -210,7 +210,7 @@ TEST(Wavelet, HaarWavelet501x303) {
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
-    imagestego::experimental::HaarFastWavelet w2;
+    imagestego::experimental::HaarWavelet w2;
     w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();

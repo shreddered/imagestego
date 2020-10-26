@@ -38,6 +38,22 @@ private:
     HaarWaveletImpl* pImpl;
 };
 
+namespace experimental {
+
+class HaarWaveletImpl;
+
+class IMAGESTEGO_EXPORTS HaarWavelet : public AbstractWavelet {
+public:
+    explicit HaarWavelet();
+    void setMatrix(const cv::Mat& src) override;
+    cv::Mat transform() override;
+    virtual ~HaarWavelet() noexcept;
+private:
+    HaarWaveletImpl* pImpl;
+};
+
+} // namespace experimental
+
 } // namespace imagestego
 
 #endif /* __IMAGESTEGO_WAVELET_HAAR_HPP_INCLUDED__ */
