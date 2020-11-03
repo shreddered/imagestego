@@ -26,7 +26,11 @@
 // opencv headers
 #include <opencv2/core.hpp>
 
-#include <immintrin.h>
+#if defined(IMAGESTEGO_AVX2_SUPPORTED)
+#   include <immintrin.h>
+#elif defined(IMAGESTEGO_NEON_SUPPORTED)
+#   include <arm_neon.h>
+#endif
 
 namespace imagestego {
 
@@ -118,6 +122,7 @@ public:
 private:
     static cv::Mat horizontalLifting(const cv::Mat& src) {
         cv::Mat dst(src.size(), CV_16SC1);
+#if defined(IMAGESTEGO_AVX2_SUPPORTED)
         const __m256i mask = _mm256_set_epi32(7, 6, 3, 2, 5, 4, 1, 0);
         for (int row = 0; row != src.rows; ++row) {
             const int16_t* sptr = src.ptr<int16_t>(row);
@@ -148,6 +153,7 @@ private:
     }
     static cv::Mat verticalLifting(const cv::Mat& src) {
         cv::Mat dst(src.size(), CV_16SC1);
+#if defined(IMAGESTEGO_AVX2_SUPPORTED)
         for (int row = 0; row < (src.rows & ~1); row += 2) {
             const int16_t* ptr1 = src.ptr<int16_t>(row);
             const int16_t* ptr2 = src.ptr<int16_t>(row + 1);

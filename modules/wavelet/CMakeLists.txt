@@ -22,7 +22,12 @@ target_compile_definitions(imagestego_wavelet PUBLIC
 
 if (CPU_AVX2_SUPPORTED)
     target_compile_definitions(imagestego_wavelet PRIVATE
-        "-DIMAGESTEGO_AVX2"
+        "-DIMAGESTEGO_AVX2_SUPPORTED"
+    )
+endif()
+if (CPU_SSSE3_SUPPORTED)
+    target_compile_definitions(imagestego_wavelet PRIVATE
+        "-DIMAGESTEGO_SSSE3_SUPPORTED"
     )
 endif()
 
