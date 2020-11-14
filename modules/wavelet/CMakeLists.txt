@@ -21,16 +21,23 @@ target_compile_definitions(imagestego_wavelet PUBLIC
   "-DIMAGESTEGO_WAVELET"
 )
 
-if (CPU_AVX2_SUPPORTED)
+if (X86 OR X86_64)
+  foreach(OPT SSSE3 AVX2)
+    if (CPU_${OPT}_SUPPORTED)
+      target_compile_definitions(imagestego_wavelet PRIVATE
+        "-DIMAGESTEGO_${OPT}_SUPPORTED"
+      )
+    endif()
+  endforeach()
+elseif(ARM OR AARCH64)
   target_compile_definitions(imagestego_wavelet PRIVATE
-    "-DIMAGESTEGO_AVX2_SUPPORTED"
+    "-DIMAGESTEGO_NEON_SUPPORTED"
   )
-endif()
-if (CPU_SSSE3_SUPPORTED)
+elseif(PPC64 OR PPC64LE)
   target_compile_definitions(imagestego_wavelet PRIVATE
-    "-DIMAGESTEGO_SSSE3_SUPPORTED"
+    "-DIMAGESTEGO_ALTIVEC_SUPPORTED"
   )
-endif()
+endif(X86 OR X86_64)
 
 imagestego_lib(imagestego_wavelet)
 imagestego_exports(imagestego_wavelet)
