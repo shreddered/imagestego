@@ -2,7 +2,7 @@
 #define __IMAGESTEGO_CORE_ROUTE_HPP_INCLUDED__
 
 // imagestego headers
-#include "imagestego/core/avl_tree.hpp"
+#include "avl_tree.hpp"
 // c++ headers
 #include <random>
 #include <utility>

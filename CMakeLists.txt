@@ -34,7 +34,20 @@ set(IMAGESTEGO_VERSION "${IMAGESTEGO_VERSION_MAJOR}.${IMAGESTEGO_VERSION_MINOR}.
 
 project(imagestego VERSION ${IMAGESTEGO_VERSION} LANGUAGES CXX)
 
+# basic definitions
 set(IMAGESTEGO_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(IMAGESTEGO_CORE_DIR ${IMAGESTEGO_SOURCE_DIR}/modules/core)
+set(IMAGESTEGO_COMPRESSION_DIR ${IMAGESTEGO_SOURCE_DIR}/modules/compression)
+set(IMAGESTEGO_LOSSLESS_DIR ${IMAGESTEGO_SOURCE_DIR}/modules/lossless)
+set(IMAGESTEGO_WAVELET_DIR ${IMAGESTEGO_SOURCE_DIR}/modules/wavelet)
+
+macro(imagestego_defs)
+    set(IMAGESTEGO_SOURCE_DIR ${IMAGESTEGO_SOURCE_DIR}) 
+    set(IMAGESTEGO_CORE_DIR ${IMAGESTEGO_CORE_DIR}) 
+    set(IMAGESTEGO_COMPRESSION_DIR ${IMAGESTEGO_COMPRESSION_DIR}) 
+    set(IMAGESTEGO_LOSSLESS_DIR ${IMAGESTEGO_LOSSLESS_DIR}) 
+    set(IMAGESTEGO_WAVELET_DIR ${IMAGESTEGO_WAVELET_DIR}) 
+endmacro()
 
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-simd-detection.cmake")
 
@@ -96,7 +109,7 @@ function(imagestego_test)
 
     foreach(OPT CORE COMPRESSION JPEG LOSSLESS WAVELET)
         if (${TEST_${OPT}})
-            set(DIR $<LOWER_CASE:${OPT}>)
+            set(DIR ${OPT})
         endif ()
     endforeach()
 
@@ -108,8 +121,10 @@ function(imagestego_test)
         gmock_main
     )
 
+    target_include_directories(${TEST_NAME} PRIVATE ${IMAGESTEGO_${DIR}_DIR}/src)
+
     set_target_properties(${TEST_NAME} PROPERTIES
-        OUTPUT_NAME "test_${DIR}_${TEST_NAME}"
+        OUTPUT_NAME "test_$<LOWER_CASE:${DIR}>_${TEST_NAME}"
         RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/"
     )
 endfunction(imagestego_test)
@@ -188,10 +203,8 @@ if (IMAGESTEGO_BUILD_TESTS)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/gtest)
 
     # core tests
-    imagestego_add_test(CORE NAME avl)
     imagestego_add_test(CORE NAME bitarray)
     imagestego_add_test(CORE NAME intrinsics)
-    imagestego_add_test(CORE NAME route)
 
     # compression tests
     if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
@@ -201,7 +214,9 @@ if (IMAGESTEGO_BUILD_TESTS)
 
     # lossless tests
     if ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
+        imagestego_add_test(LOSSLESS NAME avl)
         imagestego_add_test(LOSSLESS NAME lsb)
+        imagestego_add_test(LOSSLESS NAME route)
     endif ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
 
     # wavelet tests

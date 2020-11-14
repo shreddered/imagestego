@@ -19,7 +19,6 @@
 
 // imagestego
 #include "imagestego/wavelet/haar.hpp"
-#include "imagestego/wavelet/haar_fast.hpp"
 // gtest
 #include <gtest/gtest.h>
 // c++ headers

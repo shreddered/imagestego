@@ -21,8 +21,7 @@
 #define __IMAGESTEGO_CORE_HPP_INCLUDED__
 
 // imagestego headers
-#include "imagestego/core/avl_tree.hpp"
-//#include "imagestego/core/bitarray.hpp"
+#include "imagestego/core/bitarray.hpp"
 #include "imagestego/core/config.hpp"
 #include "imagestego/core/exception.hpp"
 #include "imagestego/core/interfaces.hpp"

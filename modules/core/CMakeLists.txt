@@ -1,3 +1,5 @@
+imagestego_defs()
+
 # imagestego_core
 add_library(imagestego_core
     ${CMAKE_CURRENT_SOURCE_DIR}/src/bitarray.cpp
@@ -5,7 +7,7 @@ add_library(imagestego_core
     ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/exception.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/intrinsic.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/route.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/src/route.cpp
     # third party
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/MurmurHash3.cpp
 )
@@ -45,11 +47,11 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
 )
 
 if (IMAGESTEGO_BUILD_TESTS)
-    imagestego_test(CORE 
-        NAME avl
-        FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/avl.cpp
-        LIBS imagestego_core
-    )
+    # imagestego_test(CORE 
+        # NAME avl
+        # FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/avl.cpp
+        # LIBS imagestego_core
+    # )
     imagestego_test(CORE
         NAME bitarray
         FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/bitarray.cpp
@@ -60,9 +62,9 @@ if (IMAGESTEGO_BUILD_TESTS)
         FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/intrinsic.cpp
         LIBS imagestego_core
     )
-    imagestego_test(CORE
-        NAME route
-        FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/route.cpp
-        LIBS imagestego_core
-    )
+    # imagestego_test(CORE
+        # NAME route
+        # FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/route.cpp
+        # LIBS imagestego_core
+    # )
 endif (IMAGESTEGO_BUILD_TESTS)

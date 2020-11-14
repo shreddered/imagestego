@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
-
-#include "imagestego/core/route.hpp"
+// imagestego headers
+#include "route.hpp"
+// c++ headers
 #include <random>
 #include <utility>
 
