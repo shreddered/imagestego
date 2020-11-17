@@ -9,7 +9,7 @@ jobs:
       dist: bionic
       compiler: gcc
       env:
-        - MODULES="core,lossless,comp,wavelet"
+        - MODULES="core,lossless,comp,wavelet" COVERAGE=1
 
     - name: "GCC-9 arm64"
       arch: arm64
@@ -68,4 +68,4 @@ after_success:
   - ctest --verbose
   - cd ..
 
-after_script: scripts/coverage.sh
+after_script: [ ! -z "$COVERAGE" ] || scripts/coverage.sh
