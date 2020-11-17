@@ -22,7 +22,7 @@ target_compile_definitions(imagestego_wavelet PUBLIC
 )
 
 if (X86 OR X86_64)
-  foreach(OPT SSSE3 AVX2)
+  foreach(OPT SSE2 SSSE3 AVX2)
     if (CPU_${OPT}_SUPPORTED)
       target_compile_definitions(imagestego_wavelet PRIVATE
         "-DIMAGESTEGO_${OPT}_SUPPORTED"
