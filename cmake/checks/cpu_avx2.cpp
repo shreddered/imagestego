@@ -1,7 +1,3 @@
-#ifndef __AVX2__
-#   error "AVX2 is not supported"
-#endif
-
 #include <x86intrin.h>
 
 #include <cstddef>
