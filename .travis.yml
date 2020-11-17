@@ -1,15 +1,5 @@
 language: cpp
 
-# os:
-  # - linux
-  # - osx
-
-# dist: bionic
-
-# compiler:
-  # - gcc
-  # - clang
-
 # arch:
   # - amd64
   # - arm64
@@ -29,16 +19,18 @@ language: cpp
   # - MODULES="core,lossless,comp,wavelet"
   # - MODULES="core,lossless,comp"
 
+# TODO: add more compilers
 jobs:
   include:
-    - name: "gcc x86"
+    - name: "GCC x86"
       arch: amd64
       os: linux
       dist: bionic
       compiler: gcc
       env:
         - MODULES="core,lossless,comp,wavelet"
-    - name: "gcc armv8"
+
+    - name: "GCC-9 arm64"
       arch: arm64
       os: linux
       dist: bionic
@@ -53,15 +45,33 @@ jobs:
             - gcc-9
             - g++-9
 
-    # - arch: arm64
-      # compiler: gcc
-      # addons:
-        # apt:
-          # sources:
-            # - sourceline: 'ppa:ubuntu-toolchain-r/test'
-          # packages:
-            # - gcc-9
-            # - g++-9
+    - name: "Clang x86"
+      arch: amd64
+      os: linux
+      dist: bionic
+      compiler: clang
+      env:
+        - MODULES="core,lossless,comp,wavelet"
+
+    - name: "Clang-9 arm64"
+      arch: arm64
+      os: linux
+      dist: bionic
+      compiler: clang-9
+      env:
+        - MODULES="core,lossless,comp,wavelet" CC=clang-9 CXX=clang++-9
+      addons:
+        apt:
+          sources:
+            - sourceline: "ppa:ubuntu-toolchain-r/test"
+          packages:
+            - clang-9
+
+    - name: "Apple Clang x86"
+      os: osx
+      compiler: clang
+      env:
+        - MODULES="core,lossless,comp"
 
 cache:
   directories:
