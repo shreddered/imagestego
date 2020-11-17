@@ -14,10 +14,11 @@ arch:
 
 addons:
   apt:
+    sources:
+      - sourceline: 'ppa:ubuntu-toolchain-r/test'
     packages:
       - cmake-data
       - cmake
-      - git
       - lcov
 
 install: scripts/install-deps.sh
