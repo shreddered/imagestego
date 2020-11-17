@@ -35,6 +35,13 @@ jobs:
       env: MODULES="core,lossless,comp,wavelet"
     - arch: arm64
       compiler: clang
+  include:
+    - arch: arm64
+      compiler: gcc-10
+      addons:
+        apt:
+          packages:
+            - gcc-10
 
 cache:
   directories:
