@@ -29,6 +29,10 @@ jobs:
     - os: osx
       env: MODULES="core,lossless,comp,wavelet"
 
+cache:
+  directories:
+    - $TRAVIS_BUILD_DIR/opencv
+
 install:
   - git clone https://github.com/opencv/opencv.git
   - git clone https://github.com/opencv/opencv_contrib.git
