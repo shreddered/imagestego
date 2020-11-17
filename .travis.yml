@@ -16,10 +16,12 @@ addons:
       - git
       - lcov
 
-sudo: required
-
 install:
   - if ! [ -d $TRAVIS_BUILD_DIR/opencv ]; then scripts/install-deps.sh; fi
+
+cache:
+  directories:
+    - $TRAVIS_BUILD_DIR/opencv
 
 script: scripts/build.sh
 
