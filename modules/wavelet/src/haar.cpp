@@ -185,16 +185,17 @@ private:
         }
 // TODO: vectorize loop using ARM NEON intrinsics
 #elif defined(IMAGESTEGO_NEON_SUPPORTED)
-        for (int row = 0; row != src.rows; ++row) {
-            const int16_t* sptr = src.ptr<int16_t>(row);
-            int16_t* dptr = dst.ptr<int16_t>(row);
-            const int aligned = align16(src.cols);
-            for (int col = 0; col != aligned; col += 16) {
-                const int16x8_t a = vld1q_s16(sptr + col),
-                                b = vld1q_s16(sptr + col + 8),
-                                sum = vpaddq_s16(a, b);
-            }
-        }
+        // for (int row = 0; row != src.rows; ++row) {
+            // const int16_t* sptr = src.ptr<int16_t>(row);
+            // int16_t* dptr = dst.ptr<int16_t>(row);
+            // const int aligned = align16(src.cols);
+            // for (int col = 0; col != aligned; col += 16) {
+                // const int16x8_t a = vld1q_s16(sptr + col),
+                                // b = vld1q_s16(sptr + col + 8),
+                                // sum = vpaddq_s16(a, b);
+            // }
+        // }
+        dst = verticalLifting(src.t()).t();
 #endif
         return dst;
     }
