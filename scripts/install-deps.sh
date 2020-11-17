@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Script for installing dependencies of imagestego on Travis CI
+set -e
 
 if [ ! -d $TRAVIS_BUILD_DIR/opencv/build ]; then
     git clone https://github.com/opencv/opencv.git

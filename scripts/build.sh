@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Script for building imagestego
+set -e
 
 mkdir build || echo -n
 cd build
