@@ -26,8 +26,6 @@
 #include <chrono>
 #include <ios>
 #include <iostream>
-// avx2
-#include <x86intrin.h>
 // opencv
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
