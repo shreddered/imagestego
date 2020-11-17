@@ -1,50 +1,67 @@
 language: cpp
 
-os:
-  - linux
-  - osx
+# os:
+  # - linux
+  # - osx
 
-compiler:
-  - gcc
-  - clang
+# dist: bionic
 
-arch:
-  - amd64
-  - arm64
+# compiler:
+  # - gcc
+  # - clang
 
-addons:
-  apt:
-    sources:
-      - sourceline: 'ppa:ubuntu-toolchain-r/test'
-    packages:
-      - cmake-data
-      - cmake
-      - lcov
+# arch:
+  # - amd64
+  # - arm64
 
-install: scripts/install-deps.sh
+# addons:
+  # apt:
+    # sources:
+      # - sourceline: 'ppa:ubuntu-toolchain-r/test'
+    # packages:
+      # - cmake-data
+      # - cmake
+      # - lcov
 
-env:
-  - MODULES="core,lossless,comp,wavelet"
-  - MODULES="core,lossless,comp"
+# install: scripts/install-deps.sh
+
+# env:
+  # - MODULES="core,lossless,comp,wavelet"
+  # - MODULES="core,lossless,comp"
 
 jobs:
-  exclude:
-    - os: linux
-      env: MODULES="core,lossless,comp"
-    - os: osx
-      env: MODULES="core,lossless,comp,wavelet"
-    - arch: arm64
-      compiler: clang
   include:
-    - arch: arm64
+    - name: "gcc x86"
+      arch: amd64
+      os: linux
+      dist: bionic
       compiler: gcc
+      env:
+        - MODULES="core,lossless,comp,wavelet"
+    - name: "gcc armv8"
+      arch: arm64
+      os: linux
+      dist: bionic
+      compiler: gcc-9
+      env:
+        - MODULES="core,lossless,comp,wavelet" CC=gcc-9 CXX=g++-9
       addons:
         apt:
           sources:
-            - sourceline: 'ppa:ubuntu-toolchain-r/test'
+            - sourceline: "ppa:ubuntu-toolchain-r/test"
           packages:
             - gcc-9
             - g++-9
+
+    # - arch: arm64
+      # compiler: gcc
+      # addons:
+        # apt:
+          # sources:
+            # - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          # packages:
+            # - gcc-9
+            # - g++-9
 
 cache:
   directories:
