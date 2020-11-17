@@ -48,13 +48,11 @@ namespace imagestego {
 class HaarWaveletImpl final {
 public:
     explicit HaarWaveletImpl() noexcept {}
-    void setMatrix(const cv::Mat& src) {
-        cv::split(src, _planes);
-    }
-    cv::Mat transform() {
+    cv::Mat transform(const cv::Mat& mat) {
         cv::Mat dst;
         std::vector<std::future<cv::Mat> > futures;
-        std::vector<cv::Mat> planes;
+        std::vector<cv::Mat> planes, _planes;
+        cv::split(mat, _planes);
         for (cv::Mat mat : _planes) {
             futures.emplace_back(std::async([](cv::Mat src) {
                 src.convertTo(src, CV_16S);
@@ -66,6 +64,10 @@ public:
         }
         cv::merge(planes, dst);
         return dst;
+    }
+    cv::Mat inverse(const cv::Mat& mat) {
+        // TODO: implement inverse wavelet
+        return mat;
     }
 private:
     static cv::Mat horizontalLifting(const cv::Mat& src) {
@@ -88,7 +90,6 @@ private:
     static inline int floor2(int num) {
         return (num < 0) ? (num - 1) / 2 : num / 2;
     }
-    std::vector<cv::Mat> _planes;
 }; // class HaarWaveletImpl
 
 HaarWavelet::HaarWavelet() : pImpl(new HaarWaveletImpl) {}
@@ -98,12 +99,12 @@ HaarWavelet::~HaarWavelet() noexcept {
         delete pImpl;
 }
 
-void HaarWavelet::setMatrix(const cv::Mat& mat) {
-    pImpl->setMatrix(mat);
+cv::Mat HaarWavelet::transform(const cv::Mat& mat) {
+    return pImpl->transform(mat);
 }
 
-cv::Mat HaarWavelet::transform() {
-    return pImpl->transform();
+cv::Mat HaarWavelet::inverse(const cv::Mat& mat) {
+    return pImpl->inverse(mat);
 }
 
 namespace experimental {
@@ -111,13 +112,11 @@ namespace experimental {
 class HaarWaveletImpl {
 public:
     explicit HaarWaveletImpl() noexcept {}
-    void setMatrix(const cv::Mat& src) {
-        cv::split(src, _planes);
-    }
-    cv::Mat transform() {
+    cv::Mat transform(const cv::Mat& mat) {
         cv::Mat dst;
         std::vector<std::future<cv::Mat> > futures;
-        std::vector<cv::Mat> planes;
+        std::vector<cv::Mat> planes, _planes;
+        cv::split(mat, _planes);
         for (const cv::Mat& mat : _planes) {
             futures.emplace_back(std::async([](cv::Mat mat) -> cv::Mat {
                 mat.convertTo(mat, CV_16S);
@@ -129,6 +128,10 @@ public:
         }
         cv::merge(planes, dst);
         return dst;
+    }
+    cv::Mat inverse(const cv::Mat& mat) {
+        // TODO: implement inverse wavelet
+        return mat;
     }
 private:
     // TODO: implement this using SSSE3 phaddw
@@ -290,22 +293,22 @@ private:
         return num & ~0x7;
     }
 #endif
-    std::vector<cv::Mat> _planes;
 }; // class HaarWaveletImpl
 
 HaarWavelet::HaarWavelet() : pImpl(new HaarWaveletImpl) {}
 
 HaarWavelet::~HaarWavelet() noexcept {
-    if (pImpl)
+    if (pImpl) {
         delete pImpl;
+    }
 }
 
-void HaarWavelet::setMatrix(const cv::Mat& src) {
-    pImpl->setMatrix(src);
+cv::Mat HaarWavelet::transform(const cv::Mat& mat) {
+    return pImpl->transform(mat);
 }
 
-cv::Mat HaarWavelet::transform() {
-    return pImpl->transform();
+cv::Mat HaarWavelet::inverse(const cv::Mat& mat) {
+    return pImpl->inverse(mat);
 }
 
 } // namespace experimental

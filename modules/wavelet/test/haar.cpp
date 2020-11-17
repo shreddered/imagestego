@@ -38,20 +38,18 @@ TEST(Wavelet, HaarWavelet256x256) {
     cv::Mat m(256, 256, CV_8UC3), dst;
     cv::randu(m, cv::Scalar(0, 0, 0), cv::Scalar(255, 255, 255));
     imagestego::HaarWavelet wavelet;
-    wavelet.setMatrix(m);
     // start
     auto start = chrono::high_resolution_clock::now();
-    dst = wavelet.transform();
+    dst = wavelet.transform(m);
     auto end = chrono::high_resolution_clock::now();
     // end
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
     imagestego::experimental::HaarWavelet w2;
-    w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
-    cv::Mat dst1 = w2.transform();
+    cv::Mat dst1 = w2.transform(m);
     end = chrono::high_resolution_clock::now();
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
@@ -65,20 +63,18 @@ TEST(Wavelet, HaarWavelet320x320) {
     cv::Mat m(320, 320, CV_8UC3), dst;
     cv::randu(m, cv::Scalar(0, 0, 0), cv::Scalar(255, 255, 255));
     imagestego::HaarWavelet wavelet;
-    wavelet.setMatrix(m);
     // start
     auto start = chrono::high_resolution_clock::now();
-    dst = wavelet.transform();
+    dst = wavelet.transform(m);
     auto end = chrono::high_resolution_clock::now();
     // end
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
     imagestego::experimental::HaarWavelet w2;
-    w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
-    cv::Mat dst1 = w2.transform();
+    cv::Mat dst1 = w2.transform(m);
     end = chrono::high_resolution_clock::now();
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
@@ -92,20 +88,18 @@ TEST(Wavelet, HaarWaveletHD) {
     cv::Mat m(720, 1280, CV_8UC3), dst;
     cv::randu(m, cv::Scalar(0, 0, 0), cv::Scalar(255, 255, 255));
     imagestego::HaarWavelet wavelet;
-    wavelet.setMatrix(m);
     // start
     auto start = chrono::high_resolution_clock::now();
-    dst = wavelet.transform();
+    dst = wavelet.transform(m);
     auto end = chrono::high_resolution_clock::now();
     // end
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
     imagestego::experimental::HaarWavelet w2;
-    w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
-    cv::Mat dst1 = w2.transform();
+    cv::Mat dst1 = w2.transform(m);
     end = chrono::high_resolution_clock::now();
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
@@ -119,20 +113,18 @@ TEST(Wavelet, HaarWaveletFullHD) {
     cv::Mat m(1080, 1920, CV_8UC3), dst;
     cv::randu(m, cv::Scalar(0, 0, 0), cv::Scalar(255, 255, 255));
     imagestego::HaarWavelet wavelet;
-    wavelet.setMatrix(m);
     // start
     auto start = chrono::high_resolution_clock::now();
-    dst = wavelet.transform();
+    dst = wavelet.transform(m);
     auto end = chrono::high_resolution_clock::now();
     // end
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
     imagestego::experimental::HaarWavelet w2;
-    w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
-    cv::Mat dst1 = w2.transform();
+    cv::Mat dst1 = w2.transform(m);
     end = chrono::high_resolution_clock::now();
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
@@ -146,20 +138,18 @@ TEST(Wavelet, HaarWavelet2K) {
     cv::Mat m(1440, 2560, CV_8UC3), dst;
     cv::randu(m, cv::Scalar(0, 0, 0), cv::Scalar(255, 255, 255));
     imagestego::HaarWavelet wavelet;
-    wavelet.setMatrix(m);
     // start
     auto start = chrono::high_resolution_clock::now();
-    dst = wavelet.transform();
+    dst = wavelet.transform(m);
     auto end = chrono::high_resolution_clock::now();
     // end
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
     imagestego::experimental::HaarWavelet w2;
-    w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
-    cv::Mat dst1 = w2.transform();
+    cv::Mat dst1 = w2.transform(m);
     end = chrono::high_resolution_clock::now();
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
@@ -173,20 +163,18 @@ TEST(Wavelet, HaarWavelet4K) {
     cv::Mat m(2160, 3840, CV_8UC3), dst;
     cv::randu(m, cv::Scalar(0, 0, 0), cv::Scalar(255, 255, 255));
     imagestego::HaarWavelet wavelet;
-    wavelet.setMatrix(m);
     // start
     auto start = chrono::high_resolution_clock::now();
-    dst = wavelet.transform();
+    dst = wavelet.transform(m);
     auto end = chrono::high_resolution_clock::now();
     // end
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
     imagestego::experimental::HaarWavelet w2;
-    w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
-    cv::Mat dst1 = w2.transform();
+    cv::Mat dst1 = w2.transform(m);
     end = chrono::high_resolution_clock::now();
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
@@ -200,20 +188,18 @@ TEST(Wavelet, HaarWavelet501x303) {
     cv::Mat m(303, 501, CV_8UC3), dst;
     cv::randu(m, cv::Scalar(0, 0, 0), cv::Scalar(255, 255, 255));
     imagestego::HaarWavelet wavelet;
-    wavelet.setMatrix(m);
     // start
     auto start = chrono::high_resolution_clock::now();
-    dst = wavelet.transform();
+    dst = wavelet.transform(m);
     auto end = chrono::high_resolution_clock::now();
     // end
     chrono::nanoseconds ns = end - start;
     std::cout << ns.count() << " ns" << '\n';
 
     imagestego::experimental::HaarWavelet w2;
-    w2.setMatrix(m);
 
     start = chrono::high_resolution_clock::now();
-    cv::Mat dst1 = w2.transform();
+    cv::Mat dst1 = w2.transform(m);
     end = chrono::high_resolution_clock::now();
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';

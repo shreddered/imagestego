@@ -31,8 +31,8 @@ class HaarWaveletImpl;
 class IMAGESTEGO_EXPORTS HaarWavelet : public AbstractWavelet {
 public:
     explicit HaarWavelet();
-    void setMatrix(const cv::Mat& src) override;
-    cv::Mat transform() override;
+    cv::Mat transform(const cv::Mat& mat) override;
+    cv::Mat inverse(const cv::Mat& mat) override;
     virtual ~HaarWavelet() noexcept;
 private:
     HaarWaveletImpl* pImpl;
@@ -45,8 +45,8 @@ class HaarWaveletImpl;
 class IMAGESTEGO_EXPORTS HaarWavelet : public AbstractWavelet {
 public:
     explicit HaarWavelet();
-    void setMatrix(const cv::Mat& src) override;
-    cv::Mat transform() override;
+    cv::Mat transform(const cv::Mat& mat) override;
+    cv::Mat inverse(const cv::Mat& mat) override;
     virtual ~HaarWavelet() noexcept;
 private:
     HaarWaveletImpl* pImpl;
