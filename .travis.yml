@@ -1,22 +1,5 @@
 language: cpp
 
-# arch:
-  # - amd64
-  # - arm64
-
-# addons:
-  # apt:
-    # sources:
-      # - sourceline: 'ppa:ubuntu-toolchain-r/test'
-    # packages:
-      # - cmake-data
-      # - cmake
-      # - lcov
-
-# env:
-  # - MODULES="core,lossless,comp,wavelet"
-  # - MODULES="core,lossless,comp"
-
 # TODO: add more compilers
 jobs:
   include:
