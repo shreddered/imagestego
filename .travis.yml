@@ -32,6 +32,8 @@ jobs:
       env: MODULES="core,lossless,comp"
     - os: osx
       env: MODULES="core,lossless,comp,wavelet"
+    - arch: arm64
+      compiler: clang
 
 cache:
   directories:
