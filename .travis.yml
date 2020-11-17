@@ -19,36 +19,14 @@ addons:
 sudo: required
 
 install:
-  - git clone https://github.com/opencv/opencv.git
-  - git clone https://github.com/opencv/opencv_contrib.git
-  - cd opencv
-  - mkdir build
-  - cd build
-  - cmake -D BUILD_LIST=core,imgcodecs -D CMAKE_BUILD_TYPE=RELEASE -D BUILD_EXAMPLES=OFF -D BUILD_opencv_apps=OFF -D BUILD_DOCS=OFF -D BUILD_PERF_TESTS=OFF -D BUILD_TESTS=OFF -D CMAKE_INSTALL_PREFIX=/usr/local/ ..
-  - make -j$(nproc)
-  - sudo make install
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then sudo sh -c 'echo "/usr/local/lib/" > /etc/ld.so.conf.d/opencv.conf'; fi
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then sudo ldconfig; fi
-  - cd ../../
+  - if ! [ -d $TRAVIS_BUILD_DIR/opencv ]; then scripts/install-deps.sh; fi
 
-script:
-  - mkdir -p build/ && cd build/
-  - cmake -DIMAGESTEGO_BUILD_TESTS=ON -DBUILD_SHARED_LIBS=ON -DIMAGESTEGO_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release
-    -DIMAGESTEGO_MODULES=core,comp,lossless ..
-  - make -j$(nproc)
+script: scripts/build.sh
+
+after_success:
+  - cd build
   - cp ../test/test.jpg .
   - ctest --verbose
   - cd ..
 
-after_success:
-  - lcov --directory . --capture --output-file coverage.info
-  - lcov --remove coverage.info
-    '/usr/*'
-    "${HOME}"'/.cache/*'
-    "$(pwd)"'/third_party/*'
-    "$(pwd)"'/modules/core/third_party/*'
-    "$(pwd)"'/modules/core/test/*'
-    "$(pwd)"'/modules/compression/test/*'
-    "$(pwd)"'/modules/lossless/test/*'
-    --output-file coverage.info
-  - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
+after_script: scripts/coverage.sh
