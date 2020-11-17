@@ -29,9 +29,12 @@ if (X86 OR X86_64)
       )
     endif()
   endforeach()
-elseif(ARM OR AARCH64)
+elseif(ARM OR AARCH64 AND CPU_NEON_SUPPORTED)
   target_compile_definitions(imagestego_wavelet PRIVATE
     "-DIMAGESTEGO_NEON_SUPPORTED"
+  )
+  target_compile_options(imagestego_wavelet PRIVATE
+    ${CPU_NEON_FLAGS}
   )
 elseif(PPC64 OR PPC64LE)
   target_compile_definitions(imagestego_wavelet PRIVATE
