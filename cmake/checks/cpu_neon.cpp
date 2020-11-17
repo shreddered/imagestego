@@ -1,6 +1,6 @@
-#ifndef __ARM_NEON__
-#   error "No ARM NEON available"
-#endif
+// #ifndef __ARM_NEON__
+// #   error "No ARM NEON available"
+// #endif
 
 #include <arm_neon.h>
 
