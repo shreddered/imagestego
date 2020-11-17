@@ -52,7 +52,7 @@ jobs:
       os: osx
       compiler: clang
       env:
-        - MODULES="core,lossless,comp"
+        - MODULES="core,lossless,comp,wavelet"
 
 cache:
   directories:
