@@ -8,6 +8,10 @@ compiler:
   - gcc
   - clang
 
+arch:
+  - amd64
+  - arm64
+
 addons:
   apt:
     packages:
@@ -28,6 +32,9 @@ jobs:
       env: MODULES="core,lossless,comp"
     - os: osx
       env: MODULES="core,lossless,comp,wavelet"
+      arch: arm64
+    - arch: arm64
+      cache: true
 
 cache:
   directories:
