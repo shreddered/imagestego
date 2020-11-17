@@ -33,8 +33,6 @@ jobs:
     - os: osx
       env: MODULES="core,lossless,comp,wavelet"
       arch: arm64
-    - arch: arm64
-      cache: true
 
 cache:
   directories:
