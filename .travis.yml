@@ -53,19 +53,19 @@ jobs:
       env:
         - MODULES="core,lossless,comp,wavelet"
 
-    - name: "Clang-9 arm64"
+    - name: "Clang-10 arm64"
       arch: arm64
       os: linux
       dist: bionic
-      compiler: clang-9
+      compiler: clang-10
       env:
-        - MODULES="core,lossless,comp,wavelet" CC=clang-9 CXX=clang++-9
+        - MODULES="core,lossless,comp,wavelet" CC=clang-10 CXX=clang++-10
       addons:
         apt:
           sources:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
           packages:
-            - clang-9
+            - clang-10
 
     - name: "Apple Clang x86"
       os: osx
