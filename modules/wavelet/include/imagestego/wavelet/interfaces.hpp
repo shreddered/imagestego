@@ -11,8 +11,8 @@ namespace imagestego {
 
 class IMAGESTEGO_EXPORTS AbstractWavelet {
 public:
-    virtual void setMatrix(const cv::Mat& src) = 0;
-    virtual cv::Mat transform() = 0;
+    virtual cv::Mat transform(const cv::Mat& src) = 0;
+    virtual cv::Mat inverse(const cv::Mat& src) = 0;
     virtual ~AbstractWavelet() noexcept = default;
 }; // class AbstractWaveletTransform
 
