@@ -91,7 +91,7 @@ if (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     -g
     --coverage
   )
-  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+if(NOT CMAKE_VERSION VERSION_LESS 3.13)
     target_link_options(coverage_config INTERFACE --coverage)
   else()
     target_link_libraries(coverage_config INTERFACE --coverage)
