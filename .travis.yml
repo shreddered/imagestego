@@ -16,8 +16,7 @@ addons:
       - git
       - lcov
 
-install:
-  - if ! [ -d $TRAVIS_BUILD_DIR/opencv ]; then scripts/install-deps.sh; fi
+install: scripts/install-deps.sh
 
 cache:
   directories:
