@@ -240,10 +240,10 @@ private:
             for (int col = 0; col != aligned; col += 8) {
                 const __m128i a = _mm_loadu_si128(reinterpret_cast<const __m128i*>(ptr1 + col)),
                               b = _mm_loadu_si128(reinterpret_cast<const __m128i*>(ptr2 + col));
-                const __m256i lo = _mm_srai_epi16(_mm_add_epi16(a, b), 1),
+                const __m128i lo = _mm_srai_epi16(_mm_add_epi16(a, b), 1),
                               hi = _mm_sub_epi16(a, b);
-                _mm_storeu_si256(reinterpret_cast<__m128i*>(loptr + col), lo);
-                _mm_storeu_si256(reinterpret_cast<__m128i*>(hiptr + col), hi);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(loptr + col), lo);
+                _mm_storeu_si128(reinterpret_cast<__m128i*>(hiptr + col), hi);
             }
             for (int col = aligned; col != src.cols; ++col) {
                 loptr[col] = floor2(ptr1[col] + ptr2[col]);
