@@ -41,13 +41,15 @@ jobs:
       dist: bionic
       compiler: clang-10
       env:
-        - MODULES="core,lossless,comp,wavelet" CC=clang-10 CXX=clang++-10
+        - MODULES="core,lossless,comp,wavelet" CC=clang-10 CXX=clang++-10 CMAKE_OPTIONS="-D CMAKE_LINKER=lld"
       addons:
         apt:
           sources:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
           packages:
             - clang-10
+            - clang++-10
+            - lld
     - name: "Apple Clang x86"
       os: osx
       compiler: clang
