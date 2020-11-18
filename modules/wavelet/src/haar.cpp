@@ -168,8 +168,8 @@ private:
             int16_t* dptr = dst.ptr<int16_t>(row);
             const int aligned = align16(src.cols);
             for (int col = 0; col != aligned; col += 16) {
-                const __m128i a = _mm_loadu_si128(reinterpret_cast<const __m128i*>(sptr + col),
-                              b = _mm_loadu_si128(reinterpret_cast<const __m128i*>(sptr + col + 8),
+                const __m128i a = _mm_loadu_si128(reinterpret_cast<const __m128i*>(sptr + col)),
+                              b = _mm_loadu_si128(reinterpret_cast<const __m128i*>(sptr + col + 8)),
                               lo = _mm_srai_epi16(_mm_hadd_epi16(a, b), 1),
                               hi = _mm_hsub_epi16(a, b);
                 _mm_storeu_si128(reinterpret_cast<__m128i*>(dptr + col / 2), lo);
