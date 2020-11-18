@@ -90,7 +90,7 @@ if (X86 OR X86_64)
 
 elseif (ARM OR AARCH64)
   set(CPU_NEON_CHECK_FILE "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checks/cpu_neon.cpp")
-  set(CPU_NEON_FLAGS "-march=native")
+  set(CPU_NEON_FLAGS "-mfpu=neon")
   imagestego_detect_simd_support(NEON)
 elseif (PPC64 OR PPC64LE)
   # TODO: implement IBM POWER support check
