@@ -10,6 +10,10 @@ jobs:
       compiler: gcc
       env:
         - MODULES="core,lossless,comp,wavelet" COVERAGE=1
+      addons:
+        apt:
+          packages:
+            - lcov
     - name: "GCC-9 arm64"
       arch: arm64
       os: linux
