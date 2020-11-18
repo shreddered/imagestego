@@ -5,7 +5,6 @@ platform: x64
 configuration: Release
 
 install:
-  - git submodule update --init --recursive
   - git clone https://github.com/opencv/opencv.git
   - cd opencv
   - mkdir build
@@ -13,6 +12,7 @@ install:
   - cmake --build build --config Release -j 4
   - cmake --build build --target install --config Release
   - cd ..
+  - git submodule update --init --recursive
 
 before_build:
   - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,comp .
