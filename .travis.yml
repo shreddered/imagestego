@@ -64,4 +64,4 @@ after_success:
   - ctest --verbose
   - cd ..
 
-after_script: [ ! -z "$COVERAGE" ] || scripts/coverage.sh
+after_script: scripts/coverage.sh
