@@ -10,7 +10,6 @@ jobs:
       compiler: gcc
       env:
         - MODULES="core,lossless,comp,wavelet" COVERAGE=1
-
     - name: "GCC-9 arm64"
       arch: arm64
       os: linux
@@ -25,7 +24,6 @@ jobs:
           packages:
             - gcc-9
             - g++-9
-
     - name: "Clang x86"
       arch: amd64
       os: linux
@@ -33,7 +31,6 @@ jobs:
       compiler: clang
       env:
         - MODULES="core,lossless,comp,wavelet"
-
     - name: "Clang-10 arm64"
       arch: arm64
       os: linux
@@ -47,7 +44,6 @@ jobs:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
           packages:
             - clang-10
-
     - name: "Apple Clang x86"
       os: osx
       compiler: clang
