@@ -1,7 +1,3 @@
-#ifndef __SSE2__
-#   error "SSE2 is not supported"
-#endif
-
 #include <x86intrin.h>
 #include <cstdint>
 
