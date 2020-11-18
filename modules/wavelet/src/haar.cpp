@@ -134,154 +134,10 @@ public:
         return mat;
     }
 private:
-    // TODO: implement this using SSSE3 phaddw
-    static cv::Mat horizontalLifting(const cv::Mat& src) {
-        cv::Mat dst(src.size(), CV_16SC1);
-#if defined(IMAGESTEGO_AVX2_SUPPORTED)
-        const __m256i mask = _mm256_set_epi32(7, 6, 3, 2, 5, 4, 1, 0);
-        for (int row = 0; row != src.rows; ++row) {
-            const int16_t* sptr = src.ptr<int16_t>(row);
-            int16_t* dptr = dst.ptr<int16_t>(row);
-            const int aligned = align32(src.cols);
-            for (int col = 0; col != aligned; col += 32) {
-                const __m256i a = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(sptr + col)),
-                              b = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(sptr + col + 16)),
-                              sum = _mm256_srai_epi16(_mm256_hadd_epi16(a, b), 1),
-                              dif = _mm256_hsub_epi16(a, b);
-                const __m256i lo = _mm256_permutevar8x32_epi32(sum, mask),
-                              hi = _mm256_permutevar8x32_epi32(dif, mask);
-                _mm256_storeu_si256(reinterpret_cast<__m256i*>(dptr + col / 2), lo);
-                _mm256_storeu_si256(reinterpret_cast<__m256i*>(dptr + src.cols / 2 + col / 2), hi);
-            }
-            // TODO: implement with AVX512 if possible
-            for (int col = aligned; col < src.cols - 1; col += 2) {
-                *(dptr + col / 2) = floor2(sptr[col + 1] + sptr[col]);
-                *(dptr + src.cols / 2 + col / 2) = sptr[col] - sptr[col + 1];
-            }
-            if (src.cols % 2 != 0) {
-                dptr[src.cols - 1] = sptr[src.cols - 1];
-            }
-        }
-#elif defined(IMAGESTEGO_SSSE3_SUPPORTED) && defined(IMAGESTEGO_SSE2_SUPPORTED)
-        for (int row = 0; row != src.rows; ++row) {
-            const int16_t* sptr = src.ptr<int16_t>(row);
-            int16_t* dptr = dst.ptr<int16_t>(row);
-            const int aligned = align16(src.cols);
-            for (int col = 0; col != aligned; col += 16) {
-                const __m128i a = _mm_loadu_si128(reinterpret_cast<const __m128i*>(sptr + col)),
-                              b = _mm_loadu_si128(reinterpret_cast<const __m128i*>(sptr + col + 8)),
-                              lo = _mm_srai_epi16(_mm_hadd_epi16(a, b), 1),
-                              hi = _mm_hsub_epi16(a, b);
-                _mm_storeu_si128(reinterpret_cast<__m128i*>(dptr + col / 2), lo);
-                _mm_storeu_si128(reinterpret_cast<__m128i*>(dptr + src.cols / 2 + col / 2), hi);
-            }
-            for (int col = aligned; col < src.cols - 1; col += 2) {
-                *(dptr + col / 2) = floor2(sptr[col + 1] + sptr[col]);
-                *(dptr + src.cols / 2 + col / 2) = sptr[col] - sptr[col + 1];
-            }
-            if (src.cols % 2 != 0) {
-                dptr[src.cols - 1] = sptr[src.cols - 1];
-            }
-        }
-// TODO: vectorize loop using ARM NEON intrinsics
-#elif defined(IMAGESTEGO_NEON_SUPPORTED)
-        // for (int row = 0; row != src.rows; ++row) {
-            // const int16_t* sptr = src.ptr<int16_t>(row);
-            // int16_t* dptr = dst.ptr<int16_t>(row);
-            // const int aligned = align16(src.cols);
-            // for (int col = 0; col != aligned; col += 16) {
-                // const int16x8_t a = vld1q_s16(sptr + col),
-                                // b = vld1q_s16(sptr + col + 8),
-                                // sum = vpaddq_s16(a, b);
-            // }
-        // }
-        dst = verticalLifting(src.t()).t();
-#endif
-        return dst;
-    }
+    static cv::Mat horizontalLifting(const cv::Mat& src);
+    static cv::Mat verticalLifting(const cv::Mat& src);
     static inline int16_t floor2(int16_t num) {
         return (num < 0) ? (num - 1) / 2 : num / 2;
-    }
-    static cv::Mat verticalLifting(const cv::Mat& src) {
-        cv::Mat dst(src.size(), CV_16SC1);
-#if defined(IMAGESTEGO_AVX2_SUPPORTED)
-        for (int row = 0; row < (src.rows & ~1); row += 2) {
-            const int16_t* ptr1 = src.ptr<int16_t>(row);
-            const int16_t* ptr2 = src.ptr<int16_t>(row + 1);
-            int16_t* loptr = dst.ptr<int16_t>(row / 2);
-            int16_t* hiptr = dst.ptr<int16_t>(row / 2 + src.rows / 2);
-            const int aligned = align16(src.cols);
-            for (int col = 0; col != aligned; col += 16) {
-                const __m256i a = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr1 + col)),
-                              b = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr2 + col));
-                const __m256i lo = _mm256_srai_epi16(_mm256_add_epi16(a, b), 1),
-                              hi = _mm256_sub_epi16(a, b);
-                _mm256_storeu_si256(reinterpret_cast<__m256i*>(loptr + col), lo);
-                _mm256_storeu_si256(reinterpret_cast<__m256i*>(hiptr + col), hi);
-            }
-            for (int col = aligned; col != src.cols; ++col) {
-                loptr[col] = floor2(ptr1[col] + ptr2[col]);
-                hiptr[col] = ptr1[col] - ptr2[col];
-            }
-        }
-        if (src.rows % 2 != 0) {
-            memcpy(reinterpret_cast<void*>(dst.ptr<int16_t>(src.rows - 1)),
-                   reinterpret_cast<const void*>(src.ptr<int16_t>(src.rows - 1)),
-                   src.cols * sizeof(int16_t));
-        }
-        _mm256_zeroupper();
-#elif defined(IMAGESTEGO_SSE2_SUPPORTED)
-        for (int row = 0; row < (src.rows & ~1); row += 2) {
-            const int16_t* ptr1 = src.ptr<int16_t>(row);
-            const int16_t* ptr2 = src.ptr<int16_t>(row + 1);
-            int16_t* loptr = dst.ptr<int16_t>(row / 2);
-            int16_t* hiptr = dst.ptr<int16_t>(row / 2 + src.rows / 2);
-            const int aligned = align8(src.cols);
-            for (int col = 0; col != aligned; col += 8) {
-                const __m128i a = _mm_loadu_si128(reinterpret_cast<const __m128i*>(ptr1 + col)),
-                              b = _mm_loadu_si128(reinterpret_cast<const __m128i*>(ptr2 + col));
-                const __m128i lo = _mm_srai_epi16(_mm_add_epi16(a, b), 1),
-                              hi = _mm_sub_epi16(a, b);
-                _mm_storeu_si128(reinterpret_cast<__m128i*>(loptr + col), lo);
-                _mm_storeu_si128(reinterpret_cast<__m128i*>(hiptr + col), hi);
-            }
-            for (int col = aligned; col != src.cols; ++col) {
-                loptr[col] = floor2(ptr1[col] + ptr2[col]);
-                hiptr[col] = ptr1[col] - ptr2[col];
-            }
-        }
-        if (src.rows % 2 != 0) {
-            memcpy(reinterpret_cast<void*>(dst.ptr<int16_t>(src.rows - 1)),
-                   reinterpret_cast<const void*>(src.ptr<int16_t>(src.rows - 1)),
-                   src.cols * sizeof(int16_t));
-        }
-#elif defined(IMAGESTEGO_NEON_SUPPORTED)
-        for (int row = 0; row < (src.rows & ~1); row += 2) {
-            const int16_t* ptr1 = src.ptr<int16_t>(row);
-            const int16_t* ptr2 = src.ptr<int16_t>(row + 1);
-            int16_t* loptr = dst.ptr<int16_t>(row / 2);
-            int16_t* hiptr = dst.ptr<int16_t>(row / 2 + src.rows / 2);
-            const int aligned = align8(src.cols);
-            for (int col = 0; col != aligned; col += 8) {
-                const int16x8_t a = vld1q_s16(ptr1 + col),
-                                b = vld1q_s16(ptr2 + col);
-                const int16x8_t lo = vhaddq_s16(a, b),
-                                hi = vsubq_s16(a, b);
-                vst1q_s16(loptr + col, lo);
-                vst1q_s16(hiptr + col, hi);
-            }
-            for (int col = aligned; col != src.cols; ++col) {
-                loptr[col] = floor2(ptr1[col] + ptr2[col]);
-                hiptr[col] = ptr1[col] - ptr2[col];
-            }
-        }
-        if (src.rows % 2 != 0) {
-            memcpy(reinterpret_cast<void*>(dst.ptr<int16_t>(src.rows - 1)),
-                   reinterpret_cast<const void*>(src.ptr<int16_t>(src.rows - 1)),
-                   src.cols * sizeof(int16_t));
-        }
-#endif
-        return dst;
     }
     static inline int align32(int num) {
         return num & ~0x1F;
@@ -295,6 +151,169 @@ private:
     }
 #endif
 }; // class HaarWaveletImpl
+
+#if defined(IMAGESTEGO_AVX2_SUPPORTED)
+cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
+    cv::Mat dst(src.size(), CV_16SC1);
+    const __m256i mask = _mm256_set_epi32(7, 6, 3, 2, 5, 4, 1, 0);
+    for (int row = 0; row != src.rows; ++row) {
+        const int16_t* sptr = src.ptr<int16_t>(row);
+        int16_t* dptr = dst.ptr<int16_t>(row);
+        const int aligned = align32(src.cols);
+        for (int col = 0; col != aligned; col += 32) {
+            const __m256i a = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(sptr + col)),
+                          b = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(sptr + col + 16)),
+                          sum = _mm256_srai_epi16(_mm256_hadd_epi16(a, b), 1),
+                          dif = _mm256_hsub_epi16(a, b);
+            const __m256i lo = _mm256_permutevar8x32_epi32(sum, mask),
+                          hi = _mm256_permutevar8x32_epi32(dif, mask);
+            _mm256_storeu_si256(reinterpret_cast<__m256i*>(dptr + col / 2), lo);
+            _mm256_storeu_si256(reinterpret_cast<__m256i*>(dptr + src.cols / 2 + col / 2), hi);
+        }
+        // TODO: implement with AVX512 if possible
+        for (int col = aligned; col < src.cols - 1; col += 2) {
+            *(dptr + col / 2) = floor2(sptr[col + 1] + sptr[col]);
+            *(dptr + src.cols / 2 + col / 2) = sptr[col] - sptr[col + 1];
+        }
+        if (src.cols % 2 != 0) {
+            dptr[src.cols - 1] = sptr[src.cols - 1];
+        }
+    }
+    return dst;
+}
+#elif defined(IMAGESTEGO_SSSE3_SUPPORTED) && defined(IMAGESTEGO_SSE2_SUPPORTED)
+cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
+    cv::Mat dst(src.size(), CV_16SC1);
+    for (int row = 0; row != src.rows; ++row) {
+        const int16_t* sptr = src.ptr<int16_t>(row);
+        int16_t* dptr = dst.ptr<int16_t>(row);
+        const int aligned = align16(src.cols);
+        for (int col = 0; col != aligned; col += 16) {
+            const __m128i a = _mm_loadu_si128(reinterpret_cast<const __m128i*>(sptr + col)),
+                          b = _mm_loadu_si128(reinterpret_cast<const __m128i*>(sptr + col + 8)),
+                          lo = _mm_srai_epi16(_mm_hadd_epi16(a, b), 1),
+                          hi = _mm_hsub_epi16(a, b);
+            _mm_storeu_si128(reinterpret_cast<__m128i*>(dptr + col / 2), lo);
+            _mm_storeu_si128(reinterpret_cast<__m128i*>(dptr + src.cols / 2 + col / 2), hi);
+        }
+        for (int col = aligned; col < src.cols - 1; col += 2) {
+            *(dptr + col / 2) = floor2(sptr[col + 1] + sptr[col]);
+            *(dptr + src.cols / 2 + col / 2) = sptr[col] - sptr[col + 1];
+        }
+        if (src.cols % 2 != 0) {
+            dptr[src.cols - 1] = sptr[src.cols - 1];
+        }
+    }
+    return dst;
+}
+// TODO: vectorize loop using ARM NEON intrinsics
+#elif defined(IMAGESTEGO_NEON_SUPPORTED)
+cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
+    cv::Mat dst(src.size(), CV_16SC1);
+    // for (int row = 0; row != src.rows; ++row) {
+        // const int16_t* sptr = src.ptr<int16_t>(row);
+        // int16_t* dptr = dst.ptr<int16_t>(row);
+        // const int aligned = align16(src.cols);
+        // for (int col = 0; col != aligned; col += 16) {
+            // const int16x8_t a = vld1q_s16(sptr + col),
+                            // b = vld1q_s16(sptr + col + 8),
+                            // sum = vpaddq_s16(a, b);
+        // }
+    // }
+    dst = verticalLifting(src.t()).t();
+    return dst;
+}
+#endif
+
+#if defined(IMAGESTEGO_AVX2_SUPPORTED)
+cv::Mat HaarWaveletImpl::verticalLifting(const cv::Mat& src) {
+    cv::Mat dst(src.size(), CV_16SC1);
+    for (int row = 0; row < (src.rows & ~1); row += 2) {
+        const int16_t* ptr1 = src.ptr<int16_t>(row);
+        const int16_t* ptr2 = src.ptr<int16_t>(row + 1);
+        int16_t* loptr = dst.ptr<int16_t>(row / 2);
+        int16_t* hiptr = dst.ptr<int16_t>(row / 2 + src.rows / 2);
+        const int aligned = align16(src.cols);
+        for (int col = 0; col != aligned; col += 16) {
+            const __m256i a = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr1 + col)),
+                          b = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(ptr2 + col));
+            const __m256i lo = _mm256_srai_epi16(_mm256_add_epi16(a, b), 1),
+                          hi = _mm256_sub_epi16(a, b);
+            _mm256_storeu_si256(reinterpret_cast<__m256i*>(loptr + col), lo);
+            _mm256_storeu_si256(reinterpret_cast<__m256i*>(hiptr + col), hi);
+        }
+        for (int col = aligned; col != src.cols; ++col) {
+            loptr[col] = floor2(ptr1[col] + ptr2[col]);
+            hiptr[col] = ptr1[col] - ptr2[col];
+        }
+    }
+    if (src.rows % 2 != 0) {
+        memcpy(reinterpret_cast<void*>(dst.ptr<int16_t>(src.rows - 1)),
+               reinterpret_cast<const void*>(src.ptr<int16_t>(src.rows - 1)),
+               src.cols * sizeof(int16_t));
+    }
+    _mm256_zeroupper();
+    return dst;
+}
+#elif defined(IMAGESTEGO_SSE2_SUPPORTED)
+cv::Mat HaarWaveletImpl::verticalLifting(const cv::Mat& src) {
+    cv::Mat dst(src.size(), CV_16SC1);
+    for (int row = 0; row < (src.rows & ~1); row += 2) {
+        const int16_t* ptr1 = src.ptr<int16_t>(row);
+        const int16_t* ptr2 = src.ptr<int16_t>(row + 1);
+        int16_t* loptr = dst.ptr<int16_t>(row / 2);
+        int16_t* hiptr = dst.ptr<int16_t>(row / 2 + src.rows / 2);
+        const int aligned = align8(src.cols);
+        for (int col = 0; col != aligned; col += 8) {
+            const __m128i a = _mm_loadu_si128(reinterpret_cast<const __m128i*>(ptr1 + col)),
+                          b = _mm_loadu_si128(reinterpret_cast<const __m128i*>(ptr2 + col));
+            const __m128i lo = _mm_srai_epi16(_mm_add_epi16(a, b), 1),
+                          hi = _mm_sub_epi16(a, b);
+            _mm_storeu_si128(reinterpret_cast<__m128i*>(loptr + col), lo);
+            _mm_storeu_si128(reinterpret_cast<__m128i*>(hiptr + col), hi);
+        }
+        for (int col = aligned; col != src.cols; ++col) {
+            loptr[col] = floor2(ptr1[col] + ptr2[col]);
+            hiptr[col] = ptr1[col] - ptr2[col];
+        }
+    }
+    if (src.rows % 2 != 0) {
+        memcpy(reinterpret_cast<void*>(dst.ptr<int16_t>(src.rows - 1)),
+               reinterpret_cast<const void*>(src.ptr<int16_t>(src.rows - 1)),
+               src.cols * sizeof(int16_t));
+    }
+    return dst;
+}
+#elif defined(IMAGESTEGO_NEON_SUPPORTED)
+cv::Mat HaarWaveletImpl::verticalLifting(const cv::Mat& src) {
+    cv::Mat dst(src.size(), CV_16SC1);
+    for (int row = 0; row < (src.rows & ~1); row += 2) {
+        const int16_t* ptr1 = src.ptr<int16_t>(row);
+        const int16_t* ptr2 = src.ptr<int16_t>(row + 1);
+        int16_t* loptr = dst.ptr<int16_t>(row / 2);
+        int16_t* hiptr = dst.ptr<int16_t>(row / 2 + src.rows / 2);
+        const int aligned = align8(src.cols);
+        for (int col = 0; col != aligned; col += 8) {
+            const int16x8_t a = vld1q_s16(ptr1 + col),
+                            b = vld1q_s16(ptr2 + col);
+            const int16x8_t lo = vhaddq_s16(a, b),
+                            hi = vsubq_s16(a, b);
+            vst1q_s16(loptr + col, lo);
+            vst1q_s16(hiptr + col, hi);
+        }
+        for (int col = aligned; col != src.cols; ++col) {
+            loptr[col] = floor2(ptr1[col] + ptr2[col]);
+            hiptr[col] = ptr1[col] - ptr2[col];
+        }
+    }
+    if (src.rows % 2 != 0) {
+        memcpy(reinterpret_cast<void*>(dst.ptr<int16_t>(src.rows - 1)),
+               reinterpret_cast<const void*>(src.ptr<int16_t>(src.rows - 1)),
+               src.cols * sizeof(int16_t));
+    }
+    return dst;
+}
+#endif
 
 HaarWavelet::HaarWavelet() : pImpl(new HaarWaveletImpl) {}
 
