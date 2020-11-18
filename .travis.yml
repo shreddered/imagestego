@@ -49,7 +49,6 @@ jobs:
           packages:
             - clang-10
             - clang++-10
-            - lld
     - name: "Apple Clang x86"
       os: osx
       compiler: clang
