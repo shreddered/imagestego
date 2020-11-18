@@ -17,11 +17,13 @@ macro(imagestego_detect_simd_support OPT)
   try_run(CPU_${OPT}_SUPPORTED CPU_${OPT}_COMPILES
     ${CMAKE_CURRENT_BINARY_DIR}/simd/
     ${CPU_${OPT}_CHECK_FILE}
+    COMPILE_OUTPUT_VARIABLE ${OPT}_OUT
   )
   if (NOT CPU_${OPT}_COMPILES OR NOT CPU_${OPT}_SUPPORTED EQUAL 0)
     message(STATUS "${OPT} extension is not supported")
     if (NOT CPU_${OPT}_COMPILES)
       message(STATUS "${OPT} test file cannot be compiled")
+      message(STATUS "${${OPT}_OUT}")
     endif()
     set(CPU_${OPT}_SUPPORTED FALSE)
     string(REPLACE "${CPU_${OPT}_FLAGS}" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
