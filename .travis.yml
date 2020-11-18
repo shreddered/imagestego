@@ -41,7 +41,7 @@ jobs:
       dist: bionic
       compiler: clang-10
       env:
-        - MODULES="core,lossless,comp,wavelet" CC=clang-10 CXX=clang++-10 CMAKE_OPTIONS="-D CMAKE_LINKER=lld"
+        - MODULES="core,lossless,comp,wavelet" CC=clang-10 CXX=clang++-10
       addons:
         apt:
           sources:
