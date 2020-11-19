@@ -155,6 +155,10 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
 
 #elif defined(IMAGESTEGO_SSSE3_SUPPORTED) && defined(IMAGESTEGO_SSE2_SUPPORTED)
 
+int align16(const int num) {
+    return num & ~0xf;
+}
+
 void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
@@ -196,7 +200,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
     for (int row = 0; row != rows; ++row) {
         const int16_t* sptr = src + row * cols;
         int16_t* dptr = dst + row * cols;
-        const int aligned = align32(cols);
+        const int aligned = align16(cols);
         for (int col = 0; col != aligned; col += 16) {
             int16_t* tmp1 = dptr + col / 2, * tmp2 = tmp1 + cols / 2;
             asm("movdqu (%2, %3, 2), %%xmm0   \n\t"
