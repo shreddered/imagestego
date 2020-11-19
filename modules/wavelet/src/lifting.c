@@ -169,7 +169,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                 "movdqu (%3, %4, 2), %%xmm1   \n\t"
                 "movx   %%xmm0, %%xmm2        \n\t"
                 "paddw  %%xmm1, %%xmm2        \n\t"
-                "psraw  $0x1, %%xmm2, %%xmm2  \n\t"
+                "psraw  $0x1, %%xmm2          \n\t"
                 "psubw  %%xmm1, %%xmm0        \n\t"
                 "movdqu %%xmm2, (%0, %4, 2)   \n\t"
                 "movdqu %%xmm0, (%1, %4, 2)   \n\t"
