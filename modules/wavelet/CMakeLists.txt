@@ -26,17 +26,24 @@ if (X86 OR X86_64)
   foreach(OPT SSE2 SSSE3 AVX2)
     if (CPU_${OPT}_SUPPORTED)
       target_compile_definitions(imagestego_wavelet PRIVATE
-        "-DIMAGESTEGO_${OPT}_SUPPORTED"
+        "-D IMAGESTEGO_${OPT}_SUPPORTED=1"
+      )
+    else()
+      target_compile_definitions(imagestego_wavelet PRIVATE
+        "-D IMAGESTEGO_${OPT}_SUPPORTED=0"
       )
     endif()
   endforeach()
-elseif(ARM OR AARCH64 AND CPU_NEON_SUPPORTED)
-  target_compile_definitions(imagestego_wavelet PRIVATE
-    "-DIMAGESTEGO_NEON_SUPPORTED"
-  )
-  target_compile_options(imagestego_wavelet PRIVATE
-    ${CPU_NEON_FLAGS}
-  )
+elseif(ARM OR AARCH64)
+  if (CPU_NEON_SUPPORTED)
+    target_compile_definitions(imagestego_wavelet PRIVATE
+      "-D IMAGESTEGO_NEON_SUPPORTED=1"
+    )
+  else()
+    target_compile_definitions(imagestego_wavelet PRIVATE
+      "-D IMAGESTEGO_NEON_SUPPORTED=0"
+    )
+  endif()
 elseif(PPC64 OR PPC64LE)
   target_compile_definitions(imagestego_wavelet PRIVATE
     "-DIMAGESTEGO_ALTIVEC_SUPPORTED"

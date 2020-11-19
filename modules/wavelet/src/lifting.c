@@ -72,7 +72,7 @@ static int16_t floor2(int16_t num) {
 }
 
 // Extension-specific implementation goes here
-#ifdef IMAGESTEGO_AVX2_SUPPORTED
+#if IMAGESTEGO_AVX2_SUPPORTED
 
 int align32(const int num) {
     return num & ~0x1f;
@@ -153,7 +153,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
     }
 }
 
-#elif defined(IMAGESTEGO_SSSE3_SUPPORTED) && defined(IMAGESTEGO_SSE2_SUPPORTED)
+#elif IMAGESTEGO_SSSE3_SUPPORTED && IMAGESTEGO_SSE2_SUPPORTED
 
 int align16(const int num) {
     return num & ~0xf;
