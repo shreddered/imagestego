@@ -167,7 +167,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
         for (int col = 0; col != aligned; col += 8) {
             asm("movdqu (%2, %4, 2), %%xmm0   \n\t"
                 "movdqu (%3, %4, 2), %%xmm1   \n\t"
-                "movx   %%xmm0, %%xmm2        \n\t"
+                "movaps %%xmm0, %%xmm2        \n\t"
                 "paddw  %%xmm1, %%xmm2        \n\t"
                 "psraw  $0x1, %%xmm2          \n\t"
                 "psubw  %%xmm1, %%xmm0        \n\t"
@@ -201,7 +201,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
             int16_t* tmp1 = dptr + col / 2, * tmp2 = tmp1 + cols / 2;
             asm("movdqu (%2, %3, 2), %%xmm0   \n\t"
                 "movdqu 16(%2, %3, 2), %%xmm1 \n\t"
-                "movx   %%xmm0, %%xmm2        \n\t"
+                "movaps %%xmm0, %%xmm2        \n\t"
                 "phsubw %%xmm1, %%xmm2        \n\t"
                 "phaddw %%xmm1, %%xmm0        \n\t"
                 "psraw  $0x1, %%xmm0          \n\t"
