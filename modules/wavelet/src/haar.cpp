@@ -159,13 +159,8 @@ private:
 #endif
 }; // class HaarWaveletImpl
 
-#if defined(IMAGESTEGO_AVX2_SUPPORTED)
-cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
-    cv::Mat dst(src.size(), CV_16SC1);
-    horizontal_lifting(src.data, dst.data, src.rows, src.cols);
-    return dst;
-}
-#elif defined(IMAGESTEGO_SSSE3_SUPPORTED) && defined(IMAGESTEGO_SSE2_SUPPORTED)
+#if defined(IMAGESTEGO_AVX2_SUPPORTED) || defined(IMAGESTEGO_SSSE3_SUPPORTED) \
+    && defined(IMAGESTEGO_SSE2_SUPPORTED)
 cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
     cv::Mat dst(src.size(), CV_16SC1);
     horizontal_lifting(src.data, dst.data, src.rows, src.cols);
@@ -190,39 +185,9 @@ cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
 }
 #endif
 
-#if defined(IMAGESTEGO_AVX2_SUPPORTED)
+#if defined(IMAGESTEGO_AVX2_SUPPORTED) || defined(IMAGESTEGO_SSE2_SUPPORTED)
 cv::Mat HaarWaveletImpl::verticalLifting(const cv::Mat& src) {
     cv::Mat dst(src.size(), CV_16SC1);
-    vertical_lifting(src.data, dst.data, src.rows, src.cols);
-    return dst;
-}
-#elif defined(IMAGESTEGO_SSE2_SUPPORTED)
-cv::Mat HaarWaveletImpl::verticalLifting(const cv::Mat& src) {
-    cv::Mat dst(src.size(), CV_16SC1);
-    // for (int row = 0; row < (src.rows & ~1); row += 2) {
-        // const int16_t* ptr1 = src.ptr<int16_t>(row);
-        // const int16_t* ptr2 = src.ptr<int16_t>(row + 1);
-        // int16_t* loptr = dst.ptr<int16_t>(row / 2);
-        // int16_t* hiptr = dst.ptr<int16_t>(row / 2 + src.rows / 2);
-        // const int aligned = align8(src.cols);
-        // for (int col = 0; col != aligned; col += 8) {
-            // const __m128i a = _mm_loadu_si128(reinterpret_cast<const __m128i*>(ptr1 + col)),
-                          // b = _mm_loadu_si128(reinterpret_cast<const __m128i*>(ptr2 + col));
-            // const __m128i lo = _mm_srai_epi16(_mm_add_epi16(a, b), 1),
-                          // hi = _mm_sub_epi16(a, b);
-            // _mm_storeu_si128(reinterpret_cast<__m128i*>(loptr + col), lo);
-            // _mm_storeu_si128(reinterpret_cast<__m128i*>(hiptr + col), hi);
-        // }
-        // for (int col = aligned; col != src.cols; ++col) {
-            // loptr[col] = floor2(ptr1[col] + ptr2[col]);
-            // hiptr[col] = ptr1[col] - ptr2[col];
-        // }
-    // }
-    // if (src.rows % 2 != 0) {
-        // memcpy(reinterpret_cast<void*>(dst.ptr<int16_t>(src.rows - 1)),
-               // reinterpret_cast<const void*>(src.ptr<int16_t>(src.rows - 1)),
-               // src.cols * sizeof(int16_t));
-    // }
     vertical_lifting(src.data, dst.data, src.rows, src.cols);
     return dst;
 }

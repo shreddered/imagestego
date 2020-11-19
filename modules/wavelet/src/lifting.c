@@ -62,7 +62,7 @@ void vertical_lifting(const uint8_t* src, uint8_t* dst, const int rows, const in
  * @param src Pointer to source matrix obtained from cv::Mat::data.
  * @param dst Destination pointer.
  * @param rows Number of rows.
- * @param cols Number columns.
+ * @param cols Number of columns.
  */
 void horizontal_lifting(const uint8_t* src, uint8_t* dst, int rows, int cols);
 
@@ -102,7 +102,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                 :
                 : "r" (loptr), "r" (hiptr), "r" (ptr1), "r" (ptr2), "r" ((ssize_t) col)
                 : "%ymm0", "%ymm1", "%ymm2"
-                );
+            );
         }
         // TODO: implement with AVX512 if possible
         for (int col = aligned; col != cols; ++col) {
@@ -216,7 +216,6 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
                 : "%xmm0", "%xmm1", "%xmm2", "%xmm3"
             );
         }
-        // TODO: implement with AVX512 if possible
         for (int col = aligned; col < cols - 1; col += 2) {
             *(dptr + col / 2) = floor2(sptr[col + 1] + sptr[col]);
             *(dptr + cols / 2 + col / 2) = sptr[col] - sptr[col + 1];
