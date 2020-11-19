@@ -200,10 +200,11 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
             int16_t* tmp1 = dptr + col / 2, * tmp2 = tmp1 + cols / 2;
             asm("movdqu (%2, %3, 2), %%xmm0   \n\t"
                 "movdqu 16(%2, %3, 2), %%xmm1 \n\t"
-                "phsubw %%xmm1, %%xmm0, %%xmm2\n\t"
-                "phaddw %%xmm1, %%xmm0, %%xmm1\n\t"
-                "psraw  $0x1, %%xmm1, %%xmm1  \n\t"
-                "movdqu %%xmm1, (%0)          \n\t"
+                "movx   %%xmm0, %%xmm2        \n\t"
+                "phsubw %%xmm1, %%xmm2        \n\t"
+                "phaddw %%xmm1, %%xmm0        \n\t"
+                "psraw  $0x1, %%xmm0          \n\t"
+                "movdqu %%xmm0, (%0)          \n\t"
                 "movdqu %%xmm2, (%1)          \n\t"
                 :
                 : "r" (tmp1), "r" (tmp2), "r" (sptr), "r" ((ssize_t) col)
