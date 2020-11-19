@@ -22,6 +22,19 @@ target_compile_definitions(imagestego_wavelet PUBLIC
   "-DIMAGESTEGO_WAVELET"
 )
 
+foreach(OPT GCC CLANG ICC MSVC)
+  if (IMAGESTEGO_${OPT})
+    target_compile_definitions(imagestego_wavelet PRIVATE
+      "-D IMAGESTEGO_${OPT}=1"
+    )
+  else()
+    target_compile_definitions(imagestego_wavelet PRIVATE
+      "-D IMAGESTEGO_${OPT}=0"
+    )
+  endif()
+endforeach()
+
+
 if (X86 OR X86_64)
   foreach(OPT SSE2 SSSE3 AVX2)
     if (CPU_${OPT}_SUPPORTED)

@@ -92,6 +92,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
         int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
         const int aligned = align16(cols);
         for (int col = 0; col != aligned; col += 16) {
+#if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
             asm("vmovdqu (%2, %4, 2), %%ymm0   \n\t"
                 "vmovdqu (%3, %4, 2), %%ymm1   \n\t"
                 "vpaddw  %%ymm1, %%ymm0, %%ymm2\n\t"
@@ -103,6 +104,8 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                 : "r" (loptr), "r" (hiptr), "r" (ptr1), "r" (ptr2), "r" ((ssize_t) col)
                 : "%ymm0", "%ymm1", "%ymm2"
             );
+#elif IMAGESTEGO_WIN
+#endif
         }
         // TODO: implement with AVX512 if possible
         for (int col = aligned; col != cols; ++col) {
