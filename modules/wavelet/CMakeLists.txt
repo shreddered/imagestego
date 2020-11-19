@@ -2,6 +2,7 @@ imagestego_defs()
 
 add_library(imagestego_wavelet
   ${CMAKE_CURRENT_SOURCE_DIR}/src/haar.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/lifting.c
 )
 
 target_include_directories(imagestego_wavelet PUBLIC
