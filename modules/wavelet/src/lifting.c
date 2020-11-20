@@ -22,18 +22,18 @@
 #include <string.h>
 
 // SIMD headers
-#if defined(IMAGESTEGO_AVX2_SUPPORTED)
+#if IMAGESTEGO_AVX2_SUPPORTED
 #   include <immintrin.h>
-#elif defined(IMAGESTEGO_SSE2_SUPPORTED) || defined(IMAGESTEGO_SSSE3_SUPPORTED)
+#elif IMAGESTEGO_SSE2_SUPPORTED || IMAGESTEGO_SSSE3_SUPPORTED
 #   ifdef IMAGESTEGO_SSE2_SUPPORTED
 #       include <emmintrin.h>
 #   endif
 #   ifdef IMAGESTEGO_SSSE3_SUPPORTED
 #       include <tmmintrin.h>
 #   endif
-#elif defined(IMAGESTEGO_NEON_SUPPORTED)
+#elif IMAGESTEGO_NEON_SUPPORTED
 #   include <arm_neon.h>
-#elif defined(IMAGESTEGO_ALTIVEC_SUPPORTED)
+#elif IMAGESTEGO_ALTIVEC_SUPPORTED
 #   include <altivec.h>
 #endif
 
