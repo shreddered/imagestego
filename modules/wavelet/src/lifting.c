@@ -209,9 +209,9 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                 : "r" (loptr), "r" (hiptr), "r" (ptr1), "r" (ptr2), "r" ((ssize_t) col)
                 : "%xmm0", "%xmm1", "%xmm2", "memory"
                 );
+            // TODO: add windows implementation
 #elif IMAGESTEGO_WIN
             __asm {
-
             };
 #endif
         }
@@ -236,6 +236,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
         const int aligned = align16(cols);
         for (int col = 0; col != aligned; col += 16) {
             int16_t* tmp1 = dptr + col / 2, * tmp2 = tmp1 + cols / 2;
+            // TODO: add windows implementation
             asm("movdqu (%2, %3, 2), %%xmm0   \n\t"
                 "movdqu 16(%2, %3, 2), %%xmm1 \n\t"
                 "movaps %%xmm0, %%xmm2        \n\t"
