@@ -50,7 +50,7 @@ extern "C" {
  * @param src Pointer to source matrix obtained from cv::Mat::data.
  * @param dst Destination pointer.
  * @param rows Number of rows.
- * @param cols Number columns.
+ * @param cols Number of columns.
  */
 void vertical_lifting(const uint8_t* src, uint8_t* dst, const int rows, const int cols);
 
