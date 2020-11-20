@@ -22,7 +22,7 @@ target_compile_definitions(imagestego_wavelet PUBLIC
   "-DIMAGESTEGO_WAVELET"
 )
 
-foreach(OPT GCC CLANG ICC MSVC)
+foreach(OPT GCC CLANG ICC MSVC WIN)
   if (IMAGESTEGO_${OPT})
     target_compile_definitions(imagestego_wavelet PRIVATE
       "-D IMAGESTEGO_${OPT}=1"

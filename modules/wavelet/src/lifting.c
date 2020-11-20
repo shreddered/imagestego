@@ -102,9 +102,18 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                 "vmovdqu %%ymm0, (%1, %4, 2)   \n\t"
                 :
                 : "r" (loptr), "r" (hiptr), "r" (ptr1), "r" (ptr2), "r" ((ssize_t) col)
-                : "%ymm0", "%ymm1", "%ymm2"
+                : "%ymm0", "%ymm1", "%ymm2", "memory"
             );
 #elif IMAGESTEGO_WIN
+            __asm {
+                vmovdqu ymm0, [ptr1 + col * 2]
+                vmovdqu ymm1, [ptr2 + col * 2]
+                vpaddw  ymm2, ymm0, ymm1
+                vpsraw  ymm2, ymm2, 1
+                vpsubw  ymm0, ymm0, ymm1
+                vmovdqu [loptr + col * 2], ymm2
+                vmovdqu [hiptr + col * 2], ymm0
+            };
 #endif
         }
         // TODO: implement with AVX512 if possible
@@ -130,6 +139,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
         const int aligned = align32(cols);
         for (int col = 0; col != aligned; col += 32) {
             int16_t* tmp1 = dptr + col / 2, * tmp2 = tmp1 + cols / 2;
+#if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
             asm("vmovdqu (%2, %4, 2), %%ymm0   \n\t"
                 "vmovdqu 32(%2, %4, 2), %%ymm1 \n\t"
                 "vmovdqu (%3), %%ymm3          \n\t"
@@ -142,8 +152,22 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
                 "vmovdqu %%ymm2, (%1)          \n\t"
                 :
                 : "r" (tmp1), "r" (tmp2), "r" (sptr), "r" ((uint32_t*) mask), "r" ((ssize_t) col)
-                : "%ymm0", "%ymm1", "%ymm2", "%ymm3"
+                : "%ymm0", "%ymm1", "%ymm2", "%ymm3", "memory"
             );
+#elif IMAGESTEGO_WIN
+            __asm {
+                vmovdqu ymm0, [ptr1 + col * 2]
+                vmovdqu ymm1, [ptr2 + col * 2 + 32]
+                vmovdqu ymm3, [mask]
+                vphsubw ymm2, ymm1, ymm0
+                vphaddw ymm1, ymm1, ymm0
+                vpsraw  ymm1, ymm1, 1
+                vpermd  ymm1, ymm3, ymm1
+                vpermd  ymm2, ymm3, ymm2
+                vmovdqu [tmp1], ymm1
+                vmovdqu [tmp2], ymm2
+            };
+#endif
         }
         // TODO: implement with AVX512 if possible
         for (int col = aligned; col < cols - 1; col += 2) {
@@ -172,6 +196,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
         int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
         const int aligned = align16(cols);
         for (int col = 0; col != aligned; col += 8) {
+#if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
             asm("movdqu (%2, %4, 2), %%xmm0   \n\t"
                 "movdqu (%3, %4, 2), %%xmm1   \n\t"
                 "movaps %%xmm0, %%xmm2        \n\t"
@@ -182,8 +207,13 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                 "movdqu %%xmm0, (%1, %4, 2)   \n\t"
                 :
                 : "r" (loptr), "r" (hiptr), "r" (ptr1), "r" (ptr2), "r" ((ssize_t) col)
-                : "%xmm0", "%xmm1", "%xmm2"
+                : "%xmm0", "%xmm1", "%xmm2", "memory"
                 );
+#elif IMAGESTEGO_WIN
+            __asm {
+
+            };
+#endif
         }
         for (int col = aligned; col != cols; ++col) {
             loptr[col] = floor2(ptr1[col] + ptr2[col]);
@@ -216,7 +246,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
                 "movdqu %%xmm2, (%1)          \n\t"
                 :
                 : "r" (tmp1), "r" (tmp2), "r" (sptr), "r" ((ssize_t) col)
-                : "%xmm0", "%xmm1", "%xmm2", "%xmm3"
+                : "%xmm0", "%xmm1", "%xmm2", "%xmm3", "memory"
             );
         }
         for (int col = aligned; col < cols - 1; col += 2) {

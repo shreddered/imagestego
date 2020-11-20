@@ -46,4 +46,8 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 4 AND AARCH64)
   set(ARM TRUE)
 endif()
 
+if (WIN32)
+  set(IMAGESTEGO_WIN 1)
+endif()
+
 # TODO: add c++11 test
