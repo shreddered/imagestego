@@ -72,7 +72,102 @@ static int16_t floor2(int16_t num) {
 }
 
 // Extension-specific implementation goes here
-#if IMAGESTEGO_AVX2_SUPPORTED
+#if IMAGESTEGO_AVX512BW_SUPPORTED
+
+static int16_t align32(int16_t num) {
+    return ((num < 0) ? (num - 1) : num) / 2;
+}
+
+void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+        const int cols) {
+    static const __mmask32 len2mask[] = {0x00000000, 0x00000001, 0x00000003, 0x00000007,
+                                         0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f,
+                                         0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff,
+                                         0x00000fff, 0x00001fff, 0x00003fff, 0x00007fff,
+                                         0x0000ffff, 0x0001ffff, 0x0003ffff, 0x0007ffff,
+                                         0x000fffff, 0x001fffff, 0x003fffff, 0x007fffff,
+                                         0x00ffffff, 0x01ffffff, 0x03ffffff, 0x07ffffff,
+                                         0x0fffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff,
+                                         0xffffffff};
+    int16_t* src = (int16_t*) _src;
+    int16_t* dst = (int16_t*) _dst;
+    for (int row = 0; row != (rows & ~1); row += 2) {
+        const int16_t* ptr1 = src + row * cols;
+        const int16_t* ptr2 = src + (row + 1) * cols;
+        int16_t* loptr = dst + (row / 2) * cols;
+        int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
+        const int aligned = align32(cols);
+        int col;
+        for (col = 0; col != aligned; col += 32) {
+#if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
+            asm(
+                "vmovdqu16 (%[a], %[col], 2), %%zmm0 \n\t"
+                "vmovdqu16 (%[b], %[col], 2), %%zmm1 \n\t"
+                "vpaddw    %%zmm1, %%zmm0, %%zmm2    \n\t"
+                "vpsraw    $0x1, %%zmm2, %%zmm2      \n\t"
+                "vpsubw    %%zmm1, %%zmm0, %%zmm0    \n\t"
+                "vmovdqu16 %%zmm2, (%[lo], %[col], 2)\n\t"
+                "vmovdqu16 %%zmm0, (%[hi], %[col], 2)   \n\t"
+                :
+                : [lo]  "r" (loptr),
+                  [hi]  "r" (hiptr),
+                  [a]   "r" (ptr1),
+                  [b]   "r" (ptr2),
+                  [col] "r" ((ssize_t) col)
+                : "%ymm0", "%ymm1", "%ymm2", "memory"
+            );
+#elif IMAGESTEGO_WIN
+            __asm {
+                vmovdqu ymm0, [ptr1 + col * 2]
+                vmovdqu ymm1, [ptr2 + col * 2]
+                vpaddw  ymm2, ymm0, ymm1
+                vpsraw  ymm2, ymm2, 1
+                vpsubw  ymm0, ymm0, ymm1
+                vmovdqu [loptr + col * 2], ymm2
+                vmovdqu [hiptr + col * 2], ymm0
+            };
+#endif
+        }
+#if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
+            asm(
+                "vmovdqu16 (%[a], %[col], 2), %%zmm0 %{%[mask]%}%{z%}\n\t"
+                "vmovdqu16 (%[b], %[col], 2), %%zmm1 %{%[mask]%}%{z%}\n\t"
+                "vpaddw    %%zmm1, %%zmm0, %%zmm2                    \n\t"
+                "vpsraw    $0x1, %%zmm2, %%zmm2                      \n\t"
+                "vpsubw    %%zmm1, %%zmm0, %%zmm0                    \n\t"
+                "vmovdqu16 %%zmm2, (%[lo], %[col], 2) %{%[mask]%}    \n\t"
+                "vmovdqu16 %%zmm0, (%[hi], %[col], 2) %{%[mask]%}    \n\t"
+                :
+                : [mask] "Yk" (len2mask[cols - col]),
+                  [a]    "r" (ptr1),
+                  [b]    "r" (ptr2),
+                  [lo]   "r" (loptr),
+                  [hi]   "r" (hiptr),
+                  [col]  "r" ((ssize_t) col)
+                : "%zmm0", "%zmm1", "%zmm2", "memory"
+            );
+#elif IMAGESTEGO_WIN
+            __asm {
+                vmovdqu ymm0, [ptr1 + col * 2]
+                vmovdqu ymm1, [ptr2 + col * 2]
+                vpaddw  ymm2, ymm0, ymm1
+                vpsraw  ymm2, ymm2, 1
+                vpsubw  ymm0, ymm0, ymm1
+                vmovdqu [loptr + col * 2], ymm2
+                vmovdqu [hiptr + col * 2], ymm0
+            };
+#endif
+        if (rows % 2 != 0) {
+            memcpy(dst + (rows - 1) * cols,
+                   src + (rows - 1) * cols,
+                   cols * sizeof(int16_t));
+        }
+    }
+}
+#endif
+
+
+#if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512BW_SUPPORTED
 
 int align32(const int num) {
     return num & ~0x1f;
@@ -133,7 +228,9 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
         }
     }
 }
+#endif
 
+#if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512VL_SUPPORTED
 void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
     static const uint32_t mask[] = {2, 3, 6, 7, 0, 1, 4, 5};
     int16_t* src = (int16_t*) _src;
@@ -189,8 +286,9 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
         }
     }
 }
+#endif
 
-#elif IMAGESTEGO_SSSE3_SUPPORTED && IMAGESTEGO_SSE2_SUPPORTED
+#if IMAGESTEGO_SSSE3_SUPPORTED && IMAGESTEGO_SSE2_SUPPORTED && !IMAGESTEGO_AVX2_SUPPORTED
 
 int align16(const int num) {
     return num & ~0xf;
