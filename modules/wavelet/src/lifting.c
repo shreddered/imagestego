@@ -322,7 +322,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                   [b]   "r" (ptr2),
                   [col] "r" ((ssize_t) col)
                 : "%xmm0", "%xmm1", "%xmm2", "memory"
-                );
+            );
             // TODO: add windows implementation
 #elif IMAGESTEGO_WIN
             __asm {
