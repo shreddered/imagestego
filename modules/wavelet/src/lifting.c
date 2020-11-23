@@ -169,10 +169,6 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
 
 #if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512BW_SUPPORTED
 
-int align32(const int num) {
-    return num & ~0x1f;
-}
-
 int align16(const int num) {
     return num & ~0xf;
 }
@@ -230,7 +226,12 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
 }
 #endif
 
-#if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512VL_SUPPORTED
+#if IMAGESTEGO_AVX2_SUPPORTED
+
+int align32(const int num) {
+    return num & ~0x1f;
+}
+
 void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
     static const uint32_t mask[] = {2, 3, 6, 7, 0, 1, 4, 5};
     int16_t* src = (int16_t*) _src;
