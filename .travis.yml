@@ -49,6 +49,7 @@ jobs:
           packages:
             - gcc-9
             - g++-9
+            - libopencv-dev
     - name: "Clang-10 arm64"
       arch: arm64
       os: linux
