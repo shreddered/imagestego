@@ -60,7 +60,9 @@ jobs:
         apt:
           sources:
             - sourceline: "ppa:ubuntu-toolchain-r/test"
+            - sourceline: "ppa:cran/opencv"
           packages:
+            - libopencv-dev
             - clang-10
             - clang++-10
             - lld-10
