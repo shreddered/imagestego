@@ -10,28 +10,13 @@ message(STATUS "Detecting processor extensions")
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/imagestego-cxx-compiler.cmake")
 
-# macro wrapper around try_run()
+include(CheckCXXSourceRuns)
+
+# function wrapper around try_run()
 macro(imagestego_detect_simd_support OPT)
-  message(STATUS "Detecting ${OPT} support")
-  string(APPEND CMAKE_CXX_FLAGS " ${CPU_${OPT}_FLAGS}")
-  try_run(CPU_${OPT}_SUPPORTED CPU_${OPT}_COMPILES
-    ${CMAKE_CURRENT_BINARY_DIR}/simd/
-    ${CPU_${OPT}_CHECK_FILE}
-    COMPILE_OUTPUT_VARIABLE ${OPT}_OUT
-  )
-  if (NOT CPU_${OPT}_COMPILES OR NOT CPU_${OPT}_SUPPORTED EQUAL 0)
-    message(STATUS "${OPT} extension is not supported")
-    if (NOT CPU_${OPT}_COMPILES)
-      message(STATUS "${OPT} test file cannot be compiled")
-      message(STATUS "${${OPT}_OUT}")
-    endif()
-    set(CPU_${OPT}_SUPPORTED FALSE)
-    string(REPLACE "${CPU_${OPT}_FLAGS}" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-  else()
-    message(STATUS "${OPT} extension is supported")
-    string(APPEND CMAKE_C_FLAGS " ${CPU_${OPT}_FLAGS}")
-    set(CPU_${OPT}_SUPPORTED TRUE)
-  endif()
+  file(READ "${CPU_${OPT}_CHECK_FILE}" CHECK_FILE)
+  set(CMAKE_REQUIRED_FLAGS "${CPU_${OPT}_FLAGS}")
+  check_cxx_source_runs("${CHECK_FILE}" CPU_${OPT}_SUPPORTED)
 endmacro()
 
 # TODO: write AVX512 checks
@@ -75,13 +60,13 @@ if (X86 OR X86_64)
     imagestego_intel_cpu_flags(AVX512VL "-mavx512vl" "/arch:AVX512")
   elseif (IMAGESTEGO_GCC OR IMAGESTEGO_CLANG)
     # SSE flags
-    set(CPU_SSE_FLAGS "-msse")
-    set(CPU_SSE2_FLAGS "-msse2")
-    set(CPU_SSSE3_FLAGS "-mssse3")
+    set(CPU_SSE_FLAGS    "-msse")
+    set(CPU_SSE2_FLAGS   "-msse2")
+    set(CPU_SSSE3_FLAGS  "-mssse3")
     set(CPU_SSE4_1_FLAGS "-msse4.1")
     set(CPU_SSE4_2_FLAGS "-msse4.2")
     # AVX flags
-    set(CPU_AVX_FLAGS "-mavx")
+    set(CPU_AVX_FLAGS  "-mavx")
     set(CPU_AVX2_FLAGS "-mavx2")
     # AVX512 flags
     set(CPU_AVX512BW_FLAGS "-mavx512bw")
