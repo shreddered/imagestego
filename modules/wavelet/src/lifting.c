@@ -93,15 +93,20 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
         const int aligned = align16(cols);
         for (int col = 0; col != aligned; col += 16) {
 #if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
-            asm("vmovdqu (%2, %4, 2), %%ymm0   \n\t"
-                "vmovdqu (%3, %4, 2), %%ymm1   \n\t"
-                "vpaddw  %%ymm1, %%ymm0, %%ymm2\n\t"
-                "vpsraw  $0x1, %%ymm2, %%ymm2  \n\t"
-                "vpsubw  %%ymm1, %%ymm0, %%ymm0\n\t"
-                "vmovdqu %%ymm2, (%0, %4, 2)   \n\t"
-                "vmovdqu %%ymm0, (%1, %4, 2)   \n\t"
+            asm(
+                "vmovdqu (%[a], %[col], 2), %%ymm0 \n\t"
+                "vmovdqu (%[b], %[col], 2), %%ymm1 \n\t"
+                "vpaddw  %%ymm1, %%ymm0, %%ymm2    \n\t"
+                "vpsraw  $0x1, %%ymm2, %%ymm2      \n\t"
+                "vpsubw  %%ymm1, %%ymm0, %%ymm0    \n\t"
+                "vmovdqu %%ymm2, (%[lo], %[col], 2)\n\t"
+                "vmovdqu %%ymm0, (%[hi], %[col], 2)\n\t"
                 :
-                : "r" (loptr), "r" (hiptr), "r" (ptr1), "r" (ptr2), "r" ((ssize_t) col)
+                : [lo]  "r" (loptr),
+                  [hi]  "r" (hiptr),
+                  [a]   "r" (ptr1),
+                  [b]   "r" (ptr2),
+                  [col] "r" ((ssize_t) col)
                 : "%ymm0", "%ymm1", "%ymm2", "memory"
             );
 #elif IMAGESTEGO_WIN
@@ -140,18 +145,23 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
         for (int col = 0; col != aligned; col += 32) {
             int16_t* tmp1 = dptr + col / 2, * tmp2 = tmp1 + cols / 2;
 #if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
-            asm("vmovdqu (%2, %4, 2), %%ymm0   \n\t"
-                "vmovdqu 32(%2, %4, 2), %%ymm1 \n\t"
-                "vmovdqu (%3), %%ymm3          \n\t"
-                "vphsubw %%ymm0, %%ymm1, %%ymm2\n\t"
-                "vphaddw %%ymm0, %%ymm1, %%ymm1\n\t"
-                "vpsraw  $0x1, %%ymm1, %%ymm1  \n\t"
-                "vpermd  %%ymm1, %%ymm3, %%ymm1\n\t"
-                "vpermd  %%ymm2, %%ymm3, %%ymm2\n\t"
-                "vmovdqu %%ymm1, (%0)          \n\t"
-                "vmovdqu %%ymm2, (%1)          \n\t"
+            asm(
+                "vmovdqu (%[src], %[col], 2), %%ymm0  \n\t"
+                "vmovdqu 32(%[src], %[col], 2), %%ymm1\n\t"
+                "vmovdqu (%[mask]), %%ymm3            \n\t"
+                "vphsubw %%ymm0, %%ymm1, %%ymm2       \n\t"
+                "vphaddw %%ymm0, %%ymm1, %%ymm1       \n\t"
+                "vpsraw  $0x1, %%ymm1, %%ymm1         \n\t"
+                "vpermd  %%ymm1, %%ymm3, %%ymm1       \n\t"
+                "vpermd  %%ymm2, %%ymm3, %%ymm2       \n\t"
+                "vmovdqu %%ymm1, (%[lo])              \n\t"
+                "vmovdqu %%ymm2, (%[hi])              \n\t"
                 :
-                : "r" (tmp1), "r" (tmp2), "r" (sptr), "r" ((uint32_t*) mask), "r" ((ssize_t) col)
+                : [lo]   "r" (tmp1),
+                  [hi]   "r" (tmp2),
+                  [src]  "r" (sptr),
+                  [mask] "r" ((uint32_t*) mask),
+                  [col]  "r" ((ssize_t) col)
                 : "%ymm0", "%ymm1", "%ymm2", "%ymm3", "memory"
             );
 #elif IMAGESTEGO_WIN
@@ -197,16 +207,21 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
         const int aligned = align16(cols);
         for (int col = 0; col != aligned; col += 8) {
 #if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
-            asm("movdqu (%2, %4, 2), %%xmm0   \n\t"
-                "movdqu (%3, %4, 2), %%xmm1   \n\t"
-                "movaps %%xmm0, %%xmm2        \n\t"
-                "paddw  %%xmm1, %%xmm2        \n\t"
-                "psraw  $0x1, %%xmm2          \n\t"
-                "psubw  %%xmm1, %%xmm0        \n\t"
-                "movdqu %%xmm2, (%0, %4, 2)   \n\t"
-                "movdqu %%xmm0, (%1, %4, 2)   \n\t"
+            asm(
+                "movdqu (%[a], %[col], 2), %%xmm0 \n\t"
+                "movdqu (%[b], %[col], 2), %%xmm1 \n\t"
+                "movaps %%xmm0, %%xmm2            \n\t"
+                "paddw  %%xmm1, %%xmm2            \n\t"
+                "psraw  $0x1, %%xmm2              \n\t"
+                "psubw  %%xmm1, %%xmm0            \n\t"
+                "movdqu %%xmm2, (%[lo], %[col], 2)\n\t"
+                "movdqu %%xmm0, (%[hi], %[col], 2)\n\t"
                 :
-                : "r" (loptr), "r" (hiptr), "r" (ptr1), "r" (ptr2), "r" ((ssize_t) col)
+                : [lo]  "r" (loptr),
+                  [hi]  "r" (hiptr),
+                  [a]   "r" (ptr1),
+                  [b]   "r" (ptr2),
+                  [col] "r" ((ssize_t) col)
                 : "%xmm0", "%xmm1", "%xmm2", "memory"
                 );
             // TODO: add windows implementation
@@ -237,16 +252,20 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
         for (int col = 0; col != aligned; col += 16) {
             int16_t* tmp1 = dptr + col / 2, * tmp2 = tmp1 + cols / 2;
             // TODO: add windows implementation
-            asm("movdqu (%2, %3, 2), %%xmm0   \n\t"
-                "movdqu 16(%2, %3, 2), %%xmm1 \n\t"
-                "movaps %%xmm0, %%xmm2        \n\t"
-                "phsubw %%xmm1, %%xmm2        \n\t"
-                "phaddw %%xmm1, %%xmm0        \n\t"
-                "psraw  $0x1, %%xmm0          \n\t"
-                "movdqu %%xmm0, (%0)          \n\t"
-                "movdqu %%xmm2, (%1)          \n\t"
+            asm(
+                "movdqu (%[src], %[col], 2), %%xmm0  \n\t"
+                "movdqu 16(%[src], %[col], 2), %%xmm1\n\t"
+                "movaps %%xmm0, %%xmm2               \n\t"
+                "phsubw %%xmm1, %%xmm2               \n\t"
+                "phaddw %%xmm1, %%xmm0               \n\t"
+                "psraw  $0x1, %%xmm0                 \n\t"
+                "movdqu %%xmm0, (%[lo])              \n\t"
+                "movdqu %%xmm2, (%[hi])              \n\t"
                 :
-                : "r" (tmp1), "r" (tmp2), "r" (sptr), "r" ((ssize_t) col)
+                : [lo]  "r" (tmp1),
+                  [hi]  "r" (tmp2),
+                  [src] "r" (sptr),
+                  [col] "r" ((ssize_t) col)
                 : "%xmm0", "%xmm1", "%xmm2", "%xmm3", "memory"
             );
         }
