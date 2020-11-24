@@ -79,8 +79,19 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
 # important
-macro(imagestego_lib)
-  list(APPEND IMAGESTEGO_LIBS ${ARGV})
+macro(imagestego_lib LIB)
+  list(APPEND IMAGESTEGO_LIBS ${LIB})
+  foreach(COMPILER GCC CLANG ICC MSVC)
+    if (IMAGESTEGO_${COMPILER})
+      target_compile_definitions(${LIB} PRIVATE
+        "-D IMAGESTEGO_${COMPILER}=1"
+      )
+    else()
+      target_compile_definitions(${LIB} PRIVATE
+        "-D IMAGESTEGO_${COMPILER}=0"
+      )
+    endif()
+  endforeach()
 endmacro()
 
 add_library(coverage_config INTERFACE)

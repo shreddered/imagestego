@@ -18,10 +18,10 @@
  */
 
 #include "imagestego/core/intrinsic.hpp"
-#ifdef _MSC_VER
+#if IMAGESTEGO_MSVC && HAVE_INTRIN_H
 #   include <intrin.h>
 #   pragma intrinsic(_BitScanReverse)
-#elif !(defined(__GNUC__) || defined(__INTEL_COMPILER) || defined(__clang__))
+#elif !(IMAGESTEGO_GCC || IMAGESTEGO_ICC || IMAGESTEGO_CLANG)
 #   include <algorithm>
 #endif
 
@@ -29,9 +29,9 @@
 namespace imagestego {
 
 uint8_t log2(uint32_t value) noexcept {
-#if defined(__clang__) || defined(__GNUC__)
+#if IMAGESTEGO_CLANG || IMAGESTEGO_GCC
     return value ? 31 - __builtin_clz(value) : 0;
-#elif defined(_MSC_VER) || defined(__INTEL_COMPILER)
+#elif IMAGESTEGO_MSVC || IMAGESTEGO_ICC
     unsigned long result = 0;
     _BitScanReverse(&result, value);
     return result;
@@ -44,14 +44,14 @@ uint8_t log2(uint32_t value) noexcept {
 }
 
 uint32_t bswap(uint32_t value) noexcept {
-#if defined(__clang__) || defined(__GNUC__)
+#if IMAGESTEGO_CLANG || IMAGESTEGO_GCC
     return __builtin_bswap32(value);
-#elif defined(_MSC_VER)
+#elif IMAGESTEGO_MSVC
     return _byteswap_ulong(value);
-#elif defined(__INTEL_COMPILER)
+#elif IMAGESTEGO_ICC
     return _bswap(value);
 #else
-    char* tmp = &value;
+    char* tmp = reinterpret_cast<char*>(&value);
     std::reverse(tmp, tmp + 4);
     return value;
 #endif
