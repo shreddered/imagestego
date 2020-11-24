@@ -57,14 +57,20 @@ public:
     explicit HaarWaveletImpl() noexcept {}
     cv::Mat transform(const cv::Mat& mat) {
         cv::Mat dst;
-        std::vector<std::future<cv::Mat> > futures;
         std::vector<cv::Mat> planes, _planes;
-        cv::split(mat, _planes);
-        for (cv::Mat mat : _planes) {
-            futures.emplace_back(std::async([](cv::Mat src) {
-                src.convertTo(src, CV_16S);
+        if (mat.depth() != CV_16S) {
+            mat.convertTo(dst, CV_16S);
+            cv::split(dst, _planes);
+        }
+        else {
+            cv::split(mat, _planes);
+        }
+        std::vector<std::future<cv::Mat> > futures;
+        for (const cv::Mat& mat : _planes) {
+            futures.emplace_back(std::async([](const cv::Mat& src) {
+                // src.convertTo(src, CV_16S);
                 return verticalLifting(horizontalLifting(src));
-            }, mat));
+            }, std::cref(mat)));
         }
         for (auto&& f : futures) {
             planes.push_back(f.get());
@@ -123,10 +129,15 @@ public:
         cv::Mat dst;
         std::vector<std::future<cv::Mat> > futures;
         std::vector<cv::Mat> planes, _planes;
-        cv::split(mat, _planes);
+        if (mat.depth() != CV_16S) {
+            mat.convertTo(dst, CV_16S);
+            cv::split(dst, _planes);
+        }
+        else {
+            cv::split(mat, _planes);
+        }
         for (const cv::Mat& mat : _planes) {
-            futures.emplace_back(std::async([](cv::Mat mat) -> cv::Mat {
-                mat.convertTo(mat, CV_16S);
+            futures.emplace_back(std::async([](const cv::Mat& mat) -> cv::Mat {
                 return verticalLifting(horizontalLifting(mat));
             }, std::cref(mat)));
         }
