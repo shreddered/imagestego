@@ -36,7 +36,7 @@ endforeach()
 
 
 if (X86 OR X86_64)
-  foreach(OPT SSE2 SSSE3 AVX2)
+  foreach(OPT SSE2 SSSE3 AVX2 AVX512BW AVX512VL)
     if (CPU_${OPT}_SUPPORTED)
       target_compile_definitions(imagestego_wavelet PRIVATE
         "-D IMAGESTEGO_${OPT}_SUPPORTED=1"
