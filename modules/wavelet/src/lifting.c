@@ -74,7 +74,7 @@ static int16_t floor2(int16_t num) {
 // Extension-specific implementation goes here
 #if IMAGESTEGO_AVX512BW_SUPPORTED
 
-static int16_t align32(int16_t num) {
+static int align32(int num) {
     return ((num < 0) ? (num - 1) : num) / 2;
 }
 
@@ -226,9 +226,9 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
 }
 #endif
 
-#if IMAGESTEGO_AVX2_SUPPORTED
+#if IMAGESTEGO_AVX2_SUPPORTED & !IMAGESTEGO_AVX512VL_SUPPORTED
 
-int align32(const int num) {
+static int align32(const int num) {
     return num & ~0x1f;
 }
 
