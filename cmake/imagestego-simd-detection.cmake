@@ -19,7 +19,6 @@ macro(imagestego_detect_simd_support OPT)
   check_cxx_source_runs("${CHECK_FILE}" CPU_${OPT}_SUPPORTED)
 endmacro()
 
-# TODO: write AVX512 checks
 if (X86 OR X86_64)
   set(CPU_SIMD_EXTENSIONS "SSE;SSE2;SSE3;SSE4_1;SSE4_1;SSE4_2;AVX;AVX2;AVX512")
 
