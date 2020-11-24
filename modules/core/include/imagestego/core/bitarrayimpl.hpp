@@ -327,7 +327,7 @@ private:
     imagestego::size_t _sz;
 
     /** Number of bits per block. */
-    static constexpr imagestego::size_t bitsPerBlock = CHAR_BIT * sizeof(BlockType);
+    static IMAGESTEGO_CONSTEXPR imagestego::size_t bitsPerBlock = CHAR_BIT * sizeof(BlockType);
 
     /**
      * Number of blocks needed to store sz bits.
@@ -335,7 +335,7 @@ private:
      * @param sz Number of bits.
      * @return Number of blocks needed to store sz bits.
      */
-    inline static constexpr imagestego::size_t numberOfBlocks(imagestego::size_t sz) {
+    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR imagestego::size_t numberOfBlocks(imagestego::size_t sz) {
         return sz / bitsPerBlock + ((sz % bitsPerBlock != 0) ? 1 : 0);
     }
 
@@ -345,7 +345,7 @@ private:
      * @param i Index of an element.
      * @return Index of block containing i-th element.
      */
-    inline static constexpr imagestego::size_t blockIndex(imagestego::size_t i) {
+    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR imagestego::size_t blockIndex(imagestego::size_t i) {
         return i / bitsPerBlock;
     }
 
@@ -355,7 +355,7 @@ private:
      * @param i index of an element.
      * @return Index of bit in the block with i-th element.
      */
-    inline static constexpr imagestego::size_t bitIndex(imagestego::size_t i) {
+    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR imagestego::size_t bitIndex(imagestego::size_t i) {
         return i % bitsPerBlock;
     }
 }; // class BitArrayImpl

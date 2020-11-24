@@ -50,6 +50,7 @@ macro(imagestego_defs)
 endmacro()
 
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-simd-detection.cmake")
+include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-compiler-features.cmake")
 
 # build conditions
 option(IMAGESTEGO_BUILD_TESTS "Build tests" OFF)
@@ -94,8 +95,12 @@ macro(imagestego_lib LIB)
     endif()
   endforeach()
   # inline
-  target_compile_definitions(${LIB} PRIVATE
+  target_compile_definitions(${LIB} PUBLIC
     "-D IMAGESTEGO_INLINE=${INLINE}"
+  )
+  # constexpr
+  target_compile_definitions(${LIB} PUBLIC
+    "-D IMAGESTEGO_CONSTEXPR=constexpr"
   )
 endmacro()
 
