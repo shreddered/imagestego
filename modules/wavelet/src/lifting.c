@@ -75,7 +75,7 @@ static int16_t floor2(int16_t num) {
 #if IMAGESTEGO_AVX512BW_SUPPORTED
 
 static int align32(int num) {
-    return ((num < 0) ? (num - 1) : num) / 2;
+    return num & ~0x1f;
 }
 
 void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
