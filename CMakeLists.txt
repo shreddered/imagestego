@@ -81,6 +81,7 @@ endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 # important
 macro(imagestego_lib LIB)
   list(APPEND IMAGESTEGO_LIBS ${LIB})
+  # compiler ID
   foreach(COMPILER GCC CLANG ICC MSVC)
     if (IMAGESTEGO_${COMPILER})
       target_compile_definitions(${LIB} PRIVATE
@@ -92,6 +93,10 @@ macro(imagestego_lib LIB)
       )
     endif()
   endforeach()
+  # inline
+  target_compile_definitions(${LIB} PRIVATE
+    "-D IMAGESTEGO_INLINE=${INLINE}"
+  )
 endmacro()
 
 add_library(coverage_config INTERFACE)

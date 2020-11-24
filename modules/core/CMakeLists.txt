@@ -36,6 +36,12 @@ else()
   )
 endif(BIG_ENDIAN)
 
+if(HAVE_INTRIN_H)
+  target_compile_definitions(imagestego_core PRIVATE
+    "HAVE_INTRIN_H"
+  )
+endif()
+
 install(TARGETS imagestego_core
   EXPORT imagestego-config
   ARCHIVE DESTINATION lib/
