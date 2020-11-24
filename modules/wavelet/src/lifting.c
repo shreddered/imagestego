@@ -228,9 +228,11 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
 
 #if IMAGESTEGO_AVX2_SUPPORTED & !IMAGESTEGO_AVX512VL_SUPPORTED
 
+#if !IMAGESTEGO_AVX512BW_SUPPORTED
 static int align32(const int num) {
     return num & ~0x1f;
 }
+#endif
 
 void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
     static const uint32_t mask[] = {2, 3, 6, 7, 0, 1, 4, 5};
