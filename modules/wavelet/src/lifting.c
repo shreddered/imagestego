@@ -362,7 +362,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
 void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
-    for (int row = 0; row < (src.rows & ~1); row += 2) {
+    for (int row = 0; row < (rows & ~1); row += 2) {
         const int16_t* ptr1 = src + row * cols;
         const int16_t* ptr2 = src + (row + 1) * cols;
         int16_t* loptr = dst + (row / 2) * cols;
@@ -376,15 +376,15 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
             vst1q_s16(loptr + col, lo);
             vst1q_s16(hiptr + col, hi);
         }
-        for (int col = aligned; col != src.cols; ++col) {
+        for (int col = aligned; col != cols; ++col) {
             loptr[col] = floor2(ptr1[col] + ptr2[col]);
             hiptr[col] = ptr1[col] - ptr2[col];
         }
     }
-    if (src.rows % 2 != 0) {
-        memcpy(reinterpret_cast<void*>(dst.ptr<int16_t>(src.rows - 1)),
-               reinterpret_cast<const void*>(src.ptr<int16_t>(src.rows - 1)),
-               src.cols * sizeof(int16_t));
+    if (rows % 2 != 0) {
+        memcpy(dst + (rows - 1) * cols,
+               src + (rows - 1) * cols,
+               cols * sizeof(int16_t));
     }
 }
 
