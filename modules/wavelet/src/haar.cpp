@@ -19,6 +19,7 @@
 
 // imagestego headers
 #include "imagestego/wavelet/haar.hpp"
+#include "lifting.h"
 // c++ headers
 #include <cstdint>
 #include <future>
@@ -27,6 +28,7 @@
 #include <opencv2/core.hpp>
 
 // SIMD headers
+// TODO: remove this
 #if defined(IMAGESTEGO_AVX2_SUPPORTED)
 #   include <immintrin.h>
 #elif defined(IMAGESTEGO_SSE2_SUPPORTED) || defined(IMAGESTEGO_SSSE3_SUPPORTED)
@@ -42,13 +44,6 @@
 #   include <altivec.h>
 #endif
 
-extern "C" {
-
-void vertical_lifting(const uint8_t*, uint8_t*, const int, const int);
-
-void horizontal_lifting(const uint8_t*, uint8_t*, const int, const int);
-
-}
 
 namespace imagestego {
 

@@ -19,7 +19,6 @@
 
 // c headers
 #include <stddef.h>
-#include <stdint.h>
 #include <string.h>
 
 // SIMD headers
@@ -38,34 +37,13 @@
 #   include <altivec.h>
 #endif
 
+// imagestego headers
+#include "lifting.h"
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * Function which computes vertical lifting.
- *
- * NB: pointers only from CV_16S matrices are accepted.
- *
- * @param src Pointer to source matrix obtained from cv::Mat::data.
- * @param dst Destination pointer.
- * @param rows Number of rows.
- * @param cols Number of columns.
- */
-void vertical_lifting(const uint8_t* src, uint8_t* dst, const int rows, const int cols);
-
-/**
- * Function which computes horizontal lifting.
- *
- * NB: pointers only from CV_16S matrices are accepted.
- *
- * @param src Pointer to source matrix obtained from cv::Mat::data.
- * @param dst Destination pointer.
- * @param rows Number of rows.
- * @param cols Number of columns.
- */
-void horizontal_lifting(const uint8_t* src, uint8_t* dst, int rows, int cols);
 
 // private function
 static IMAGESTEGO_INLINE int16_t floor2(int16_t num) {
