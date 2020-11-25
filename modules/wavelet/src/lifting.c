@@ -50,12 +50,34 @@ static IMAGESTEGO_INLINE int16_t floor2(int16_t num) {
     return (num < 0) ? (num - 1) / 2 : num / 2;
 }
 
-// Extension-specific implementation goes here
-#if IMAGESTEGO_AVX512BW_SUPPORTED
+// align functions
+// align32
+#if IMAGESTEGO_AVX512BW_SUPPORTED || IMAGESTEGO_AVX2_SUPPORTED
 
-static IMAGESTEGO_INLINE int align32(int num) {
+static IMAGESTEGO_INLINE int align32(const int num) {
     return num & ~0x1f;
 }
+
+#endif
+
+#if IMAGESTEGO_AVX2_SUPPORTED || IMAGESTEGO_SSSE3_SUPPORTED || IMAGESTEGO_NEON_SUPPORTED
+
+static IMAGESTEGO_INLINE int align16(const int num) {
+    return num & ~0xf;
+}
+
+#endif
+
+#if IMAGESTEGO_NEON_SUPPORTED || IMAGESTEGO_SSE2_SUPPORTED
+
+static IMAGESTEGO_INLINE int align8(const int num) {
+    return num & ~0x7;
+}
+
+#endif
+
+// Extension-specific implementation goes here
+#if IMAGESTEGO_AVX512BW_SUPPORTED
 
 void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
         const int cols) {
@@ -125,16 +147,14 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
         }
     }
 }
-#endif
+
+#endif /* IMAGESTEGO_AVX512BW_SUPPORTED */
 
 
 #if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512BW_SUPPORTED
 
-static IMAGESTEGO_INLINE int align16(const int num) {
-    return num & ~0xf;
-}
-
-void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
+void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+        const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != (rows & ~1); row += 2) {
@@ -184,17 +204,13 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
         }
     }
 }
-#endif
 
-#if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512VL_SUPPORTED
+#endif /* IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512BW_SUPPORTED */
 
-#if !IMAGESTEGO_AVX512BW_SUPPORTED
-static IMAGESTEGO_INLINE int align32(const int num) {
-    return num & ~0x1f;
-}
-#endif
+#if IMAGESTEGO_AVX2_SUPPORTED
 
-void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
+void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+        const int cols) {
     static const uint32_t mask[] = {2, 3, 6, 7, 0, 1, 4, 5};
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
@@ -249,15 +265,13 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
         }
     }
 }
-#endif
+
+#endif /* IMAGESTEGO_AVX2_SUPPORTED */
 
 #if IMAGESTEGO_SSSE3_SUPPORTED && IMAGESTEGO_SSE2_SUPPORTED && !IMAGESTEGO_AVX2_SUPPORTED
 
-static IMAGESTEGO_INLINE int align16(const int num) {
-    return num & ~0xf;
-}
-
-void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
+void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+        const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != (rows & ~1); row += 2) {
@@ -265,7 +279,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
         const int16_t* ptr2 = src + (row + 1) * cols;
         int16_t* loptr = dst + (row / 2) * cols;
         int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
-        const int aligned = align16(cols);
+        const int aligned = align8(cols);
         for (int col = 0; col != aligned; col += 8) {
 #if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
             asm(
@@ -303,7 +317,8 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
     }
 }
 
-void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
+void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+        const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != rows; ++row) {
@@ -340,7 +355,40 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
     }
 }
 
-#endif
+#endif /* IMAGESTEGO_SSSE3_SUPPORTED && IMAGESTEGO_SSE2_SUPPORTED && !IMAGESTEGO_AVX2_SUPPORTED */
+
+#if IMAGESTEGO_NEON_SUPPORTED
+
+void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
+    int16_t* src = (int16_t*) _src;
+    int16_t* dst = (int16_t*) _dst;
+    for (int row = 0; row < (src.rows & ~1); row += 2) {
+        const int16_t* ptr1 = src + row * cols;
+        const int16_t* ptr2 = src + (row + 1) * cols;
+        int16_t* loptr = dst + (row / 2) * cols;
+        int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
+        const int aligned = align8(cols);
+        for (int col = 0; col != aligned; col += 8) {
+            const int16x8_t a = vld1q_s16(ptr1 + col),
+                            b = vld1q_s16(ptr2 + col);
+            const int16x8_t lo = vhaddq_s16(a, b),
+                            hi = vsubq_s16(a, b);
+            vst1q_s16(loptr + col, lo);
+            vst1q_s16(hiptr + col, hi);
+        }
+        for (int col = aligned; col != src.cols; ++col) {
+            loptr[col] = floor2(ptr1[col] + ptr2[col]);
+            hiptr[col] = ptr1[col] - ptr2[col];
+        }
+    }
+    if (src.rows % 2 != 0) {
+        memcpy(reinterpret_cast<void*>(dst.ptr<int16_t>(src.rows - 1)),
+               reinterpret_cast<const void*>(src.ptr<int16_t>(src.rows - 1)),
+               src.cols * sizeof(int16_t));
+    }
+}
+
+#endif /* IMAGESTEGO_NEON_SUPPORTED */
 
 #ifdef __cplusplus
 }

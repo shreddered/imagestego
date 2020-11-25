@@ -27,23 +27,6 @@
 // opencv headers
 #include <opencv2/core.hpp>
 
-// SIMD headers
-// TODO: remove this
-#if defined(IMAGESTEGO_AVX2_SUPPORTED)
-#   include <immintrin.h>
-#elif defined(IMAGESTEGO_SSE2_SUPPORTED) || defined(IMAGESTEGO_SSSE3_SUPPORTED)
-#   ifdef IMAGESTEGO_SSE2_SUPPORTED
-#       include <emmintrin.h>
-#   endif
-#   ifdef IMAGESTEGO_SSSE3_SUPPORTED
-#       include <tmmintrin.h>
-#   endif
-#elif defined(IMAGESTEGO_NEON_SUPPORTED)
-#   include <arm_neon.h>
-#elif defined(IMAGESTEGO_ALTIVEC_SUPPORTED)
-#   include <altivec.h>
-#endif
-
 
 namespace imagestego {
 
@@ -149,20 +132,6 @@ public:
 private:
     static cv::Mat horizontalLifting(const cv::Mat& src);
     static cv::Mat verticalLifting(const cv::Mat& src);
-    static inline int16_t floor2(int16_t num) {
-        return (num < 0) ? (num - 1) / 2 : num / 2;
-    }
-    static inline int align32(int num) {
-        return num & ~0x1F;
-    }
-    static inline int align16(int num) {
-        return num & ~0xF;
-    }
-#if IMAGESTEGO_NEON_SUPPORTED || IMAGESTEGO_SSE2_SUPPORTED
-    static inline int align8(int num) {
-        return num & ~0x7;
-    }
-#endif
 }; // class HaarWaveletImpl
 
 #if IMAGESTEGO_AVX2_SUPPORTED || IMAGESTEGO_SSSE3_SUPPORTED && IMAGESTEGO_SSE2_SUPPORTED
@@ -190,42 +159,11 @@ cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
 }
 #endif
 
-#if IMAGESTEGO_AVX2_SUPPORTED || IMAGESTEGO_SSE2_SUPPORTED
 cv::Mat HaarWaveletImpl::verticalLifting(const cv::Mat& src) {
     cv::Mat dst(src.size(), CV_16SC1);
     vertical_lifting(src.data, dst.data, src.rows, src.cols);
     return dst;
 }
-#elif IMAGESTEGO_NEON_SUPPORTED
-cv::Mat HaarWaveletImpl::verticalLifting(const cv::Mat& src) {
-    cv::Mat dst(src.size(), CV_16SC1);
-    for (int row = 0; row < (src.rows & ~1); row += 2) {
-        const int16_t* ptr1 = src.ptr<int16_t>(row);
-        const int16_t* ptr2 = src.ptr<int16_t>(row + 1);
-        int16_t* loptr = dst.ptr<int16_t>(row / 2);
-        int16_t* hiptr = dst.ptr<int16_t>(row / 2 + src.rows / 2);
-        const int aligned = align8(src.cols);
-        for (int col = 0; col != aligned; col += 8) {
-            const int16x8_t a = vld1q_s16(ptr1 + col),
-                            b = vld1q_s16(ptr2 + col);
-            const int16x8_t lo = vhaddq_s16(a, b),
-                            hi = vsubq_s16(a, b);
-            vst1q_s16(loptr + col, lo);
-            vst1q_s16(hiptr + col, hi);
-        }
-        for (int col = aligned; col != src.cols; ++col) {
-            loptr[col] = floor2(ptr1[col] + ptr2[col]);
-            hiptr[col] = ptr1[col] - ptr2[col];
-        }
-    }
-    if (src.rows % 2 != 0) {
-        memcpy(reinterpret_cast<void*>(dst.ptr<int16_t>(src.rows - 1)),
-               reinterpret_cast<const void*>(src.ptr<int16_t>(src.rows - 1)),
-               src.cols * sizeof(int16_t));
-    }
-    return dst;
-}
-#endif
 
 HaarWavelet::HaarWavelet() : pImpl(new HaarWaveletImpl) {}
 
