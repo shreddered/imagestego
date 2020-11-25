@@ -402,7 +402,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* _dst, const int r
                             tmp2 = vreinterpretq_s32_s16(b);
             const int16x8_t t1 = vcombine_s16(vmovn_s32(tmp1), vmovn_s32(tmp2)),
                             t2 = vcombine_s16(vshrn_n_s32(tmp1, 16), vshrn_n_s32(b, 16));
-            const int16x8_t hi = vsubq_s16(t1 - t2);
+            const int16x8_t hi = vsubq_s16(t1, t2);
             vst1q_s16(dptr + col / 2, lo);
             vst1q_s16(dptr + col / 2 + cols / 2, hi);
         }
