@@ -81,6 +81,7 @@ jobs:
         - cp test/test.jpg build/
         - cd build
         - ctest --verbose
+        - scripts/coverage.sh
 
 cache:
   directories:
@@ -89,5 +90,3 @@ cache:
 install: scripts/install-deps.sh
 
 script: scripts/build.sh
-
-after_script: scripts/coverage.sh
