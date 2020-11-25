@@ -166,21 +166,11 @@ private:
     static cv::Mat verticalLifting(const cv::Mat& src);
 }; // class HaarWaveletImpl
 
-#if IMAGESTEGO_AVX2_SUPPORTED || IMAGESTEGO_SSSE3_SUPPORTED && IMAGESTEGO_SSE2_SUPPORTED
 cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
     cv::Mat dst(src.size(), CV_16SC1);
     horizontal_lifting(src.data, dst.data, src.rows, src.cols);
     return dst;
 }
-// TODO: vectorize loop using ARM NEON intrinsics
-#elif IMAGESTEGO_NEON_SUPPORTED
-cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
-    cv::Mat dst(src.size(), CV_16SC1);
-    horizontal_lifting(src.data, dst.data, src.rows, src.cols);
-    // dst = verticalLifting(src.t()).t();
-    return dst;
-}
-#endif
 
 cv::Mat HaarWaveletImpl::verticalLifting(const cv::Mat& src) {
     cv::Mat dst(src.size(), CV_16SC1);
