@@ -3,6 +3,12 @@ language: cpp
 # TODO: add more compilers
 jobs:
   include:
+    - stage: unit_test
+      script:
+        - cd build
+        - cp ../test/test.jpg .
+        - ctest --verbose
+        - cd ..
     - name: "GCC x86"
       arch: amd64
       os: linux
@@ -77,11 +83,5 @@ cache:
 install: scripts/install-deps.sh
 
 script: scripts/build.sh
-
-after_success:
-  - cd build
-  - cp ../test/test.jpg .
-  - ctest --verbose
-  - cd ..
 
 after_script: scripts/coverage.sh
