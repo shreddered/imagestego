@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
-#ifndef __IMAGESTEGO_WAVELET_LIFTING_H_INCLUDED__
-#define __IMAGESTEGO_WAVELET_LIFTING_H_INCLUDED__
+#ifndef __IMAGESTEGO_WAVELET_HAAR_H_INCLUDED__
+#define __IMAGESTEGO_WAVELET_HAAR_H_INCLUDED__
 
 // c headers
 #include <stdint.h>
@@ -54,4 +54,4 @@ void horizontal_lifting(const uint8_t* src, uint8_t* dst, int rows, int cols);
 }
 #endif
 
-#endif /* __IMAGESTEGO_WAVELET_LIFTING_H_INCLUDED__ */
+#endif /* __IMAGESTEGO_WAVELET_HAAR_H_INCLUDED__ */

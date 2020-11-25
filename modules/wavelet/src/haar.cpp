@@ -19,7 +19,7 @@
 
 // imagestego headers
 #include "imagestego/wavelet/haar.hpp"
-#include "lifting.h"
+#include "haar.h"
 // c++ headers
 #include <cstdint>
 #include <future>
