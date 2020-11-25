@@ -168,13 +168,13 @@ private:
 
 cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
     cv::Mat dst(src.size(), CV_16SC1);
-    horizontal_lifting(src.data, dst.data, src.rows, src.cols);
+    horizontal_haar(src.data, dst.data, src.rows, src.cols);
     return dst;
 }
 
 cv::Mat HaarWaveletImpl::verticalLifting(const cv::Mat& src) {
     cv::Mat dst(src.size(), CV_16SC1);
-    vertical_lifting(src.data, dst.data, src.rows, src.cols);
+    vertical_haar(src.data, dst.data, src.rows, src.cols);
     return dst;
 }
 
