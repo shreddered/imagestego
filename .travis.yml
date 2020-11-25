@@ -1,15 +1,14 @@
 language: cpp
 
 # TODO: add more compilers
+stages:
+  - compile
+  - test
+
 jobs:
   include:
-    - stage: unit_test
-      script:
-        - cd build
-        - cp ../test/test.jpg .
-        - ctest --verbose
-        - cd ..
     - name: "GCC x86"
+      stage: compile
       arch: amd64
       os: linux
       dist: bionic
@@ -75,6 +74,13 @@ jobs:
       compiler: clang
       env:
         - MODULES="core,lossless,comp,wavelet"
+    - stage: test
+      name: "Unit Tests"
+      script:
+        - cd $TRAVIS_BUILD_DIR
+        - cp test/test.jpg build/
+        - cd build
+        - ctest --verbose
 
 cache:
   directories:
