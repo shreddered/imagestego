@@ -38,7 +38,7 @@
 #endif
 
 // imagestego headers
-#include "lifting.h"
+#include "haar.h"
 
 
 #ifdef __cplusplus
