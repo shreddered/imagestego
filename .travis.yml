@@ -74,12 +74,11 @@ cache:
   directories:
     - $TRAVIS_BUILD_DIR/opencv
 
-install: scripts/install-deps.sh
+install: ci/travis-install-deps.sh
 
 script:
-  - scripts/build.sh
-  - cd $TRAVIS_BUILD_DIR
+  - ci/travis-build.sh
   - cp test/test.jpg build/
   - cd build
   - ctest --verbose
-  - scripts/coverage.sh
+  - ci/travis-upload-coverage.sh
