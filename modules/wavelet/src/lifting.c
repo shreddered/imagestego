@@ -208,7 +208,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
 }
 #endif
 
-#if IMAGESTEGO_AVX2_SUPPORTED & !IMAGESTEGO_AVX512VL_SUPPORTED
+#if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512VL_SUPPORTED
 
 #if !IMAGESTEGO_AVX512BW_SUPPORTED
 static IMAGESTEGO_INLINE int align32(const int num) {
