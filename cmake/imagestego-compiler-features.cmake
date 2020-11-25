@@ -2,6 +2,7 @@
 
 include(CheckIncludeFiles)
 include(CheckCXXSourceCompiles)
+include(CheckCSourceCompiles)
 
 # intrin.h header
 if (MSVC)
@@ -15,7 +16,7 @@ else()
   set(INLINE_OPTS "__inline__;inline")
 endif()
 foreach(inline ${INLINE_OPTS})
-  check_cxx_source_compiles("${inline} static int foo() { return 0; } int main() { return foo(); }" HAVE_INLINE)
+  check_c_source_compiles("${inline} static int foo() { return 0; } int main() { return foo(); }" HAVE_INLINE)
   if (HAVE_INLINE)
     set(INLINE ${inline})
     break()

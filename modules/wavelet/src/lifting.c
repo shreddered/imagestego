@@ -67,14 +67,14 @@ void vertical_lifting(const uint8_t* src, uint8_t* dst, const int rows, const in
 void horizontal_lifting(const uint8_t* src, uint8_t* dst, int rows, int cols);
 
 // private function
-static int16_t floor2(int16_t num) {
+IMAGESTEGO_INLINE int16_t floor2(int16_t num) {
     return (num < 0) ? (num - 1) / 2 : num / 2;
 }
 
 // Extension-specific implementation goes here
 #if IMAGESTEGO_AVX512BW_SUPPORTED
 
-static int align32(int num) {
+IMAGESTEGO_INLINE int align32(int num) {
     return num & ~0x1f;
 }
 
@@ -151,7 +151,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
 
 #if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512BW_SUPPORTED
 
-int align16(const int num) {
+IMAGESTEGO_INLINE int align16(const int num) {
     return num & ~0xf;
 }
 
@@ -210,7 +210,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
 #if IMAGESTEGO_AVX2_SUPPORTED & !IMAGESTEGO_AVX512VL_SUPPORTED
 
 #if !IMAGESTEGO_AVX512BW_SUPPORTED
-static int align32(const int num) {
+IMAGESTEGO_INLINE int align32(const int num) {
     return num & ~0x1f;
 }
 #endif
@@ -274,7 +274,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
 
 #if IMAGESTEGO_SSSE3_SUPPORTED && IMAGESTEGO_SSE2_SUPPORTED && !IMAGESTEGO_AVX2_SUPPORTED
 
-int align16(const int num) {
+IMAGESTEGO_INLINE int align16(const int num) {
     return num & ~0xf;
 }
 
