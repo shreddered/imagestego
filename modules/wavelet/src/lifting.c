@@ -397,7 +397,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* _dst, const int r
         for (int col = 0; col != aligned; col += 16) {
             const int16x8_t a = vld1q_s16(sptr + col),
                             b = vld1q_s16(sptr + col + 8);
-            const int16x8_t lo = vshr_n_s16(vpaddq_s16(a, b), 1);
+            const int16x8_t lo = vshrq_n_s16(vpaddq_s16(a, b), 1);
             const int32x4_t tmp1 = vreinterpretq_s32_s16(a),
                             tmp2 = vreinterpretq_s32_s16(b),
                             t1 = vcombine_s16(vmovn_s32(tmp1), vmovn_s32(tmp2)),
