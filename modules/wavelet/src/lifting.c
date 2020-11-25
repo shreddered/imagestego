@@ -110,12 +110,12 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                 "vmovdqu16 %%zmm2, (%[lo], %[col], 2)\n\t"
                 "vmovdqu16 %%zmm0, (%[hi], %[col], 2)   \n\t"
                 :
-                : [lo]  "m" (loptr),
+                : [lo]  "r" (loptr),
                   [hi]  "r" (hiptr),
                   [a]   "r" (ptr1),
                   [b]   "r" (ptr2),
                   [col] "r" ((ssize_t) col)
-                : "%ymm0", "%ymm1", "%ymm2", "memory"
+                : "%zmm0", "%zmm1", "%zmm2", "memory"
             );
 #endif
         }
