@@ -81,6 +81,5 @@ script:
   - cp test/test.jpg build/
   - cd build
   - ctest --verbose
-  - set -x
+  - cd ..
   - ci/travis-upload-coverage.sh
-  - set +x
