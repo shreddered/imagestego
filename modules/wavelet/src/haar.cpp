@@ -144,17 +144,8 @@ cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
 #elif IMAGESTEGO_NEON_SUPPORTED
 cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
     cv::Mat dst(src.size(), CV_16SC1);
-    // for (int row = 0; row != src.rows; ++row) {
-        // const int16_t* sptr = src.ptr<int16_t>(row);
-        // int16_t* dptr = dst.ptr<int16_t>(row);
-        // const int aligned = align16(src.cols);
-        // for (int col = 0; col != aligned; col += 16) {
-            // const int16x8_t a = vld1q_s16(sptr + col),
-                            // b = vld1q_s16(sptr + col + 8),
-                            // sum = vpaddq_s16(a, b);
-        // }
-    // }
-    dst = verticalLifting(src.t()).t();
+    horizontal_lifting(src.data, dst.data, src.rows, src.cols);
+    // dst = verticalLifting(src.t()).t();
     return dst;
 }
 #endif

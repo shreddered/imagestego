@@ -51,7 +51,6 @@ static IMAGESTEGO_INLINE int16_t floor2(int16_t num) {
 }
 
 // align functions
-// align32
 #if IMAGESTEGO_AVX512BW_SUPPORTED || IMAGESTEGO_AVX2_SUPPORTED
 
 static IMAGESTEGO_INLINE int align32(const int num) {
@@ -385,6 +384,35 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
         memcpy(dst + (rows - 1) * cols,
                src + (rows - 1) * cols,
                cols * sizeof(int16_t));
+    }
+}
+
+void horizontal_lifting(const uint8_t* restrict _src, uint8_t* _dst, const int rows, const int cols) {
+    int16_t* src = (int16_t*) _src;
+    int16_t* dst = (int16_t*) _dst;
+    for (int row = 0; row != rows; ++row) {
+        const int16_t* sptr = src + row * cols;
+        int16_t* dptr = dst + row * cols;
+        const int aligned = align16(cols);
+        for (int col = 0; col != aligned; col += 16) {
+            const int16x8_t a = vld1q_s16(sptr + col),
+                            b = vld1q_s16(sptr + col + 8);
+            const int16x8_t lo = vshr_n_s16(vpaddq_s16(a, b), 1);
+            const int32x4_t tmp1 = vreinterpretq_s32_s16(a),
+                            tmp2 = vreinterpretq_s32_s16(b),
+                            t1 = vcombine_s16(vmovn_s32(tmp1), vmovn_s32(tmp2)),
+                            t2 = vcombine_s16(vshrn_n_s32(tmp1, 16), vshrn_n_s32(b, 16));
+            const int16x8_t hi = vsubq_s16(t1 - t2);
+            vst1q_s16(dptr + col / 2);
+            vst1q_s16(dptr + col / 2 + cols / 2);
+        }
+        for (int col = aligned; col < cols - 1; col += 2) {
+            *(dptr + col / 2) = floor2(sptr[col + 1] + sptr[col]);
+            *(dptr + cols / 2 + col / 2) = sptr[col] - sptr[col + 1];
+        }
+        if (cols % 2 != 0) {
+            dptr[cols - 1] = sptr[cols - 1];
+        }
     }
 }
 
