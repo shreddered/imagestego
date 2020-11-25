@@ -14,20 +14,6 @@ jobs:
         apt:
           packages:
             - lcov
-    - name: "GCC-9 arm64"
-      arch: arm64
-      os: linux
-      dist: bionic
-      compiler: gcc-9
-      env:
-        - MODULES="core,lossless,comp,wavelet" CC=gcc-9 CXX=g++-9
-      addons:
-        apt:
-          sources:
-            - sourceline: "ppa:ubuntu-toolchain-r/test"
-          packages:
-            - gcc-9
-            - g++-9
     - name: "Clang x86"
       arch: amd64
       os: linux
@@ -49,6 +35,11 @@ jobs:
           packages:
             - gcc-9
             - g++-9
+    - name: "Apple Clang x86"
+      os: osx
+      compiler: clang
+      env:
+        - MODULES="core,lossless,comp,wavelet"
     - name: "Clang-10 arm64"
       arch: arm64
       os: linux
@@ -64,11 +55,20 @@ jobs:
             - clang-10
             - clang++-10
             - lld-10
-    - name: "Apple Clang x86"
-      os: osx
-      compiler: clang
+    - name: "GCC-9 arm64"
+      arch: arm64
+      os: linux
+      dist: bionic
+      compiler: gcc-9
       env:
-        - MODULES="core,lossless,comp,wavelet"
+        - MODULES="core,lossless,comp,wavelet" CC=gcc-9 CXX=g++-9
+      addons:
+        apt:
+          sources:
+            - sourceline: "ppa:ubuntu-toolchain-r/test"
+          packages:
+            - gcc-9
+            - g++-9
 
 cache:
   directories:
