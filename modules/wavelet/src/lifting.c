@@ -18,6 +18,7 @@
  */
 
 // c headers
+#include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -114,7 +115,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                   [hi]  "r" (hiptr),
                   [a]   "r" (ptr1),
                   [b]   "r" (ptr2),
-                  [col] "r" ((ssize_t) col)
+                  [col] "r" ((ptrdiff_t) col)
                 : "%zmm0", "%zmm1", "%zmm2", "memory"
             );
 #endif
@@ -135,7 +136,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                   [b]    "r" (ptr2),
                   [lo]   "r" (loptr),
                   [hi]   "r" (hiptr),
-                  [col]  "r" ((ssize_t) col)
+                  [col]  "r" ((ptrdiff_t) col)
                 : "%zmm0", "%zmm1", "%zmm2", "memory"
             );
 #endif
@@ -179,7 +180,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                   [hi]  "r" (hiptr),
                   [a]   "r" (ptr1),
                   [b]   "r" (ptr2),
-                  [col] "r" ((ssize_t) col)
+                  [col] "r" ((ptrdiff_t) col)
                 : "%ymm0", "%ymm1", "%ymm2", "memory"
             );
 #elif IMAGESTEGO_WIN
@@ -242,7 +243,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
                   [hi]   "r" (tmp2),
                   [src]  "r" (sptr),
                   [mask] "r" ((uint32_t*) mask),
-                  [col]  "r" ((ssize_t) col)
+                  [col]  "r" ((ptrdiff_t) col)
                 : "%ymm0", "%ymm1", "%ymm2", "%ymm3", "memory"
             );
 #elif IMAGESTEGO_WIN
@@ -303,7 +304,7 @@ void vertical_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, cons
                   [hi]  "r" (hiptr),
                   [a]   "r" (ptr1),
                   [b]   "r" (ptr2),
-                  [col] "r" ((ssize_t) col)
+                  [col] "r" ((ptrdiff_t) col)
                 : "%xmm0", "%xmm1", "%xmm2", "memory"
             );
             // TODO: add windows implementation
@@ -347,7 +348,7 @@ void horizontal_lifting(const uint8_t* restrict _src, uint8_t* restrict _dst, co
                 : [lo]  "r" (tmp1),
                   [hi]  "r" (tmp2),
                   [src] "r" (sptr),
-                  [col] "r" ((ssize_t) col)
+                  [col] "r" ((ptrdiff_t) col)
                 : "%xmm0", "%xmm1", "%xmm2", "%xmm3", "memory"
             );
         }
