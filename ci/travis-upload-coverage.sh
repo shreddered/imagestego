@@ -3,7 +3,7 @@
 # Script for uploading coverage report
 set -e
 
-if [ -z "$COVERAGE" ]; then
+if [ ! -z "$COVERAGE" ]; then
     touch coverage.info
     lcov --directory . --capture --output-file coverage.info
     lcov --remove coverage.info \
