@@ -50,7 +50,7 @@ static IMAGESTEGO_INLINE int16_t floor2(int16_t num) {
     return (num < 0) ? (num - 1) / 2 : num / 2;
 }
 
-// align functions
+// set of align functions
 #if IMAGESTEGO_AVX512BW_SUPPORTED || IMAGESTEGO_AVX2_SUPPORTED
 
 static IMAGESTEGO_INLINE int align32(const int num) {
@@ -210,7 +210,7 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
 
 void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
         const int cols) {
-    static const uint32_t mask[] = {2, 3, 6, 7, 0, 1, 4, 5};
+    __m256i mask = _mm256_set_epi32(5, 4, 1, 0, 7, 6, 3, 2);
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != rows; ++row) {
@@ -223,21 +223,20 @@ void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const
             asm(
                 "vmovdqu (%[src], %[col], 2), %%ymm0  \n\t"
                 "vmovdqu 32(%[src], %[col], 2), %%ymm1\n\t"
-                "vmovdqu (%[mask]), %%ymm3            \n\t"
                 "vphsubw %%ymm0, %%ymm1, %%ymm2       \n\t"
                 "vphaddw %%ymm0, %%ymm1, %%ymm1       \n\t"
                 "vpsraw  $0x1, %%ymm1, %%ymm1         \n\t"
-                "vpermd  %%ymm1, %%ymm3, %%ymm1       \n\t"
-                "vpermd  %%ymm2, %%ymm3, %%ymm2       \n\t"
+                "vpermd  %%ymm1, %[mask], %%ymm1      \n\t"
+                "vpermd  %%ymm2, %[mask], %%ymm2      \n\t"
                 "vmovdqu %%ymm1, (%[lo])              \n\t"
                 "vmovdqu %%ymm2, (%[hi])              \n\t"
                 :
                 : [lo]   "r" (tmp1),
                   [hi]   "r" (tmp2),
                   [src]  "r" (sptr),
-                  [mask] "r" ((uint32_t*) mask),
+                  [mask] "x" (mask),
                   [col]  "r" ((ptrdiff_t) col)
-                : "%ymm0", "%ymm1", "%ymm2", "%ymm3", "memory"
+                : "%ymm0", "%ymm1", "%ymm2", "memory"
             );
 #elif IMAGESTEGO_WIN
             __asm {
