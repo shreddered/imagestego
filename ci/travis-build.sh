@@ -3,8 +3,7 @@
 # Script for building imagestego on Travis CI
 set -e
 
-mkdir build || echo -n
-cd build
+mkdir -p build && cd build
 if [ -z "$MODULES" ]; then
     cmake -D CMAKE_BUILD_TYPE=Release \
         -D BUILD_SHARED_LIBS=ON \

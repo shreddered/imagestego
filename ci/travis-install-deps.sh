@@ -5,9 +5,7 @@ set -e
 
 if [ ! -d $TRAVIS_BUILD_DIR/opencv/build ]; then
     git clone https://github.com/opencv/opencv.git
-    cd opencv
-    mkdir build
-    cd build
+    mkdir -p opencv/build && pushd opencv/build
     cmake -D BUILD_LIST=core,imgcodecs \
      -D CMAKE_BUILD_TYPE=Release \
      -D BUILD_EXAMPLES=OFF \
@@ -23,4 +21,4 @@ fi
 sudo make install
 if [ "${TRAVIS_OS_NAME}" = "linux" ]; then sudo sh -c 'echo "/usr/local/lib/" > /etc/ld.so.conf.d/opencv.conf'; fi
 if [ "${TRAVIS_OS_NAME}" = "linux" ]; then sudo ldconfig; fi
-cd ../../
+popd

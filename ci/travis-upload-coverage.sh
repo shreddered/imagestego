@@ -4,6 +4,7 @@
 set -e
 
 if [ -z "$COVERAGE" ]; then
+    touch coverage.info
     lcov --directory . --capture --output-file coverage.info
     lcov --remove coverage.info \
         '/usr/*' \
