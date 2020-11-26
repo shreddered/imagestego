@@ -7,7 +7,6 @@ add_library(imagestego_core
   ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/exception.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/intrinsic.cpp
-  # ${CMAKE_CURRENT_SOURCE_DIR}/src/route.cpp
   # third party
   ${CMAKE_CURRENT_SOURCE_DIR}/third_party/MurmurHash3.cpp
 )
@@ -20,8 +19,6 @@ target_include_directories(imagestego_core PUBLIC
 
 imagestego_lib(imagestego_core)
 imagestego_exports(imagestego_core)
-
-target_link_libraries(imagestego_core PUBLIC coverage_config)
 
 include(TestBigEndian)
 test_big_endian(BIG_ENDIAN)
@@ -52,15 +49,13 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
   DESTINATION include/
 )
 
-if (IMAGESTEGO_BUILD_TESTS)
-  imagestego_test(CORE
-    NAME bitarray
-    FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/bitarray.cpp
-    LIBS imagestego_core
-  )
-  imagestego_test(CORE
-    NAME intrinsics
-    FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/intrinsic.cpp
-    LIBS imagestego_core
-  )
-endif (IMAGESTEGO_BUILD_TESTS)
+imagestego_add_test(CORE
+  NAME bitarray
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/bitarray.cpp
+  LIBS imagestego_core
+)
+imagestego_add_test(CORE
+  NAME intrinsics
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/intrinsic.cpp
+  LIBS imagestego_core
+)

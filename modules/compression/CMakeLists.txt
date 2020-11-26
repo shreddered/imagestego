@@ -17,7 +17,6 @@ target_include_directories(imagestego_compression PUBLIC
 
 target_link_libraries(imagestego_compression PUBLIC
   imagestego_core
-  coverage_config
 )
 
 target_compile_definitions(imagestego_compression PUBLIC
@@ -35,15 +34,13 @@ install(TARGETS imagestego_compression
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include/)
 
-if (IMAGESTEGO_BUILD_TESTS)
-  imagestego_test(COMPRESSION
-    NAME huffman
-    FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/huffman.cpp
-    LIBS imagestego_compression
-  )
-  imagestego_test(COMPRESSION
-    NAME lzw
-    FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/lzw.cpp
-    LIBS imagestego_compression
-  )
-endif(IMAGESTEGO_BUILD_TESTS)
+imagestego_add_test(COMPRESSION
+  NAME huffman
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/huffman.cpp
+  LIBS imagestego_compression
+)
+imagestego_add_test(COMPRESSION
+  NAME lzw
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/lzw.cpp
+  LIBS imagestego_compression
+)

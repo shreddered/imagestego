@@ -11,15 +11,13 @@ if (POLICY CMP0042)
   cmake_policy(SET CMP0042 NEW)
 endif (POLICY CMP0042)
 
+if (POLICY CMP0079)
+  cmake_policy(SET CMP0079 NEW)
+endif()
+
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
-
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wpedantic")
-endif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
 if (POLICY CMP0091)
   cmake_policy(SET CMP0091 NEW)
@@ -52,14 +50,19 @@ endmacro()
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-simd-detection.cmake")
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-compiler-features.cmake")
 
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+
+if (IMAGESTEGO_GCC)
+  string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wpedantic")
+endif (IMAGESTEGO_GCC)
+
 # build conditions
 option(IMAGESTEGO_BUILD_TESTS "Build tests" OFF)
+option(IMAGESTEGO_BUILD_PERF_TESTS "Build performance tests" OFF)
 option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
 option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
 option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
 option(IMAGESTEGO_COVERAGE "Check coverage" OFF)
-
-# modules
 option(IMAGESTEGO_MODULES "imagestego modules" "core,jpeg,lossless,comp")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -70,16 +73,72 @@ if (WIN32)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 endif (WIN32)
 
-# preparing needed directories
-if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
-  file(MAKE_DIRECTORY bin/)
-endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
+# function for test generation
+macro(imagestego_add_test)
+  cmake_parse_arguments(TEST
+    "CORE;COMPRESSION;JPEG;LOSSLESS;WAVELET"
+    "NAME;FILE"
+    "LIBS"
+    ${ARGN}
+  )
 
-if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
-  file(MAKE_DIRECTORY test/)
-endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
+  foreach(OPT CORE COMPRESSION JPEG LOSSLESS WAVELET)
+    if (${TEST_${OPT}})
+      set(DIR ${OPT})
+      break()
+    endif ()
+  endforeach()
 
-# important
+  list(APPEND IMAGESTEGO_TEST_FILES "${TEST_FILE}")
+  list(APPEND IMAGESTEGO_TEST_LIBS "${TEST_LIBS}")
+  list(APPEND IMAGESTEGO_TEST_INCLUDES "${IMAGESTEGO_${DIR}_DIR}/src")
+
+  set(IMAGESTEGO_TEST_FILES "${IMAGESTEGO_TEST_FILES}" PARENT_SCOPE)
+  set(IMAGESTEGO_TEST_LIBS "${IMAGESTEGO_TEST_LIBS}" PARENT_SCOPE)
+  set(IMAGESTEGO_TEST_INCLUDES "${IMAGESTEGO_TEST_INCLUDES}" PARENT_SCOPE)
+
+endmacro(imagestego_add_test)
+
+# function for performance test generation
+macro(imagestego_add_perf_test)
+  cmake_parse_arguments(TEST
+    "CORE;COMPRESSION;JPEG;LOSSLESS;WAVELET"
+    "NAME;FILE"
+    "LIBS"
+    ${ARGN}
+  )
+
+  foreach(OPT CORE COMPRESSION JPEG LOSSLESS WAVELET)
+    if (${TEST_${OPT}})
+      set(DIR ${OPT})
+    endif ()
+  endforeach()
+
+  list(APPEND IMAGESTEGO_PERF_TEST_FILES "${TEST_FILE}")
+  list(APPEND IMAGESTEGO_PERF_TEST_LIBS "${TEST_LIBS}")
+  list(APPEND IMAGESTEGO_PERF_TEST_INCLUDES "${IMAGESTEGO_${DIR}_DIR}/src")
+
+  set(IMAGESTEGO_PERF_TEST_FILES "${IMAGESTEGO_PERF_TEST_FILES}" PARENT_SCOPE)
+  set(IMAGESTEGO_PERF_TEST_LIBS "${IMAGESTEGO_PERF_TEST_LIBS}" PARENT_SCOPE)
+  set(IMAGESTEGO_PERF_TEST_INCLUDES "${IMAGESTEGO_PERF_TEST_INCLUDES}" PARENT_SCOPE)
+
+endmacro(imagestego_add_perf_test)
+
+# helper function for defining export macros
+function(imagestego_exports target)
+  if (WIN32 AND BUILD_SHARED_LIBS)
+    target_compile_definitions(${target} PUBLIC
+      "-DIMAGESTEGO_DLL"
+    )
+    if (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
+      target_compile_definitions(${target} PRIVATE
+        "-DIMAGESTEGO_EXPORTS"
+      )
+    endif (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
+  endif (WIN32 AND BUILD_SHARED_LIBS)
+endfunction(imagestego_exports target)
+
+# function for marking every imagestego module
 macro(imagestego_lib LIB)
   list(APPEND IMAGESTEGO_LIBS ${LIB})
   # compiler ID
@@ -102,8 +161,16 @@ macro(imagestego_lib LIB)
   target_compile_definitions(${LIB} PUBLIC
     "-D IMAGESTEGO_CONSTEXPR=constexpr"
   )
+  # exports
+  imagestego_exports(${LIB})
 endmacro()
 
+# preparing needed directories
+if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
+  file(MAKE_DIRECTORY test/)
+endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
+
+# coverage interface
 add_library(coverage_config INTERFACE)
 
 if (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
@@ -118,50 +185,6 @@ if(NOT CMAKE_VERSION VERSION_LESS 3.13)
     target_link_libraries(coverage_config INTERFACE --coverage)
   endif ()
 endif (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-
-# function for test generation
-function(imagestego_test)
-  cmake_parse_arguments(TEST
-    "CORE;COMPRESSION;JPEG;LOSSLESS;WAVELET"
-    "NAME;FILE"
-    "LIBS"
-    ${ARGN}
-  )
-
-  foreach(OPT CORE COMPRESSION JPEG LOSSLESS WAVELET)
-    if (${TEST_${OPT}})
-      set(DIR ${OPT})
-    endif ()
-  endforeach()
-
-  # test executable
-  add_executable(${TEST_NAME} ${TEST_FILE})
-  target_link_libraries(${TEST_NAME}
-    ${TEST_LIBS}
-    gtest_main
-    gmock_main
-  )
-
-  target_include_directories(${TEST_NAME} PRIVATE ${IMAGESTEGO_${DIR}_DIR}/src)
-
-  set_target_properties(${TEST_NAME} PROPERTIES
-    OUTPUT_NAME "test_$<LOWER_CASE:${DIR}>_${TEST_NAME}"
-    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin/"
-  )
-endfunction(imagestego_test)
-
-function(imagestego_exports target)
-  if (WIN32 AND BUILD_SHARED_LIBS)
-    target_compile_definitions(${target} PUBLIC
-      "-DIMAGESTEGO_DLL"
-    )
-    if (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
-      target_compile_definitions(${target} PRIVATE
-        "-DIMAGESTEGO_EXPORTS"
-      )
-    endif (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
-  endif (WIN32 AND BUILD_SHARED_LIBS)
-endfunction(imagestego_exports target)
 
 string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
 
@@ -198,50 +221,36 @@ if ("wavelet" IN_LIST IMAGESTEGO_BUILD_LIST)
   add_subdirectory("modules/wavelet")
 endif ("wavelet" IN_LIST IMAGESTEGO_BUILD_LIST)
 
-function(imagestego_add_test)
-  cmake_parse_arguments(TEST
-    "CORE;COMPRESSION;JPEG;LOSSLESS;WAVELET"
-    "NAME"
-    ""
-    ${ARGN}
-  )
-
-  foreach(OPT CORE COMPRESSION JPEG LOSSLESS WAVELET)
-    if (${TEST_${OPT}})
-      set(DIR $<LOWER_CASE:${OPT}>)
-    endif ()
-  endforeach()
-
-  add_test(NAME ${TEST_NAME}
-    COMMAND "${PROJECT_SOURCE_DIR}/bin/test_${DIR}_${TEST_NAME}"
-  )
-endfunction(imagestego_add_test)
-
-if (IMAGESTEGO_BUILD_TESTS)
-  include(CTest)
-
+if (IMAGESTEGO_BUILD_TESTS OR IMAGESTEGO_BUILD_PERF_TESTS)
+  enable_testing()
   # gtest
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/gtest)
+endif()
 
-  # core tests
-  imagestego_add_test(CORE NAME bitarray)
-  imagestego_add_test(CORE NAME intrinsics)
+# unit tests
+if (IMAGESTEGO_BUILD_TESTS)
+  # test executable
+  add_executable(imagestego_test
+    ${IMAGESTEGO_TEST_FILES}
+  )
+  target_link_libraries(imagestego_test
+    ${IMAGESTEGO_TEST_LIBS}
+    gtest_main
+    gmock_main
+  )
+  target_include_directories(imagestego_test PRIVATE ${IMAGESTEGO_TEST_INCLUDES})
 
-  # compression tests
-  if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
-    imagestego_add_test(COMPRESSION NAME huffman)
-    imagestego_add_test(COMPRESSION NAME lzw)
-  endif ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
-
-  # lossless tests
-  if ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
-    imagestego_add_test(LOSSLESS NAME avl)
-    imagestego_add_test(LOSSLESS NAME lsb)
-    imagestego_add_test(LOSSLESS NAME route)
-  endif ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
-
-  # wavelet tests
-  if ("wavelet" IN_LIST IMAGESTEGO_BUILD_LIST)
-    imagestego_add_test(WAVELET NAME haar)
-  endif ("wavelet" IN_LIST IMAGESTEGO_BUILD_LIST)
+  add_test(NAME unit_tests COMMAND imagestego_test)
 endif (IMAGESTEGO_BUILD_TESTS)
+
+if (IMAGESTEGO_BUILD_PERF_TESTS)
+  # test executable
+  add_executable(imagestego_perf_test ${IMAGESTEGO_PERF_TEST_FILES})
+  target_link_libraries(imagestego_perf_test
+    ${IMAGESTEGO_PERF_TEST_LIBS}
+    gtest_main
+  )
+  target_include_directories(imagestego_perf_test PRIVATE ${IMAGESTEGO_PERF_TEST_INCLUDES})
+
+  add_test(NAME perf_test COMMAND imagestego_perf_test)
+endif(IMAGESTEGO_BUILD_PERF_TESTS)

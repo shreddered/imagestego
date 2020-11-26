@@ -1,7 +1,6 @@
 imagestego_defs()
 
 add_library(imagestego_lossless
-  # ${CMAKE_CURRENT_SOURCE_DIR}/src/dwt.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/lsb.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/route.cpp
 )
@@ -17,7 +16,6 @@ target_link_libraries(imagestego_lossless PUBLIC
   imagestego_core
   opencv_core
   opencv_imgcodecs
-  coverage_config
 )
 
 if (TARGET imagestego_compression)
@@ -41,21 +39,19 @@ install(TARGETS imagestego_lossless
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include/)
 
-if (IMAGESTEGO_BUILD_TESTS)
-  imagestego_test(LOSSLESS
-    NAME lsb
-    FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/lsb.cpp
-    LIBS imagestego_lossless
-  )
+imagestego_add_test(LOSSLESS
+  NAME lsb
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/lsb.cpp
+  LIBS imagestego_lossless
+)
 
-  imagestego_test(LOSSLESS
-    NAME avl
-    FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/avl.cpp
-    LIBS imagestego_lossless
-  )
-  imagestego_test(LOSSLESS
-    NAME route
-    FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/route.cpp
-    LIBS imagestego_lossless
-  )
-endif (IMAGESTEGO_BUILD_TESTS)
+imagestego_add_test(LOSSLESS
+  NAME avl
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/avl.cpp
+  LIBS imagestego_lossless
+)
+imagestego_add_test(LOSSLESS
+  NAME route
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/route.cpp
+  LIBS imagestego_lossless
+)

@@ -15,7 +15,6 @@ target_link_libraries(imagestego_wavelet PUBLIC
   imagestego_core
   opencv_core
   opencv_imgcodecs
-  coverage_config
 )
 
 target_compile_definitions(imagestego_wavelet PUBLIC
@@ -59,10 +58,8 @@ install(TARGETS imagestego_wavelet
   LIBRARY DESTINATION lib
 )
 
-if (IMAGESTEGO_BUILD_TESTS)
-  imagestego_test(WAVELET
-    NAME haar
-    FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/haar.cpp
-    LIBS imagestego_wavelet opencv_imgcodecs
-  )
-endif (IMAGESTEGO_BUILD_TESTS)
+imagestego_add_perf_test(WAVELET
+  NAME haar_perf
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/perf/haar.cpp
+  LIBS imagestego_wavelet opencv_core
+)
