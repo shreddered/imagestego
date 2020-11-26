@@ -1,0 +1,16 @@
+name: Windows
+
+on: push
+
+jobs:
+  msvc2019:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Generate solution'
+        run: cmake -S . -B build -G "Visual Studio 16 2019" -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=ON
+      - name: 'Build'
+        run: cmake --build build -j 10
+      - name: 'Test'
+        run: cp test/test.jpg build/; cd build; ctest -C Release --output-on-failure
