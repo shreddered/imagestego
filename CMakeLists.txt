@@ -50,6 +50,10 @@ endmacro()
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-simd-detection.cmake")
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-compiler-features.cmake")
 
+if (NOT DEFINED CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 
 if (IMAGESTEGO_GCC)
