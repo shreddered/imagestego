@@ -163,7 +163,7 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
         int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
         const int aligned = align16(cols);
         for (int col = 0; col != aligned; col += 16) {
-#if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
+#if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || IMAGESTEGO_ICC
             asm(
                 "vmovdqu (%[a], %[col], 2), %%ymm0 \n\t"
                 "vmovdqu (%[b], %[col], 2), %%ymm1 \n\t"
@@ -180,16 +180,13 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
                   [col] "r" ((ptrdiff_t) col)
                 : "%ymm0", "%ymm1", "%ymm2", "memory"
             );
-#elif IMAGESTEGO_WIN
-            __asm {
-                vmovdqu ymm0, [ptr1 + col]
-                vmovdqu ymm1, [ptr2 + col]
-                vpaddw  ymm2, ymm0, ymm1
-                vpsraw  ymm2, ymm2, 1
-                vpsubw  ymm0, ymm0, ymm1
-                vmovdqu [loptr + col], ymm2
-                vmovdqu [hiptr + col], ymm0
-            };
+#else
+            const __m256i a = _mm256_loadu_si256((const __m256i*) ptr1 + col),
+                          b = _mm256_loadu_si256((const __m256i*) ptr2 + col);
+            const __m256i lo = _mm256_srai_epi16(_mm256_add_epi16(a, b), 1),
+                          hi = _mm256_sub_epi16(a, b);
+            _mm256_storeu_si256((__m256i*) loptr + col, lo);
+            _mm256_storeu_si256((__m256i*) hiptr + col, hi);
 #endif
         }
         for (int col = aligned; col != cols; ++col) {
@@ -219,7 +216,7 @@ void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const
         const int aligned = align32(cols);
         for (int col = 0; col != aligned; col += 32) {
             int16_t* tmp1 = dptr + col / 2, * tmp2 = tmp1 + cols / 2;
-#if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
+#if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || IMAGESTEGO_ICC
             asm(
                 "vmovdqu (%[src], %[col], 2), %%ymm0  \n\t"
                 "vmovdqu 32(%[src], %[col], 2), %%ymm1\n\t"
@@ -238,19 +235,13 @@ void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const
                   [col]  "r" ((ptrdiff_t) col)
                 : "%ymm0", "%ymm1", "%ymm2", "memory"
             );
-#elif IMAGESTEGO_WIN
-            __asm {
-                vmovdqu ymm0, [sptr + col]
-                vmovdqu ymm1, [sptr + col + 16]
-                vmovdqu ymm3, [mask]
-                vphsubw ymm2, ymm1, ymm0
-                vphaddw ymm1, ymm1, ymm0
-                vpsraw  ymm1, ymm1, 1
-                vpermd  ymm1, ymm3, ymm1
-                vpermd  ymm2, ymm3, ymm2
-                vmovdqu [tmp1], ymm1
-                vmovdqu [tmp2], ymm2
-            };
+#else // MSVC doesn't support inline asm for x64
+            const __m256i a = _mm256_loadu_si256((const __m256i*) src + col),
+                          b = _mm256_loadu_si256((const __m256i*) src + col + 16);
+            const __m256i lo = _mm256_srai_epi16(_mm256_hadd_epi16(b, a), 1),
+                          hi = _mm256_hsub_epi16(b, a);
+            _mm256_storeu_si256((__m256i*) tmp1, _mm256_permutevar8x32_epi16(lo, mask));
+            _mm256_storeu_si256((__m256i*) tmp2, _mm256_permutevar8x32_epi16(hi, mask));
 #endif
         }
         // TODO: implement with AVX512 if possible
@@ -297,10 +288,8 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
                   [col] "r" ((ptrdiff_t) col)
                 : "%xmm0", "%xmm1", "%xmm2", "memory"
             );
-            // TODO: add windows implementation
-#elif IMAGESTEGO_WIN
-            __asm {
-            };
+            // TODO: add intrinsics implementation
+#else
 #endif
         }
         for (int col = aligned; col != cols; ++col) {
