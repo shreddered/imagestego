@@ -18,7 +18,6 @@ target_include_directories(imagestego_core PUBLIC
 )
 
 imagestego_lib(imagestego_core)
-imagestego_exports(imagestego_core)
 
 include(TestBigEndian)
 test_big_endian(BIG_ENDIAN)
@@ -38,16 +37,6 @@ if(HAVE_INTRIN_H)
     "HAVE_INTRIN_H"
   )
 endif()
-
-install(TARGETS imagestego_core
-  EXPORT imagestego-config
-  ARCHIVE DESTINATION lib/
-  LIBRARY DESTINATION lib/
-)
-
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
-  DESTINATION include/
-)
 
 imagestego_add_test(CORE
   NAME bitarray

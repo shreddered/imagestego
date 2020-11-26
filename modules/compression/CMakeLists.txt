@@ -24,15 +24,6 @@ target_compile_definitions(imagestego_compression PUBLIC
 )
 
 imagestego_lib(imagestego_compression)
-imagestego_exports(imagestego_compression)
-
-install(TARGETS imagestego_compression
-  EXPORT imagestego-config
-  ARCHIVE DESTINATION lib/
-  LIBRARY DESTINATION lib
-)
-
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include/)
 
 imagestego_add_test(COMPRESSION
   NAME huffman

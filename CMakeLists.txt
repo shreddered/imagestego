@@ -60,6 +60,7 @@ endif (IMAGESTEGO_GCC)
 option(IMAGESTEGO_BUILD_TESTS "Build tests" OFF)
 option(IMAGESTEGO_BUILD_PERF_TESTS "Build performance tests" OFF)
 option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
+option(IMAGESTEGO_INSTALL "Install imagestego" ON)
 option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
 option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
 option(IMAGESTEGO_COVERAGE "Check coverage" OFF)
@@ -141,6 +142,7 @@ endfunction(imagestego_exports target)
 # function for marking every imagestego module
 macro(imagestego_lib LIB)
   list(APPEND IMAGESTEGO_LIBS ${LIB})
+  set(IMAGESTEGO_LIBS ${IMAGESTEGO_LIBS} PARENT_SCOPE)
   # compiler ID
   foreach(COMPILER GCC CLANG ICC MSVC)
     if (IMAGESTEGO_${COMPILER})
@@ -254,3 +256,19 @@ if (IMAGESTEGO_BUILD_PERF_TESTS)
 
   add_test(NAME perf_test COMMAND imagestego_perf_test)
 endif(IMAGESTEGO_BUILD_PERF_TESTS)
+
+# installation rules
+include("cmake/imagestego-install.cmake")
+
+if (IMAGESTEGO_INSTALL)
+  install(TARGETS ${IMAGESTEGO_LIBS}
+    EXPORT imagestegoConfig
+    INCLUDES DESTINATION ${IMAGESTEGO_INCLUDE_DESTINATION}
+    ARCHIVE DESTINATION ${IMAGESTEGO_ARCHIVE_DESTINATION}
+    LIBRARY DESTINATION ${IMAGESTEGO_LIBRARY_DESTINATION}
+  )
+  install(EXPORT imagestegoConfig
+    NAMESPACE imagestego::
+    DESTINATION ${IMAGESTEGO_CONFIG_DESTINATION}
+  )
+endif()

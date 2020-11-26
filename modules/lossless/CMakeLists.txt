@@ -29,15 +29,6 @@ target_compile_definitions(imagestego_lossless PUBLIC
 )
 
 imagestego_lib(imagestego_lossless)
-imagestego_exports(imagestego_lossless)
-
-install(TARGETS imagestego_lossless
-  EXPORT imagestego-config
-  ARCHIVE DESTINATION lib/
-  LIBRARY DESTINATION lib
-)
-
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include/)
 
 imagestego_add_test(LOSSLESS
   NAME lsb

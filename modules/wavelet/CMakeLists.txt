@@ -50,13 +50,6 @@ elseif(PPC64 OR PPC64LE)
 endif(X86 OR X86_64)
 
 imagestego_lib(imagestego_wavelet)
-imagestego_exports(imagestego_wavelet)
-
-install(TARGETS imagestego_wavelet
-  EXPORT imagestego-config
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-)
 
 imagestego_add_perf_test(WAVELET
   NAME haar_perf
