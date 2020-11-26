@@ -4,6 +4,7 @@
 !test/test.jpg
 *.png
 *build*/
+*install*/
 Makefile
 .clangd/
 compile_commands.json
