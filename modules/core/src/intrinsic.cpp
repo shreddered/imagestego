@@ -21,19 +21,44 @@
 #if IMAGESTEGO_MSVC && HAVE_INTRIN_H
 #   include <intrin.h>
 #   pragma intrinsic(_BitScanReverse)
-#elif !(IMAGESTEGO_GCC || IMAGESTEGO_ICC || IMAGESTEGO_CLANG)
-#   include <algorithm>
 #endif
 
+#if IMAGESTEGO_MSVC
+#   define bswap_32(x) _byteswap_ulong(x)
+#elif IMAGESTEGO_GCC || (IMAGESTEGO_CLANG && !defined(__APPLE__))
+#   define bswap_32(x) __builtin_bswap32(x)
+#elif defined(__APPLE__)
+#   include <libkern/OSByteOrder.h>
+#   define bswap_32(x) OSSwapInt32(x)
+#elif defined(__sun) || defined(sun) 
+#   include <sys/byteorder.h>
+#   define bswap_32(x) BSWAP_32(x)
+#elif defined(__FreeBSD__)
+#   include <sys/endian.h>
+#   define bswap_32(x) bswap32(x)
+#elif defined(__OpenBSD__)
+#   include <sys/types.h>
+#   define bswap_32(x) swap32(x)
+#elif defined(__NetBSD__)
+#   include <sys/types.h>
+#   include <machine/bswap.h>
+#   if defined(__BSWAP_RENAME) && !defined(__bswap_32)
+#       define bswap_32(x) bswap32(x)
+#   endif
+#endif
 
 namespace imagestego {
 
 uint8_t log2(uint32_t value) noexcept {
 #if IMAGESTEGO_CLANG || IMAGESTEGO_GCC
     return value ? 31 - __builtin_clz(value) : 0;
-#elif IMAGESTEGO_MSVC || IMAGESTEGO_ICC
+#elif IMAGESTEGO_ICC
     uint32_t result = 0;
     _BitScanReverse(&result, value);
+    return result;
+#elif IMAGESTEGO_MSVC
+    unsigned long result = 0;
+    _BitScanReverse($result, value);
     return result;
 #else
     uint8_t res = 0;
@@ -44,12 +69,8 @@ uint8_t log2(uint32_t value) noexcept {
 }
 
 uint32_t bswap(uint32_t value) noexcept {
-#if IMAGESTEGO_CLANG || IMAGESTEGO_GCC
-    return __builtin_bswap32(value);
-#elif IMAGESTEGO_MSVC
-    return _byteswap_ulong(value);
-#elif IMAGESTEGO_ICC
-    return _bswap(value);
+#ifdef bswap_32
+    return bswap_32(value);
 #else
     char* tmp = reinterpret_cast<char*>(&value);
     std::reverse(tmp, tmp + 4);
