@@ -44,13 +44,14 @@ public:
             cv::split(mat, _planes);
         }
         std::vector<std::future<cv::Mat> > futures;
-        futures.reserve(_planes.size());
-        for (const cv::Mat& mat : _planes) {
+        futures.reserve(_planes.size() - 1);
+        for (std::size_t i = 1; i != _planes.size(); ++i) {
             futures.emplace_back(std::async([](const cv::Mat& src) {
                 return verticalLifting(horizontalLifting(src));
-            }, std::cref(mat)));
+            }, std::cref(_planes[i])));
         }
         planes.reserve(_planes.size());
+        planes.emplace_back(verticalLifting(horizontalLifting(_planes.front())));
         for (auto&& f : futures) {
             planes.emplace_back(f.get());
         }
@@ -146,11 +147,14 @@ public:
         else {
             cv::split(mat, _planes);
         }
-        for (const cv::Mat& mat : _planes) {
+
+        for (std::size_t i = 1; i != _planes.size(); ++i) {
             futures.emplace_back(std::async([](const cv::Mat& mat) -> cv::Mat {
                 return verticalLifting(horizontalLifting(mat));
-            }, std::cref(mat)));
+            }, std::cref(_planes[i])));
         }
+        planes.reserve(_planes.size());
+        planes.emplace_back(verticalLifting(horizontalLifting(_planes.front())));
         for (auto&& f : futures) {
             planes.emplace_back(f.get());
         }
