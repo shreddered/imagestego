@@ -31,8 +31,12 @@ namespace imagestego {
 uint8_t log2(uint32_t value) noexcept {
 #if IMAGESTEGO_CLANG || IMAGESTEGO_GCC
     return value ? 31 - __builtin_clz(value) : 0;
-#elif IMAGESTEGO_MSVC || IMAGESTEGO_ICC
+#elif IMAGESTEGO_ICC
     uint32_t result = 0;
+    _BitScanReverse(&result, value);
+    return result;
+#elif IMAGESTEGO_MSVC
+    unsigned long result = 0;
     _BitScanReverse(&result, value);
     return result;
 #else
