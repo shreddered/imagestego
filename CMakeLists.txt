@@ -47,6 +47,7 @@ macro(imagestego_defs)
   set(IMAGESTEGO_WAVELET_DIR ${IMAGESTEGO_WAVELET_DIR}) 
 endmacro()
 
+# HW/Compiler features
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-simd-detection.cmake")
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-compiler-features.cmake")
 # opencv
