@@ -23,4 +23,5 @@ build:
 
 test_script:
   - cd test
+  - dumpbin /DEPENDENTS imagestego_test.exe
   - ctest -C Release --verbose
