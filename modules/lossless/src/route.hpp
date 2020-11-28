@@ -18,7 +18,7 @@ public:
     inline void setMapSize(const std::pair<int, int>& mapSize) {
         _mapSize = mapSize;
     }
-    void create(const int&);
+    void create(std::size_t);
     void add();
 private:
     std::pair<int, int> _mapSize;
@@ -33,7 +33,7 @@ public:
     explicit Route(It begin, It end, std::mt19937& _gen) : _route(new RouteImpl(begin, end, _gen)) {}
     virtual ~Route() noexcept;
     void setMapSize(const std::pair<int, int>& mapSize);
-    void create(const int&);
+    void create(std::size_t n);
     void add();
     bool search(const std::pair<int, int>& p);
     iterator begin();

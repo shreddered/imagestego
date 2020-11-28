@@ -87,7 +87,7 @@ public:
     inline std::size_t size() const noexcept {
         return _size;
     }
-#ifdef IMAGESTEG0_DEBUG
+#ifdef IMAGESTEGO_DEBUG
     void printDfs() const noexcept { // for debugging purposes
         if (!isEmpty())
             printDfsImpl(root);
@@ -211,8 +211,9 @@ private:
             copy(from->leftChild, to->leftChild);
             copy(from->rightChild, to->rightChild);
         }
-        else
+        else {
             to = nullptr;
+        }
     }
     // Base class representing tree iterator
     // Operator ++ stands for going to the next
@@ -224,7 +225,7 @@ private:
         AvlTree<T, Comp>* owner;
         bool isEnd = false;
         explicit Iterator(AvlTree<T, Comp>* owner, TreeNode* node, bool flag) noexcept
-            : owner(owner), node(node), isEnd(flag) {}
+            : node(node), owner(owner), isEnd(flag) {}
     public:
         typedef T value_type;
         inline T operator *() {

@@ -23,7 +23,7 @@
 namespace imagestego {
 
 // TODO: optimize this
-unsigned char takeChar(const BitArray& arr, const imagestego::size_t& pos) {
+unsigned char takeChar(const BitArray& arr, const std::size_t& pos) {
     unsigned char tmp = 0;
     for (unsigned short i = 0; i != 8; ++i) {
         tmp |= arr[pos + i] << (7 - i);
@@ -115,14 +115,14 @@ private:
         } while (currentNode != root);
     }
     void readAlphabet() {
-        for (imagestego::size_t i = 0; i != codes.size(); ++i) {
+        for (std::size_t i = 0; i != codes.size(); ++i) {
             alphabet += takeChar(encodedMsg, it);
             it += 8;
         }
     }
     void buildCode();
     void createCodeTable() {
-        for (imagestego::size_t i = 0; i != codes.size(); ++i)
+        for (std::size_t i = 0; i != codes.size(); ++i)
             codeTable.emplace(codes[i], alphabet[i]);
     }
     void decode() {
@@ -145,7 +145,7 @@ private:
         }
     }
     std::vector<std::string> codes;
-    imagestego::size_t it;
+    std::size_t it;
     BitArray encodedMsg;
     std::string alphabet;
     std::string decodedMsg;
