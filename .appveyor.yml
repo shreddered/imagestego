@@ -12,7 +12,7 @@ environment:
   OPENCV_DIR: $(APPVEYOR_BUILD_FOLDER)\opencv\build
 
 before_build:
-  - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,comp .
+  - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,compression .
 
 build:
   parallel: true
