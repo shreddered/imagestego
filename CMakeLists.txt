@@ -208,8 +208,12 @@ target_link_libraries(imagestego INTERFACE
 )
 
 foreach(OPT ${IMAGESTEGO_BUILD_LIST})
-  add_subdirectory("modules/${OPT}")
-  target_link_libraries(imagestego INTERFACE ${OPT})
+  if (EXISTS "modules/${OPT}")
+    add_subdirectory("modules/${OPT}")
+    target_link_libraries(imagestego INTERFACE ${OPT})
+  else()
+    message(WARNING "Unknown module: ${OPT}")
+  endif()
 endforeach()
 
 if (IMAGESTEGO_BUILD_TESTS OR IMAGESTEGO_BUILD_PERF_TESTS)
