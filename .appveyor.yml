@@ -13,11 +13,12 @@ environment:
   OPENCV_DIR: $(APPVEYOR_BUILD_FOLDER)\opencv\build
 
 before_build:
-  - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,compression .
+  - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,compression,lossless,wavelet .
 
 build:
   parallel: true
   project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
 
 test_script:
+  - cp ..\test\test.jpg .
   - ctest -C Release --verbose
