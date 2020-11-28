@@ -7,7 +7,7 @@ configuration: Release
 install:
   - curl -fsSL -o opencv.zip https://github.com/opencv/opencv/releases/download/4.5.0/opencv-4.5.0-dldt-2021.1-vc16-avx2.zip
   - 7z x opencv.zip
-  - echo %OPENCV_DIR%
+  - echo $(OPENCV_DIR)
 
 environment:
   OPENCV_DIR: $(APPVEYOR_BUILD_FOLDER)\opencv\build
