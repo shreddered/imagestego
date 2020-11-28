@@ -49,6 +49,9 @@ endmacro()
 
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-simd-detection.cmake")
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-compiler-features.cmake")
+# opencv
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${IMAGESTEGO_SOURCE_DIR}/cmake")
+find_package(OpenCV CONFIG REQUIRED)
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -126,7 +129,6 @@ macro(imagestego_add_perf_test)
   set(IMAGESTEGO_PERF_TEST_FILES "${IMAGESTEGO_PERF_TEST_FILES}" PARENT_SCOPE)
   set(IMAGESTEGO_PERF_TEST_LIBS "${IMAGESTEGO_PERF_TEST_LIBS}" PARENT_SCOPE)
   set(IMAGESTEGO_PERF_TEST_INCLUDES "${IMAGESTEGO_PERF_TEST_INCLUDES}" PARENT_SCOPE)
-
 endmacro(imagestego_add_perf_test)
 
 # helper function for defining export macros
