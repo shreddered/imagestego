@@ -118,10 +118,6 @@ std::size_t BitArray::toInt() const {
     return _arr->toInt();
 }
 
-void BitArray::put(int num, std::size_t n) {
-    _arr->put(num, n);
-}
-
 void BitArray::put(std::size_t num, std::size_t n) {
     _arr->put(num, n);
 }

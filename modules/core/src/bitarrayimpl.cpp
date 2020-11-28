@@ -169,13 +169,6 @@ void BitArrayImpl::pushBack(bool val) {
     ++_sz;
 }
 
-void BitArrayImpl::put(int num, std::size_t n) {
-    for(; n != 0; --n) {
-        const std::size_t offset = n - 1;
-        pushBack((num & (1 << offset)) != 0);
-    }
-}
-
 void BitArrayImpl::put(std::size_t num, std::size_t n) {
     for(; n != 0; --n) {
         const std::size_t offset = n - 1;

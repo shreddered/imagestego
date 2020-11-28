@@ -166,12 +166,9 @@ public:
     /**
      * Puts n bits from number to array.
      *
-     * This method has several overloads for different integer types.
-     *
      * @param num Number from which bits are taken.
      * @param n Nubmer of bits to take from num.
      */
-    void put(int num, std::size_t n);
     void put(std::size_t num, std::size_t n);
 
     /**
