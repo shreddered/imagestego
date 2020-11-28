@@ -165,6 +165,10 @@ macro(imagestego_lib LIB)
       )
     endif()
   endforeach()
+  # restrict
+  target_compile_definitions(${LIB} PUBLIC
+    "-D IMAGESTEGO_RESTRICT=${RESTRICT}"
+  )
   # inline
   target_compile_definitions(${LIB} PUBLIC
     "-D IMAGESTEGO_INLINE=${INLINE}"

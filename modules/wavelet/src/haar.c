@@ -78,7 +78,7 @@ static IMAGESTEGO_INLINE int align8(const int num) {
 // Extension-specific implementation goes here
 #if IMAGESTEGO_AVX512BW_SUPPORTED
 
-void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
     static const __mmask32 len2mask[] = { 0x00000000, 0x00000001, 0x00000003, 0x00000007,
                                           0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f,
@@ -152,7 +152,7 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
 
 #if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512BW_SUPPORTED
 
-void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
@@ -205,7 +205,7 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
 
 #if IMAGESTEGO_AVX2_SUPPORTED
 
-void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
     __m256i mask = _mm256_set_epi32(5, 4, 1, 0, 7, 6, 3, 2);
     int16_t* src = (int16_t*) _src;
@@ -259,7 +259,7 @@ void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const
 
 #if IMAGESTEGO_SSSE3_SUPPORTED && IMAGESTEGO_SSE2_SUPPORTED && !IMAGESTEGO_AVX2_SUPPORTED
 
-void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
@@ -304,7 +304,7 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
     }
 }
 
-void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
@@ -346,7 +346,7 @@ void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const
 
 #if IMAGESTEGO_NEON_SUPPORTED
 
-void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
+void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows, const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row < (rows & ~1); row += 2) {
@@ -375,7 +375,7 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
     }
 }
 
-void horizontal_haar(const uint8_t* restrict _src, uint8_t* _dst, const int rows, const int cols) {
+void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* _dst, const int rows, const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != rows; ++row) {
