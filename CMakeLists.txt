@@ -143,7 +143,7 @@ function(imagestego_exports target)
     )
     if (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
       target_compile_definitions(${target} PRIVATE
-        "-DIMAGESTEGO_EXPORTS"
+        "-DIMAGESTEGO_EXPORT"
       )
     endif (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
   endif (WIN32 AND BUILD_SHARED_LIBS)
