@@ -8,7 +8,6 @@ add_library(imagestego_wavelet
 target_include_directories(imagestego_wavelet PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
   $<INSTALL_INTERFACE:include/>
-  /usr/local/include/opencv4/
 )
 
 target_link_libraries(imagestego_wavelet PUBLIC
