@@ -192,6 +192,7 @@ if(NOT CMAKE_VERSION VERSION_LESS 3.13)
   endif ()
 endif (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 
+string(REGEX REPLACE "comp.*," "compression," IMAGESTEGO_MODULES "${IMAGESTEGO_MODULES}")
 string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
 
 add_library(imagestego INTERFACE)
@@ -201,31 +202,10 @@ target_link_libraries(imagestego INTERFACE
   $<INSTALL_INTERFACE:include/>
 )
 
-# core module
-add_subdirectory("modules/core/")
-target_link_libraries(imagestego INTERFACE imagestego_core)
-
-# compression module
-if ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
-  add_subdirectory("modules/compression")
-  target_link_libraries(imagestego INTERFACE imagestego_compression)
-endif ("comp" IN_LIST IMAGESTEGO_BUILD_LIST)
-
-# lossless module
-if ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
-  add_subdirectory("modules/lossless")
-  target_link_libraries(imagestego INTERFACE imagestego_lossless)
-endif ("lossless" IN_LIST IMAGESTEGO_BUILD_LIST)
-
-# jpeg module
-if ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
-  add_subdirectory("modules/jpeg")
-  target_link_libraries(imagestego INTERFACE imagestego_jpeg)
-endif ("jpeg" IN_LIST IMAGESTEGO_BUILD_LIST)
-
-if ("wavelet" IN_LIST IMAGESTEGO_BUILD_LIST)
-  add_subdirectory("modules/wavelet")
-endif ("wavelet" IN_LIST IMAGESTEGO_BUILD_LIST)
+foreach(OPT ${IMAGESTEGO_BUILD_LIST})
+  add_subdirectory("modules/${OPT}")
+  target_link_libraries(imagestego INTERFACE ${OPT})
+endforeach()
 
 if (IMAGESTEGO_BUILD_TESTS OR IMAGESTEGO_BUILD_PERF_TESTS)
   enable_testing()
