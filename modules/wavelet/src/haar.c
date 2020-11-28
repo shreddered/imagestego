@@ -240,8 +240,8 @@ void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const
                           b = _mm256_loadu_si256((const __m256i*) src + col + 16);
             const __m256i lo = _mm256_srai_epi16(_mm256_hadd_epi16(b, a), 1),
                           hi = _mm256_hsub_epi16(b, a);
-            _mm256_storeu_si256((__m256i*) tmp1, _mm256_permutevar8x32_epi16(lo, mask));
-            _mm256_storeu_si256((__m256i*) tmp2, _mm256_permutevar8x32_epi16(hi, mask));
+            _mm256_storeu_si256((__m256i*) tmp1, _mm256_permutevar8x32_epi32(lo, mask));
+            _mm256_storeu_si256((__m256i*) tmp2, _mm256_permutevar8x32_epi32(hi, mask));
 #endif
         }
         // TODO: implement with AVX512 if possible

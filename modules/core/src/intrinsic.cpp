@@ -58,7 +58,7 @@ uint8_t log2(uint32_t value) noexcept {
     return result;
 #elif IMAGESTEGO_MSVC
     unsigned long result = 0;
-    _BitScanReverse($result, value);
+    _BitScanReverse(&result, value);
     return result;
 #else
     uint8_t res = 0;
