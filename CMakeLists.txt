@@ -50,8 +50,10 @@ endmacro()
 # HW/Compiler features
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-simd-detection.cmake")
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-compiler-features.cmake")
+if (DEFINED ENV{OPENCV_DIR})
+  set(CMAKE_PREFIX_PATH $ENV{OPENCV_DIR}/cmake)
+endif()
 # opencv
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${IMAGESTEGO_SOURCE_DIR}/cmake")
 find_package(OpenCV CONFIG REQUIRED)
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)
