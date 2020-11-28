@@ -10,7 +10,7 @@ install:
   - setx -m OPENCV_DIR opencv\build
 
 before_build:
-  - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,comp .
+  - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,comp . -D OpenCV_DIR=%OPENCV_DIR%\cmake
 
 build:
   parallel: true

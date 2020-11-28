@@ -51,6 +51,7 @@ endmacro()
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-simd-detection.cmake")
 include("${IMAGESTEGO_SOURCE_DIR}/cmake/imagestego-compiler-features.cmake")
 if (DEFINED ENV{OPENCV_DIR})
+  message(STATUS "Found OPENCV_DIR env variable")
   set(CMAKE_PREFIX_PATH $ENV{OPENCV_DIR}/cmake)
 endif()
 # opencv
