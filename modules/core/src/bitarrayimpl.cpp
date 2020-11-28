@@ -87,25 +87,6 @@ BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator --(int) {
     return it;
 }
 
-// BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator +=(std::size_t i) {
-    // return *this;
-// }
-
-// BitArrayImpl::BitIterator& BitArrayImpl::BitIterator::operator -=(std::size_t i) {
-    // _ref._block = *(&_ref._block - i);
-    // return *this;
-// }
-
-// BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator +(std::size_t i) {
-    // BitIterator it = *this;
-    // return it += i;
-// }
-
-// BitArrayImpl::BitIterator BitArrayImpl::BitIterator::operator -(std::size_t i) {
-    // BitIterator it = *this;
-    // return it -= i;
-// }
-
 bool BitArrayImpl::BitIterator::operator==(const BitIterator& other) noexcept {
     return _owner == other._owner && _pos == other._pos;
 }
@@ -155,7 +136,7 @@ BitArrayImpl BitArrayImpl::fromByteString(std::string str) {
     return arr;
 }
 
-BitArrayImpl BitArrayImpl::fromInt(std::size_t num) {
+BitArrayImpl BitArrayImpl::fromInt(uint32_t num) {
     BitArrayImpl arr;
     arr._blocks.push_back(num);
     arr._sz = sizeof(num) * CHAR_BIT;

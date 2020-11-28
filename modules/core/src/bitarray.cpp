@@ -65,13 +65,13 @@ BitArray BitArray::fromByteString(const std::string& str) {
     return arr;
 }
 
-BitArray BitArray::fromInt(std::size_t num) {
+BitArray BitArray::fromInt(uint32_t num) {
     BitArray arr(new BitArrayImpl(BitArrayImpl::fromInt(num)));
     return arr;
 }
 
 typename BitArrayImpl::reference BitArray::operator[](std::size_t i) {
-    return (*_arr)[i];
+    return _arr->operator[](i);
 }
 
 std::size_t BitArray::size() const noexcept {
@@ -79,7 +79,7 @@ std::size_t BitArray::size() const noexcept {
 }
 
 bool BitArray::operator[](std::size_t i) const {
-    return (*_arr)[i];
+    return _arr->operator[](i);
 }
 
 void BitArray::pushBack(bool val) {

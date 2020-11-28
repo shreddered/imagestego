@@ -117,7 +117,7 @@ public:
      * @param num Number to be converted to bit array.
      * @return Created array.
      */
-    static BitArray fromInt(std::size_t num);
+    static BitArray fromInt(uint32_t num);
 
     /**
      * Converter from bit array to byte string.
