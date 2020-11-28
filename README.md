@@ -27,6 +27,8 @@ The _lossless_ module contains steganographic schemes with lossless destination.
 
 The _jpeg_ module contains steganographic schemes with JPEG writer.
 
+The _wavelet_ module contains different wavelet transforms.
+
 
 # Integration
 

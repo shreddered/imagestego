@@ -5,18 +5,15 @@ platform: x64
 configuration: Release
 
 install:
+  - curl -fsSL -o opencv.zip https://github.com/opencv/opencv/releases/download/4.5.0/opencv-4.5.0-dldt-2021.1-vc16-avx2.zip
+  - 7z x opencv.zip
   - git submodule update --init --recursive
 
+environment:
+  OPENCV_DIR: $(APPVEYOR_BUILD_FOLDER)\opencv\build
+
 before_build:
-  # - git clone https://github.com/opencv/opencv.git
-  # - git clone https://github.com/opencv/opencv_contrib.git
-  # - cd opencv
-  # - mkdir build
-  # - cmake -H. -Bbuild -DBUILD_LIST=core,imgcodecs -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=OFF -DBUILD_opencv_apps=OFF -DCMAKE_INSTALL_PREFIX=install -DBUILD_TESTS=OFF -DBUILD_SHARED_LIBS=ON
-  # - cmake --build build --config Release
-  # - cmake --build build --target install --config Release
-  # - cd ..
-  - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,comp .
+  - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,compression .
 
 build:
   parallel: true

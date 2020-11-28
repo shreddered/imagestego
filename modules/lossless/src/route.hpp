@@ -1,8 +1,8 @@
-#ifndef __IMAGESTEGO_ROUTE_HPP_INCLUDED__
-#define __IMAGESTEGO_ROUTE_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_CORE_ROUTE_HPP_INCLUDED__
+#define __IMAGESTEGO_CORE_ROUTE_HPP_INCLUDED__
 
 // imagestego headers
-#include "imagestego/core/avl_tree.hpp"
+#include "avl_tree.hpp"
 // c++ headers
 #include <random>
 #include <utility>
@@ -44,4 +44,4 @@ private:
 
 } // namespace imagestego
 
-#endif /* __IMAGESTEGO_ROUTE_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_CORE_ROUTE_HPP_INCLUDED__ */

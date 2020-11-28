@@ -1,33 +1,85 @@
 language: cpp
 
-os:
-  - linux
-  - osx
-
-compiler:
-  - gcc
-  - clang
-
-addons:
-  apt:
-    packages:
-      - cmake-data
-      - cmake
-      - git
-      - lcov
-
-install: scripts/install-deps.sh
+# TODO: add more compilers
+jobs:
+  include:
+    - name: "GCC x86"
+      arch: amd64
+      os: linux
+      dist: bionic
+      compiler: gcc
+      env:
+        - MODULES="core,lossless,comp,wavelet" COVERAGE=1
+      addons:
+        apt:
+          packages:
+            - lcov
+    - name: "Clang x86"
+      arch: amd64
+      os: linux
+      dist: bionic
+      compiler: clang
+      env:
+        - MODULES="core,lossless,comp,wavelet"
+    - name: "GCC-9 x86"
+      arch: amd64
+      os: linux
+      dist: bionic
+      compiler: gcc-9
+      env:
+        - MODULES="core,lossless,comp,wavelet" CC=gcc-9 CXX=g++-9
+      addons:
+        apt:
+          sources:
+            - sourceline: "ppa:ubuntu-toolchain-r/test"
+          packages:
+            - gcc-9
+            - g++-9
+    - name: "Apple Clang x86"
+      os: osx
+      compiler: clang
+      env:
+        - MODULES="core,lossless,comp,wavelet"
+    - name: "Clang-10 arm64"
+      arch: arm64
+      os: linux
+      dist: bionic
+      compiler: clang-10
+      env:
+        - MODULES="core,lossless,comp,wavelet" CC=clang-10 CXX=clang++-10
+      addons:
+        apt:
+          sources:
+            - sourceline: "ppa:ubuntu-toolchain-r/test"
+          packages:
+            - clang-10
+            - clang++-10
+            - lld-10
+    - name: "GCC-9 arm64"
+      arch: arm64
+      os: linux
+      dist: bionic
+      compiler: gcc-9
+      env:
+        - MODULES="core,lossless,comp,wavelet" CC=gcc-9 CXX=g++-9
+      addons:
+        apt:
+          sources:
+            - sourceline: "ppa:ubuntu-toolchain-r/test"
+          packages:
+            - gcc-9
+            - g++-9
 
 cache:
   directories:
     - $TRAVIS_BUILD_DIR/opencv
 
-script: scripts/build.sh
+install: ci/travis-install-deps.sh
 
-after_success:
+script:
+  - ci/travis-build.sh
+  - cp test/test.jpg build/
   - cd build
-  - cp ../test/test.jpg .
   - ctest --verbose
   - cd ..
-
-after_script: scripts/coverage.sh
+  - ci/travis-upload-coverage.sh

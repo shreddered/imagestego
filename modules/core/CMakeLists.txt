@@ -1,69 +1,50 @@
+imagestego_defs()
+
 # imagestego_core
 add_library(imagestego_core
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/bitarray.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/bitarrayimpl.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/exception.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/intrinsic.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/route.cpp
-    # third party
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/MurmurHash3.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/bitarray.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/bitarrayimpl.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/exception.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/intrinsic.cpp
+  # third party
+  ${CMAKE_CURRENT_SOURCE_DIR}/third_party/MurmurHash3.cpp
 )
 
 target_include_directories(imagestego_core PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
-    $<INSTALL_INTERFACE:include/>
-    /usr/include/opencv4
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
+  $<INSTALL_INTERFACE:include/>
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
 )
 
 imagestego_lib(imagestego_core)
-imagestego_exports(imagestego_core)
-
-target_link_libraries(imagestego_core PUBLIC coverage_config)
 
 include(TestBigEndian)
 test_big_endian(BIG_ENDIAN)
 
 if (BIG_ENDIAN)
-    target_compile_definitions(imagestego_core PUBLIC
-        "IMAGESTEGO_BIG_ENDIAN"
-    )
+  target_compile_definitions(imagestego_core PUBLIC
+    "IMAGESTEGO_BIG_ENDIAN"
+  )
 else()
-    target_compile_definitions(imagestego_core PUBLIC
-        "IMAGESTEGO_LITTLE_ENDIAN"
-    )
+  target_compile_definitions(imagestego_core PUBLIC
+    "IMAGESTEGO_LITTLE_ENDIAN"
+  )
 endif(BIG_ENDIAN)
 
-install(TARGETS imagestego_core
-    EXPORT imagestego-config
-    ARCHIVE DESTINATION lib/
-    LIBRARY DESTINATION lib/
-)
+if(HAVE_INTRIN_H)
+  target_compile_definitions(imagestego_core PRIVATE
+    "HAVE_INTRIN_H"
+  )
+endif()
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
-    DESTINATION include/
+imagestego_add_test(CORE
+  NAME bitarray
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/bitarray.cpp
+  LIBS imagestego_core
 )
-
-if (IMAGESTEGO_BUILD_TESTS)
-    imagestego_test(CORE 
-        NAME avl
-        FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/avl.cpp
-        LIBS imagestego_core
-    )
-    imagestego_test(CORE
-        NAME bitarray
-        FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/bitarray.cpp
-        LIBS imagestego_core
-    )
-    imagestego_test(CORE
-        NAME intrinsics
-        FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/intrinsic.cpp
-        LIBS imagestego_core
-    )
-    imagestego_test(CORE
-        NAME route
-        FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/route.cpp
-        LIBS imagestego_core
-    )
-endif (IMAGESTEGO_BUILD_TESTS)
+imagestego_add_test(CORE
+  NAME intrinsics
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/intrinsic.cpp
+  LIBS imagestego_core
+)

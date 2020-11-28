@@ -17,21 +17,49 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
+// imagestego headers
 #include "imagestego/core/intrinsic.hpp"
-#ifdef _MSC_VER
+// c++ headers
+#include <cstdlib>
+#if IMAGESTEGO_MSVC && HAVE_INTRIN_H
 #   include <intrin.h>
 #   pragma intrinsic(_BitScanReverse)
-#elif !(defined(__GNUC__) || defined(__INTEL_COMPILER) || defined(__clang__))
-#   include <algorithm>
 #endif
 
+#if IMAGESTEGO_MSVC
+#   define bswap_32(x) _byteswap_ulong(x)
+#elif IMAGESTEGO_GCC || (IMAGESTEGO_CLANG && !defined(__APPLE__))
+#   define bswap_32(x) __builtin_bswap32(x)
+#elif defined(__APPLE__)
+#   include <libkern/OSByteOrder.h>
+#   define bswap_32(x) OSSwapInt32(x)
+#elif defined(__sun) || defined(sun) 
+#   include <sys/byteorder.h>
+#   define bswap_32(x) BSWAP_32(x)
+#elif defined(__FreeBSD__)
+#   include <sys/endian.h>
+#   define bswap_32(x) bswap32(x)
+#elif defined(__OpenBSD__)
+#   include <sys/types.h>
+#   define bswap_32(x) swap32(x)
+#elif defined(__NetBSD__)
+#   include <sys/types.h>
+#   include <machine/bswap.h>
+#   if defined(__BSWAP_RENAME) && !defined(__bswap_32)
+#       define bswap_32(x) bswap32(x)
+#   endif
+#endif
 
 namespace imagestego {
 
 uint8_t log2(uint32_t value) noexcept {
-#if defined(__clang__) || defined(__GNUC__)
+#if IMAGESTEGO_CLANG || IMAGESTEGO_GCC
     return value ? 31 - __builtin_clz(value) : 0;
-#elif defined(_MSC_VER) || defined(__INTEL_COMPILER)
+#elif IMAGESTEGO_ICC
+    uint32_t result = 0;
+    _BitScanReverse(&result, value);
+    return result;
+#elif IMAGESTEGO_MSVC
     unsigned long result = 0;
     _BitScanReverse(&result, value);
     return result;
@@ -44,14 +72,10 @@ uint8_t log2(uint32_t value) noexcept {
 }
 
 uint32_t bswap(uint32_t value) noexcept {
-#if defined(__clang__) || defined(__GNUC__)
-    return __builtin_bswap32(value);
-#elif defined(_MSC_VER)
-    return _byteswap_ulong(value);
-#elif defined(__INTEL_COMPILER)
-    return _bswap(value);
+#ifdef bswap_32
+    return bswap_32(value);
 #else
-    char* tmp = &value;
+    char* tmp = reinterpret_cast<char*>(&value);
     std::reverse(tmp, tmp + 4);
     return value;
 #endif
