@@ -17,7 +17,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
 
+// imagestego headers
 #include "imagestego/core/intrinsic.hpp"
+// c++ headers
+#include <cstdlib>
 #if IMAGESTEGO_MSVC && HAVE_INTRIN_H
 #   include <intrin.h>
 #   pragma intrinsic(_BitScanReverse)
