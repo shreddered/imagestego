@@ -59,7 +59,37 @@ int main(int argc, char** argv) {
 }
 ```
 
-# Build at your own
+# Installing dependencies
+
+## Debian
+
+```bash
+$ sudo apt update
+$ sudo apt install cmake libopencv-dev
+```
+## Arch Linux
+
+```bash
+$ sudo pacman -S cmake opencv
+```
+
+## macOS
+
+Use [brew](https://brew.sh/).
+```bash
+$ brew install cmake opencv
+```
+
+# Windows
+
+Select [opencv release](https://github.com/opencv/opencv/releases) suitable for your visual studio version.
+
+Also you will need to set `OPENCV_DIR` environmental variabe to specify path to opencv.
+```bat
+> set "OPENCV_DIR=<path\to\opencv\build>"
+```
+
+# Building
 
 If you want to build this library, then you have to do several steps.
 ```bash
