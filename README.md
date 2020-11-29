@@ -17,6 +17,7 @@ Dependencies - [_opencv_](https://github.com/opencv/opencv) and [_libjpeg_](http
     * [Arch Linux](#arch-linux)
     * [macOS](#mac-os)
     * [Windows](#windows)
+- [Building](#building)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
