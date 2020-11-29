@@ -8,10 +8,16 @@ Image Steganography library written in _c++11_.
 Dependencies - [_opencv_](https://github.com/opencv/opencv) and [_libjpeg_](http://www.ijg.org/).
 
 # Contents
+
 - [Overview](#overview)
 - [Integration](#integration)
+    * [CMake](#cmake)
+- [Installing dependencies](#installing-dependencies)
+    * [Debian](#debian)
+    * [Arch Linux](#arch-linux)
+    * [macOS](#mac-os)
+    * [Windows](#windows)
 - [Usage](#usage)
-- [Build at your own](#build-at-your-own)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -33,7 +39,11 @@ The _wavelet_ module contains different wavelet transforms.
 
 ## CMake
 
-If you want to embed _imagestego_ into your project, just use `add_subdirectory()`
+### Subdirectory
+
+If you want to embed _imagestego_ into your project, just use `add_subdirectory()`.
+After that `imagestego` interface target should be available:
+
 ```cmake
 add_executable(foo
     foo.cpp
@@ -44,19 +54,18 @@ add_subdirectory(path/to/imagestego/directory)
 target_link_libraries(foo imagestego)
 ```
 
-# Usage
-The basic usage is:
+### Find package
 
-```cpp
-// ...
-// imagestego
-#include <imagestego/imagestego.hpp>
+If you have _imagestego_ already installed, you can simply add it with `find_package()`:
 
-int main(int argc, char** argv) {
-    imagestego::embedSecretMessage(new imagestego::LsbEmbedder, "in.png",
-                                   "out.png", "message", "key");
-    return 0;
-}
+```cmake
+find_package(imagestego CONFIG REQUIRED)
+
+add_executable(foo
+    foo.cpp
+)
+
+target_link_libraries(foo imagestego)
 ```
 
 # Installing dependencies
@@ -80,7 +89,7 @@ Use [brew](https://brew.sh/).
 $ brew install cmake opencv
 ```
 
-# Windows
+## Windows
 
 Select [opencv release](https://github.com/opencv/opencv/releases) suitable for your visual studio version.
 
@@ -102,6 +111,22 @@ $ make
 $ sudo make install
 ```
 
+# Usage
+
+The basic usage is:
+
+```cpp
+// ...
+// imagestego
+#include <imagestego/imagestego.hpp>
+
+int main(int argc, char** argv) {
+    imagestego::embedSecretMessage(new imagestego::LsbEmbedder, "in.png",
+                                   "out.png", "message", "key");
+    return 0;
+}
+```
+
 # Contributing
 
 Please see [Contributing](https://github.com/shreddered/imagestego/wiki/Contributing) wiki page for more information.
@@ -111,4 +136,5 @@ Please see [Contributing](https://github.com/shreddered/imagestego/wiki/Contribu
 This software is distibuted under GNU GPLv3. For more details see [LICENSE.txt](LICENSE.txt).
 
 # Further development
+
 - [ ] Wavelet module
