@@ -96,7 +96,7 @@ Select [opencv release](https://github.com/opencv/opencv/releases/latest) suitab
 
 Also you will need to set `OPENCV_DIR` environmental variabe to specify path to opencv.
 ```bat
-> set "OPENCV_DIR=<path\to\opencv\build>"
+set "OPENCV_DIR=<path\to\opencv\build>"
 ```
 
 # Building
@@ -117,7 +117,6 @@ $ sudo make install
 The basic usage is:
 
 ```cpp
-// ...
 // imagestego
 #include <imagestego/imagestego.hpp>
 
