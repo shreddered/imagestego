@@ -29,7 +29,6 @@ The _jpeg_ module contains steganographic schemes with JPEG writer.
 
 The _wavelet_ module contains different wavelet transforms.
 
-
 # Integration
 
 ## CMake
@@ -67,7 +66,7 @@ If you want to build this library, then you have to do several steps.
 $ git clone https://github.com/shreddered/imagestego.git
 $ cd imagestego/
 $ mkdir build/ && cd build/
-$ cmake ..
+$ cmake -D CMAKE_INSTALL_PREFIX=<optional: install prefix here>..
 $ make
 # if you want to install it
 $ sudo make install
