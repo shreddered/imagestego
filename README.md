@@ -92,9 +92,11 @@ $ brew install cmake opencv
 
 ## Windows
 
-Select [opencv release](https://github.com/opencv/opencv/releases/latest) suitable for your visual studio version.
+Grab [opencv release](https://github.com/opencv/opencv/releases/latest) suitable for your visual studio version.
+Then extract archive and run `setup_vars_opencv4.cmd`.
 
 Also you will need to set `OPENCV_DIR` environmental variabe to specify path to opencv.
+You can open Windows command line and type:
 ```bat
 set "OPENCV_DIR=<path\to\opencv\build>"
 ```
@@ -106,7 +108,7 @@ If you want to build this library, then you have to do several steps.
 $ git clone https://github.com/shreddered/imagestego.git
 $ cd imagestego/
 $ mkdir build/ && cd build/
-$ cmake -D CMAKE_INSTALL_PREFIX=<optional: install prefix here>..
+$ cmake -D CMAKE_INSTALL_PREFIX=<optional: install prefix here> ..
 $ make
 # if you want to install it
 $ sudo make install
