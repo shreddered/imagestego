@@ -75,7 +75,7 @@ option(IMAGESTEGO_INSTALL "Install imagestego" ON)
 option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
 option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
 option(IMAGESTEGO_COVERAGE "Check coverage" OFF)
-option(IMAGESTEGO_MODULES "imagestego modules" "core,jpeg,lossless,comp")
+set(IMAGESTEGO_MODULES "core,lossless,compression,wavelet" CACHE STRING "imagestego modules")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_definitions("-DIMAGESTEGO_DEBUG")
