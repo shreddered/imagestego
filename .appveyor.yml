@@ -14,7 +14,7 @@ environment:
   OPENCV_DIR: $(APPVEYOR_BUILD_FOLDER)\opencv\build
 
 before_build:
-  - cmake -B test -G "Visual Studio 16 2019" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TEST=ON -D IMAGESTEGO_MODULES=core,compression,lossless,wavelet .
+  - cmake -B test -G "Visual Studio 16 2019" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=ON -D IMAGESTEGO_MODULES=core,compression,lossless,wavelet .
 
 build:
   parallel: true
