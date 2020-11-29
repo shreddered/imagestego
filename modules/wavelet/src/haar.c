@@ -181,12 +181,12 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
                 : "%ymm0", "%ymm1", "%ymm2", "memory"
             );
 #else
-            const __m256i a = _mm256_loadu_si256((const __m256i*) ptr1 + col),
-                          b = _mm256_loadu_si256((const __m256i*) ptr2 + col);
+            const __m256i a = _mm256_loadu_si256((const __m256i*) (ptr1 + col)),
+                          b = _mm256_loadu_si256((const __m256i*) (ptr2 + col));
             const __m256i lo = _mm256_srai_epi16(_mm256_add_epi16(a, b), 1),
                           hi = _mm256_sub_epi16(a, b);
-            _mm256_storeu_si256((__m256i*) loptr + col, lo);
-            _mm256_storeu_si256((__m256i*) hiptr + col, hi);
+            _mm256_storeu_si256((__m256i*) (loptr + col), lo);
+            _mm256_storeu_si256((__m256i*) (hiptr + col), hi);
 #endif
         }
         for (int col = aligned; col != cols; ++col) {
@@ -236,8 +236,8 @@ void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEG
                 : "%ymm0", "%ymm1", "%ymm2", "memory"
             );
 #else // MSVC doesn't support inline asm for x64
-            const __m256i a = _mm256_loadu_si256((const __m256i*) src + col),
-                          b = _mm256_loadu_si256((const __m256i*) src + col + 16);
+            const __m256i a = _mm256_loadu_si256((const __m256i*) (src + col)),
+                          b = _mm256_loadu_si256((const __m256i*) (src + col + 16));
             const __m256i lo = _mm256_srai_epi16(_mm256_hadd_epi16(b, a), 1),
                           hi = _mm256_hsub_epi16(b, a);
             _mm256_storeu_si256((__m256i*) tmp1, _mm256_permutevar8x32_epi32(lo, mask));
