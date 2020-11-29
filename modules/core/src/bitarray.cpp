@@ -32,7 +32,7 @@ BitArray::BitArray() : _arr(new BitArrayImpl()) {}
 
 BitArray::BitArray(const std::string& str) : _arr(new BitArrayImpl(str)) {}
 
-BitArray::BitArray(imagestego::size_t sz) : _arr(new BitArrayImpl(sz)) {}
+BitArray::BitArray(std::size_t sz) : _arr(new BitArrayImpl(sz)) {}
 
 BitArray::~BitArray() noexcept {
     if (_arr)
@@ -65,28 +65,28 @@ BitArray BitArray::fromByteString(const std::string& str) {
     return arr;
 }
 
-BitArray BitArray::fromInt(imagestego::size_t num) {
+BitArray BitArray::fromInt(uint32_t num) {
     BitArray arr(new BitArrayImpl(BitArrayImpl::fromInt(num)));
     return arr;
 }
 
-typename BitArrayImpl::reference BitArray::operator[](imagestego::size_t i) {
-    return (*_arr)[i];
+typename BitArrayImpl::reference BitArray::operator[](std::size_t i) {
+    return _arr->operator[](i);
 }
 
-imagestego::size_t BitArray::size() const noexcept {
+std::size_t BitArray::size() const noexcept {
     return _arr->size();
 }
 
-bool BitArray::operator[](imagestego::size_t i) const {
-    return (*_arr)[i];
+bool BitArray::operator[](std::size_t i) const {
+    return _arr->operator[](i);
 }
 
 void BitArray::pushBack(bool val) {
     _arr->pushBack(val);
 }
 
-void BitArray::pushFront(imagestego::size_t num) {
+void BitArray::pushFront(std::size_t num) {
     _arr->pushFront(num);
 }
 
@@ -114,15 +114,11 @@ std::string BitArray::toString() const {
     return _arr->toString();
 }
 
-imagestego::size_t BitArray::toInt() const {
+std::size_t BitArray::toInt() const {
     return _arr->toInt();
 }
 
-void BitArray::put(int num, imagestego::size_t n) {
-    _arr->put(num, n);
-}
-
-void BitArray::put(imagestego::size_t num, imagestego::size_t n) {
+void BitArray::put(std::size_t num, std::size_t n) {
     _arr->put(num, n);
 }
 

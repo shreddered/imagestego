@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
-#ifndef __IMAGESTEGO_WAVELET_HAAR_H_INCLUDED__
-#define __IMAGESTEGO_WAVELET_HAAR_H_INCLUDED__
+#ifndef __IMAGESTEGO_WAVELET_INVERSE_HAAR_H_INCLUDED__
+#define __IMAGESTEGO_WAVELET_INVERSE_HAAR_H_INCLUDED__
 
 // c headers
 #include <stdint.h>
@@ -27,7 +27,7 @@ extern "C" {
 #endif
 
 /**
- * Function which computes vertical lifting.
+ * Function which computes inverse vertical lifting.
  *
  * NB: pointers only from CV_16S matrices are accepted.
  *
@@ -36,10 +36,10 @@ extern "C" {
  * @param rows Number of rows.
  * @param cols Number of columns.
  */
-void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT src, uint8_t* IMAGESTEGO_RESTRICT dst, const int rows, const int cols);
+void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT src, uint8_t* IMAGESTEGO_RESTRICT dst, const int rows, const int cols);
 
 /**
- * Function which computes horizontal lifting.
+ * Function which computes inverse horizontal lifting.
  *
  * NB: pointers only from CV_16S matrices are accepted.
  *
@@ -48,10 +48,10 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT src, uint8_t* IMAGESTEGO_R
  * @param rows Number of rows.
  * @param cols Number of columns.
  */
-void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT src, uint8_t* IMAGESTEGO_RESTRICT dst, int rows, int cols);
+void inverse_horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT src, uint8_t* IMAGESTEGO_RESTRICT dst, int rows, int cols);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __IMAGESTEGO_WAVELET_HAAR_H_INCLUDED__ */
+#endif /* __IMAGESTEGO_WAVELET_INVERSE_HAAR_H_INCLUDED__ */

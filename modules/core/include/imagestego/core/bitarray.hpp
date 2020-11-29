@@ -76,7 +76,7 @@ public:
      *
      * @param sz Size of array.
      */
-    explicit BitArray(imagestego::size_t sz);
+    explicit BitArray(std::size_t sz);
 
     /**
      * imagestego::BitArray copy constructor.
@@ -117,7 +117,7 @@ public:
      * @param num Number to be converted to bit array.
      * @return Created array.
      */
-    static BitArray fromInt(imagestego::size_t num);
+    static BitArray fromInt(uint32_t num);
 
     /**
      * Converter from bit array to byte string.
@@ -138,7 +138,7 @@ public:
      *
      * @return Unsigned 32-bit integer.
      */
-    imagestego::size_t toInt() const;
+    std::size_t toInt() const;
 
     /**
      * Operator [] overloading.
@@ -146,7 +146,7 @@ public:
      * @param i Index of element in array.
      * @return Instance of proxy class representing element.
      */
-    typename BitArrayImpl::reference operator[](imagestego::size_t i);
+    typename BitArrayImpl::reference operator[](std::size_t i);
 
     /**
      * Operator [] overloading.
@@ -154,32 +154,29 @@ public:
      * @param i Index of element in array.
      * @return Read-only element of array.
      */
-    bool operator [](imagestego::size_t i) const;
+    bool operator [](std::size_t i) const;
 
     /**
      * Size of array.
      *
      * @return Size of array
      */
-    imagestego::size_t size() const noexcept;
+    std::size_t size() const noexcept;
 
     /**
      * Puts n bits from number to array.
      *
-     * This method has several overloads for different integer types.
-     *
      * @param num Number from which bits are taken.
      * @param n Nubmer of bits to take from num.
      */
-    void put(int num, imagestego::size_t n);
-    void put(imagestego::size_t num, imagestego::size_t n);
+    void put(std::size_t num, std::size_t n);
 
     /**
      * Pushes unsigned 32-bit integer in the beginning of the array.
      *
      * @param num number to be pushed.
      */
-    void pushFront(imagestego::size_t num);
+    void pushFront(std::size_t num);
 
     /**
      * Adds element to the end.

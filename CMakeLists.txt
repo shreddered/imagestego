@@ -21,7 +21,7 @@ endif()
 
 if (POLICY CMP0091)
   cmake_policy(SET CMP0091 NEW)
-  set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>DLL)
 endif (POLICY CMP0091)
 
 set(IMAGESTEGO_VERSION_MAJOR 1)
@@ -40,11 +40,11 @@ set(IMAGESTEGO_LOSSLESS_DIR ${IMAGESTEGO_SOURCE_DIR}/modules/lossless)
 set(IMAGESTEGO_WAVELET_DIR ${IMAGESTEGO_SOURCE_DIR}/modules/wavelet)
 
 macro(imagestego_defs)
-  set(IMAGESTEGO_SOURCE_DIR ${IMAGESTEGO_SOURCE_DIR}) 
-  set(IMAGESTEGO_CORE_DIR ${IMAGESTEGO_CORE_DIR}) 
-  set(IMAGESTEGO_COMPRESSION_DIR ${IMAGESTEGO_COMPRESSION_DIR}) 
-  set(IMAGESTEGO_LOSSLESS_DIR ${IMAGESTEGO_LOSSLESS_DIR}) 
-  set(IMAGESTEGO_WAVELET_DIR ${IMAGESTEGO_WAVELET_DIR}) 
+  set(IMAGESTEGO_SOURCE_DIR ${IMAGESTEGO_SOURCE_DIR})
+  set(IMAGESTEGO_CORE_DIR ${IMAGESTEGO_CORE_DIR})
+  set(IMAGESTEGO_COMPRESSION_DIR ${IMAGESTEGO_COMPRESSION_DIR})
+  set(IMAGESTEGO_LOSSLESS_DIR ${IMAGESTEGO_LOSSLESS_DIR})
+  set(IMAGESTEGO_WAVELET_DIR ${IMAGESTEGO_WAVELET_DIR})
 endmacro()
 
 # HW/Compiler features
@@ -143,38 +143,101 @@ function(imagestego_exports target)
     )
     if (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
       target_compile_definitions(${target} PRIVATE
-        "-DIMAGESTEGO_EXPORTS"
+        "-DIMAGESTEGO_EXPORT"
       )
     endif (PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
   endif (WIN32 AND BUILD_SHARED_LIBS)
 endfunction(imagestego_exports target)
 
-# function for marking every imagestego module
-macro(imagestego_lib LIB)
-  list(APPEND IMAGESTEGO_LIBS ${LIB})
+# macro for marking every imagestego module
+macro(imagestego_library)
+  if (ARGC EQUAL 0)
+    message(FATAL_ERROR "Function imagestego_library() requires at least one argument")
+  endif()
+
+  list(APPEND IMAGESTEGO_LIBS ${ARGV0})
   set(IMAGESTEGO_LIBS ${IMAGESTEGO_LIBS} PARENT_SCOPE)
-  # compiler ID
-  foreach(COMPILER GCC CLANG ICC MSVC)
-    if (IMAGESTEGO_${COMPILER})
-      target_compile_definitions(${LIB} PRIVATE
-        "-D IMAGESTEGO_${COMPILER}=1"
+
+  # library target
+  if (ARGC EQUAL 1)
+    add_library(${ARGV0} INTERFACE)
+  else()
+    string(REPLACE "${ARGV0};" "" ${ARGV0}_SOURCES "${ARGV}")
+    # library target
+    add_library(${ARGV0} ${${ARGV0}_SOURCES})
+    # compiler ID
+    foreach(COMPILER GCC CLANG ICC MSVC)
+      if (IMAGESTEGO_${COMPILER})
+        target_compile_definitions(${ARGV0} PRIVATE
+          "-D IMAGESTEGO_${COMPILER}=1"
+        )
+      else()
+        target_compile_definitions(${ARGV0} PRIVATE
+          "-D IMAGESTEGO_${COMPILER}=0"
+        )
+      endif()
+    endforeach()
+    # Compiler and hardware features macro definitions
+    # restrict
+    target_compile_definitions(${ARGV0} PUBLIC
+      "-D IMAGESTEGO_RESTRICT=${RESTRICT}"
+    )
+    # inline
+    target_compile_definitions(${ARGV0} PUBLIC
+      "-D IMAGESTEGO_INLINE=${INLINE}"
+    )
+    # constexpr
+    target_compile_definitions(${ARGV0} PUBLIC
+      "-D IMAGESTEGO_CONSTEXPR=constexpr"
+    )
+    # exports
+    imagestego_exports(${ARGV0})
+    # Endianness
+    if (IMAGESTEGO_BIG_ENDIAN)
+      target_compile_definitions(${ARGV0} PRIVATE
+        "IMAGESTEGO_BIG_ENDIAN"
       )
     else()
-      target_compile_definitions(${LIB} PRIVATE
-        "-D IMAGESTEGO_${COMPILER}=0"
+      target_compile_definitions(${ARGV0} PRIVATE
+        "IMAGESTEGO_LITTLE_ENDIAN"
+      )
+    endif(IMAGESTEGO_BIG_ENDIAN)
+    # intrin.h
+    if(HAVE_INTRIN_H)
+      target_compile_definitions(imagestego_core PRIVATE
+        "HAVE_INTRIN_H"
       )
     endif()
-  endforeach()
-  # inline
-  target_compile_definitions(${LIB} PUBLIC
-    "-D IMAGESTEGO_INLINE=${INLINE}"
-  )
-  # constexpr
-  target_compile_definitions(${LIB} PUBLIC
-    "-D IMAGESTEGO_CONSTEXPR=constexpr"
-  )
-  # exports
-  imagestego_exports(${LIB})
+    # SIMD definitions
+    if (X86 OR X86_64)
+      foreach(OPT SSE2 SSSE3 AVX2 AVX512BW AVX512VL)
+        if (CPU_${OPT}_SUPPORTED)
+          target_compile_definitions(${ARGV0} PRIVATE
+            "-D IMAGESTEGO_${OPT}_SUPPORTED=1"
+          )
+        else()
+          target_compile_definitions(${ARGV0} PRIVATE
+            "-D IMAGESTEGO_${OPT}_SUPPORTED=0"
+          )
+        endif()
+      endforeach()
+    elseif(ARM OR AARCH64)
+      if (CPU_NEON_SUPPORTED)
+        target_compile_definitions(${ARGV0} PRIVATE
+          "-D IMAGESTEGO_NEON_SUPPORTED=1"
+        )
+      else()
+        target_compile_definitions(${ARGV0} PRIVATE
+          "-D IMAGESTEGO_NEON_SUPPORTED=0"
+        )
+      endif()
+    elseif(PPC64 OR PPC64LE)
+      # TODO: check for altivec support
+      target_compile_definitions(${ARGV0} PRIVATE
+        "-DIMAGESTEGO_ALTIVEC_SUPPORTED"
+      )
+    endif(X86 OR X86_64)
+  endif()
 endmacro()
 
 # preparing needed directories

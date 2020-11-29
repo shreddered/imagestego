@@ -73,7 +73,7 @@ public:
      *
      * @param sz Size of array.
      */
-    explicit BitArrayImpl(imagestego::size_t sz);
+    explicit BitArrayImpl(std::size_t sz);
 
     /**
      * Converter from byte sequence to bit array.
@@ -89,7 +89,7 @@ public:
      * @param num Number to be converted to bit array.
      * @return Created array.
      */
-    static BitArrayImpl fromInt(imagestego::size_t num);
+    static BitArrayImpl fromInt(uint32_t num);
 
     /**
      * Converter from bit array to byte string.
@@ -110,14 +110,14 @@ public:
      *
      * @return Unsigned 32-bit integer.
      */
-    imagestego::size_t toInt() const;
+    std::size_t toInt() const;
 
     /**
      * Size of array.
      *
      * @return Size of array
      */
-    imagestego::size_t size() const noexcept;
+    std::size_t size() const noexcept;
 
     /**
      * Operator [] overloading.
@@ -125,7 +125,7 @@ public:
      * @param i Index of element in array.
      * @return Instance of proxy class representing element.
      */
-    BitReference operator [](imagestego::size_t i);
+    BitReference operator [](std::size_t i);
 
     /**
      * Operator [] overloading.
@@ -133,7 +133,7 @@ public:
      * @param i Index of element in array.
      * @return Read-only element of array.
      */
-    bool operator [](imagestego::size_t i) const;
+    bool operator [](std::size_t i) const;
 
     /**
      * Adds element to the end.
@@ -145,20 +145,17 @@ public:
     /**
      * Puts n bits from number to array.
      *
-     * This method has several overloads for different integer types.
-     *
      * @param num Number from which bits are taken.
      * @param n Nubmer of bits to take from num.
      */
-    void put(int num, imagestego::size_t n);
-    void put(imagestego::size_t num, imagestego::size_t n);
+    void put(std::size_t num, std::size_t n);
 
     /**
      * Pushes unsigned 32-bit integer in the beginning of the array.
      *
      * @param num number to be pushed.
      */
-    void pushFront(imagestego::size_t num);
+    void pushFront(std::size_t num);
 
     /**
      * Clears array.
@@ -214,7 +211,7 @@ private:
          * @param block Block reference containing element.
          * @param pos Bit index of block.
          */
-        explicit BitReference(BlockType& block, imagestego::size_t pos) noexcept;
+        explicit BitReference(BlockType& block, std::size_t pos) noexcept;
     public:
 
         /**
@@ -259,7 +256,7 @@ private:
         BitArrayImpl* _owner;
 
         /** Current position. */
-        imagestego::size_t _pos;
+        std::size_t _pos;
 
         /**
          * Constructs iterator.
@@ -267,7 +264,7 @@ private:
          * @param owner Iterator's owner.
          * @param pos Position of element iterator points to.
          */
-        explicit BitIterator(BitArrayImpl* owner, imagestego::size_t pos) noexcept;
+        explicit BitIterator(BitArrayImpl* owner, std::size_t pos) noexcept;
     public:
 
         /**
@@ -305,13 +302,13 @@ private:
          */
         BitIterator operator --(int);
 
-        // BitIterator& operator +=(imagestego::size_t i);
+        // BitIterator& operator +=(std::size_t i);
 
-        // BitIterator& operator -=(imagestego::size_t i);
+        // BitIterator& operator -=(std::size_t i);
 
-        // BitIterator operator +(imagestego::size_t i);
+        // BitIterator operator +(std::size_t i);
 
-        // BitIterator operator -(imagestego::size_t i);
+        // BitIterator operator -(std::size_t i);
 
         /**
          * Iterator comparison.
@@ -324,10 +321,10 @@ private:
     std::vector<BlockType> _blocks;
 
     /** Size of array. */
-    imagestego::size_t _sz;
+    std::size_t _sz;
 
     /** Number of bits per block. */
-    static IMAGESTEGO_CONSTEXPR imagestego::size_t bitsPerBlock = CHAR_BIT * sizeof(BlockType);
+    static IMAGESTEGO_CONSTEXPR std::size_t bitsPerBlock = CHAR_BIT * sizeof(BlockType);
 
     /**
      * Number of blocks needed to store sz bits.
@@ -335,7 +332,7 @@ private:
      * @param sz Number of bits.
      * @return Number of blocks needed to store sz bits.
      */
-    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR imagestego::size_t numberOfBlocks(imagestego::size_t sz) {
+    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR std::size_t numberOfBlocks(std::size_t sz) {
         return sz / bitsPerBlock + ((sz % bitsPerBlock != 0) ? 1 : 0);
     }
 
@@ -345,7 +342,7 @@ private:
      * @param i Index of an element.
      * @return Index of block containing i-th element.
      */
-    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR imagestego::size_t blockIndex(imagestego::size_t i) {
+    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR std::size_t blockIndex(std::size_t i) {
         return i / bitsPerBlock;
     }
 
@@ -355,7 +352,7 @@ private:
      * @param i index of an element.
      * @return Index of bit in the block with i-th element.
      */
-    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR imagestego::size_t bitIndex(imagestego::size_t i) {
+    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR std::size_t bitIndex(std::size_t i) {
         return i % bitsPerBlock;
     }
 }; // class BitArrayImpl

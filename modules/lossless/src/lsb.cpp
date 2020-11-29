@@ -54,7 +54,7 @@ public:
         if (_key.empty())
             throw Exception(Exception::Codes::NoKeyFound);
         BitArray sz = BitArray::fromInt(_msg.size());
-        imagestego::size_t idx = 0, i = 0;
+        std::size_t idx = 0, i = 0;
         Route r(std::make_pair(_image.cols, _image.rows), _gen);
         r.create(32);
         for (auto it = r.begin(); it != r.end(); ++it) {
@@ -129,7 +129,7 @@ public:
         if (_key.empty())
             throw Exception(Exception::Codes::NoKeyFound);
         BitArray sz;
-        imagestego::size_t idx = 0;
+        std::size_t idx = 0;
         Route r(std::make_pair(_image.cols, _image.rows), _gen);
         r.create(32);
         for (auto it = r.begin(); it != r.end(); ++it) {

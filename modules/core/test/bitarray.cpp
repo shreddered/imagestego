@@ -31,7 +31,7 @@ using imagestego::BitArray;
 
 
 std::bitset<32> reverse32(const std::bitset<32>& set) {
-    const imagestego::size_t n = static_cast<imagestego::size_t>(set.to_ulong());
+    const std::size_t n = static_cast<std::size_t>(set.to_ulong());
     return std::bitset<32>(imagestego::bswap(n));
 }
 

@@ -21,9 +21,9 @@
 #include "imagestego/compression/lzw_dictionary.hpp"
 
 
-int read(const imagestego::BitArray& arr, imagestego::size_t& i, uint8_t bits) {
-    int block = 0;
-    imagestego::size_t it;
+std::size_t read(const imagestego::BitArray& arr, std::size_t& i, uint8_t bits) {
+    std::size_t block = 0;
+    std::size_t it;
     for (it = i; it != i + bits; ++it)
         block |= arr[it] << (bits - 1 - (it - i));
     i = it;
@@ -52,15 +52,15 @@ private:
     BitArray msg;
     void decode() {
         // reading first 4 bits
-        imagestego::size_t i = 0;
+        std::size_t i = 0;
         uint8_t maxBits = read(msg, i, 4);
         while(i < msg.size()) {
             Dictionary::clear();
             uint8_t currentBitsPerBlock = 8;
-            imagestego::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
-            imagestego::size_t code = read(msg, i, currentBitsPerBlock);
-            decodedMsg += code;
-            imagestego::size_t oldCode = code;
+            std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
+            std::size_t code = read(msg, i, currentBitsPerBlock);
+            decodedMsg += static_cast<char>(code); // always 8-bit
+            std::size_t oldCode = code;
             while (1) {
                 if (i >= msg.size())
                     break;

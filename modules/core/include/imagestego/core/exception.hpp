@@ -20,10 +20,8 @@
 #ifndef __IMAGESTEGO_CORE_EXCEPTION_HPP_INCLUDED__
 #define __IMAGESTEGO_CORE_EXCEPTION_HPP_INCLUDED__
 
-#ifdef _MSC_VER
-#   pragma warning(push)
-#   pragma warning(disable:4251)
-#   pragma warning(pop)
+#if IMAGESTEGO_MSVC
+#   pragma warning(disable: 4257)
 #endif
 
 // imagestego headers
@@ -71,6 +69,10 @@ inline const char* imagestego::Exception::what() const noexcept {
             return "Unknown Error";
                                                                                                                 }
 }
+#endif
+
+#if IMAGESTEGO_MSVC
+#   pragma warning(default: 4275)
 #endif
 
 #endif /* __IMAGESTEGO_CORE_EXCEPTION_HPP_INCLUDED__ */

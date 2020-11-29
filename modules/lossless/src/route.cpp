@@ -27,7 +27,7 @@ namespace imagestego {
 
 RouteImpl::RouteImpl(const std::pair<int, int>& mapSize, std::mt19937& _gen) noexcept : AvlTree(), _mapSize(mapSize), gen(_gen) {}
 
-void RouteImpl::create(const int& n) {
+void RouteImpl::create(std::size_t n) {
     while(size() != n) {
         insert({gen() % _mapSize.first, gen() % _mapSize.second});
     }
@@ -51,7 +51,7 @@ Route::~Route() noexcept {
         delete _route;
 }
 
-void Route::create(const int& n) {
+void Route::create(std::size_t n) {
     _route->create(n);
 }
 

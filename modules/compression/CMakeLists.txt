@@ -1,13 +1,9 @@
-add_library(imagestego_compression
+imagestego_library(imagestego_compression
   ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_decoder.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/huffman_encoder.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_decoder.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_dictionary.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/lzw_encoder.cpp
-)
-
-set_target_properties(imagestego_compression PROPERTIES
-  OUTPUT_NAME "imagestego_comp"
 )
 
 target_include_directories(imagestego_compression PUBLIC
@@ -22,8 +18,6 @@ target_link_libraries(imagestego_compression PUBLIC
 target_compile_definitions(imagestego_compression PUBLIC
   "-DIMAGESTEGO_COMPRESSION_SUPPORT"
 )
-
-imagestego_lib(imagestego_compression)
 
 imagestego_add_test(COMPRESSION
   NAME huffman

@@ -78,8 +78,8 @@ static IMAGESTEGO_INLINE int align8(const int num) {
 // Extension-specific implementation goes here
 #if IMAGESTEGO_AVX512BW_SUPPORTED
 
-void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
-        const int cols) {
+void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst,
+        const int rows, const int cols) {
     static const __mmask32 len2mask[] = { 0x00000000, 0x00000001, 0x00000003, 0x00000007,
                                           0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f,
                                           0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff,
@@ -152,7 +152,7 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
 
 #if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512BW_SUPPORTED
 
-void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
@@ -181,12 +181,12 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
                 : "%ymm0", "%ymm1", "%ymm2", "memory"
             );
 #else
-            const __m256i a = _mm256_loadu_si256((const __m256i*) ptr1 + col),
-                          b = _mm256_loadu_si256((const __m256i*) ptr2 + col);
+            const __m256i a = _mm256_loadu_si256((const __m256i*) (ptr1 + col)),
+                          b = _mm256_loadu_si256((const __m256i*) (ptr2 + col));
             const __m256i lo = _mm256_srai_epi16(_mm256_add_epi16(a, b), 1),
                           hi = _mm256_sub_epi16(a, b);
-            _mm256_storeu_si256((__m256i*) loptr + col, lo);
-            _mm256_storeu_si256((__m256i*) hiptr + col, hi);
+            _mm256_storeu_si256((__m256i*) (loptr + col), lo);
+            _mm256_storeu_si256((__m256i*) (hiptr + col), hi);
 #endif
         }
         for (int col = aligned; col != cols; ++col) {
@@ -205,7 +205,7 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
 
 #if IMAGESTEGO_AVX2_SUPPORTED
 
-void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
     __m256i mask = _mm256_set_epi32(5, 4, 1, 0, 7, 6, 3, 2);
     int16_t* src = (int16_t*) _src;
@@ -236,8 +236,8 @@ void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const
                 : "%ymm0", "%ymm1", "%ymm2", "memory"
             );
 #else // MSVC doesn't support inline asm for x64
-            const __m256i a = _mm256_loadu_si256((const __m256i*) src + col),
-                          b = _mm256_loadu_si256((const __m256i*) src + col + 16);
+            const __m256i a = _mm256_loadu_si256((const __m256i*) (src + col)),
+                          b = _mm256_loadu_si256((const __m256i*) (src + col + 16));
             const __m256i lo = _mm256_srai_epi16(_mm256_hadd_epi16(b, a), 1),
                           hi = _mm256_hsub_epi16(b, a);
             _mm256_storeu_si256((__m256i*) tmp1, _mm256_permutevar8x32_epi32(lo, mask));
@@ -259,7 +259,7 @@ void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const
 
 #if IMAGESTEGO_SSSE3_SUPPORTED && IMAGESTEGO_SSE2_SUPPORTED && !IMAGESTEGO_AVX2_SUPPORTED
 
-void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
@@ -304,7 +304,7 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
     }
 }
 
-void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows,
+void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
@@ -346,7 +346,7 @@ void horizontal_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const
 
 #if IMAGESTEGO_NEON_SUPPORTED
 
-void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const int rows, const int cols) {
+void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows, const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row < (rows & ~1); row += 2) {
@@ -375,7 +375,7 @@ void vertical_haar(const uint8_t* restrict _src, uint8_t* restrict _dst, const i
     }
 }
 
-void horizontal_haar(const uint8_t* restrict _src, uint8_t* _dst, const int rows, const int cols) {
+void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* _dst, const int rows, const int cols) {
     int16_t* src = (int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != rows; ++row) {

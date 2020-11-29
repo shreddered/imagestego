@@ -1,4 +1,4 @@
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 platform: x64
 
@@ -7,17 +7,19 @@ configuration: Release
 install:
   - curl -fsSL -o opencv.zip https://github.com/opencv/opencv/releases/download/4.5.0/opencv-4.5.0-dldt-2021.1-vc16-avx2.zip
   - 7z x opencv.zip
+  - opencv\build\setup_vars_opencv4.cmd
   - git submodule update --init --recursive
 
 environment:
   OPENCV_DIR: $(APPVEYOR_BUILD_FOLDER)\opencv\build
 
 before_build:
-  - cmake -G "Visual Studio 15 2017" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_MODULES=core,compression .
+  - cmake -B test -G "Visual Studio 16 2019" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=ON -D IMAGESTEGO_MODULES=core,compression,lossless,wavelet .
 
 build:
   parallel: true
-  project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
+  project: $(APPVEYOR_BUILD_FOLDER)\test\$(APPVEYOR_PROJECT_NAME).sln
 
 test_script:
+  - cd test
   - ctest -C Release --verbose
