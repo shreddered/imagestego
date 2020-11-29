@@ -92,4 +92,7 @@ elseif(MINGW)
   endif()
 endif()
 
+include(TestBigEndian)
+test_big_endian(IMAGESTEGO_BIG_ENDIAN)
+
 # TODO: add c++11 test

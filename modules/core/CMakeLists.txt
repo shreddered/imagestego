@@ -1,7 +1,7 @@
 imagestego_defs()
 
 # imagestego_core
-add_library(imagestego_core
+imagestego_library(imagestego_core
   ${CMAKE_CURRENT_SOURCE_DIR}/src/bitarray.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/bitarrayimpl.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/core.cpp
@@ -16,27 +16,6 @@ target_include_directories(imagestego_core PUBLIC
   $<INSTALL_INTERFACE:include/>
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/
 )
-
-imagestego_lib(imagestego_core)
-
-include(TestBigEndian)
-test_big_endian(BIG_ENDIAN)
-
-if (BIG_ENDIAN)
-  target_compile_definitions(imagestego_core PUBLIC
-    "IMAGESTEGO_BIG_ENDIAN"
-  )
-else()
-  target_compile_definitions(imagestego_core PUBLIC
-    "IMAGESTEGO_LITTLE_ENDIAN"
-  )
-endif(BIG_ENDIAN)
-
-if(HAVE_INTRIN_H)
-  target_compile_definitions(imagestego_core PRIVATE
-    "HAVE_INTRIN_H"
-  )
-endif()
 
 imagestego_add_test(CORE
   NAME bitarray
