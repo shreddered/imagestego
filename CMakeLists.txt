@@ -149,6 +149,32 @@ function(imagestego_exports target)
   endif (WIN32 AND BUILD_SHARED_LIBS)
 endfunction(imagestego_exports target)
 
+# coverage interface
+add_library(coverage_config INTERFACE)
+
+if (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  target_compile_options(coverage_config INTERFACE
+    -O0
+    -g
+    --coverage
+  )
+if(NOT CMAKE_VERSION VERSION_LESS 3.13)
+    target_link_options(coverage_config INTERFACE --coverage)
+  else()
+    target_link_libraries(coverage_config INTERFACE --coverage)
+  endif ()
+endif (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+
+# macro for adding target to code coverage
+macro(imagestego_add_coverage target)
+  target_link_libraries(${target} PRIVATE coverage_config)
+endmacro()
+
+string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
+
+# imagestego interface
+add_library(imagestego INTERFACE)
+
 # macro for marking every imagestego module
 macro(imagestego_library)
   if (ARGC EQUAL 0)
@@ -165,6 +191,8 @@ macro(imagestego_library)
     string(REPLACE "${ARGV0};" "" ${ARGV0}_SOURCES "${ARGV}")
     # library target
     add_library(${ARGV0} ${${ARGV0}_SOURCES})
+    # adding to coverage
+    imagestego_add_coverage(${ARGV0})
     # compiler ID
     foreach(COMPILER GCC CLANG ICC MSVC)
       if (IMAGESTEGO_${COMPILER})
@@ -245,26 +273,6 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
   file(MAKE_DIRECTORY test/)
 endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
-# coverage interface
-add_library(coverage_config INTERFACE)
-
-if (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  target_compile_options(coverage_config INTERFACE
-    -O0
-    -g
-    --coverage
-  )
-if(NOT CMAKE_VERSION VERSION_LESS 3.13)
-    target_link_options(coverage_config INTERFACE --coverage)
-  else()
-    target_link_libraries(coverage_config INTERFACE --coverage)
-  endif ()
-endif (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-
-string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
-
-add_library(imagestego INTERFACE)
-
 target_link_libraries(imagestego INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
   $<INSTALL_INTERFACE:include/>
@@ -317,7 +325,7 @@ endif(IMAGESTEGO_BUILD_PERF_TESTS)
 include("cmake/imagestego-install.cmake")
 
 if (IMAGESTEGO_INSTALL)
-  install(TARGETS ${IMAGESTEGO_LIBS}
+  install(TARGETS ${IMAGESTEGO_LIBS} coverage_config
     EXPORT imagestegoConfig
     INCLUDES DESTINATION ${IMAGESTEGO_INCLUDE_DESTINATION}
     ARCHIVE DESTINATION ${IMAGESTEGO_ARCHIVE_DESTINATION}
