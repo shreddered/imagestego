@@ -92,7 +92,7 @@ $ brew install cmake opencv
 
 ## Windows
 
-Select [opencv release](https://github.com/opencv/opencv/releases) suitable for your visual studio version.
+Select [opencv release](https://github.com/opencv/opencv/releases/latest) suitable for your visual studio version.
 
 Also you will need to set `OPENCV_DIR` environmental variabe to specify path to opencv.
 ```bat
