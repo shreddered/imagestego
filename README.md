@@ -24,17 +24,17 @@ Dependencies - [_opencv_](https://github.com/opencv/opencv) and [_libjpeg_](http
 
 # Overview
 
-This library has several modules.
+This library consists of components as described below.
 
-The _core_ module is the main module of this library, which introduces a lot of types/functions/etc needed for other modules to work.
+- _core_ is the main component of this library, which introduces types/functions/etc needed for other components to work.
 
-The _compression_ module introduces data compression algorithms.
+- _compression_ component introduces data compression algorithms.
 
-The _lossless_ module contains steganographic schemes with lossless destination.
+- _lossless_ component contains steganographic schemes with lossless destination.
 
-The _jpeg_ module contains steganographic schemes with JPEG writer.
+- _jpeg_ component contains steganographic schemes with JPEG writer.
 
-The _wavelet_ module contains different wavelet transforms.
+- _wavelet_ component contains different wavelet transforms.
 
 # Integration
 
@@ -42,7 +42,7 @@ The _wavelet_ module contains different wavelet transforms.
 
 ### Subdirectory
 
-If you want to embed _imagestego_ into your project, just use `add_subdirectory()`.
+If you want to embed _imagestego_ into your project, you should use `add_subdirectory()`.
 After that `imagestego` interface target should be available:
 
 ```cmake
@@ -57,7 +57,7 @@ target_link_libraries(foo imagestego)
 
 ### Find package
 
-If you have _imagestego_ already installed, you can simply add it with `find_package()`:
+If you have _imagestego_ already installed, consider using `find_package()`:
 
 ```cmake
 find_package(imagestego CONFIG REQUIRED)
@@ -70,6 +70,8 @@ target_link_libraries(foo imagestego)
 ```
 
 # Installing dependencies
+
+This project needs [cmake](https://cmake.org/) to be built from source and [opencv](https://github.com/opencv/opencv) as a dependency.
 
 ## Debian
 
@@ -85,15 +87,17 @@ $ sudo pacman -S cmake opencv
 
 ## macOS
 
-Use [brew](https://brew.sh/).
+Use [brew](https://brew.sh/):
 ```bash
 $ brew install cmake opencv
 ```
 
 ## Windows
 
-Grab [opencv release](https://github.com/opencv/opencv/releases/latest) suitable for your visual studio version.
-Then extract archive and run `setup_vars_opencv4.cmd`.
+At first you will need [cmake](https://cmake.org/) to build this project.
+
+Grab [opencv release](https://github.com/opencv/opencv/releases/latest) which is suitable for your Visual Studio version.
+Then extract it and run `setup_vars_opencv4.cmd`.
 
 Also you will need to set `OPENCV_DIR` environmental variabe to specify path to opencv.
 You can open Windows command line and type:
@@ -103,7 +107,9 @@ set "OPENCV_DIR=<path\to\opencv\build>"
 
 # Building
 
-If you want to build this library, then you have to do several steps.
+First make sure that you have followed all steps presented in [installing depencies](#installing-dependencies) topic.
+
+If you want to build this library, then you have to do the following:
 ```bash
 $ git clone https://github.com/shreddered/imagestego.git
 $ cd imagestego/
