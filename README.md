@@ -42,7 +42,7 @@ The _wavelet_ module contains different wavelet transforms.
 
 ### Subdirectory
 
-If you want to embed _imagestego_ into your project, just use `add_subdirectory()`.
+If you want to embed _imagestego_ into your project, you should use `add_subdirectory()`.
 After that `imagestego` interface target should be available:
 
 ```cmake
@@ -57,7 +57,7 @@ target_link_libraries(foo imagestego)
 
 ### Find package
 
-If you have _imagestego_ already installed, you can simply add it with `find_package()`:
+If you have _imagestego_ already installed, consider using `find_package()`:
 
 ```cmake
 find_package(imagestego CONFIG REQUIRED)
