@@ -71,6 +71,8 @@ target_link_libraries(foo imagestego)
 
 # Installing dependencies
 
+This project needs [cmake](https://cmake.org/) to be built from source and [opencv](https://github.com/opencv/opencv) as a dependency.
+
 ## Debian
 
 ```bash
@@ -85,15 +87,17 @@ $ sudo pacman -S cmake opencv
 
 ## macOS
 
-Use [brew](https://brew.sh/).
+Use [brew](https://brew.sh/):
 ```bash
 $ brew install cmake opencv
 ```
 
 ## Windows
 
-Grab [opencv release](https://github.com/opencv/opencv/releases/latest) suitable for your visual studio version.
-Then extract archive and run `setup_vars_opencv4.cmd`.
+At first you will need [cmake](https://cmake.org/) to build this project.
+
+Grab [opencv release](https://github.com/opencv/opencv/releases/latest) which is suitable for your visual studio version.
+Then extract it and run `setup_vars_opencv4.cmd`.
 
 Also you will need to set `OPENCV_DIR` environmental variabe to specify path to opencv.
 You can open Windows command line and type:
