@@ -139,11 +139,11 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
                 : "%zmm0", "%zmm1", "%zmm2", "memory"
             );
 #endif
-        if (rows % 2 != 0) {
-            memcpy(dst + (rows - 1) * cols,
-                   src + (rows - 1) * cols,
-                   cols * sizeof(int16_t));
-        }
+    }
+    if (rows % 2 != 0) {
+        memcpy(dst + (rows - 1) * cols,
+               src + (rows - 1) * cols,
+               cols * sizeof(int16_t));
     }
 }
 
@@ -193,11 +193,11 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
             loptr[col] = floor2(ptr1[col] + ptr2[col]);
             hiptr[col] = ptr1[col] - ptr2[col];
         }
-        if (rows % 2 != 0) {
-            memcpy(dst + (rows - 1) * cols,
-                   src + (rows - 1) * cols,
-                   cols * sizeof(int16_t));
-        }
+    }
+    if (rows % 2 != 0) {
+        memcpy(dst + (rows - 1) * cols,
+               src + (rows - 1) * cols,
+               cols * sizeof(int16_t));
     }
 }
 
