@@ -107,7 +107,9 @@ set "OPENCV_DIR=<path\to\opencv\build>"
 
 # Building
 
-If you want to build this library, then you have to do several steps.
+First make sure that you have followed all steps presented in [installing depencies](#installing-dependencies) topic.
+
+If you want to build this library, then you have to do the following:
 ```bash
 $ git clone https://github.com/shreddered/imagestego.git
 $ cd imagestego/
