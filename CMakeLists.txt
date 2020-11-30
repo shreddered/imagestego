@@ -280,8 +280,8 @@ target_link_libraries(imagestego INTERFACE
 )
 
 foreach(OPT ${IMAGESTEGO_BUILD_LIST})
-  if (EXISTS "modules/${OPT}")
-    add_subdirectory("modules/${OPT}")
+  if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/modules/${OPT}")
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/modules/${OPT}")
     target_link_libraries(imagestego INTERFACE ${OPT})
   else()
     message(WARNING "Unknown module: ${OPT}")
