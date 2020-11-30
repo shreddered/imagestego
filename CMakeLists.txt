@@ -75,6 +75,7 @@ option(IMAGESTEGO_INSTALL "Install imagestego" ON)
 option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
 option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
 option(IMAGESTEGO_COVERAGE "Check coverage" OFF)
+option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
 set(IMAGESTEGO_MODULES "core,lossless,compression,wavelet" CACHE STRING "imagestego modules")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -286,6 +287,10 @@ foreach(OPT ${IMAGESTEGO_BUILD_LIST})
     message(WARNING "Unknown module: ${OPT}")
   endif()
 endforeach()
+
+if (IMAGESTEGO_BUILD_EXAMPLES)
+  add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/examples")
+endif()
 
 if (IMAGESTEGO_BUILD_TESTS OR IMAGESTEGO_BUILD_PERF_TESTS)
   enable_testing()
