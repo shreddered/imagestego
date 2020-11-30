@@ -24,17 +24,17 @@ Dependencies - [_opencv_](https://github.com/opencv/opencv) and [_libjpeg_](http
 
 # Overview
 
-This library has several modules.
+This library consists of components as described below.
 
-The _core_ module is the main module of this library, which introduces a lot of types/functions/etc needed for other modules to work.
+- _core_ is the main component of this library, which introduces types/functions/etc needed for other components to work.
 
-The _compression_ module introduces data compression algorithms.
+- _compression_ component introduces data compression algorithms.
 
-The _lossless_ module contains steganographic schemes with lossless destination.
+- _lossless_ component contains steganographic schemes with lossless destination.
 
-The _jpeg_ module contains steganographic schemes with JPEG writer.
+- _jpeg_ component contains steganographic schemes with JPEG writer.
 
-The _wavelet_ module contains different wavelet transforms.
+- _wavelet_ component contains different wavelet transforms.
 
 # Integration
 
@@ -96,7 +96,7 @@ $ brew install cmake opencv
 
 At first you will need [cmake](https://cmake.org/) to build this project.
 
-Grab [opencv release](https://github.com/opencv/opencv/releases/latest) which is suitable for your visual studio version.
+Grab [opencv release](https://github.com/opencv/opencv/releases/latest) which is suitable for your Visual Studio version.
 Then extract it and run `setup_vars_opencv4.cmd`.
 
 Also you will need to set `OPENCV_DIR` environmental variabe to specify path to opencv.
