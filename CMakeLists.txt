@@ -274,15 +274,9 @@ if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
   file(MAKE_DIRECTORY test/)
 endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 
-target_link_libraries(imagestego INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
-  $<INSTALL_INTERFACE:include/>
-)
-
 foreach(OPT ${IMAGESTEGO_BUILD_LIST})
   if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/modules/${OPT}")
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/modules/${OPT}")
-    target_link_libraries(imagestego INTERFACE ${OPT})
   else()
     message(WARNING "Unknown module: ${OPT}")
   endif()
