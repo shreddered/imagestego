@@ -64,6 +64,9 @@ if (NOT DEFINED CMAKE_CXX_FLAGS_RELEASE)
   set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 endif()
 
+string(APPEND CMAKE_CXX_FLAGS_DEBUG " -O0 -DIMAGESTEGO_DEBUG")
+string(APPEND CMAKE_C_FLAGS_DEBUG " -O0 -DIMAGESTEGO_DEBUG")
+
 if (IMAGESTEGO_GCC)
   string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wpedantic")
 endif (IMAGESTEGO_GCC)
@@ -78,10 +81,6 @@ option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
 option(IMAGESTEGO_COVERAGE "Check coverage" OFF)
 option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
 set(IMAGESTEGO_MODULES "core,lossless,compression,wavelet" CACHE STRING "imagestego modules")
-
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-  add_definitions("-DIMAGESTEGO_DEBUG")
-endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 if (WIN32)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
