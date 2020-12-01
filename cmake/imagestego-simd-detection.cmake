@@ -22,11 +22,12 @@ macro(imagestego_detect_simd_support OPT)
     string(APPEND CMAKE_C_FLAGS_RELEASE " ${CPU_${OPT}_FLAGS}")
     string(APPEND CMAKE_CXX_FLAGS_DEBUG " ${CPU_${OPT}_FLAGS}")
     string(APPEND CMAKE_C_FLAGS_DEBUG " ${CPU_${OPT}_FLAGS}")
+    list(APPEND CPU_SUPPORTED_EXTENSIONS ${OPT})
   endif()
 endmacro()
 
 if (X86 OR X86_64)
-  set(CPU_SIMD_EXTENSIONS "SSE;SSE2;SSE3;SSE4_1;SSE4_1;SSE4_2;AVX;AVX2;AVX512")
+  set(CPU_SIMD_EXTENSIONS "SSE;SSE2;SSE3;SSE4_1;SSE4_1;SSE4_2;AVX;AVX2;AVX512BW;AVX512VL")
 
   # SSE checks
   set(CPU_SSE_CHECK_FILE      "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checks/cpu_sse.cpp")
@@ -91,7 +92,6 @@ if (X86 OR X86_64)
     imagestego_detect_simd_support(SSE2)
     imagestego_detect_simd_support(SSSE3)
   endif()
-
 elseif (ARM OR AARCH64)
   set(CPU_NEON_CHECK_FILE "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checks/cpu_neon.cpp")
   set(CPU_NEON_FLAGS "")

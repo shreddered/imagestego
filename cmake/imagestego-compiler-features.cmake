@@ -23,7 +23,7 @@ foreach(inline ${INLINE_OPTS})
   endif()
 endforeach()
 if (NOT HAVE_INLINE)
-  message(WARNING "Can't inline functions")
+  message(STATUS "Can't inline functions")
 endif()
 
 # restrict
@@ -40,7 +40,7 @@ foreach(restrict ${RESTRICT_OPTS})
   endif()
 endforeach()
 if (NOT HAVE_RESTRICT)
-  message(WARNING "No restrict keyword detected")
+  message(STATUS "No restrict keyword detected")
 endif()
 
 # cxx-constexpr
