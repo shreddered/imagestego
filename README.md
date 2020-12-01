@@ -135,6 +135,8 @@ int main(int argc, char** argv) {
 }
 ```
 
+More examples are coming soon!
+
 # Contributing
 
 Please see [Contributing](https://github.com/shreddered/imagestego/wiki/Contributing) wiki page for more information.
