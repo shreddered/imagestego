@@ -2,6 +2,7 @@ language: cpp
 
 # TODO: add more compilers
 jobs:
+  fast_finish: true
   include:
     - name: "GCC x86"
       arch: amd64
