@@ -23,3 +23,21 @@ build:
 test_script:
   - cd test
   - ctest -C Release --verbose
+
+before_deploy:
+  - cmake -B build -D CPACK_GENERATOR=WIX
+  - cmake --build build --target package
+
+artifacts:
+  - path: $(APPVEYOR_BUILD_FOLDER)\test\*.msi
+    name: 'imagestego package'
+
+deploy:
+  description: 'imagestego release'
+  provider: GitHub
+  auth_token:
+    secure: xQBekBmkWo2ATAVUhWEGN+ji3rI78/lHWv8BcnVAe7DmZCI2PMRpKboMpnwQgwzM
+  draft: false
+  prerelease: false
+  on:
+    APPVEYOR_REPO_TAG: true
