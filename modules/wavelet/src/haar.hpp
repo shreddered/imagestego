@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>
  */
-#ifndef __IMAGESTEGO_WAVELET_HAAR_H_INCLUDED__
-#define __IMAGESTEGO_WAVELET_HAAR_H_INCLUDED__
+#ifndef __IMAGESTEGO_WAVELET_PRIVATE_HAAR_HPP_INCLUDED__
+#define __IMAGESTEGO_WAVELET_PRIVATE_HAAR_HPP_INCLUDED__
 
 // c headers
-#include <stdint.h>
+#include <cstdint>
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,7 +36,7 @@ extern "C" {
  * @param rows Number of rows.
  * @param cols Number of columns.
  */
-void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT src, uint8_t* IMAGESTEGO_RESTRICT dst, const int rows, const int cols);
+void vertical_haar(const uint8_t* src, uint8_t* dst, const int rows, const int cols);
 
 /**
  * Function which computes horizontal lifting.
@@ -48,10 +48,10 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT src, uint8_t* IMAGESTEGO_R
  * @param rows Number of rows.
  * @param cols Number of columns.
  */
-void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT src, uint8_t* IMAGESTEGO_RESTRICT dst, int rows, int cols);
+void horizontal_haar(const uint8_t* src, uint8_t* dst, int rows, int cols);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __IMAGESTEGO_WAVELET_HAAR_H_INCLUDED__ */
+#endif /* __IMAGESTEGO_WAVELET_PRIVATE_HAAR_HPP_INCLUDED__ */
