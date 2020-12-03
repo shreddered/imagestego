@@ -19,6 +19,7 @@
 
 // imagestego headers
 #include "imagestego/wavelet/haar.hpp"
+#include "inverse_haar.hpp"
 #include "haar.hpp"
 // c++ headers
 #include <cstdint>
