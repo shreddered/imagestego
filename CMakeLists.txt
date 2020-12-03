@@ -180,9 +180,11 @@ macro(imagestego_library)
   list(APPEND IMAGESTEGO_LIBS ${ARGV0})
   set(IMAGESTEGO_LIBS ${IMAGESTEGO_LIBS} PARENT_SCOPE)
 
-  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
-    DESTINATION include
-  )
+  if (IMAGESTEGO_INSTALL)
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
+      DESTINATION include
+    )
+  endif()
 
   # library target
   if (ARGC EQUAL 1)
