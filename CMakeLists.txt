@@ -73,7 +73,7 @@ endif (IMAGESTEGO_GCC)
 
 # build conditions
 option(IMAGESTEGO_BUILD_TESTS "Build tests" OFF)
-option(IMAGESTEGO_BUILD_PERF_TESTS "Build performance tests" OFF)
+option(IMAGESTEGO_BUILD_PERF_TESTS "Build performance tests" ON)
 option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
 option(IMAGESTEGO_INSTALL "Install imagestego" ON)
 option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
