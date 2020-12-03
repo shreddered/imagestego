@@ -27,7 +27,7 @@ test_script:
 
 after_test:
   - cmake -B build -D CPACK_GENERATOR=WIX
-  - cmake --build build --target package
+  - cmake --build test --target package
 
 artifacts:
   - path: test\*.msi
