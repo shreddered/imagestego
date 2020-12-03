@@ -3,6 +3,7 @@ imagestego_defs()
 imagestego_library(imagestego_wavelet
   ${CMAKE_CURRENT_SOURCE_DIR}/src/haar.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/haar.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/inverse_haar.c
 )
 
 target_include_directories(imagestego_wavelet PUBLIC
