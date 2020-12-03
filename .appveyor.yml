@@ -29,7 +29,7 @@ after_build:
   - cmake --build build --target package
 
 artifacts:
-  - path: $(APPVEYOR_BUILD_FOLDER)\test\*.msi
+  - path: test\*.msi
     name: 'imagestego package'
 
 deploy:
