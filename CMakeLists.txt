@@ -180,6 +180,10 @@ macro(imagestego_library)
   list(APPEND IMAGESTEGO_LIBS ${ARGV0})
   set(IMAGESTEGO_LIBS ${IMAGESTEGO_LIBS} PARENT_SCOPE)
 
+  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
+    DESTINATION include
+  )
+
   # library target
   if (ARGC EQUAL 1)
     add_library(${ARGV0} INTERFACE)
@@ -304,6 +308,7 @@ endforeach()
 if (IMAGESTEGO_BUILD_TESTS OR IMAGESTEGO_BUILD_PERF_TESTS)
   enable_testing()
   # gtest
+  set (INSTALL_GTEST OFF) # do not install GTest
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/gtest)
 endif()
 
