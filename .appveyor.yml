@@ -26,7 +26,7 @@ test_script:
   - cd ..
 
 after_test:
-  - cmake -B build -D CPACK_GENERATOR=WIX
+  - cmake -B test -D CPACK_GENERATOR=WIX
   - cmake --build test --target package
 
 artifacts:
