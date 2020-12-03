@@ -87,7 +87,7 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
                                           0x00ffffff, 0x01ffffff, 0x03ffffff, 0x07ffffff,
                                           0x0fffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff,
                                           0xffffffff };
-    int16_t* src = (int16_t*) _src;
+    const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != (rows & ~1); row += 2) {
         const int16_t* ptr1 = src + row * cols;
@@ -152,7 +152,7 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
 
 void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
-    int16_t* src = (int16_t*) _src;
+    const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != (rows & ~1); row += 2) {
         const int16_t* ptr1 = src + row * cols;
@@ -206,7 +206,7 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
 void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
     __m256i mask = _mm256_set_epi32(5, 4, 1, 0, 7, 6, 3, 2);
-    int16_t* src = (int16_t*) _src;
+    const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != rows; ++row) {
         const int16_t* sptr = src + row * cols;
@@ -259,7 +259,7 @@ void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEG
 
 void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
-    int16_t* src = (int16_t*) _src;
+    const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != (rows & ~1); row += 2) {
         const int16_t* ptr1 = src + row * cols;
@@ -304,7 +304,7 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
 
 void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows,
         const int cols) {
-    int16_t* src = (int16_t*) _src;
+    const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != rows; ++row) {
         const int16_t* sptr = src + row * cols;
@@ -345,7 +345,7 @@ void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEG
 #if IMAGESTEGO_NEON_SUPPORTED
 
 void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows, const int cols) {
-    int16_t* src = (int16_t*) _src;
+    const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row < (rows & ~1); row += 2) {
         const int16_t* ptr1 = src + row * cols;
@@ -374,7 +374,7 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
 }
 
 void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* _dst, const int rows, const int cols) {
-    int16_t* src = (int16_t*) _src;
+    const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != rows; ++row) {
         const int16_t* sptr = src + row * cols;

@@ -88,7 +88,7 @@ void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMA
                                           0x0fffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff,
                                           0xffffffff };
     const __m512i zero = _mm512_setzero();
-    int16_t* src = (int16_t*) _src;
+    const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != (rows & ~1); ++row) {
         const int16_t* ptr1 = src + row * cols;
