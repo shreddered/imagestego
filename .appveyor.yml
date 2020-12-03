@@ -14,7 +14,7 @@ environment:
   OPENCV_DIR: $(APPVEYOR_BUILD_FOLDER)\opencv\build
 
 before_build:
-  - cmake -B test -G "Visual Studio 16 2019" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON .
+  - cmake -B test -G "Visual Studio 16 2019" -A x64 -D IMAGESTEGO_BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=Release .
 
 build:
   parallel: true
@@ -26,8 +26,8 @@ test_script:
   - cd ..
 
 after_test:
-  - cmake -B test -D CPACK_GENERATOR=WIX
-  - cmake --build test --target package
+  - cmake -B test -D CPACK_GENERATOR=WIX -D CMAKE_BUILD_TYPE=Release .
+  - cmake --build test --config Release --target package
 
 artifacts:
   - path: test\*.msi
