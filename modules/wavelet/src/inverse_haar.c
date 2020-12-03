@@ -19,6 +19,7 @@
 
 // c headers
 #include <stddef.h>
+#include <stdint.h>
 #include <string.h>
 
 // SIMD headers
@@ -36,9 +37,6 @@
 #elif IMAGESTEGO_ALTIVEC_SUPPORTED
 #   include <altivec.h>
 #endif
-
-// imagestego headers
-#include "inverse_haar.h"
 
 
 #ifdef __cplusplus
