@@ -23,6 +23,7 @@ build:
 test_script:
   - cd test
   - ctest -C Release --verbose
+  - cd ..
 
 after_test:
   - cmake -B build -D CPACK_GENERATOR=WIX
