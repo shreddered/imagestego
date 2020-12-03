@@ -24,7 +24,7 @@ test_script:
   - cd test
   - ctest -C Release --verbose
 
-before_deploy:
+after_build:
   - cmake -B build -D CPACK_GENERATOR=WIX
   - cmake --build build --target package
 
