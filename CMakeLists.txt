@@ -278,7 +278,7 @@ endif (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/test/)
 # print summary of all options
 message(STATUS "Build configuration for ${PROJECT_NAME} ${IMAGESTEGO_VERSION}:")
 message(STATUS "\tPlatform:")
-message(STATUS "\t\tHost:                ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR}")
+message(STATUS "\t\tHost:                ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_VERSION} ${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS "\t\tCMake:               ${CMAKE_VERSION}")
 message(STATUS "\t\tC compiler:          ${CMAKE_C_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION}")
 message(STATUS "\t\tC++ compiler:        ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
