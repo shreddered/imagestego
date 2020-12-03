@@ -95,10 +95,10 @@ void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMA
     const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != (rows & ~1); ++row) {
-        const int16_t* ptr1 = src + row * cols;
-        const int16_t* ptr2 = src + (row + 1) * cols;
-        int16_t* loptr = dst + (row / 2) * cols;
-        int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
+        int16_t* ptr1 = dst + row * cols;
+        int16_t* ptr2 = dst + (row + 1) * cols;
+        const int16_t* loptr = src + (row / 2) * cols;
+        const int16_t* hiptr = src + (row / 2 + rows / 2) * cols;
         const int aligned = align32(cols);
         int col;
         for (col = 0; col != aligned; col += 32) {
@@ -134,12 +134,12 @@ void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMA
         asm(
                 "vmovdqu16 (%[lo], %[col], 2), %%zmm0 %{%[mask]%}%{z%}\n\t"
                 "vmovdqu16 (%[hi], %[col], 2), %%zmm1 %{%[mask]%}%{z%}\n\t"
-                "vpsraw    $0x1, %%zmm1, %%zmm2      \n\t"
-                "vpsubw    %%zmm2, %%zmm0, %%zmm2    \n\t"
-                "vpavgw    %%zmm1, %[zero], %%zmm1   \n\t"
-                "vpaddw    %%zmm1, %%zmm0, %%zmm1    \n\t"
-                "vmovdqu16 %%zmm2, (%[b], %[col], 2) %{%[mask]%}%{z%} \n\t"
-                "vmovdqu16 %%zmm1, (%[a], %[col], 2) %{%[mask]%}%{z%} \n\t"
+                "vpsraw    $0x1, %%zmm1, %%zmm2                       \n\t"
+                "vpsubw    %%zmm2, %%zmm0, %%zmm2                     \n\t"
+                "vpavgw    %%zmm1, %[zero], %%zmm1                    \n\t"
+                "vpaddw    %%zmm1, %%zmm0, %%zmm1                     \n\t"
+                "vmovdqu16 %%zmm1, (%[b], %[col], 2) %{%[mask]%}      \n\t"
+                "vmovdqu16 %%zmm2, (%[a], %[col], 2) %{%[mask]%}      \n\t"
                 :
                 : [lo]   "r" (loptr),
                   [hi]   "r" (hiptr),
