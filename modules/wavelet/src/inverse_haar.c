@@ -48,6 +48,10 @@ static IMAGESTEGO_INLINE int16_t floor2(int16_t num) {
     return (num < 0) ? (num - 1) / 2 : num / 2;
 }
 
+static IMAGESTEGO_INLINE int16_t ceil2(int16_t num) {
+    return (num < 0) ? num / 2 : (num + 1) / 2;
+}
+
 // set of align functions
 #if IMAGESTEGO_AVX512BW_SUPPORTED || IMAGESTEGO_AVX2_SUPPORTED
 
