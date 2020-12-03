@@ -8,6 +8,7 @@ set(CPACK_PACKAGE_VERSION_MINOR ${IMAGESTEGO_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${IMAGESTEGO_VERSION_PATCH})
 set(CPACK_PACKAGE_VERSION ${IMAGESTEGO_VERSION})
 
+# package rules
 set(CPACK_PACKAGE_DESCRIPTION "Image Steganography library written in C++ with data compression and wavelet transform support")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "C++ Image Steganography library")
 
@@ -19,5 +20,6 @@ else()
 endif()
 
 set(CPACK_SOURCE_GENERATOR TGZ ZIP)
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
 
 include(CPack)
