@@ -34,11 +34,12 @@ artifacts:
     name: 'imagestego package'
 
 deploy:
-  description: 'imagestego release'
   provider: GitHub
+  release: $(APPVEYOR_REPO_TAG_NAME)
+  description: 'imagestego release'
   auth_token:
     secure: xQBekBmkWo2ATAVUhWEGN+ji3rI78/lHWv8BcnVAe7DmZCI2PMRpKboMpnwQgwzM
-  draft: false
   prerelease: true
   on:
+    branch: master
     APPVEYOR_REPO_TAG: true
