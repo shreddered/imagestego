@@ -150,25 +150,20 @@ function(imagestego_exports target)
   endif (WIN32 AND BUILD_SHARED_LIBS)
 endfunction(imagestego_exports target)
 
-# coverage interface
-add_library(coverage_config INTERFACE)
-
-if (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  target_compile_options(coverage_config INTERFACE
-    -O0
-    -g
-    --coverage
-  )
-if(NOT CMAKE_VERSION VERSION_LESS 3.13)
-    target_link_options(coverage_config INTERFACE --coverage)
-  else()
-    target_link_libraries(coverage_config INTERFACE --coverage)
-  endif ()
-endif (IMAGESTEGO_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-
 # macro for adding target to code coverage
 macro(imagestego_add_coverage target)
-  target_link_libraries(${target} PRIVATE coverage_config)
+  if (IMAGESTEGO_COVERAGE AND IMAGESTEGO_GCC)
+    target_compile_options(${target} PRIVATE
+      -O0
+      -g
+      --coverage
+    )
+    if(NOT CMAKE_VERSION VERSION_LESS 3.13)
+      target_link_options(${target} INTERFACE --coverage)
+    else()
+      target_link_libraries(${target} INTERFACE --coverage)
+    endif ()
+  endif (IMAGESTEGO_COVERAGE AND IMAGESTEGO_GCC)
 endmacro()
 
 string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
@@ -340,11 +335,13 @@ if (IMAGESTEGO_BUILD_PERF_TESTS)
   add_test(NAME perf_test COMMAND imagestego_perf_test)
 endif(IMAGESTEGO_BUILD_PERF_TESTS)
 
+include("cmake/CPackConfig.cmake")
+
 # installation rules
 include("cmake/imagestego-install.cmake")
 
 if (IMAGESTEGO_INSTALL)
-  install(TARGETS ${IMAGESTEGO_LIBS} coverage_config
+  install(TARGETS ${IMAGESTEGO_LIBS}
     EXPORT imagestegoConfig
     INCLUDES DESTINATION ${IMAGESTEGO_INCLUDE_DESTINATION}
     ARCHIVE DESTINATION ${IMAGESTEGO_ARCHIVE_DESTINATION}
