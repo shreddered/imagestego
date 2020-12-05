@@ -20,8 +20,11 @@
 #ifndef __IMAGESTEGO_WAVELET_HAAR_HPP_INCLUDED__
 #define __IMAGESTEGO_WAVELET_HAAR_HPP_INCLUDED__
 
+// imagestego headers
 #include "imagestego/core/config.hpp"
 #include "imagestego/wavelet/interfaces.hpp"
+// opencv headers
+#include <opencv2/core/mat.hpp>
 
 
 namespace imagestego {
