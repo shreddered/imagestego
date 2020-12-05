@@ -89,13 +89,13 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
                                           0xffffffff };
     const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
-    for (int row = 0; row != (rows & ~1); row += 2) {
+    for (size_t row = 0; row < rows - 1; row += 2) {
         const int16_t* ptr1 = src + row * cols;
         const int16_t* ptr2 = src + (row + 1) * cols;
         int16_t* loptr = dst + (row / 2) * cols;
         int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
         const int aligned = align32(cols);
-        int col;
+        size_t col;
         for (col = 0; col != aligned; col += 32) {
             // TODO: MASM implementation
 #if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
@@ -112,7 +112,7 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
                   [hi]  "r" (hiptr),
                   [a]   "r" (ptr1),
                   [b]   "r" (ptr2),
-                  [col] "r" ((ptrdiff_t) col)
+                  [col] "r" (col)
                 : "%zmm0", "%zmm1", "%zmm2", "memory"
             );
 #endif
@@ -133,7 +133,7 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
                   [b]    "r" (ptr2),
                   [lo]   "r" (loptr),
                   [hi]   "r" (hiptr),
-                  [col]  "r" ((ptrdiff_t) col)
+                  [col]  "r" (col)
                 : "%zmm0", "%zmm1", "%zmm2", "memory"
             );
 #endif
@@ -154,13 +154,13 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
         const int cols) {
     const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
-    for (int row = 0; row != (rows & ~1); row += 2) {
+    for (size_t row = 0; row < rows - 1; row += 2) {
         const int16_t* ptr1 = src + row * cols;
         const int16_t* ptr2 = src + (row + 1) * cols;
         int16_t* loptr = dst + (row / 2) * cols;
         int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
         const int aligned = align16(cols);
-        for (int col = 0; col != aligned; col += 16) {
+        for (size_t col = 0; col != aligned; col += 16) {
 #if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || IMAGESTEGO_ICC
             asm(
                 "vmovdqu (%[a], %[col], 2), %%ymm0 \n\t"
@@ -187,7 +187,7 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
             _mm256_storeu_si256((__m256i*) (hiptr + col), hi);
 #endif
         }
-        for (int col = aligned; col != cols; ++col) {
+        for (size_t col = aligned; col != cols; ++col) {
             loptr[col] = floor2(ptr1[col] + ptr2[col]);
             hiptr[col] = ptr1[col] - ptr2[col];
         }
@@ -208,11 +208,11 @@ void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEG
     __m256i mask = _mm256_set_epi32(5, 4, 1, 0, 7, 6, 3, 2);
     const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
-    for (int row = 0; row != rows; ++row) {
+    for (size_t row = 0; row < rows; ++row) {
         const int16_t* sptr = src + row * cols;
         int16_t* dptr = dst + row * cols;
         const int aligned = align32(cols);
-        for (int col = 0; col != aligned; col += 32) {
+        for (size_t col = 0; col != aligned; col += 32) {
             int16_t* tmp1 = dptr + col / 2, * tmp2 = tmp1 + cols / 2;
 #if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || IMAGESTEGO_ICC
             asm(
@@ -243,7 +243,7 @@ void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEG
 #endif
         }
         // TODO: implement with AVX512 if possible
-        for (int col = aligned; col < cols - 1; col += 2) {
+        for (size_t col = aligned; col < cols - 1; col += 2) {
             *(dptr + col / 2) = floor2(sptr[col + 1] + sptr[col]);
             *(dptr + cols / 2 + col / 2) = sptr[col] - sptr[col + 1];
         }
@@ -261,13 +261,13 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
         const int cols) {
     const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
-    for (int row = 0; row != (rows & ~1); row += 2) {
+    for (size_t row = 0; row < rows - 1; row += 2) {
         const int16_t* ptr1 = src + row * cols;
         const int16_t* ptr2 = src + (row + 1) * cols;
         int16_t* loptr = dst + (row / 2) * cols;
         int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
         const int aligned = align8(cols);
-        for (int col = 0; col != aligned; col += 8) {
+        for (size_t col = 0; col != aligned; col += 8) {
 #if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || (IMAGESTEGO_ICC && !IMAGESTEGO_WIN)
             asm(
                 "movdqu (%[a], %[col], 2), %%xmm0 \n\t"
@@ -290,7 +290,7 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
 #else
 #endif
         }
-        for (int col = aligned; col != cols; ++col) {
+        for (size_t col = aligned; col != cols; ++col) {
             loptr[col] = floor2(ptr1[col] + ptr2[col]);
             hiptr[col] = ptr1[col] - ptr2[col];
         }
@@ -306,11 +306,11 @@ void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEG
         const int cols) {
     const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
-    for (int row = 0; row != rows; ++row) {
+    for (size_t row = 0; row < rows; ++row) {
         const int16_t* sptr = src + row * cols;
         int16_t* dptr = dst + row * cols;
         const int aligned = align16(cols);
-        for (int col = 0; col != aligned; col += 16) {
+        for (size_t col = 0; col != aligned; col += 16) {
             int16_t* tmp1 = dptr + col / 2, * tmp2 = tmp1 + cols / 2;
             // TODO: add windows implementation
             asm(
@@ -330,7 +330,7 @@ void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEG
                 : "%xmm0", "%xmm1", "%xmm2", "%xmm3", "memory"
             );
         }
-        for (int col = aligned; col < cols - 1; col += 2) {
+        for (size_t col = aligned; col < cols - 1; col += 2) {
             *(dptr + col / 2) = floor2(sptr[col + 1] + sptr[col]);
             *(dptr + cols / 2 + col / 2) = sptr[col] - sptr[col + 1];
         }
@@ -347,13 +347,13 @@ void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEG
 void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst, const int rows, const int cols) {
     const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
-    for (int row = 0; row < (rows & ~1); row += 2) {
+    for (size_t row = 0; row < (rows & ~1); row += 2) {
         const int16_t* ptr1 = src + row * cols;
         const int16_t* ptr2 = src + (row + 1) * cols;
         int16_t* loptr = dst + (row / 2) * cols;
         int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
         const int aligned = align8(cols);
-        for (int col = 0; col != aligned; col += 8) {
+        for (size_t col = 0; col != aligned; col += 8) {
             const int16x8_t a = vld1q_s16(ptr1 + col),
                             b = vld1q_s16(ptr2 + col);
             const int16x8_t lo = vhaddq_s16(a, b),
@@ -361,7 +361,7 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
             vst1q_s16(loptr + col, lo);
             vst1q_s16(hiptr + col, hi);
         }
-        for (int col = aligned; col != cols; ++col) {
+        for (size_t col = aligned; col != cols; ++col) {
             loptr[col] = floor2(ptr1[col] + ptr2[col]);
             hiptr[col] = ptr1[col] - ptr2[col];
         }
@@ -376,11 +376,11 @@ void vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_
 void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* _dst, const int rows, const int cols) {
     const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
-    for (int row = 0; row != rows; ++row) {
+    for (size_t row = 0; row < rows; ++row) {
         const int16_t* sptr = src + row * cols;
         int16_t* dptr = dst + row * cols;
         const int aligned = align16(cols);
-        for (int col = 0; col != aligned; col += 16) {
+        for (size_t col = 0; col != aligned; col += 16) {
             const int16x8_t a = vld1q_s16(sptr + col),
                             b = vld1q_s16(sptr + col + 8);
             const int16x8_t lo = vshrq_n_s16(vpaddq_s16(a, b), 1);
@@ -392,7 +392,7 @@ void horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* _dst, con
             vst1q_s16(dptr + col / 2, lo);
             vst1q_s16(dptr + col / 2 + cols / 2, hi);
         }
-        for (int col = aligned; col < cols - 1; col += 2) {
+        for (size_t col = aligned; col < cols - 1; col += 2) {
             *(dptr + col / 2) = floor2(sptr[col + 1] + sptr[col]);
             *(dptr + cols / 2 + col / 2) = sptr[col] - sptr[col + 1];
         }
