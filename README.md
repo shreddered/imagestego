@@ -94,7 +94,7 @@ $ brew install cmake opencv
 
 ## Windows
 
-Follow guide from [cmake official website](https://cmake.org/) to install CMake.
+Go to [cmake downloads](https://cmake.org/download/) to install CMake.
 
 Grab [opencv release](https://github.com/opencv/opencv/releases/latest) which is suitable for your Visual Studio version.
 Then extract it and run `setup_vars_opencv4.cmd`.
