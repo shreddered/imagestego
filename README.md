@@ -147,4 +147,5 @@ This software is distibuted under GNU GPLv3. For more details see [LICENSE.txt](
 
 # Further development
 
-- [ ] Wavelet module
+- [x] Wavelet module
+- [x] JPEG module
