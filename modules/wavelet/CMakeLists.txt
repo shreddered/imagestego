@@ -3,6 +3,7 @@ imagestego_defs()
 imagestego_library(imagestego_wavelet
   ${CMAKE_CURRENT_SOURCE_DIR}/src/haar.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/haar.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/inverse_haar.c
 )
 
 target_include_directories(imagestego_wavelet PUBLIC
@@ -13,7 +14,6 @@ target_include_directories(imagestego_wavelet PUBLIC
 target_link_libraries(imagestego_wavelet PUBLIC
   imagestego_core
   opencv_core
-  opencv_imgcodecs
 )
 
 target_compile_definitions(imagestego_wavelet PUBLIC
@@ -23,5 +23,5 @@ target_compile_definitions(imagestego_wavelet PUBLIC
 imagestego_add_perf_test(WAVELET
   NAME haar_perf
   FILE ${CMAKE_CURRENT_SOURCE_DIR}/perf/haar.cpp
-  LIBS imagestego_wavelet opencv_core
+  LIBS imagestego_wavelet
 )

@@ -19,6 +19,7 @@
 
 // c headers
 #include <stddef.h>
+#include <stdint.h>
 #include <string.h>
 
 // SIMD headers
@@ -37,9 +38,6 @@
 #   include <altivec.h>
 #endif
 
-// imagestego headers
-#include "inverse_haar.h"
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -48,6 +46,10 @@ extern "C" {
 // private function
 static IMAGESTEGO_INLINE int16_t floor2(int16_t num) {
     return (num < 0) ? (num - 1) / 2 : num / 2;
+}
+
+static IMAGESTEGO_INLINE int16_t ceil2(int16_t num) {
+    return (num < 0) ? num / 2 : (num + 1) / 2;
 }
 
 // set of align functions
@@ -90,13 +92,13 @@ void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMA
                                           0x0fffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff,
                                           0xffffffff };
     const __m512i zero = _mm512_setzero();
-    int16_t* src = (int16_t*) _src;
+    const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != (rows & ~1); ++row) {
-        const int16_t* ptr1 = src + row * cols;
-        const int16_t* ptr2 = src + (row + 1) * cols;
-        int16_t* loptr = dst + (row / 2) * cols;
-        int16_t* hiptr = dst + (row / 2 + rows / 2) * cols;
+        int16_t* ptr1 = dst + row * cols;
+        int16_t* ptr2 = dst + (row + 1) * cols;
+        const int16_t* loptr = src + (row / 2) * cols;
+        const int16_t* hiptr = src + (row / 2 + rows / 2) * cols;
         const int aligned = align32(cols);
         int col;
         for (col = 0; col != aligned; col += 32) {
@@ -132,12 +134,12 @@ void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMA
         asm(
                 "vmovdqu16 (%[lo], %[col], 2), %%zmm0 %{%[mask]%}%{z%}\n\t"
                 "vmovdqu16 (%[hi], %[col], 2), %%zmm1 %{%[mask]%}%{z%}\n\t"
-                "vpsraw    $0x1, %%zmm1, %%zmm2      \n\t"
-                "vpsubw    %%zmm2, %%zmm0, %%zmm2    \n\t"
-                "vpavgw    %%zmm1, %[zero], %%zmm1   \n\t"
-                "vpaddw    %%zmm1, %%zmm0, %%zmm1    \n\t"
-                "vmovdqu16 %%zmm2, (%[b], %[col], 2) %{%[mask]%}%{z%} \n\t"
-                "vmovdqu16 %%zmm1, (%[a], %[col], 2) %{%[mask]%}%{z%} \n\t"
+                "vpsraw    $0x1, %%zmm1, %%zmm2                       \n\t"
+                "vpsubw    %%zmm2, %%zmm0, %%zmm2                     \n\t"
+                "vpavgw    %%zmm1, %[zero], %%zmm1                    \n\t"
+                "vpaddw    %%zmm1, %%zmm0, %%zmm1                     \n\t"
+                "vmovdqu16 %%zmm1, (%[b], %[col], 2) %{%[mask]%}      \n\t"
+                "vmovdqu16 %%zmm2, (%[a], %[col], 2) %{%[mask]%}      \n\t"
                 :
                 : [lo]   "r" (loptr),
                   [hi]   "r" (hiptr),
@@ -165,6 +167,102 @@ void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMA
     }
 }
 
+#endif
+
+#if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512BW_SUPPORTED
+
+void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst,
+        const int rows, const int cols) {
+    const __m256i zero = _mm256_setzero_si256();
+    const int16_t* src = (const int16_t*) _src;
+    int16_t* dst = (int16_t*) _dst;
+    for (int row = 0; row != (rows & ~1); ++row) {
+        int16_t* ptr1 = dst + row * cols;
+        int16_t* ptr2 = dst + (row + 1) * cols;
+        const int16_t* loptr = src + (row / 2) * cols;
+        const int16_t* hiptr = src + (row / 2 + rows / 2) * cols;
+        const int aligned = align16(cols);
+        int col;
+        for (col = 0; col != aligned; col += 16) {
+#if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || IMAGESTEGO_ICC
+            asm(
+                "vmovdqu (%[lo], %[col], 2), %%ymm0\n\t"
+                "vmovdqu (%[hi], %[col], 2), %%ymm1\n\t"
+                "vpsraw  $0x1, %%ymm1, %%ymm2      \n\t"
+                "vpsubw  %%ymm2, %%ymm0, %%ymm2    \n\t"
+                "vpavgw  %%ymm1, %[zero], %%ymm1   \n\t"
+                "vpaddw  %%ymm1, %%ymm0, %%ymm1    \n\t"
+                "vmovdqu %%ymm1, (%[a], %[col], 2) \n\t"
+                "vmovdqu %%ymm2, (%[b], %[col], 2) \n\t"
+                :
+                : [lo]   "r" (loptr),
+                  [hi]   "r" (hiptr),
+                  [a]    "r" (ptr1),
+                  [zero] "x" (zero),
+                  [b]    "r" (ptr2),
+                  [col]  "r" ((ptrdiff_t) col)
+                : "%ymm0", "%ymm1", "%ymm2", "memory"
+            );
+#endif
+        }
+        for (; col != cols; ++col) {
+            ptr1[col] = loptr[col] + ceil2(hiptr[col]);
+            ptr2[col] = loptr[col] - floor2(hiptr[col]);
+        }
+    }
+    if (rows % 2 != 0) {
+        memcpy(dst + (rows - 1) * cols,
+               src + (rows - 1) * cols,
+               cols * sizeof(int16_t));
+    }
+}
+
+#endif
+
+#if IMAGESTEGO_AVX2_SUPPORTED
+
+void inverse_horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst,
+        const int rows, const int cols) {
+    const __m256i zero = _mm256_setzero_si256();
+    const int16_t* src = (const int16_t*) _src;
+    int16_t* dst = (int16_t*) _dst;
+    for (int row = 0; row != rows; ++row) {
+        const int16_t* sptr = src + row * cols;
+        int16_t* dptr = dst + row * cols;
+        const int aligned = align32(cols);
+        int col;
+        for (col = 0; col != aligned; col += 32) {
+            const int16_t* tmp1 = sptr + col / 2;
+            const int16_t* tmp2 = tmp1 + cols / 2;
+#if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || IMAGESTEGO_ICC
+            asm(
+                "vmovdqu (%[lo]), %%ymm0              \n\t"
+                "vmovdqu (%[hi]), %%ymm1              \n\t"
+                "vpavgw  %%ymm1, %[zero], %%ymm2      \n\t"
+                "vpaddw  %%ymm0, %%ymm2, %%ymm2       \n\t"
+                "vpsraw  $0x1, %%ymm1, %%ymm1         \n\t"
+                "vpsubw  %%ymm1, %%ymm0, %%ymm1       \n\t"
+                "vmovdqu %%ymm2, (%[dst], %[col], 2)  \n\t"
+                "vmovdqu %%ymm1, 32(%[dst], %[col], 2)\n\t"
+                :
+                : [lo]   "r" (tmp1),
+                  [hi]   "r" (tmp2),
+                  [dst]  "r" (dptr),
+                  [zero] "x" (zero),
+                  [col]  "r" ((ptrdiff_t) col)
+                : "%ymm0", "%ymm1", "%ymm2", "memory"
+            );
+#endif
+        }
+        for (; col < cols - 1; col += 2) {
+            dptr[col] = sptr[col / 2] + ceil2(sptr[col / 2 + cols / 2]);
+            dptr[col + 1] = sptr[col / 2] - floor2(sptr[col / 2 + cols / 2]);
+        }
+        if (rows % 2 != 0) {
+            dptr[rows - 1] = sptr[rows - 1];
+        }
+    }
+}
 #endif
 
 #ifdef __cplusplus

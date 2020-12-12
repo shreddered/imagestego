@@ -55,6 +55,8 @@ if (DEFINED ENV{OPENCV_DIR})
 endif()
 # opencv
 find_package(OpenCV CONFIG REQUIRED)
+# threads
+find_package(Threads)
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -207,6 +209,9 @@ macro(imagestego_library)
         )
       endif()
     endforeach()
+    if (Threads_FOUND)
+      target_link_libraries(${ARGV0} PUBLIC Threads::Threads)
+    endif()
     # Compiler and hardware features macro definitions
     # restrict
     target_compile_definitions(${ARGV0} PUBLIC

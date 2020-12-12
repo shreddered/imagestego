@@ -19,8 +19,6 @@
 
 // imagestego
 #include "imagestego/wavelet/haar.hpp"
-// gtest
-#include <gtest/gtest.h>
 // c++ headers
 #include <algorithm>
 #include <chrono>
@@ -28,7 +26,6 @@
 #include <iostream>
 // opencv
 #include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
 
 namespace chrono = std::chrono;
 
