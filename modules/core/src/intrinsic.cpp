@@ -28,6 +28,8 @@
 
 #if IMAGESTEGO_MSVC
 #   define bswap_32(x) _byteswap_ulong(x)
+#elif IMAGESTEGO_ICC
+#   define bswap_32(x) _bswap(x)
 #elif IMAGESTEGO_GCC || (IMAGESTEGO_CLANG && !defined(__APPLE__))
 #   define bswap_32(x) __builtin_bswap32(x)
 #elif defined(__APPLE__)
