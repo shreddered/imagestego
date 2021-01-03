@@ -45,7 +45,7 @@ TEST(Core, BitArray1) {
     EXPECT_EQ(reverse32(std::bitset<32>(temp)).to_string(), ss.str());
     EXPECT_EQ(ss.str(), arr.toString());
     std::ostringstream().swap(ss);
-    BitArray copy = arr;
+    BitArray copy = arr; // NOLINT: needed for testing
     ss << copy;
     EXPECT_EQ(ss.str(), reverse32(std::bitset<32>(temp)).to_string());
 }

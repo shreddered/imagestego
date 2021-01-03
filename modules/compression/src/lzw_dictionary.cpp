@@ -40,7 +40,7 @@ void Dictionary::clear() noexcept {
 std::string Dictionary::at(int index) {
     std::string tmp;
     while (index != -1) {
-        tmp = char(_codeTable[index].value) + tmp;
+        tmp.insert(0, 1, char(_codeTable[index].value));
         index = _codeTable[index].prefixIndex;
     }
     return tmp;

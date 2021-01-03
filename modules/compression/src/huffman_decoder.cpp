@@ -37,14 +37,14 @@ public:
     explicit HuffmanDecoderImpl() noexcept {}
     explicit HuffmanDecoderImpl(const BitArray& arr) noexcept : _encodedMsg(arr) {}
     virtual ~HuffmanDecoderImpl() noexcept {
-        if (root)
-            delete root;
+        if (_root)
+            delete _root;
     }
     void setMessage(const BitArray& arr) {
         _encodedMsg = arr;
     }
     std::string getDecodedMessage() {
-        if (!root) {
+        if (!_root) {
             readDfs();
             readAlphabet();
             createCodeTable();
@@ -65,7 +65,6 @@ private:
                 delete right;
         }
     }; // TreeNode
-    TreeNode* root = nullptr;
     static inline bool isLeftChild(TreeNode* node) {
         if (node == nullptr)
             return false;
@@ -81,8 +80,8 @@ private:
         return node->parent->right == node;
     }
     void readDfs() {
-        root = new TreeNode();
-        auto currentNode = root;
+        _root = new TreeNode();
+        auto currentNode = _root;
         _it = 0;
         std::string code;
         do {
@@ -102,17 +101,17 @@ private:
                     cameFrom = currentNode;
                     currentNode = currentNode->parent;
                     code.pop_back();
-                } while (currentNode->right == cameFrom && currentNode != root);
+                } while (currentNode->right == cameFrom && currentNode != _root);
                 if (isLeftChild(cameFrom)) {
                     currentNode->right = new TreeNode(currentNode);
                     currentNode = currentNode->right;
                     code += '1';
                 }
-                if (!_encodedMsg[_it + 1] && currentNode != root)
+                if (!_encodedMsg[_it + 1] && currentNode != _root)
                     _codes.push_back(code);
             }
             ++_it;
-        } while (currentNode != root);
+        } while (currentNode != _root);
     }
     void readAlphabet() {
         for (std::size_t i = 0; i != _codes.size(); ++i) {
@@ -126,7 +125,7 @@ private:
             _codeTable.emplace(_codes[i], _alphabet[i]);
     }
     void decode() {
-        auto currNode = root;
+        auto currNode = _root;
         std::string code;
         for ( ; _it != _encodedMsg.size(); ++_it) {
             if (_encodedMsg[_it]) {
@@ -140,16 +139,17 @@ private:
             if (!currNode->left) {
                 _decodedMsg += _codeTable[code];
                 code.clear();
-                currNode = root;
+                currNode = _root;
             }
         }
     }
-    std::vector<std::string> _codes;
-    std::size_t _it;
+    std::unordered_map<std::string, char> _codeTable;
     BitArray _encodedMsg;
+    std::vector<std::string> _codes;
     std::string _alphabet;
     std::string _decodedMsg;
-    std::unordered_map<std::string, char> _codeTable;
+    std::size_t _it;
+    TreeNode* _root = nullptr;
 }; // class HuffmanDecoderImpl
 
 HuffmanDecoder::HuffmanDecoder() noexcept : decoder(new HuffmanDecoderImpl()) {}

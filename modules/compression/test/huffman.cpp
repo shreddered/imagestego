@@ -30,8 +30,7 @@ using imagestego::BitArray;
 TEST(Compression, HuffmanEncoding) {
     imagestego::HuffmanEncoder encoder("beep boop beer");
     auto tmp = encoder.getEncodedMessage();
-    BitArray arr = tmp;
-    imagestego::HuffmanDecoder decoder(arr);
+    imagestego::HuffmanDecoder decoder(tmp);
     auto str = decoder.getDecodedMessage();
     EXPECT_EQ("beep boop beer", str);
 }

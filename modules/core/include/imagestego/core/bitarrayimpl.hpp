@@ -213,6 +213,7 @@ private:
          */
         explicit BitReference(BlockType& block, std::size_t pos) noexcept;
     public:
+        BitReference(const BitReference&) = default;
 
         /**
          * Cast reference to bool.
