@@ -44,15 +44,15 @@ public:
     int search(const StringElement& s);
     void clear() noexcept;
     inline unsigned int size() const noexcept {
-        return newCode;
+        return _newCode;
     }
     virtual ~Dictionary();
 protected:
     std::string at(int code);
     void add(const uint8_t& value, const int& prefixIndex);
 private:
-    std::vector<StringElement> codeTable;
-    unsigned int newCode = 256;
+    std::vector<StringElement> _codeTable;
+    unsigned int _newCode = 256;
 }; // class Dictionary
 
 } // namespace imagestego
