@@ -58,13 +58,13 @@ public:
         if (!isEmpty())
             delete root;
     }
-    AvlTree<T, Comp>& operator =(AvlTree<T, Comp>&& other) noexcept {
+    AvlTree<T, Comp>& operator=(AvlTree<T, Comp>&& other) noexcept {
         root = other.root;
         _size = other._size;
         other.root = nullptr;
         return *this;
     }
-    AvlTree<T, Comp>& operator =(const AvlTree<T, Comp>& other) {
+    AvlTree<T, Comp>& operator=(const AvlTree<T, Comp>& other) {
         if (this != &other)
             copy(other.root, root);
         return *this;
