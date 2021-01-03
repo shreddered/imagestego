@@ -25,7 +25,6 @@
 // c++ headers
 #include <string>
 
-
 namespace imagestego {
 
 class LzwEncoderImpl;
@@ -37,6 +36,7 @@ public:
     virtual ~LzwEncoder() noexcept;
     void setMessage(const std::string& str) override;
     BitArray getEncodedMessage() override;
+
 private:
     LzwEncoderImpl* _encoder;
 }; // class LzwEncoder

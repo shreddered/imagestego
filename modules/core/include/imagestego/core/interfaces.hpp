@@ -26,7 +26,6 @@
 // c++
 #include <string>
 
-
 namespace imagestego {
 
 class IMAGESTEGO_EXPORTS AbstractStegoEmbedder {

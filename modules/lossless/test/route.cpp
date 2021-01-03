@@ -39,7 +39,7 @@ TEST(Core, Route) {
     gen.seed(1);
     Route r({10, 15}, gen);
     r.create(3);
-    std::vector<std::pair<int, int> > v = {{4, 8}, {3, 13}, {5, 14}};
+    std::vector<std::pair<int, int>> v = {{4, 8}, {3, 13}, {5, 14}};
     EXPECT_TRUE(isEqual(r.begin(), r.end(), v.begin()));
     r.add();
     v = {{4, 8}, {3, 13}, {1, 11}, {5, 14}};

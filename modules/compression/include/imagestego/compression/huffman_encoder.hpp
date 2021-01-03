@@ -29,7 +29,6 @@
 #include <map>
 #include <string>
 
-
 namespace imagestego {
 
 class HuffmanEncoderImpl;
@@ -40,10 +39,11 @@ public:
     explicit HuffmanEncoder(const std::string& str) noexcept;
     explicit HuffmanEncoder(std::string&& str) noexcept;
     HuffmanEncoder(const HuffmanEncoder&) = delete;
-    HuffmanEncoder& operator =(const HuffmanEncoder&) = delete;
+    HuffmanEncoder& operator=(const HuffmanEncoder&) = delete;
     void setMessage(const std::string& str) override;
     BitArray getEncodedMessage() override;
     virtual ~HuffmanEncoder() noexcept;
+
 private:
     HuffmanEncoderImpl* encoder;
 }; // class HuffmanEncoder

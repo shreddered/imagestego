@@ -1,5 +1,5 @@
-#include <emmintrin.h>
 #include <cstdint>
+#include <emmintrin.h>
 
 int main() {
     uint32_t buf[4] = {1, 2, 3, 4};

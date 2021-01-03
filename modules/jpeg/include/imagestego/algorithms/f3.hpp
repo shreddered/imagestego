@@ -6,16 +6,15 @@
 #include "imagestego/utils/bitarray.hpp"
 #include "imagestego/utils/jpeg_image.hpp"
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
-#   include "imagestego/keygen.hpp"
-#   include <iostream>
+#include "imagestego/keygen.hpp"
+#include <iostream>
 #endif
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
-#   include "imagestego/utils/format_checker.hpp"
+#include "imagestego/utils/format_checker.hpp"
 #endif
 // c++ headers
 #include <random>
 #include <string>
-
 
 namespace imagestego {
 
@@ -24,13 +23,10 @@ template<class EncoderType>
 class F3Embedder : public AbstractStegoEmbedder {
 public:
     explicit F3Embedder() noexcept {}
-    explicit F3Embedder(const std::string& input, const std::string& _output) : image(input), output(_output) {}
-    void setImage(const std::string& imageName) override {
-        image.open(imageName);
-    }
-    void setOutputName(const std::string& filename) override {
-        output = filename;
-    }
+    explicit F3Embedder(const std::string& input, const std::string& _output)
+        : image(input), output(_output) {}
+    void setImage(const std::string& imageName) override { image.open(imageName); }
+    void setOutputName(const std::string& filename) override { output = filename; }
     void setMessage(const std::string& _msg) override {
         encoder.setMessage(_msg);
         msg = encoder.getEncodedMessage();
@@ -39,9 +35,7 @@ public:
         gen.seed(hash(key));
         hasKey = true;
     }
-    Algorithm getAlgorithm() const noexcept override {
-        return Algorithm::F3;
-    }
+    Algorithm getAlgorithm() const noexcept override { return Algorithm::F3; }
     void createStegoContainer() override {
         if (!hasKey) {
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
@@ -55,9 +49,7 @@ public:
         randomize(msg, gen);
         BitArray<> size;
         size.pushBack(msg.size(), 32);
-        auto lsb = [](const short& value) -> bool {
-            return (value & 1) != 0;
-        };
+        auto lsb = [](const short& value) -> bool { return (value & 1) != 0; };
         auto decrement = [](short& value) -> void {
             if (value > 0)
                 --value;
@@ -79,8 +71,7 @@ public:
                                 decrement(p[k]);
                                 ++msgIndex;
                             }
-                        }
-                        else
+                        } else
                             ++msgIndex;
                     }
                     flag = msgIndex != 32;
@@ -107,8 +98,7 @@ public:
                                 decrement(p[k]);
                                 ++msgIndex;
                             }
-                        }
-                        else
+                        } else
                             ++msgIndex;
                     }
                     if (msgIndex == msg.size()) {
@@ -120,6 +110,7 @@ public:
             j = 0;
         }
     }
+
 private:
     std::string output;
     JpegImage image;
@@ -134,22 +125,16 @@ class F3Extracter : public AbstractStegoExtracter {
 public:
     explicit F3Extracter() noexcept {}
     explicit F3Extracter(const std::string& imageName) : image(imageName) {}
-    void setImage(const std::string& imageName) override {
-        image.open(imageName);
-    }
+    void setImage(const std::string& imageName) override { image.open(imageName); }
     void setSecretKey(const std::string& key) override {
         gen.seed(hash(key));
         hasKey = true;
     }
-    Algorithm getAlgorithm() const noexcept override {
-        return Algorithm::F3;
-    }
+    Algorithm getAlgorithm() const noexcept override { return Algorithm::F3; }
     std::string extractMessage() override {
         if (!hasKey)
             throw Exception(Exception::Codes::NoKeyFound);
-        auto lsb = [](const short& value) -> bool {
-            return (value & 1) != 0;
-        };
+        auto lsb = [](const short& value) -> bool { return (value & 1) != 0; };
         BitArray<uint32_t> size;
         BitArray<uint8_t> msg;
         bool flag = true;
@@ -187,6 +172,7 @@ public:
             }
         }
     }
+
 private:
     JpegImage image;
     DecoderType decoder;
@@ -212,6 +198,7 @@ public:
     void setSecretKey(const std::string& key) override;
     Algorithm getAlgorithm() const noexcept override;
     void createStegoContainer() override;
+
 private:
     JpegImage image;
     std::string output;
@@ -229,6 +216,7 @@ public:
     void setSecretKey(const std::string& key) override;
     Algorithm getAlgorithm() const noexcept override;
     std::string extractMessage() override;
+
 private:
     JpegImage image;
     std::mt19937 gen;

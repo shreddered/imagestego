@@ -24,7 +24,6 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-
 namespace imagestego {
 
 class WaveletEmbedderImpl {
@@ -36,22 +35,18 @@ public:
         if (_encoder)
             delete _encoder;
     }
-    void setImage(const std::string& src) {
-        _wavelet->setMatrix(cv::imread(src));
-    }
+    void setImage(const std::string& src) { _wavelet->setMatrix(cv::imread(src)); }
     void setMessage(const std::string& msg) {
         if (_encoder) {
             _encoder->setMessage(msg);
-        }
-        else {
+        } else {
             arr = BitArray::fromByteString(msg);
         }
     }
-    void setSecretKey(const std::string& key) {
-    }
+    void setSecretKey(const std::string& key) {}
 
-    void createStegoContainer(const std::string& dst) {
-    }
+    void createStegoContainer(const std::string& dst) {}
+
 private:
     AbstractEncoder* _encoder;
     AbstractWavelet* _wavelet;
@@ -66,16 +61,10 @@ WaveletEmbedder::~WaveletEmbedder() noexcept {
         delete pImpl;
 }
 
-void WaveletEmbedder::setImage(const std::string& src) {
-    pImpl->setImage(src);
-}
+void WaveletEmbedder::setImage(const std::string& src) { pImpl->setImage(src); }
 
-void WaveletEmbedder::setMessage(const std::string& msg) {
-    pImpl->setMessage(msg);
-}
+void WaveletEmbedder::setMessage(const std::string& msg) { pImpl->setMessage(msg); }
 
-void WaveletEmbedder::setSecretKey(const std::string& key) {
-    pImpl->setSecretKey(key);
-}
+void WaveletEmbedder::setSecretKey(const std::string& key) { pImpl->setSecretKey(key); }
 
 } // namespace imagestego

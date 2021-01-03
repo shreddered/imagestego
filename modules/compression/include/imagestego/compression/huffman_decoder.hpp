@@ -23,10 +23,9 @@
 // imagestego headers
 #include "imagestego/core.hpp"
 // c++ headers
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
 #include <vector>
-
 
 namespace imagestego {
 
@@ -39,6 +38,7 @@ public:
     virtual ~HuffmanDecoder() noexcept;
     void setMessage(const BitArray& arr) override;
     std::string getDecodedMessage() override;
+
 private:
     HuffmanDecoderImpl* decoder;
 }; // class HuffmanDecoder

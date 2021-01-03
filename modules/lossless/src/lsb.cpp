@@ -24,25 +24,22 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-
 namespace imagestego {
 
 class LsbEmbedderImpl final {
 public:
-    explicit LsbEmbedderImpl(AbstractEncoder* encoder = nullptr) noexcept : _encoder(encoder) {}
+    explicit LsbEmbedderImpl(AbstractEncoder* encoder = nullptr) noexcept
+        : _encoder(encoder) {}
     virtual ~LsbEmbedderImpl() noexcept {
         if (_encoder)
             delete _encoder;
     }
-    void setImage(const std::string& src) {
-        _image = cv::imread(src);
-    }
+    void setImage(const std::string& src) { _image = cv::imread(src); }
     void setMessage(const std::string& msg) {
         if (_encoder) {
             _encoder->setMessage(msg);
             _msg = _encoder->getEncodedMessage();
-        }
-        else {
+        } else {
             _msg = BitArray::fromByteString(msg);
         }
     }
@@ -65,8 +62,7 @@ public:
                     pix.val[1] |= 1u;
                 else
                     pix.val[1] &= ~1u;
-            }
-            else {
+            } else {
                 if (sz[i])
                     pix.val[2] |= 1u;
                 else
@@ -90,8 +86,7 @@ public:
                     pixel.val[1] |= 1;
                 else
                     pixel.val[1] &= ~1u;
-            }
-            else {
+            } else {
                 if (_msg[i])
                     pixel.val[2] |= 1u;
                 else
@@ -102,6 +97,7 @@ public:
         }
         cv::imwrite(dst, _image);
     }
+
 private:
     AbstractEncoder* _encoder = nullptr;
     /** PRNG */
@@ -113,14 +109,13 @@ private:
 
 class LsbExtracterImpl final {
 public:
-    explicit LsbExtracterImpl(AbstractDecoder* decoder = nullptr) noexcept : _decoder(decoder) {}
+    explicit LsbExtracterImpl(AbstractDecoder* decoder = nullptr) noexcept
+        : _decoder(decoder) {}
     virtual ~LsbExtracterImpl() noexcept {
         if (_decoder)
             delete _decoder;
     }
-    void setImage(const std::string& src) {
-        _image = cv::imread(src);
-    }
+    void setImage(const std::string& src) { _image = cv::imread(src); }
     void setSecretKey(const std::string& key) {
         _key = BitArray::fromByteString(key);
         _gen.seed(hash(key));
@@ -160,11 +155,11 @@ public:
         if (_decoder) {
             _decoder->setMessage(msg);
             return _decoder->getDecodedMessage();
-        }
-        else {
+        } else {
             return msg.toByteString();
         }
     }
+
 private:
     AbstractDecoder* _decoder;
     std::mt19937 _gen;
@@ -181,17 +176,11 @@ LsbEmbedder::~LsbEmbedder() noexcept {
         delete _embedder;
 }
 
-void LsbEmbedder::setImage(const std::string& src) {
-    _embedder->setImage(src);
-}
+void LsbEmbedder::setImage(const std::string& src) { _embedder->setImage(src); }
 
-void LsbEmbedder::setMessage(const std::string& msg) {
-    _embedder->setMessage(msg);
-}
+void LsbEmbedder::setMessage(const std::string& msg) { _embedder->setMessage(msg); }
 
-void LsbEmbedder::setSecretKey(const std::string& key) {
-    _embedder->setSecretKey(key);
-}
+void LsbEmbedder::setSecretKey(const std::string& key) { _embedder->setSecretKey(key); }
 
 void LsbEmbedder::createStegoContainer(const std::string& dst) {
     _embedder->createStegoContainer(dst);
@@ -206,16 +195,10 @@ LsbExtracter::~LsbExtracter() noexcept {
         delete _extracter;
 }
 
-void LsbExtracter::setImage(const std::string& src) {
-    _extracter->setImage(src);
-}
+void LsbExtracter::setImage(const std::string& src) { _extracter->setImage(src); }
 
-void LsbExtracter::setSecretKey(const std::string& key) {
-    _extracter->setSecretKey(key);
-}
+void LsbExtracter::setSecretKey(const std::string& key) { _extracter->setSecretKey(key); }
 
-std::string LsbExtracter::extractMessage() {
-    return _extracter->extractMessage();
-}
+std::string LsbExtracter::extractMessage() { return _extracter->extractMessage(); }
 
 } // namespace imagestego

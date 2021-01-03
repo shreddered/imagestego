@@ -42,7 +42,8 @@ class BitArray;
  * @param arr Bit array to be printed.
  * @return std::ostream instance.
  */
-IMAGESTEGO_EXPORTS std::ostream& operator<<(std::ostream& os, const imagestego::BitArray& arr);
+IMAGESTEGO_EXPORTS std::ostream& operator<<(std::ostream& os,
+                                            const imagestego::BitArray& arr);
 
 namespace imagestego {
 
@@ -51,7 +52,6 @@ namespace imagestego {
  */
 class IMAGESTEGO_EXPORTS BitArray {
 public:
-
     /**
      * Iterator type definition.
      */
@@ -200,7 +200,7 @@ public:
     bool empty() const noexcept;
 
     /** friend declaration of operator<< overloading. */
-    friend std::ostream& (::operator<<)(std::ostream& os, const imagestego::BitArray& arr);
+    friend std::ostream&(::operator<<)(std::ostream& os, const imagestego::BitArray& arr);
 
     bool operator==(const BitArray& other);
 
@@ -217,8 +217,8 @@ public:
      * @return Iterator pointing to past-the-end element in array.
      */
     iterator end();
-private:
 
+private:
     /**
      * Constructs array from implementation pointer.
      *

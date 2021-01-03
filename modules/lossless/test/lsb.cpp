@@ -21,11 +21,11 @@
 #include "imagestego/core/exception.hpp"
 #include "imagestego/core/interfaces.hpp"
 #include <imagestego/algorithm/lsb.hpp>
-#include <imagestego/compression/huffman_encoder.hpp>
 #include <imagestego/compression/huffman_decoder.hpp>
+#include <imagestego/compression/huffman_encoder.hpp>
 // gtest headers
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 using testing::_;
 

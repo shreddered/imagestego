@@ -22,7 +22,6 @@
 // third party headers
 #include "MurmurHash3.h"
 
-
 namespace imagestego {
 
 uint32_t hash(const std::string& _key) {

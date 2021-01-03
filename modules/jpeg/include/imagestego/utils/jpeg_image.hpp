@@ -12,7 +12,6 @@
 // libjpeg
 #include <jpeglib.h>
 
-
 namespace imagestego {
 
 struct Point_ {
@@ -29,9 +28,7 @@ struct Point {
     short& z;
     explicit Point(short& x, short& y, short& z) noexcept;
     short& operator[](int index) noexcept;
-    operator Point_() const {
-        return Point_(x, y, z);
-    }
+    operator Point_() const { return Point_(x, y, z); }
 }; // struct Point
 
 class JpegImage {
@@ -43,12 +40,11 @@ public:
     virtual ~JpegImage() noexcept;
     void open(const std::string& src);
     void close() noexcept;
-    inline bool isEmpty() const noexcept {
-        return coeffs == nullptr;
-    }
+    inline bool isEmpty() const noexcept { return coeffs == nullptr; }
     Point at(const int& y, const int& x);
     Point_ at(const int& y, const int& x) const;
     void writeTo(const std::string& dst);
+
 private:
     FILE* in = nullptr;
     jvirt_barray_ptr* coeffs = nullptr;

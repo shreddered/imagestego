@@ -19,7 +19,6 @@
 
 #include "imagestego/compression/lzw_dictionary.hpp"
 
-
 namespace imagestego {
 
 Dictionary::Dictionary() noexcept : _codeTable(1 << maxBits) {
@@ -54,30 +53,28 @@ int Dictionary::search(const StringElement& s) {
         _codeTable[s.prefixIndex].first = _newCode;
         _codeTable[_newCode++] = s;
         return -1;
-    }
-    else { // perform search
-        while(true) {
-              uint8_t val = _codeTable[index].value;
-              if (s.value == val)
-                  return index;
-              if (s.value < val) {
-                  int left = _codeTable[index].left;
-                  if (left == -1) { // left insertion case
-                      _codeTable[index].left = _newCode;
-                      _codeTable[_newCode++] = s;
-                      return -1;
-                  }
-                  index = left;
-              }
-              else {
-                  int right = _codeTable[index].right;
-                  if (right == -1) { // right insertion case
-                      _codeTable[index].right = _newCode;
-                      _codeTable[_newCode++] = s;
-                      return -1;
-                  }
-                  index = right;
-              }
+    } else { // perform search
+        while (true) {
+            uint8_t val = _codeTable[index].value;
+            if (s.value == val)
+                return index;
+            if (s.value < val) {
+                int left = _codeTable[index].left;
+                if (left == -1) { // left insertion case
+                    _codeTable[index].left = _newCode;
+                    _codeTable[_newCode++] = s;
+                    return -1;
+                }
+                index = left;
+            } else {
+                int right = _codeTable[index].right;
+                if (right == -1) { // right insertion case
+                    _codeTable[index].right = _newCode;
+                    _codeTable[_newCode++] = s;
+                    return -1;
+                }
+                index = right;
+            }
         } // while(1)
     }
 }

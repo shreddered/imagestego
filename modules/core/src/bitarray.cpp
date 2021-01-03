@@ -22,7 +22,6 @@
 // c++ headers
 #include <ostream>
 
-
 namespace imagestego {
 
 // BitArray
@@ -41,19 +40,17 @@ BitArray::~BitArray() noexcept {
 
 BitArray::BitArray(const BitArray& other) : _arr(new BitArrayImpl(*other._arr)) {}
 
-BitArray& BitArray::operator =(const BitArray& other) {
-    if (this != & other) {
+BitArray& BitArray::operator=(const BitArray& other) {
+    if (this != &other) {
         delete _arr;
         _arr = new BitArrayImpl(*other._arr);
     }
     return *this;
 }
 
-BitArray::BitArray(BitArray&& other) noexcept : _arr(other._arr) {
-    other._arr = nullptr;
-}
+BitArray::BitArray(BitArray&& other) noexcept : _arr(other._arr) { other._arr = nullptr; }
 
-BitArray& BitArray::operator =(BitArray&& other) noexcept {
+BitArray& BitArray::operator=(BitArray&& other) noexcept {
     delete _arr;
     _arr = other._arr;
     other._arr = nullptr;
@@ -74,60 +71,34 @@ typename BitArrayImpl::reference BitArray::operator[](std::size_t i) {
     return _arr->operator[](i);
 }
 
-std::size_t BitArray::size() const noexcept {
-    return _arr->size();
-}
+std::size_t BitArray::size() const noexcept { return _arr->size(); }
 
-bool BitArray::operator[](std::size_t i) const {
-    return _arr->operator[](i);
-}
+bool BitArray::operator[](std::size_t i) const { return _arr->operator[](i); }
 
-void BitArray::pushBack(bool val) {
-    _arr->pushBack(val);
-}
+void BitArray::pushBack(bool val) { _arr->pushBack(val); }
 
-void BitArray::pushFront(std::size_t num) {
-    _arr->pushFront(num);
-}
+void BitArray::pushFront(std::size_t num) { _arr->pushFront(num); }
 
-void BitArray::clear() {
-    _arr->clear();
-}
+void BitArray::clear() { _arr->clear(); }
 
-bool BitArray::empty() const noexcept {
-    return _arr->empty();
-}
+bool BitArray::empty() const noexcept { return _arr->empty(); }
 
-typename BitArray::iterator BitArray::begin() {
-    return _arr->begin();
-}
+typename BitArray::iterator BitArray::begin() { return _arr->begin(); }
 
-typename BitArray::iterator BitArray::end() {
-    return _arr->end();
-}
+typename BitArray::iterator BitArray::end() { return _arr->end(); }
 
-std::string BitArray::toByteString() const {
-    return _arr->toByteString();
-}
+std::string BitArray::toByteString() const { return _arr->toByteString(); }
 
-std::string BitArray::toString() const {
-    return _arr->toString();
-}
+std::string BitArray::toString() const { return _arr->toString(); }
 
-std::size_t BitArray::toInt() const {
-    return _arr->toInt();
-}
+std::size_t BitArray::toInt() const { return _arr->toInt(); }
 
-void BitArray::put(std::size_t num, std::size_t n) {
-    _arr->put(num, n);
-}
+void BitArray::put(std::size_t num, std::size_t n) { _arr->put(num, n); }
 
-bool BitArray::operator ==(const BitArray& other) {
-    return *_arr == *other._arr;
-}
+bool BitArray::operator==(const BitArray& other) { return *_arr == *other._arr; }
 
 } // namespace imagestego
 
-std::ostream& operator <<(std::ostream& os, const imagestego::BitArray& arr) {
+std::ostream& operator<<(std::ostream& os, const imagestego::BitArray& arr) {
     return os << (*arr._arr);
 }

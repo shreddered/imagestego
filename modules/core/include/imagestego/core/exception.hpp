@@ -21,14 +21,13 @@
 #define __IMAGESTEGO_CORE_EXCEPTION_HPP_INCLUDED__
 
 #if IMAGESTEGO_MSVC
-#   pragma warning(disable: 4257)
+#pragma warning(disable : 4257)
 #endif
 
 // imagestego headers
 #include "imagestego/core/config.hpp"
 // c++ headers
 #include <stdexcept>
-
 
 namespace imagestego {
 
@@ -44,6 +43,7 @@ public:
         UnknownLsbMode = 1 << 4,
         NotJpegClass = 1 << 5
     };
+
 private:
     int code;
 };
@@ -52,7 +52,7 @@ private:
 
 #ifdef _MSC_VER
 inline const char* imagestego::Exception::what() const noexcept {
-    switch(code) {
+    switch (code) {
         case Codes::NoSuchFile:
             return "No such file";
         case Codes::BigMessageSize:
@@ -64,15 +64,17 @@ inline const char* imagestego::Exception::what() const noexcept {
         case Codes::UnknownLsbMode:
             return "Unknown LSB mode";
         case Codes::NotJpegClass:
-            return "Class 'LsbEmbedder' doesn't support JPEG pictures. Use 'JpegLsbEmbedder' instead";
+            return "Class 'LsbEmbedder' doesn't support JPEG pictures. Use "
+                   "'JpegLsbEmbedder' "
+                   "instead";
         default:
             return "Unknown Error";
-                                                                                                                }
+    }
 }
 #endif
 
 #if IMAGESTEGO_MSVC
-#   pragma warning(default: 4275)
+#pragma warning(default : 4275)
 #endif
 
 #endif /* __IMAGESTEGO_CORE_EXCEPTION_HPP_INCLUDED__ */

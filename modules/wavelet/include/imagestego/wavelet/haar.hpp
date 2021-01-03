@@ -26,7 +26,6 @@
 // opencv headers
 #include <opencv2/core/mat.hpp>
 
-
 namespace imagestego {
 
 class HaarWaveletImpl;
@@ -37,6 +36,7 @@ public:
     cv::Mat transform(const cv::Mat& mat) override;
     cv::Mat inverse(const cv::Mat& mat) override;
     virtual ~HaarWavelet() noexcept;
+
 private:
     HaarWaveletImpl* pImpl;
 };
@@ -51,6 +51,7 @@ public:
     cv::Mat transform(const cv::Mat& mat) override;
     cv::Mat inverse(const cv::Mat& mat) override;
     virtual ~HaarWavelet() noexcept;
+
 private:
     HaarWaveletImpl* pImpl;
 };

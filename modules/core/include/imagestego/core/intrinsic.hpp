@@ -22,7 +22,6 @@
 
 #include "imagestego/core/config.hpp"
 
-
 namespace imagestego {
 
 IMAGESTEGO_EXPORTS uint8_t log2(uint32_t value) noexcept;

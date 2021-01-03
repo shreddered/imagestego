@@ -27,7 +27,6 @@
 #include "imagestego/core/interfaces.hpp"
 #include "imagestego/core/intrinsic.hpp"
 
-
 namespace imagestego {
 
 template<class It, class Rng>

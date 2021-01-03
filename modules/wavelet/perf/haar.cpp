@@ -49,7 +49,7 @@ void test256x256() {
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
 
-    std::cout << "Total speedup is: " << double(ns.count())/ns1.count() << std::endl;
+    std::cout << "Total speedup is: " << double(ns.count()) / ns1.count() << std::endl;
 }
 void test320x320() {
     cv::Mat m(320, 320, CV_8UC3), dst;
@@ -71,7 +71,7 @@ void test320x320() {
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
 
-    std::cout << "Total speedup is: " << double(ns.count())/ns1.count() << std::endl;
+    std::cout << "Total speedup is: " << double(ns.count()) / ns1.count() << std::endl;
 }
 
 void testHD() {
@@ -94,7 +94,7 @@ void testHD() {
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
 
-    std::cout << "Total speedup is: " << double(ns.count())/ns1.count() << std::endl;
+    std::cout << "Total speedup is: " << double(ns.count()) / ns1.count() << std::endl;
 }
 
 void testFullHD() {
@@ -117,7 +117,7 @@ void testFullHD() {
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
 
-    std::cout << "Total speedup is: " << double(ns.count())/ns1.count() << std::endl;
+    std::cout << "Total speedup is: " << double(ns.count()) / ns1.count() << std::endl;
 }
 
 void test2K() {
@@ -140,7 +140,7 @@ void test2K() {
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
 
-    std::cout << "Total speedup is: " << double(ns.count())/ns1.count() << std::endl;
+    std::cout << "Total speedup is: " << double(ns.count()) / ns1.count() << std::endl;
 }
 
 void test4K() {
@@ -163,7 +163,7 @@ void test4K() {
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
 
-    std::cout << "Total speedup is: " << double(ns.count())/ns1.count() << std::endl;
+    std::cout << "Total speedup is: " << double(ns.count()) / ns1.count() << std::endl;
 }
 
 void test501x303() {
@@ -186,7 +186,7 @@ void test501x303() {
     chrono::nanoseconds ns1 = end - start;
     std::cout << ns1.count() << " ns" << '\n';
 
-    std::cout << "Total speedup is: " << double(ns.count())/ns1.count() << std::endl;
+    std::cout << "Total speedup is: " << double(ns.count()) / ns1.count() << std::endl;
 }
 
 int main() {

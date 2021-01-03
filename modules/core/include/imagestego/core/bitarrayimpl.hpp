@@ -28,9 +28,8 @@
 #include <vector>
 
 #ifndef CHAR_BIT
-#   define CHAR_BIT 8
+#define CHAR_BIT 8
 #endif
-
 
 namespace imagestego {
 
@@ -43,6 +42,7 @@ namespace imagestego {
 class BitArrayImpl final {
     class BitReference;
     class BitIterator;
+
 public:
     typedef BitReference reference;
     typedef BitIterator iterator;
@@ -184,8 +184,8 @@ public:
      * @return Iterator pointing to past-the-end element in array.
      */
     iterator end();
-private:
 
+private:
     /**
      * Block type of undelying array. Integer blocks used to store bits.
      */
@@ -212,6 +212,7 @@ private:
          * @param pos Bit index of block.
          */
         explicit BitReference(BlockType& block, std::size_t pos) noexcept;
+
     public:
         BitReference(const BitReference&) = default;
 
@@ -266,8 +267,8 @@ private:
          * @param pos Position of element iterator points to.
          */
         explicit BitIterator(BitArrayImpl* owner, std::size_t pos) noexcept;
-    public:
 
+    public:
         /**
          * Unary * overloading.
          *

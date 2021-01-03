@@ -20,7 +20,6 @@
 #include "imagestego/compression/lzw_decoder.hpp"
 #include "imagestego/compression/lzw_dictionary.hpp"
 
-
 std::size_t read(const imagestego::BitArray& arr, std::size_t& i, uint8_t bits) {
     std::size_t block = 0;
     std::size_t it;
@@ -47,6 +46,7 @@ public:
         }
         return _decodedMsg;
     }
+
 private:
     std::string _decodedMsg;
     BitArray _msg;
@@ -54,7 +54,7 @@ private:
         // reading first 4 bits
         std::size_t i = 0;
         uint8_t maxBits = read(_msg, i, 4);
-        while(i < _msg.size()) {
+        while (i < _msg.size()) {
             Dictionary::clear();
             uint8_t currentBitsPerBlock = 8;
             std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
@@ -75,8 +75,7 @@ private:
                 if (code < Dictionary::size()) {
                     tmp = Dictionary::at(code);
                     _decodedMsg += tmp;
-                }
-                else {
+                } else {
                     tmp = Dictionary::at(oldCode);
                     _decodedMsg += tmp + tmp[0];
                 }
@@ -91,16 +90,10 @@ LzwDecoder::LzwDecoder() : _decoder(new LzwDecoderImpl) {}
 
 LzwDecoder::LzwDecoder(const BitArray& arr) : _decoder(new LzwDecoderImpl(arr)) {}
 
-LzwDecoder::~LzwDecoder() noexcept {
-    delete _decoder;
-}
+LzwDecoder::~LzwDecoder() noexcept { delete _decoder; }
 
-void LzwDecoder::setMessage(const BitArray& arr) {
-    _decoder->setMessage(arr);
-}
+void LzwDecoder::setMessage(const BitArray& arr) { _decoder->setMessage(arr); }
 
-std::string LzwDecoder::getDecodedMessage() {
-    return _decoder->getDecodedMessage();
-}
+std::string LzwDecoder::getDecodedMessage() { return _decoder->getDecodedMessage(); }
 
 } // namespace imagestego

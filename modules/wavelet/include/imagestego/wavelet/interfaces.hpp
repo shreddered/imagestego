@@ -6,7 +6,6 @@
 // opencv headers
 #include <opencv2/core/mat.hpp>
 
-
 namespace imagestego {
 
 class IMAGESTEGO_EXPORTS AbstractWavelet {

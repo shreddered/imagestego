@@ -23,7 +23,6 @@
 #include <string>
 #include <unordered_map>
 
-
 namespace imagestego {
 
 class HuffmanEncoderImpl final {
@@ -31,7 +30,7 @@ public:
     explicit HuffmanEncoderImpl() noexcept {}
     explicit HuffmanEncoderImpl(const std::string& str) noexcept : _msg(str) {}
     HuffmanEncoderImpl(const HuffmanEncoderImpl&) = delete;
-    HuffmanEncoderImpl& operator =(const HuffmanEncoderImpl&) = delete;
+    HuffmanEncoderImpl& operator=(const HuffmanEncoderImpl&) = delete;
     void setMessage(const std::string& str) noexcept {
         _msg = str;
         _encodedMsg.clear();
@@ -50,13 +49,12 @@ public:
         dfs(_root);
         _route += '0';
     }
-    std::string getAlphabet() const noexcept {
-        return _alphabet;
-    }
+    std::string getAlphabet() const noexcept { return _alphabet; }
     virtual ~HuffmanEncoderImpl() noexcept {
         if (_root)
             delete _root;
     }
+
 private:
     struct TreeNode final {
         std::string data;
@@ -73,23 +71,21 @@ private:
     };
     void __buildCode() {
         std::unordered_map<char, std::size_t> weight;
-        std::for_each(_msg.begin(), _msg.end(), [&weight](const char& c) mutable {
-            ++weight[c];
-        });
+        std::for_each(_msg.begin(), _msg.end(),
+                      [&weight](const char& c) mutable { ++weight[c]; });
         std::multimap<std::size_t, TreeNode*> node;
-        std::for_each(weight.begin(), weight.end(), [&node](const typename decltype(weight)::value_type& p) mutable {
-            node.emplace(p.second, new TreeNode(p.first + std::string("")));
-        });
-        while(node.size() > 1) {
-            auto it2 = node.begin(),
-                 it1 = it2++;
-            std::for_each(it1->second->data.begin(), it1->second->data.end(), [this](const char& c) {
-                _codeTable[c].insert(0, 1, '0');
-            });
-            std::for_each(it2->second->data.begin(), it2->second->data.end(), [this](const char& c) {
-                _codeTable[c].insert(0, 1, '1');
-            });
-            typename decltype(node)::value_type pair = {it1->first + it2->first,
+        std::for_each(weight.begin(), weight.end(),
+                      [&node](const typename decltype(weight)::value_type& p) mutable {
+                          node.emplace(p.second, new TreeNode(p.first + std::string("")));
+                      });
+        while (node.size() > 1) {
+            auto it2 = node.begin(), it1 = it2++;
+            std::for_each(it1->second->data.begin(), it1->second->data.end(),
+                          [this](const char& c) { _codeTable[c].insert(0, 1, '0'); });
+            std::for_each(it2->second->data.begin(), it2->second->data.end(),
+                          [this](const char& c) { _codeTable[c].insert(0, 1, '1'); });
+            typename decltype(node)::value_type pair = {
+                it1->first + it2->first,
                 new TreeNode(it1->second->data + it2->second->data)};
             pair.second->right = it2->second;
             pair.second->left = it1->second;
@@ -119,8 +115,7 @@ private:
             dfs(node->right);
             if (_route.back() != '0')
                 _route += '0';
-        }
-        else {
+        } else {
             _alphabet += node->data;
         }
     }
@@ -134,20 +129,16 @@ private:
 
 HuffmanEncoder::HuffmanEncoder() noexcept : encoder(new HuffmanEncoderImpl()) {}
 
-HuffmanEncoder::HuffmanEncoder(const std::string& str) noexcept : encoder(new HuffmanEncoderImpl(str)) {}
+HuffmanEncoder::HuffmanEncoder(const std::string& str) noexcept
+    : encoder(new HuffmanEncoderImpl(str)) {}
 
-HuffmanEncoder::HuffmanEncoder(std::string&& str) noexcept : encoder(new HuffmanEncoderImpl(str)) {}
+HuffmanEncoder::HuffmanEncoder(std::string&& str) noexcept
+    : encoder(new HuffmanEncoderImpl(str)) {}
 
-void HuffmanEncoder::setMessage(const std::string& str) {
-    encoder->setMessage(str);
-}
+void HuffmanEncoder::setMessage(const std::string& str) { encoder->setMessage(str); }
 
-BitArray HuffmanEncoder::getEncodedMessage() {
-    return encoder->getEncodedMessage();
-}
+BitArray HuffmanEncoder::getEncodedMessage() { return encoder->getEncodedMessage(); }
 
-HuffmanEncoder::~HuffmanEncoder() noexcept {
-    delete encoder;
-}
+HuffmanEncoder::~HuffmanEncoder() noexcept { delete encoder; }
 
 } // namespace imagestego

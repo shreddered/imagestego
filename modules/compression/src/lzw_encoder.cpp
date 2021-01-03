@@ -21,7 +21,6 @@
 #include "imagestego/compression/lzw_encoder.hpp"
 #include "imagestego/compression/lzw_dictionary.hpp"
 
-
 namespace imagestego {
 
 class LzwEncoderImpl : private Dictionary {
@@ -38,6 +37,7 @@ public:
         }
         return _encodedMsg;
     }
+
 private:
     static constexpr std::size_t maxDictionarySize = (1 << maxBits) - 1;
     std::string _msg;
@@ -52,16 +52,14 @@ private:
             int index = Dictionary::search(s);
             if (index != -1) {
                 s.prefixIndex = index;
-            }
-            else {
+            } else {
                 _encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
                 s.prefixIndex = s.value;
                 if (Dictionary::size() > currentMaxDictionarySize) {
                     if (currentBitsPerBlock == maxBits) {
                         currentBitsPerBlock = 8;
                         Dictionary::clear();
-                    }
-                    else
+                    } else
                         ++currentBitsPerBlock;
                     currentMaxDictionarySize = (1 << currentBitsPerBlock);
                 }
@@ -80,12 +78,8 @@ LzwEncoder::~LzwEncoder() noexcept {
         delete _encoder;
 }
 
-void LzwEncoder::setMessage(const std::string& str) {
-    _encoder->setMessage(str);
-}
+void LzwEncoder::setMessage(const std::string& str) { _encoder->setMessage(str); }
 
-BitArray LzwEncoder::getEncodedMessage() {
-    return _encoder->getEncodedMessage();
-}
+BitArray LzwEncoder::getEncodedMessage() { return _encoder->getEncodedMessage(); }
 
 } // namespace imagestego

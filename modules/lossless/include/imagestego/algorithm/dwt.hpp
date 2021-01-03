@@ -24,22 +24,21 @@
 #include "imagestego/core.hpp"
 // #include "imagestego/utils/bitarray.hpp"
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
-#   include "imagestego/keygen.hpp"
-#   include <iostream>
+#include "imagestego/keygen.hpp"
+#include <iostream>
 #endif
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
-#   include "imagestego/utils/format_checker.hpp"
+#include "imagestego/utils/format_checker.hpp"
 #endif
 // c++ headers
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 #include <random>
 #include <string>
 #include <vector>
 // opencv
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
-
 
 namespace imagestego {
 
@@ -69,9 +68,7 @@ public:
     void setImage(const std::string& imageName) override {
         image = cv::imread(imageName);
     }
-    void setOutputName(const std::string& filename) override {
-        outputFile = filename;
-    }
+    void setOutputName(const std::string& filename) override { outputFile = filename; }
     void setMessage(const std::string& _msg) override {
         encoder.setMessage(_msg);
         msg = encoder.getEncodedMessage();
@@ -80,9 +77,7 @@ public:
         key = hash(_key);
         hasKey = true;
     }
-    Algorithm getAlgorithm() const noexcept override {
-        return Algorithm::Dwt;
-    }
+    Algorithm getAlgorithm() const noexcept override { return Algorithm::Dwt; }
     void createStegoContainer() override {
         if (!hasKey) {
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
@@ -99,7 +94,8 @@ public:
         std::vector<cv::Mat> planes;
         cv::split(image, planes);
         cv::Mat dwtGreen;
-        dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)), dwtGreen);
+        dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)),
+            dwtGreen);
         for (int i = 0; i != dwtGreen.rows && currentMsgIndex != 32; ++i)
             for (int j = 0; j != dwtGreen.cols && currentMsgIndex != 32; ++j) {
                 if (arr[currentMsgIndex++])
@@ -125,8 +121,7 @@ public:
         // DWT of blue channel
         dwt(cropped, tmp);
         currentMsgIndex = 0;
-        int i = tmp.rows >> 1,
-            j = tmp.cols >> 1;
+        int i = tmp.rows >> 1, j = tmp.cols >> 1;
         currentMsgIndex = 0;
         for (i = tmp.rows >> 1; i != tmp.rows && currentMsgIndex != msg.size(); ++i) {
             for (j = tmp.cols >> 1; j != tmp.cols && currentMsgIndex != msg.size(); ++j) {
@@ -141,6 +136,7 @@ public:
         cv::merge(planes, image);
         cv::imwrite(outputFile, image);
     }
+
 private:
     EncoderType encoder;
     cv::Mat image;
@@ -163,9 +159,7 @@ public:
         key = hash(_key);
         hasKey = true;
     }
-    Algorithm getAlgorithm() const noexcept override {
-        return Algorithm::Dwt;
-    }
+    Algorithm getAlgorithm() const noexcept override { return Algorithm::Dwt; }
     std::string extractMessage() override {
         if (!hasKey)
             throw Exception(Exception::Codes::NoKeyFound);
@@ -173,7 +167,8 @@ public:
         std::vector<cv::Mat> planes;
         cv::split(image, planes);
         cv::Mat dwtGreen;
-        dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)), dwtGreen);
+        dwt(planes[1](cv::Rect(planes[1].rows >> 1, planes[1].cols >> 1, 32, 1)),
+            dwtGreen);
         BitArray<uint32_t> arr1;
         for (int i = 0; i != dwtGreen.rows; ++i)
             for (int j = 0; j != dwtGreen.cols; ++j)
@@ -187,8 +182,7 @@ public:
             x0 = gen() % image.cols;
         } while (y0 > image.rows - sz || x0 > image.cols - sz);
         cv::Mat cropped = planes[0](cv::Rect(x0, y0, sz, sz));
-        std::size_t currentMsgIndex = 0,
-                    msgSize = 0;
+        std::size_t currentMsgIndex = 0, msgSize = 0;
         bool sizeKnown = false;
         // DWT of blue channel
         cv::Mat tmp;
@@ -200,8 +194,7 @@ public:
                 if (currentMsgIndex > 32) {
                     sizeKnown = true;
                     arr.pushBack(bit);
-                }
-                else
+                } else
                     msgSize |= bit << (32 - currentMsgIndex);
                 if (sizeKnown && currentMsgIndex - 32 == msgSize) {
                     decoder.setMessage(arr);
@@ -209,6 +202,7 @@ public:
                 }
             }
     }
+
 private:
     std::mt19937 gen;
     cv::Mat image;
@@ -235,6 +229,7 @@ public:
     void setSecretKey(const std::string& key) override;
     void createStegoContainer() override;
     Algorithm getAlgorithm() const noexcept override;
+
 private:
     cv::Mat image;
     std::string outputFile;
@@ -253,6 +248,7 @@ public:
     void setSecretKey(const std::string& key) override;
     std::string extractMessage() override;
     Algorithm getAlgorithm() const noexcept override;
+
 private:
     std::mt19937 gen;
     cv::Mat image;

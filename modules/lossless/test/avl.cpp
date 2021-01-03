@@ -24,7 +24,6 @@
 // gtest
 #include <gtest/gtest.h>
 
-
 template<class It1, class It2>
 bool isEqual(It1 begin, It1 end, It2 _begin) {
     for (; begin != end; ++begin, ++_begin)

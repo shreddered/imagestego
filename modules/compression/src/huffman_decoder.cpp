@@ -19,7 +19,6 @@
 
 #include "imagestego/compression/huffman_decoder.hpp"
 
-
 namespace imagestego {
 
 // TODO: optimize this
@@ -31,7 +30,6 @@ unsigned char takeChar(const BitArray& arr, const std::size_t& pos) {
     return tmp;
 }
 
-
 class HuffmanDecoderImpl {
 public:
     explicit HuffmanDecoderImpl() noexcept {}
@@ -40,9 +38,7 @@ public:
         if (_root)
             delete _root;
     }
-    void setMessage(const BitArray& arr) {
-        _encodedMsg = arr;
-    }
+    void setMessage(const BitArray& arr) { _encodedMsg = arr; }
     std::string getDecodedMessage() {
         if (!_root) {
             readDfs();
@@ -52,6 +48,7 @@ public:
         }
         return _decodedMsg;
     }
+
 private:
     struct TreeNode final {
         TreeNode* left = nullptr;
@@ -94,8 +91,7 @@ private:
                 if (!_encodedMsg[_it + 1]) {
                     _codes.push_back(code);
                 }
-            }
-            else {
+            } else {
                 TreeNode* cameFrom;
                 do {
                     cameFrom = currentNode;
@@ -127,12 +123,11 @@ private:
     void decode() {
         auto currNode = _root;
         std::string code;
-        for ( ; _it != _encodedMsg.size(); ++_it) {
+        for (; _it != _encodedMsg.size(); ++_it) {
             if (_encodedMsg[_it]) {
                 currNode = currNode->right;
                 code.push_back('1');
-            }
-            else {
+            } else {
                 currNode = currNode->left;
                 code.push_back('0');
             }
@@ -154,18 +149,13 @@ private:
 
 HuffmanDecoder::HuffmanDecoder() noexcept : decoder(new HuffmanDecoderImpl()) {}
 
-HuffmanDecoder::HuffmanDecoder(const BitArray& arr) noexcept : decoder(new HuffmanDecoderImpl(arr)) {}
+HuffmanDecoder::HuffmanDecoder(const BitArray& arr) noexcept
+    : decoder(new HuffmanDecoderImpl(arr)) {}
 
-HuffmanDecoder::~HuffmanDecoder() noexcept {
-    delete decoder;
-}
+HuffmanDecoder::~HuffmanDecoder() noexcept { delete decoder; }
 
-void HuffmanDecoder::setMessage(const BitArray& arr) {
-    decoder->setMessage(arr);
-}
+void HuffmanDecoder::setMessage(const BitArray& arr) { decoder->setMessage(arr); }
 
-std::string HuffmanDecoder::getDecodedMessage() {
-    return decoder->getDecodedMessage();
-}
+std::string HuffmanDecoder::getDecodedMessage() { return decoder->getDecodedMessage(); }
 
 } // namespace imagestego
