@@ -35,13 +35,13 @@ unsigned char takeChar(const BitArray& arr, const std::size_t& pos) {
 class HuffmanDecoderImpl {
 public:
     explicit HuffmanDecoderImpl() noexcept {}
-    explicit HuffmanDecoderImpl(const BitArray& arr) noexcept : encodedMsg(arr) {}
+    explicit HuffmanDecoderImpl(const BitArray& arr) noexcept : _encodedMsg(arr) {}
     virtual ~HuffmanDecoderImpl() noexcept {
         if (root)
             delete root;
     }
     void setMessage(const BitArray& arr) {
-        encodedMsg = arr;
+        _encodedMsg = arr;
     }
     std::string getDecodedMessage() {
         if (!root) {
@@ -50,7 +50,7 @@ public:
             createCodeTable();
             decode();
         }
-        return decodedMsg;
+        return _decodedMsg;
     }
 private:
     struct TreeNode final {
@@ -83,17 +83,17 @@ private:
     void readDfs() {
         root = new TreeNode();
         auto currentNode = root;
-        it = 0;
+        _it = 0;
         std::string code;
         do {
             // 1 - go down
             // 0 - up
-            if (encodedMsg[it]) {
+            if (_encodedMsg[_it]) {
                 currentNode->left = new TreeNode(currentNode);
                 currentNode = currentNode->left;
                 code += '0';
-                if (!encodedMsg[it + 1]) {
-                    codes.push_back(code);
+                if (!_encodedMsg[_it + 1]) {
+                    _codes.push_back(code);
                 }
             }
             else {
@@ -102,34 +102,34 @@ private:
                     cameFrom = currentNode;
                     currentNode = currentNode->parent;
                     code.pop_back();
-                } while (currentNode && currentNode->right == cameFrom && currentNode != root);
+                } while (currentNode->right == cameFrom && currentNode != root);
                 if (isLeftChild(cameFrom)) {
                     currentNode->right = new TreeNode(currentNode);
                     currentNode = currentNode->right;
                     code += '1';
                 }
-                if (!encodedMsg[it + 1] && currentNode != root)
-                    codes.push_back(code);
+                if (!_encodedMsg[_it + 1] && currentNode != root)
+                    _codes.push_back(code);
             }
-            ++it;
+            ++_it;
         } while (currentNode != root);
     }
     void readAlphabet() {
-        for (std::size_t i = 0; i != codes.size(); ++i) {
-            alphabet += takeChar(encodedMsg, it);
-            it += 8;
+        for (std::size_t i = 0; i != _codes.size(); ++i) {
+            _alphabet += takeChar(_encodedMsg, _it);
+            _it += 8;
         }
     }
     void buildCode();
     void createCodeTable() {
-        for (std::size_t i = 0; i != codes.size(); ++i)
-            codeTable.emplace(codes[i], alphabet[i]);
+        for (std::size_t i = 0; i != _codes.size(); ++i)
+            _codeTable.emplace(_codes[i], _alphabet[i]);
     }
     void decode() {
         auto currNode = root;
         std::string code;
-        for ( ; it != encodedMsg.size(); ++it) {
-            if (encodedMsg[it]) {
+        for ( ; _it != _encodedMsg.size(); ++_it) {
+            if (_encodedMsg[_it]) {
                 currNode = currNode->right;
                 code.push_back('1');
             }
@@ -138,18 +138,18 @@ private:
                 code.push_back('0');
             }
             if (!currNode->left) {
-                decodedMsg += codeTable[code];
+                _decodedMsg += _codeTable[code];
                 code.clear();
                 currNode = root;
             }
         }
     }
-    std::vector<std::string> codes;
-    std::size_t it;
-    BitArray encodedMsg;
-    std::string alphabet;
-    std::string decodedMsg;
-    std::unordered_map<std::string, char> codeTable;
+    std::vector<std::string> _codes;
+    std::size_t _it;
+    BitArray _encodedMsg;
+    std::string _alphabet;
+    std::string _decodedMsg;
+    std::unordered_map<std::string, char> _codeTable;
 }; // class HuffmanDecoderImpl
 
 HuffmanDecoder::HuffmanDecoder() noexcept : decoder(new HuffmanDecoderImpl()) {}

@@ -27,34 +27,34 @@ namespace imagestego {
 class LzwEncoderImpl : private Dictionary {
 public:
     explicit LzwEncoderImpl() noexcept : Dictionary() {}
-    explicit LzwEncoderImpl(const std::string& str) noexcept : Dictionary(), msg(str) {}
+    explicit LzwEncoderImpl(const std::string& str) noexcept : Dictionary(), _msg(str) {}
     void setMessage(const std::string& str) noexcept {
-        msg = str;
-        encodedMsg.clear();
+        _msg = str;
+        _encodedMsg.clear();
     }
     BitArray getEncodedMessage() {
-        if (encodedMsg.empty() && msg.size() != 1) {
+        if (_encodedMsg.empty() && _msg.size() != 1) {
             encode();
         }
-        return encodedMsg;
+        return _encodedMsg;
     }
 private:
     static constexpr std::size_t maxDictionarySize = (1 << maxBits) - 1;
-    std::string msg;
-    BitArray encodedMsg;
+    std::string _msg;
+    BitArray _encodedMsg;
     void encode() {
         StringElement s;
         uint8_t currentBitsPerBlock = 8;
         std::size_t currentMaxDictionarySize = (1 << currentBitsPerBlock);
-        encodedMsg.put(maxBits, 4);
-        for (std::size_t i = 0; i != msg.size(); ++i) {
-            s.value = msg[i];
+        _encodedMsg.put(maxBits, 4);
+        for (std::size_t i = 0; i != _msg.size(); ++i) {
+            s.value = _msg[i];
             int index = Dictionary::search(s);
             if (index != -1) {
                 s.prefixIndex = index;
             }
             else {
-                encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
+                _encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
                 s.prefixIndex = s.value;
                 if (Dictionary::size() > currentMaxDictionarySize) {
                     if (currentBitsPerBlock == maxBits) {
@@ -67,7 +67,7 @@ private:
                 }
             }
         }
-        encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
+        _encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
     }
 }; // class LzwEncoderImpl
 

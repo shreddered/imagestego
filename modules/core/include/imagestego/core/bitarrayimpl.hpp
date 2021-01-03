@@ -48,7 +48,7 @@ public:
     typedef BitIterator iterator;
     typedef const BitIterator const_iterator;
 
-    bool operator ==(const BitArrayImpl& other);
+    bool operator==(const BitArrayImpl& other);
 
     /**
      * Constructor of BitArrayImpl.
@@ -125,7 +125,7 @@ public:
      * @param i Index of element in array.
      * @return Instance of proxy class representing element.
      */
-    BitReference operator [](std::size_t i);
+    BitReference operator[](std::size_t i);
 
     /**
      * Operator [] overloading.
@@ -133,7 +133,7 @@ public:
      * @param i Index of element in array.
      * @return Read-only element of array.
      */
-    bool operator [](std::size_t i) const;
+    bool operator[](std::size_t i) const;
 
     /**
      * Adds element to the end.
@@ -227,7 +227,7 @@ private:
          * @param val Value to be assigned.
          * @return This instance's reference.
          */
-        BitReference& operator =(bool val) noexcept;
+        BitReference& operator=(bool val) noexcept;
 
         /**
          * Operator = overloading.
@@ -235,14 +235,14 @@ private:
          * @param val Reference to be assigned.
          * @return This instance's reference.
          */
-        BitReference& operator =(const BitReference& other) noexcept;
+        BitReference& operator=(const BitReference& other) noexcept;
 
         /**
          * Comparator for two references.
          *
          * @return true if references are equal, false otherwise.
          */
-        bool operator ==(const BitReference& other) noexcept;
+        bool operator==(const BitReference& other) noexcept;
     }; // class BitReference
 
     /**
@@ -272,49 +272,49 @@ private:
          *
          * @return Reference iterator points to.
          */
-        BitReference operator *();
+        BitReference operator*();
 
         /**
          * Prefix increment overloading.
          *
          * @return This instance's reference.
          */
-        BitIterator& operator ++();
+        BitIterator& operator++();
 
         /**
          * Postfix increment overloading.
          *
          * @return Iterator befor it was incremented.
          */
-        BitIterator operator ++(int);
+        BitIterator operator++(int);
 
         /**
          * Prefix decrement overloading.
          *
          * @return This instance's reference.
          */
-        BitIterator& operator --();
+        BitIterator& operator--();
 
         /**
          * Postfix decrement overloading.
          *
          * @return Iterator befor it was decremented.
          */
-        BitIterator operator --(int);
+        BitIterator operator--(int);
 
-        // BitIterator& operator +=(std::size_t i);
+        // BitIterator& operator+=(std::size_t i);
 
-        // BitIterator& operator -=(std::size_t i);
+        // BitIterator& operator-=(std::size_t i);
 
-        // BitIterator operator +(std::size_t i);
+        // BitIterator operator+(std::size_t i);
 
-        // BitIterator operator -(std::size_t i);
+        // BitIterator operator-(std::size_t i);
 
         /**
          * Iterator comparison.
          */
-        bool operator ==(const BitIterator& other) noexcept;
-        bool operator !=(const BitIterator& other) noexcept;
+        bool operator==(const BitIterator& other) noexcept;
+        bool operator!=(const BitIterator& other) noexcept;
     }; // class BitIterator
 
     /** Array of integer blocks. */
@@ -359,6 +359,6 @@ private:
 
 } // namespace imagestego
 
-std::ostream& operator <<(std::ostream& os, const imagestego::BitArrayImpl& arr);
+std::ostream& operator<<(std::ostream& os, const imagestego::BitArrayImpl& arr);
 
 #endif /* __IMAGESTEGO_CORE_BITARRAY_IMPL_HPP_INCLUDED__ */
