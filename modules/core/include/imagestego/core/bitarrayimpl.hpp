@@ -334,7 +334,7 @@ private:
      * @param sz Number of bits.
      * @return Number of blocks needed to store sz bits.
      */
-    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR std::size_t numberOfBlocks(std::size_t sz) {
+    inline static IMAGESTEGO_CONSTEXPR std::size_t numberOfBlocks(std::size_t sz) {
         return sz / bitsPerBlock + ((sz % bitsPerBlock != 0) ? 1 : 0);
     }
 
@@ -344,7 +344,7 @@ private:
      * @param i Index of an element.
      * @return Index of block containing i-th element.
      */
-    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR std::size_t blockIndex(std::size_t i) {
+    inline static IMAGESTEGO_CONSTEXPR std::size_t blockIndex(std::size_t i) {
         return i / bitsPerBlock;
     }
 
@@ -354,7 +354,7 @@ private:
      * @param i index of an element.
      * @return Index of bit in the block with i-th element.
      */
-    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR std::size_t bitIndex(std::size_t i) {
+    inline static IMAGESTEGO_CONSTEXPR std::size_t bitIndex(std::size_t i) {
         return i % bitsPerBlock;
     }
 }; // class BitArrayImpl
