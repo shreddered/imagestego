@@ -55,6 +55,7 @@ jobs:
           arch: aarch64
           distro: ubuntu20.04
           install: |
-                   apt-get update -q -y
-                   apt-get install cmake
+                   apt update -q -y
+                   apt install -q -y cmake gcc g++ git
+                   git submodule update --init
           run: echo "Hello world"
