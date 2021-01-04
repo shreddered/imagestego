@@ -3,7 +3,7 @@ name: Ubuntu
 on: [push, pull_request]
 
 jobs:
-  gcc_amd64:
+  gcc-10-amd64:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -12,18 +12,20 @@ jobs:
              sudo apt update
              sudo apt install gcc-10 g++-10 libopencv-dev
              git submodule update --init
-      - name: build
+      - name: cmake
         env:
           CC: gcc-10
           CXX: g++-10
-        run: scripts/build.sh
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TEST=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+      - name: build
+        run: cmake --build build -j 10
       - name: test
         run: |
              cd build
              cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
 
-  clang_amd64:
+  clang-10-amd64:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -32,11 +34,32 @@ jobs:
              sudo apt update
              sudo apt install clang-10 libopencv-dev
              git submodule update --init
-      - name: build
+      - name: cmake
         env:
           CC: clang-10
           CXX: clang++-10
-        run: scripts/build.sh
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TEST=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+      - name: build
+        run: cmake --build build -j 10
+      - name: test
+        run: |
+             cd build
+             cp ../test/test.jpg .
+             ctest -j 10 --output-on-failure
+  gcc-arm64:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: uraimo/run-on-arch-action@v2.0.5
+      - name: "install dependencies"
+        run: |
+             sudo apt update
+             sudo apt install libopencv-dev
+             git submodule update --init
+      - name: cmake
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TEST=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+      - name: build
+        run: cmake --build build -j 10
       - name: test
         run: |
              cd build
