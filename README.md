@@ -143,7 +143,7 @@ Please see [Contributing](https://github.com/shreddered/imagestego/wiki/Contribu
 
 # License
 
-This software is distibuted under GNU GPLv3. For more details see [LICENSE.txt](LICENSE.txt).
+This software is distibuted under MIT License. For more details see [LICENSE](LICENSE).
 
 # Further development
 
