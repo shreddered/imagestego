@@ -50,18 +50,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: uraimo/run-on-arch-action@v2.0.5
-      - name: "install dependencies"
-        run: |
-             sudo apt update
-             sudo apt install libopencv-dev
-             git submodule update --init
-      - name: cmake
-        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TEST=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
-      - name: build
-        run: cmake --build build -j 10
-      - name: test
-        run: |
-             cd build
-             cp ../test/test.jpg .
-             ctest -j 10 --output-on-failure
+      - uses: uraimo/run-on-arch-action@v2.0.8
+        with:
+          arch: aarch64
+          distro: ubuntu20.04
+          run: |
+               cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TEST=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
