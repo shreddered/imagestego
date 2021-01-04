@@ -54,5 +54,6 @@ jobs:
         with:
           arch: aarch64
           distro: ubuntu20.04
-          run: |
-               apt install cmake gcc g++
+          install: |
+                   apt-get update -q -y
+                   apt-get install cmake
