@@ -18,7 +18,10 @@ jobs:
           CXX: g++-10
         run: scripts/build.sh
       - name: test
-        run: cd build; ctest -j 10 --output-on-failure
+        run: |
+             cd build
+             cp test/test.jpg .
+             ctest -j 10 --output-on-failure
 
   clang_amd64:
     runs-on: ubuntu-latest
@@ -35,4 +38,7 @@ jobs:
           CXX: clang++-10
         run: scripts/build.sh
       - name: test
-        run: cd build; ctest -j 10 --output-on-failure
+        run: |
+             cd build
+             cp test/test.jpg .
+             ctest -j 10 --output-on-failure
