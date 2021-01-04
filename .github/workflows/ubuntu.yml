@@ -57,3 +57,4 @@ jobs:
           install: |
                    apt-get update -q -y
                    apt-get install cmake
+          run: echo "Hello world"
