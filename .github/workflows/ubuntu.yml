@@ -11,6 +11,7 @@ jobs:
         run: |
              sudo apt update
              sudo apt install gcc-10 g++-10 libopencv-dev
+             git submodule update --init
       - name: build
         env:
           CC: gcc-10
@@ -27,6 +28,7 @@ jobs:
         run: |
              sudo apt update
              sudo apt install clang-10 libopencv-dev
+             git submodule update --init
       - name: build
         env:
           CC: clang-10
