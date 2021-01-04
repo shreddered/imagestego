@@ -94,7 +94,7 @@ $ brew install cmake opencv
 
 ## Windows
 
-At first you will need [cmake](https://cmake.org/) to build this project.
+Go to [cmake downloads](https://cmake.org/download/) to install CMake.
 
 Grab [opencv release](https://github.com/opencv/opencv/releases/latest) which is suitable for your Visual Studio version.
 Then extract it and run `setup_vars_opencv4.cmd`.
@@ -147,4 +147,5 @@ This software is distibuted under GNU GPLv3. For more details see [LICENSE.txt](
 
 # Further development
 
-- [ ] Wavelet module
+- [x] Wavelet module
+- [x] JPEG module
