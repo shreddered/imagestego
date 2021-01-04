@@ -55,4 +55,4 @@ jobs:
           arch: aarch64
           distro: ubuntu20.04
           run: |
-               cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TEST=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+               sudo apt install cmake gcc g++
