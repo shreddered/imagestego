@@ -20,7 +20,7 @@ jobs:
       - name: test
         run: |
              cd build
-             cp test/test.jpg .
+             cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
 
   clang_amd64:
@@ -40,5 +40,5 @@ jobs:
       - name: test
         run: |
              cd build
-             cp test/test.jpg .
+             cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
