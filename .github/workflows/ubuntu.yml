@@ -50,7 +50,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: uraimo/run-on-arch-action@v2.0.8
-      - name: install dependencies
-        run: |
-             apt update -q -y
-             apt install -q -y cmake gcc g++
+        with:
+          arch: aarch64
+          distro: ubuntu20.04
+          githubToken: ${{ github.token }}
+          run: |
+               apt update -q -y
+               apt install -q -y cmake gcc g++
