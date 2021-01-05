@@ -21,6 +21,8 @@ jobs:
         run: cmake --build build -j 10
       - name: test
         run: |
+             which gcov || echo "No gcov"
+             which gcov-10 || echo "No gcov-10"
              cd build
              cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
