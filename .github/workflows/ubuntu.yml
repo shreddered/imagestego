@@ -46,3 +46,10 @@ jobs:
              cd build
              cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
+  gcc-9-arm64:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: uraimo/run-on-arch-action@v2.0.8
+        run: |
+             apt update -q -y
+             apt install -q -y cmake gcc g++
