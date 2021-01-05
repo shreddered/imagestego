@@ -16,7 +16,7 @@ jobs:
         env:
           CC: gcc-10
           CXX: g++-10
-        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TEST=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
       - name: build
         run: cmake --build build -j 10
       - name: test
@@ -38,7 +38,7 @@ jobs:
         env:
           CC: clang-10
           CXX: clang++-10
-        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TEST=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
       - name: build
         run: cmake --build build -j 10
       - name: test
@@ -66,5 +66,5 @@ jobs:
                cd imagestego
                git checkout ${{ steps.extract_branch.outputs.branch }}
           run: |
-               cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TEST=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+               cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
                cmake --build build -j 10
