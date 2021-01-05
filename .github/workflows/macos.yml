@@ -8,7 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
-        run: brew install opencv
+        run: |
+             brew install opencv
+             git submodule update --init
       - name: cmake
         run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
       - name: build
