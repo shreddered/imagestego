@@ -43,7 +43,7 @@ This library consists of components as described below.
 ### Subdirectory
 
 If you want to embed _imagestego_ into your project, you should use `add_subdirectory()`.
-After that `imagestego` interface target should be available:
+After that `imagestego` interface target will be available:
 
 ```cmake
 add_executable(foo
