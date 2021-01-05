@@ -26,6 +26,8 @@ jobs:
              ctest -j 10 --output-on-failure
       - name: coverage
         run: |
+             gcc-10 --version
+             gcov-10 --version
              touch coverage.info
              lcov --directory . --capture --gcov-tool $(which gcov-10) --output-file coverage.info
              lcov --remove coverage.info \
