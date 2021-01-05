@@ -64,6 +64,7 @@ jobs:
           install: |
                apt update -q -y
                apt install -q -y cmake gcc g++
-          run: |
                git clone https://github.com/shreddered/imagestego
+               cd imagestego
                git checkout $BRANCH
+          run: echo "Hello world"
