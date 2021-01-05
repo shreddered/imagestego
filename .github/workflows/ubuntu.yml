@@ -61,7 +61,7 @@ jobs:
           githubToken: ${{ github.token }}
           install: |
                apt update -q -y
-               apt install -q -y cmake gcc g++
+               apt install -q -y cmake gcc g++ git
                git clone https://github.com/shreddered/imagestego
                cd imagestego
                git checkout ${{ steps.extract_branch.outputs.branch }}
