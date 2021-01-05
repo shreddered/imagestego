@@ -24,8 +24,10 @@ jobs:
              cd build
              cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
+      - name: coverage
+        run: |
              touch coverage.info
-             lcov --directory . --capture --gcov-tool $(which gcov) --output-file coverage.info
+             lcov --directory . --capture --gcov-tool $(which gcov-10) --output-file coverage.info
              lcov --remove coverage.info \
                 '/usr/*' \
                 "$(pwd)"'/third_party/*' \
