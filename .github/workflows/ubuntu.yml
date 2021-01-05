@@ -65,6 +65,11 @@ jobs:
                git clone https://github.com/shreddered/imagestego
                cd imagestego
                git checkout ${{ steps.extract_branch.outputs.branch }}
-          run: |
-               cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
-               cmake --build build -j 10
+               git submodule update --init
+      - name: cmake
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+      - name: test
+        run: |
+             cd build
+             cp ../test/test.jpg .
+             ctest -j 10 --output-on-failure
