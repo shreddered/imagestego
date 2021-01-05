@@ -49,11 +49,21 @@ jobs:
   gcc-9-arm64:
     runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v2
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       - uses: uraimo/run-on-arch-action@v2.0.8
         with:
           arch: aarch64
           distro: ubuntu20.04
           githubToken: ${{ github.token }}
-          run: |
+          env:
+            BRANCH: ${{ steps.extract_branch.outputs.branch }}
+          install: |
                apt update -q -y
                apt install -q -y cmake gcc g++
+          run: |
+               git clone https://github.com/shreddered/imagestego
+               git checkout $BRANCH
