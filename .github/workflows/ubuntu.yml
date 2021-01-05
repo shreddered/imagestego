@@ -10,7 +10,7 @@ jobs:
       - name: install dependencies
         run: |
              sudo apt update
-             sudo apt install gcc-10 g++-10 libopencv-dev
+             sudo apt install gcc-10 g++-10 libopencv-dev lcov
              git submodule update --init
       - name: cmake
         env:
