@@ -65,4 +65,6 @@ jobs:
                git clone https://github.com/shreddered/imagestego
                cd imagestego
                git checkout ${{ steps.extract_branch.outputs.branch }}
-          run: echo "Hello world"
+          run: |
+               cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TEST=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+               cmake --build build -j 10
