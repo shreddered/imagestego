@@ -75,21 +75,11 @@ jobs:
              cd build
              cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
-  gcc-9-arm64:
+  gcc-arm64:
     runs-on: ubuntu-latest
-    container: arm64v8/ubuntu
     steps:
-      - name: install dependencies
-        run: |
-             apt update -q -y
-             apt install -q -y cmake gcc g++ git libopencv-dev
       - uses: actions/checkout@v2
-      - name: cmake
-        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+      - name: install dependencies
+        run: git submodule update --init
       - name: build
-        run: cmake --build build -j 10
-      - name: test
-        run: |
-             cd build
-             cp ../test/test.jpg .
-             ctest -j 10 --output-on-failure
+        run: docker run -v `pwd`:`pwd` -w `pwd` -t arm64v8/ubuntu ci/arm64-build.sh
