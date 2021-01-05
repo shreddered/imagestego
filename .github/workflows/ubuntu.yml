@@ -59,12 +59,10 @@ jobs:
           arch: aarch64
           distro: ubuntu20.04
           githubToken: ${{ github.token }}
-          env:
-            BRANCH: ${{ steps.extract_branch.outputs.branch }}
           install: |
                apt update -q -y
                apt install -q -y cmake gcc g++
                git clone https://github.com/shreddered/imagestego
                cd imagestego
-               git checkout $BRANCH
+               git checkout ${{ steps.extract_branch.outputs.branch }}
           run: echo "Hello world"
