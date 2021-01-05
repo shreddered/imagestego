@@ -25,6 +25,7 @@ jobs:
              cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
              touch coverage.info
+             lcov --directory . --capture --output-file coverage.info
              lcov --remove coverage.info \
                 '/usr/*' \
                 "$(pwd)"'/third_party/*' \
