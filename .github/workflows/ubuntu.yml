@@ -3,6 +3,37 @@ name: Ubuntu
 on: [push, pull_request]
 
 jobs:
+  gcc-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+             sudo apt update
+             sudo apt install gcc-10 g++-10 libopencv-dev
+             git submodule update --init
+      - name: cmake
+        env:
+          CC: gcc-10
+          CXX: g++-10
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF -D IMAGESTEGO_COVERAGE=ON
+      - name: build
+        run: cmake --build build -j 10
+      - name: test
+        run: |
+             cd build
+             cp ../test/test.jpg .
+             ctest -j 10 --output-on-failure
+             touch coverage.info
+             lcov --remove coverage.info \
+                '/usr/*' \
+                "$(pwd)"'/third_party/*' \
+                "$(pwd)"'/modules/core/third_party/*' \
+                "$(pwd)"'/modules/core/test/*' \
+                "$(pwd)"'/modules/compression/test/*' \
+                "$(pwd)"'/modules/lossless/test/*' \
+                --output-file coverage.info
+             bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
   gcc-10-amd64:
     runs-on: ubuntu-latest
     steps:

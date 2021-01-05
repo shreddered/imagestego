@@ -59,7 +59,11 @@ find_package(OpenCV CONFIG REQUIRED)
 find_package(Threads)
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
+  if (IMAGESTEGO_COVERAGE)
+    set(CMAKE_BUILD_TYPE Debug)
+  else()
+    set(CMAKE_BUILD_TYPE Release)
+  endif()
 endif()
 
 if (NOT DEFINED CMAKE_CXX_FLAGS_RELEASE)
