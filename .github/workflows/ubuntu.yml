@@ -62,15 +62,13 @@ jobs:
           install: |
                apt update -q -y
                apt install -q -y cmake gcc g++ git libopencv-dev
-          run: |
                git clone https://github.com/shreddered/imagestego.git
                cd imagestego
                git checkout ${{ steps.extract_branch.outputs.branch }}
                git submodule update --init
-      - name: cmake
-        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
-      - name: test
-        run: |
-             cd build
-             cp ../test/test.jpg .
-             ctest -j 10 --output-on-failure
+          run: |
+               cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+               cmake --build build -j 10
+               cd build
+               cp ../test/test.jpg .
+               ctest -j 10 --output-on-failure
