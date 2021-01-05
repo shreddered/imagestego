@@ -160,7 +160,6 @@ endfunction(imagestego_exports target)
 macro(imagestego_add_coverage target)
   if (IMAGESTEGO_COVERAGE AND IMAGESTEGO_GCC)
     target_compile_options(${target} PRIVATE
-      -O0
       -g
       --coverage
     )
