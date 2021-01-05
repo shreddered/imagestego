@@ -26,6 +26,7 @@ jobs:
              ctest -j 10 --output-on-failure
       - name: coverage
         run: |
+             lcov --version
              gcc-10 --version
              gcov-10 --version
              touch coverage.info
