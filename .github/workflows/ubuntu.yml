@@ -46,16 +46,3 @@ jobs:
              cd build
              cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
-  gcc-arm64:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: uraimo/run-on-arch-action@v2.0.8
-        with:
-          arch: aarch64
-          distro: ubuntu20.04
-          install: |
-                   apt update -q -y
-                   apt install -q -y cmake gcc g++ git
-                   git submodule update --init
-          run: echo "Hello world"
