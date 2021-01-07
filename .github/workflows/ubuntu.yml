@@ -80,11 +80,11 @@ jobs:
              cd build
              cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
-  gcc-arm64:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: install dependencies
-        run: git submodule update --init
-      - name: build
-        run: docker run -v `pwd`:`pwd` -w `pwd` -t arm64v8/ubuntu ci/arm64-build.sh
+  # gcc-arm64:
+    # runs-on: ubuntu-latest
+    # steps:
+      # - uses: actions/checkout@v2
+      # - name: install dependencies
+        # run: git submodule update --init
+      # - name: build
+        # run: docker run -v `pwd`:`pwd` -w `pwd` -t arm64v8/ubuntu ci/arm64-build.sh
