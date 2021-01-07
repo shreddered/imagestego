@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,15 +31,16 @@
 #include <string>
 #include <vector>
 
-
 namespace imagestego {
 
 struct StringElement final {
-    int prefixIndex; // index of prefix string
-    uint8_t value; // last byte value stored instead of string
-    int first = -1; // index of first string which has *this as prefix
+    int prefixIndex;           // index of prefix string
+    uint8_t value;             // last byte value stored instead of string
+    int first = -1;            // index of first string which has *this as prefix
     int left = -1, right = -1; // indexes of string which have same prefix as *this
-    explicit constexpr StringElement(const uint8_t val = 0, const int& prefix = -1) noexcept : prefixIndex(prefix), value(val) {}
+    explicit constexpr StringElement(const uint8_t val = 0,
+                                     const int& prefix = -1) noexcept
+        : prefixIndex(prefix), value(val) {}
 }; // struct StringElement
 
 class Dictionary {
@@ -48,16 +49,16 @@ public:
     explicit Dictionary() noexcept;
     int search(const StringElement& s);
     void clear() noexcept;
-    inline unsigned int size() const noexcept {
-        return newCode;
-    }
+    inline unsigned int size() const noexcept { return _newCode; }
     virtual ~Dictionary();
+
 protected:
     std::string at(int code);
     void add(const uint8_t& value, const int& prefixIndex);
+
 private:
-    std::vector<StringElement> codeTable;
-    unsigned int newCode = 256;
+    std::vector<StringElement> _codeTable;
+    unsigned int _newCode = 256;
 }; // class Dictionary
 
 } // namespace imagestego

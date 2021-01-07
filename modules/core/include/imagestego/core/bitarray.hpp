@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,7 +31,7 @@
 #include <ostream>
 #include <string>
 
-// forward declarations (needed for operator <<)
+// forward declarations (needed for operator<<)
 namespace imagestego {
 
 class BitArray;
@@ -47,7 +47,8 @@ class BitArray;
  * @param arr Bit array to be printed.
  * @return std::ostream instance.
  */
-IMAGESTEGO_EXPORTS std::ostream& operator <<(std::ostream& os, const imagestego::BitArray& arr);
+IMAGESTEGO_EXPORTS std::ostream& operator<<(std::ostream& os,
+                                            const imagestego::BitArray& arr);
 
 namespace imagestego {
 
@@ -56,7 +57,6 @@ namespace imagestego {
  */
 class IMAGESTEGO_EXPORTS BitArray {
 public:
-
     /**
      * Iterator type definition.
      */
@@ -89,9 +89,9 @@ public:
     BitArray(const BitArray& other);
 
     /**
-     * imagestego::BitArray copy-assignment operator overloading.
+     * imagestego::BitArray copy-assignment operatoroverloading.
      */
-    BitArray& operator =(const BitArray& other);
+    BitArray& operator=(const BitArray& other);
 
     /**
      * imagestego::BitArray move constructor.
@@ -99,9 +99,9 @@ public:
     BitArray(BitArray&& other) noexcept;
 
     /**
-     * imagestego::BitArray move-assignment operator overloading.
+     * imagestego::BitArray move-assignment operatoroverloading.
      */
-    BitArray& operator =(BitArray&& other) noexcept;
+    BitArray& operator=(BitArray&& other) noexcept;
 
     /**
      * imagestego::BitArray destructor.
@@ -159,7 +159,7 @@ public:
      * @param i Index of element in array.
      * @return Read-only element of array.
      */
-    bool operator [](std::size_t i) const;
+    bool operator[](std::size_t i) const;
 
     /**
      * Size of array.
@@ -204,10 +204,10 @@ public:
      */
     bool empty() const noexcept;
 
-    /** friend declaration of operator << overloading. */
-    friend std::ostream& (::operator <<)(std::ostream& os, const imagestego::BitArray& arr);
+    /** friend declaration of operator<< overloading. */
+    friend std::ostream&(::operator<<)(std::ostream& os, const imagestego::BitArray& arr);
 
-    bool operator ==(const BitArray& other);
+    bool operator==(const BitArray& other);
 
     /**
      * Iterator to beginning.
@@ -222,8 +222,8 @@ public:
      * @return Iterator pointing to past-the-end element in array.
      */
     iterator end();
-private:
 
+private:
     /**
      * Constructs array from implementation pointer.
      *

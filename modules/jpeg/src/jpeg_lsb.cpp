@@ -1,23 +1,20 @@
 #include "imagestego/algorithms/jpeg_lsb.hpp"
 
-
 namespace imagestego {
 
 JpegLsbEmbedder<void>::JpegLsbEmbedder() noexcept {}
 
-JpegLsbEmbedder<void>::JpegLsbEmbedder(const std::string& input, const std::string& _output) : image(input), output(_output) {}
+JpegLsbEmbedder<void>::JpegLsbEmbedder(const std::string& input,
+                                       const std::string& _output)
+    : image(input), output(_output) {}
 
-void JpegLsbEmbedder<void>::setImage(const std::string& im) {
-    image.open(im);
-}
+void JpegLsbEmbedder<void>::setImage(const std::string& im) { image.open(im); }
 
 void JpegLsbEmbedder<void>::setMessage(const std::string& _msg) {
     msg = BitArray<>(_msg);
 }
 
-void JpegLsbEmbedder<void>::setOutputName(const std::string& str) {
-    output = str;
-}
+void JpegLsbEmbedder<void>::setOutputName(const std::string& str) { output = str; }
 
 void JpegLsbEmbedder<void>::setSecretKey(const std::string& _key) {
     key = BitArray<>(_key);
@@ -55,9 +52,7 @@ JpegLsbExtracter<void>::JpegLsbExtracter() noexcept {}
 
 JpegLsbExtracter<void>::JpegLsbExtracter(const std::string& _image) : image(_image) {}
 
-void JpegLsbExtracter<void>::setImage(const std::string& str) {
-    image.open(str);
-}
+void JpegLsbExtracter<void>::setImage(const std::string& str) { image.open(str); }
 
 void JpegLsbExtracter<void>::setSecretKey(const std::string& _key) {
     key = BitArray<>(_key);

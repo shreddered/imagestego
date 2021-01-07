@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,15 +24,14 @@
 
 // imagestego headers
 #include "imagestego/wavelet/haar.hpp"
-#include "inverse_haar.hpp"
 #include "haar.hpp"
+#include "inverse_haar.hpp"
 // c++ headers
 #include <cstdint>
 #include <future>
 #include <vector>
 // opencv headers
 #include <opencv2/core.hpp>
-
 
 namespace imagestego {
 
@@ -45,16 +44,17 @@ public:
         if (mat.depth() != CV_16S) {
             mat.convertTo(dst, CV_16S);
             cv::split(dst, _planes);
-        }
-        else {
+        } else {
             cv::split(mat, _planes);
         }
-        std::vector<std::future<cv::Mat> > futures;
+        std::vector<std::future<cv::Mat>> futures;
         futures.reserve(_planes.size() - 1);
         for (std::size_t i = 1; i != _planes.size(); ++i) {
-            futures.emplace_back(std::async([](const cv::Mat& src) {
-                return verticalLifting(horizontalLifting(src));
-            }, std::cref(_planes[i])));
+            futures.emplace_back(std::async(
+                [](const cv::Mat& src) {
+                    return verticalLifting(horizontalLifting(src));
+                },
+                std::cref(_planes[i])));
         }
         planes.reserve(_planes.size());
         planes.emplace_back(verticalLifting(horizontalLifting(_planes.front())));
@@ -68,12 +68,14 @@ public:
         cv::Mat dst;
         std::vector<cv::Mat> planes, _planes;
         cv::split(mat, _planes);
-        std::vector<std::future<cv::Mat> > futures;
+        std::vector<std::future<cv::Mat>> futures;
         futures.reserve(_planes.size());
         for (const cv::Mat& mat : _planes) {
-            futures.emplace_back(std::async([](const cv::Mat& src) {
-                return inverseHorizontalLifting(inverseVerticalLifting(src));
-            }, std::cref(mat)));
+            futures.emplace_back(std::async(
+                [](const cv::Mat& src) {
+                    return inverseHorizontalLifting(inverseVerticalLifting(src));
+                },
+                std::cref(mat)));
         }
         planes.reserve(_planes.size());
         for (auto&& f : futures) {
@@ -82,6 +84,7 @@ public:
         cv::merge(planes, dst);
         return mat;
     }
+
 private:
     static cv::Mat horizontalLifting(const cv::Mat& src) {
         cv::Mat dst(src.size(), CV_16S);
@@ -106,8 +109,7 @@ private:
         auto x = src.cols >> 1;
         for (int i = 0; i != src.rows; ++i) {
             for (int j = 0; j != x; ++j) {
-                auto a = src.at<short>(i, j),
-                     b = src.at<short>(i, j + x);
+                auto a = src.at<short>(i, j), b = src.at<short>(i, j + x);
                 dst.at<short>(i, (j << 1)) = a + floor2(b + 1);
                 dst.at<short>(i, (j << 1) + 1) = a - floor2(b);
             }
@@ -117,9 +119,7 @@ private:
     static inline cv::Mat inverseVerticalLifting(const cv::Mat& src) {
         return inverseHorizontalLifting(src.t());
     }
-    static inline int floor2(int num) {
-        return (num < 0) ? (num - 1) / 2 : num / 2;
-    }
+    static inline int floor2(int num) { return (num < 0) ? (num - 1) / 2 : num / 2; }
 }; // class HaarWaveletImpl
 
 HaarWavelet::HaarWavelet() : pImpl(new HaarWaveletImpl) {}
@@ -129,13 +129,9 @@ HaarWavelet::~HaarWavelet() noexcept {
         delete pImpl;
 }
 
-cv::Mat HaarWavelet::transform(const cv::Mat& mat) {
-    return pImpl->transform(mat);
-}
+cv::Mat HaarWavelet::transform(const cv::Mat& mat) { return pImpl->transform(mat); }
 
-cv::Mat HaarWavelet::inverse(const cv::Mat& mat) {
-    return pImpl->inverse(mat);
-}
+cv::Mat HaarWavelet::inverse(const cv::Mat& mat) { return pImpl->inverse(mat); }
 
 namespace experimental {
 
@@ -144,20 +140,21 @@ public:
     explicit HaarWaveletImpl() noexcept {}
     cv::Mat transform(const cv::Mat& mat) {
         cv::Mat dst;
-        std::vector<std::future<cv::Mat> > futures;
+        std::vector<std::future<cv::Mat>> futures;
         std::vector<cv::Mat> planes, _planes;
         if (mat.depth() != CV_16S) {
             mat.convertTo(dst, CV_16S);
             cv::split(dst, _planes);
-        }
-        else {
+        } else {
             cv::split(mat, _planes);
         }
 
         for (std::size_t i = 1; i != _planes.size(); ++i) {
-            futures.emplace_back(std::async([](const cv::Mat& mat) -> cv::Mat {
-                return verticalLifting(horizontalLifting(mat));
-            }, std::cref(_planes[i])));
+            futures.emplace_back(std::async(
+                [](const cv::Mat& mat) -> cv::Mat {
+                    return verticalLifting(horizontalLifting(mat));
+                },
+                std::cref(_planes[i])));
         }
         planes.reserve(_planes.size());
         planes.emplace_back(verticalLifting(horizontalLifting(_planes.front())));
@@ -171,6 +168,7 @@ public:
         // TODO: implement inverse wavelet
         return mat;
     }
+
 private:
     static cv::Mat horizontalLifting(const cv::Mat& src);
     static cv::Mat verticalLifting(const cv::Mat& src);
@@ -196,13 +194,9 @@ HaarWavelet::~HaarWavelet() noexcept {
     }
 }
 
-cv::Mat HaarWavelet::transform(const cv::Mat& mat) {
-    return pImpl->transform(mat);
-}
+cv::Mat HaarWavelet::transform(const cv::Mat& mat) { return pImpl->transform(mat); }
 
-cv::Mat HaarWavelet::inverse(const cv::Mat& mat) {
-    return pImpl->inverse(mat);
-}
+cv::Mat HaarWavelet::inverse(const cv::Mat& mat) { return pImpl->inverse(mat); }
 
 } // namespace experimental
 

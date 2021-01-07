@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,6 @@
 // c++ headers
 #include <iostream>
 
-
 namespace {
 
 void dwt1D(const cv::Mat& src, cv::Mat& dst) {
@@ -35,8 +34,7 @@ void dwt1D(const cv::Mat& src, cv::Mat& dst) {
     auto x = src.cols >> 1;
     for (int i = 0; i != src.rows; ++i)
         for (int j = 0; j != x; ++j) {
-            auto a = src.at<short>(i, (j << 1)),
-                 b = src.at<short>(i, (j << 1) + 1);
+            auto a = src.at<short>(i, (j << 1)), b = src.at<short>(i, (j << 1) + 1);
             dst.at<short>(i, j) = (a + b) / 2;
             dst.at<short>(i, j + x) = a - b;
         }
@@ -47,8 +45,7 @@ void idwt1D(const cv::Mat& src, cv::Mat& dst) {
     auto x = src.cols >> 1;
     for (int i = 0; i != src.rows; ++i)
         for (int j = 0; j != x; ++j) {
-            auto a = src.at<short>(i, j),
-                 b = src.at<short>(i, j + x);
+            auto a = src.at<short>(i, j), b = src.at<short>(i, j + x);
             dst.at<short>(i, (j << 1)) = a + ((b + 1 < 0 && (b + 1) % 2) ? b : b + 1) / 2;
             dst.at<short>(i, (j << 1) + 1) = a - ((b < 0 && b % 2) ? b - 1 : b) / 2;
         }
@@ -78,7 +75,6 @@ DwtEmbedder<void>::DwtEmbedder() noexcept {}
 DwtEmbedder<void>::DwtEmbedder(const std::string& imageName, const std::string& output)
     : image(cv::imread(imageName)), outputFile(output) {}
 
-
 void DwtEmbedder<void>::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
 }
@@ -94,9 +90,7 @@ void DwtEmbedder<void>::setSecretKey(const std::string& _key) {
     hasKey = true;
 }
 
-void DwtEmbedder<void>::setMessage(const std::string& _msg) {
-    msg = BitArray<>(_msg);
-}
+void DwtEmbedder<void>::setMessage(const std::string& _msg) { msg = BitArray<>(_msg); }
 
 void DwtEmbedder<void>::createStegoContainer() {
     if (!hasKey) {
@@ -138,8 +132,7 @@ void DwtEmbedder<void>::createStegoContainer() {
     // DWT of blue channel
     dwt(cropped, tmp);
     currentMsgIndex = 0;
-    int i = tmp.rows >> 1,
-        j = tmp.cols >> 1;
+    int i = tmp.rows >> 1, j = tmp.cols >> 1;
     currentMsgIndex = 0;
     for (i = tmp.rows >> 1; i != tmp.rows && currentMsgIndex != msg.size(); ++i) {
         for (j = tmp.cols >> 1; j != tmp.cols && currentMsgIndex != msg.size(); ++j) {
@@ -157,7 +150,8 @@ void DwtEmbedder<void>::createStegoContainer() {
 
 DwtExtracter<void>::DwtExtracter() noexcept {}
 
-DwtExtracter<void>::DwtExtracter(const std::string& imageName) : image(cv::imread(imageName)) {}
+DwtExtracter<void>::DwtExtracter(const std::string& imageName)
+    : image(cv::imread(imageName)) {}
 
 void DwtExtracter<void>::setImage(const std::string& imageName) {
     image = cv::imread(imageName);
@@ -189,8 +183,7 @@ std::string DwtExtracter<void>::extractMessage() {
         x0 = gen() % image.cols;
     } while (y0 > image.rows - sz || x0 > image.cols - sz);
     cv::Mat cropped = planes[0](cv::Rect(x0, y0, sz, sz));
-    std::size_t currentMsgIndex = 0,
-                msgSize = 0;
+    std::size_t currentMsgIndex = 0, msgSize = 0;
     bool sizeKnown = false;
     // DWT of blue channel
     cv::Mat tmp;
@@ -202,20 +195,15 @@ std::string DwtExtracter<void>::extractMessage() {
             if (currentMsgIndex > 32) {
                 sizeKnown = true;
                 arr.pushBack(bit);
-            }
-            else
+            } else
                 msgSize |= bit << (32 - currentMsgIndex);
             if (sizeKnown && currentMsgIndex - 32 == msgSize)
                 return arr.toString();
         }
 }
 
-Algorithm DwtEmbedder<void>::getAlgorithm() const noexcept {
-    return Algorithm::Dwt;
-}
+Algorithm DwtEmbedder<void>::getAlgorithm() const noexcept { return Algorithm::Dwt; }
 
-Algorithm DwtExtracter<void>::getAlgorithm() const noexcept {
-    return Algorithm::Dwt;
-}
+Algorithm DwtExtracter<void>::getAlgorithm() const noexcept { return Algorithm::Dwt; }
 
 } // namespace imagestego

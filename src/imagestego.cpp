@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,11 +24,11 @@
 
 #include "imagestego/imagestego.hpp"
 
-
 namespace imagestego {
 
 void embedSecretMessage(AbstractStegoEmbedder* embedder, const std::string& image,
-        const std::string& output, const std::string& message, const std::string& key) {
+                        const std::string& output, const std::string& message,
+                        const std::string& key) {
     std::unique_ptr<AbstractStegoEmbedder> ptr(embedder);
     embedder->setImage(image);
     embedder->setOutputName(output);
@@ -37,7 +37,8 @@ void embedSecretMessage(AbstractStegoEmbedder* embedder, const std::string& imag
     embedder->createStegoContainer();
 }
 
-std::string extractSecretMessage(AbstractStegoExtracter* extracter, const std::string& image, const std::string& key) {
+std::string extractSecretMessage(AbstractStegoExtracter* extracter,
+                                 const std::string& image, const std::string& key) {
     std::unique_ptr<AbstractStegoExtracter> ptr(extracter);
     extracter->setImage(image);
     extracter->setSecretKey(key);

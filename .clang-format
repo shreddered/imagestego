@@ -1,0 +1,11 @@
+Language: Cpp
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlwaysBreakTemplateDeclarations: Yes
+ColumnLimit: 90
+DerivePointerAlignment: false
+IndentCaseLabels: true
+IndentWidth: 4
+PointerAlignment: Left
+SpaceAfterCStyleCast: true
+SpaceAfterTemplateKeyword: false

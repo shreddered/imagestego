@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -44,7 +44,7 @@ TEST(Core, Route) {
     gen.seed(1);
     Route r({10, 15}, gen);
     r.create(3);
-    std::vector<std::pair<int, int> > v = {{4, 8}, {3, 13}, {5, 14}};
+    std::vector<std::pair<int, int>> v = {{4, 8}, {3, 13}, {5, 14}};
     EXPECT_TRUE(isEqual(r.begin(), r.end(), v.begin()));
     r.add();
     v = {{4, 8}, {3, 13}, {1, 11}, {5, 14}};

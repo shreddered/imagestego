@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,19 +31,18 @@
 #include <random>
 #include <utility>
 
-
 namespace imagestego {
 
-class RouteImpl final : public AvlTree<std::pair<int, int>, PairComparator<int, int> > {
+class RouteImpl final : public AvlTree<std::pair<int, int>, PairComparator<int, int>> {
 public:
     explicit RouteImpl(const std::pair<int, int>& mapSize, std::mt19937&) noexcept;
     template<class It>
-    explicit RouteImpl(It begin, It end, std::mt19937& _gen) : AvlTree(begin, end), gen(_gen) {}
-    inline void setMapSize(const std::pair<int, int>& mapSize) {
-        _mapSize = mapSize;
-    }
+    explicit RouteImpl(It begin, It end, std::mt19937& _gen)
+        : AvlTree(begin, end), gen(_gen) {}
+    inline void setMapSize(const std::pair<int, int>& mapSize) { _mapSize = mapSize; }
     void create(std::size_t);
     void add();
+
 private:
     std::pair<int, int> _mapSize;
     std::mt19937& gen;
@@ -54,7 +53,8 @@ public:
     typedef RouteImpl::iterator iterator;
     explicit Route(const std::pair<int, int>& mapSize, std::mt19937& gen);
     template<class It>
-    explicit Route(It begin, It end, std::mt19937& _gen) : _route(new RouteImpl(begin, end, _gen)) {}
+    explicit Route(It begin, It end, std::mt19937& _gen)
+        : _route(new RouteImpl(begin, end, _gen)) {}
     virtual ~Route() noexcept;
     void setMapSize(const std::pair<int, int>& mapSize);
     void create(std::size_t n);
@@ -62,6 +62,7 @@ public:
     bool search(const std::pair<int, int>& p);
     iterator begin();
     iterator end();
+
 private:
     RouteImpl* _route;
 }; // class Route

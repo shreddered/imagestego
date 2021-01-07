@@ -6,16 +6,15 @@
 #include "imagestego/utils/bitarray.hpp"
 #include "imagestego/utils/jpeg_image.hpp"
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
-#   include "imagestego/keygen.hpp"
-#   include <iostream>
+#include "imagestego/keygen.hpp"
+#include <iostream>
 #endif
 #ifdef IMAGESTEGO_ENABLE_FORMAT_CHECKNG
-#   include "imagestego/utils/format_checker.hpp"
+#include "imagestego/utils/format_checker.hpp"
 #endif
 // c++
 #include <string>
 #include <vector>
-
 
 namespace imagestego {
 
@@ -24,13 +23,10 @@ template<typename EncoderType>
 class JpegLsbEmbedder : public AbstractStegoEmbedder {
 public:
     explicit JpegLsbEmbedder() noexcept {}
-    explicit JpegLsbEmbedder(const std::string& input, const std::string& _output) : image(input), output(_output) {}
-    void setImage(const std::string& img) override {
-        image.open(img);
-    }
-    void setOutputName(const std::string& str) override {
-        output = str;
-    }
+    explicit JpegLsbEmbedder(const std::string& input, const std::string& _output)
+        : image(input), output(_output) {}
+    void setImage(const std::string& img) override { image.open(img); }
+    void setOutputName(const std::string& str) override { output = str; }
     void setMessage(const std::string& message) override {
         encoder.setMessage(message);
         msg = encoder.getEncodedMessage();
@@ -38,9 +34,7 @@ public:
     void setSecretKey(const std::string& _key) override {
         key = BitArray<unsigned char>(_key);
     }
-    Algorithm getAlgorithm() const noexcept override {
-        return Algorithm::JpegLsb;
-    }
+    Algorithm getAlgorithm() const noexcept override { return Algorithm::JpegLsb; }
     void createStegoContainer() override {
         if (key.empty()) {
 #ifdef IMAGESTEGO_ENABLE_KEYGEN_SUPPORT
@@ -51,8 +45,7 @@ public:
             throw Exception(Exception::Codes::NoKeyFound);
 #endif
         }
-        std::size_t keyIndex = 0,
-                    msgIndex = 0;
+        std::size_t keyIndex = 0, msgIndex = 0;
         BitArray<uint32_t> sizeStream;
         sizeStream.pushBack(msg.size(), 32);
         int i = 0, j = 0;
@@ -66,8 +59,7 @@ public:
                         else
                             p[1] &= ~1;
                     }
-                }
-                else {
+                } else {
                     if (p[2] != 1 && p[2]) {
                         if (sizeStream[msgIndex++])
                             p[2] |= 1;
@@ -96,8 +88,7 @@ public:
                         else
                             p[1] &= ~1;
                     }
-                }
-                else {
+                } else {
                     if (p[2] != 1 && p[2]) {
                         if (msg[msgIndex++])
                             p[2] |= 1;
@@ -111,6 +102,7 @@ public:
         }
         image.writeTo(output);
     }
+
 private:
     BitArray<unsigned char> msg, key;
     EncoderType encoder;
@@ -123,20 +115,13 @@ class JpegLsbExtracter : public AbstractStegoExtracter {
 public:
     explicit JpegLsbExtracter() noexcept {}
     explicit JpegLsbExtracter(const std::string& _image) : image(_image) {}
-    void setImage(const std::string& str) override {
-        image.open(str);
-    }
-    void setSecretKey(const std::string& _key) override {
-        key = BitArray<>(_key);
-    }
-    Algorithm getAlgorithm() const noexcept override {
-        return Algorithm::JpegLsb;
-    }
+    void setImage(const std::string& str) override { image.open(str); }
+    void setSecretKey(const std::string& _key) override { key = BitArray<>(_key); }
+    Algorithm getAlgorithm() const noexcept override { return Algorithm::JpegLsb; }
     std::string extractMessage() override {
         if (key.empty())
             throw Exception(Exception::Codes::NoKeyFound);
-        std::size_t keyIndex = 0,
-                    msgIndex = 0;
+        std::size_t keyIndex = 0, msgIndex = 0;
         BitArray<uint32_t> sizeStream;
         BitArray<uint8_t> msg;
         int i = 0, j = 0;
@@ -146,8 +131,7 @@ public:
                 if (lsb(p[0]) != key[keyIndex]) {
                     if (p[1] != 1 && p[1])
                         sizeStream.pushBack(lsb(p[1]));
-                }
-                else {
+                } else {
                     if (p[2] != 1 && p[2])
                         sizeStream.pushBack(lsb(p[2]));
                 }
@@ -170,8 +154,7 @@ public:
                         msg.pushBack(lsb(p[1]));
                         --sz;
                     }
-                }
-                else {
+                } else {
                     if (p[2] != 1 && p[2]) {
                         msg.pushBack(lsb(p[2]));
                         --sz;
@@ -183,13 +166,12 @@ public:
         decoder.setMessage(msg);
         return decoder.getDecodedMessage();
     }
+
 private:
     BitArray<> key;
     JpegImage image;
     DecoderType decoder;
-    static constexpr bool lsb(const short& value) {
-        return (value & 1) != 0;
-    }
+    static constexpr bool lsb(const short& value) { return (value & 1) != 0; }
 }; // class JpegLsbExtracter
 #else
 template<class EncoderType>
@@ -210,6 +192,7 @@ public:
     void setSecretKey(const std::string& key) override;
     Algorithm getAlgorithm() const noexcept override;
     void createStegoContainer() override;
+
 private:
     BitArray<> msg, key;
     JpegImage image;
@@ -225,6 +208,7 @@ public:
     void setSecretKey(const std::string& key) override;
     Algorithm getAlgorithm() const noexcept override;
     std::string extractMessage() override;
+
 private:
     BitArray<> key;
     JpegImage image;

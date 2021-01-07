@@ -1,5 +1,5 @@
-#include <immintrin.h>
 #include <cstdint>
+#include <immintrin.h>
 
 int main() {
     int32_t data[8] = {0, 1, 2, 3, 4, 5, 6, 7};

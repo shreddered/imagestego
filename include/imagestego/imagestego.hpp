@@ -10,13 +10,14 @@
 #include <memory>
 #include <string>
 
-
 namespace imagestego {
 
 void embedSecretMessage(AbstractStegoEmbedder* embedder, const std::string& image,
-        const std::string& output, const std::string& message, const std::string& key);
+                        const std::string& output, const std::string& message,
+                        const std::string& key);
 
-std::string extractSecretMessage(AbstractStegoExtracter* extracter, const std::string& image, const std::string& key);
+std::string extractSecretMessage(AbstractStegoExtracter* extracter,
+                                 const std::string& image, const std::string& key);
 
 } // namespace imagestego
 

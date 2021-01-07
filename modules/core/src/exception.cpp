@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,14 +24,13 @@
 
 #include "imagestego/core/exception.hpp"
 
-
 namespace imagestego {
 
 Exception::Exception(const int& _code) noexcept : std::exception(), code(_code) {}
 
 #ifndef _MSC_VER
 const char* Exception::what() const noexcept {
-    switch(code) {
+    switch (code) {
         case Codes::NoSuchFile:
             return "No such file";
         case Codes::BigMessageSize:
@@ -43,7 +42,9 @@ const char* Exception::what() const noexcept {
         case Codes::UnknownLsbMode:
             return "Unknown LSB mode";
         case Codes::NotJpegClass:
-            return "Class 'LsbEmbedder' doesn't support JPEG pictures. Use 'JpegLsbEmbedder' instead";
+            return "Class 'LsbEmbedder' doesn't support JPEG pictures. Use "
+                   "'JpegLsbEmbedder' "
+                   "instead";
         default:
             return "Unknown Error";
     }

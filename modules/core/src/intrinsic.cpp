@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,34 +27,34 @@
 // c++ headers
 #include <cstdlib>
 #if IMAGESTEGO_MSVC && HAVE_INTRIN_H
-#   include <intrin.h>
-#   pragma intrinsic(_BitScanReverse)
+#include <intrin.h>
+#pragma intrinsic(_BitScanReverse)
 #endif
 
 #if IMAGESTEGO_MSVC
-#   define bswap_32(x) _byteswap_ulong(x)
+#define bswap_32(x) _byteswap_ulong(x)
 #elif IMAGESTEGO_ICC
-#   define bswap_32(x) _bswap(x)
+#define bswap_32(x) _bswap(x)
 #elif IMAGESTEGO_GCC || (IMAGESTEGO_CLANG && !defined(__APPLE__))
-#   define bswap_32(x) __builtin_bswap32(x)
+#define bswap_32(x) __builtin_bswap32(x)
 #elif defined(__APPLE__)
-#   include <libkern/OSByteOrder.h>
-#   define bswap_32(x) OSSwapInt32(x)
-#elif defined(__sun) || defined(sun) 
-#   include <sys/byteorder.h>
-#   define bswap_32(x) BSWAP_32(x)
+#include <libkern/OSByteOrder.h>
+#define bswap_32(x) OSSwapInt32(x)
+#elif defined(__sun) || defined(sun)
+#include <sys/byteorder.h>
+#define bswap_32(x) BSWAP_32(x)
 #elif defined(__FreeBSD__)
-#   include <sys/endian.h>
-#   define bswap_32(x) bswap32(x)
+#include <sys/endian.h>
+#define bswap_32(x) bswap32(x)
 #elif defined(__OpenBSD__)
-#   include <sys/types.h>
-#   define bswap_32(x) swap32(x)
+#include <sys/types.h>
+#define bswap_32(x) swap32(x)
 #elif defined(__NetBSD__)
-#   include <sys/types.h>
-#   include <machine/bswap.h>
-#   if defined(__BSWAP_RENAME) && !defined(__bswap_32)
-#       define bswap_32(x) bswap32(x)
-#   endif
+#include <machine/bswap.h>
+#include <sys/types.h>
+#if defined(__BSWAP_RENAME) && !defined(__bswap_32)
+#define bswap_32(x) bswap32(x)
+#endif
 #endif
 
 namespace imagestego {

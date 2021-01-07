@@ -1,12 +1,11 @@
 #include "imagestego/utils/jpeg_image.hpp"
 #include <iostream>
 
-
 namespace imagestego {
 
 Point::Point(short& _x, short& _y, short& _z) noexcept : x(_x), y(_y), z(_z) {}
 
-short& Point::operator [](int index) noexcept {
+short& Point::operator[](int index) noexcept {
     if (!index)
         return x;
     else if (index - 1)
@@ -15,9 +14,10 @@ short& Point::operator [](int index) noexcept {
         return y;
 }
 
-Point_::Point_(const short& _x, const short& _y, const short& _z) noexcept : x(_x), y(_y), z(_z) {}
+Point_::Point_(const short& _x, const short& _y, const short& _z) noexcept
+    : x(_x), y(_y), z(_z) {}
 
-const short& Point_::operator [](int index) const noexcept {
+const short& Point_::operator[](int index) const noexcept {
     if (!index)
         return x;
     else if (index - 1)
@@ -28,13 +28,9 @@ const short& Point_::operator [](int index) const noexcept {
 
 JpegImage::JpegImage() noexcept {}
 
-JpegImage::JpegImage(const std::string& src) {
-    open(src);
-}
+JpegImage::JpegImage(const std::string& src) { open(src); }
 
-JpegImage::~JpegImage() noexcept {
-    close();
-}
+JpegImage::~JpegImage() noexcept { close(); }
 
 void JpegImage::open(const std::string& src) {
     if (in)
@@ -60,27 +56,33 @@ void JpegImage::close() noexcept {
 }
 
 Point JpegImage::at(const int& y, const int& x) {
-    auto red = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[0],
-                y / 8, 1, static_cast<boolean>(true)),
-         green = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[1],
-                y / 8, 1, static_cast<boolean>(true)),
-         blue = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[2],
-                y / 8, 1, static_cast<boolean>(true));
+    auto red = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo),
+                                               coeffs[0], y / 8, 1,
+                                               static_cast<boolean>(true)),
+         green = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo),
+                                                 coeffs[1], y / 8, 1,
+                                                 static_cast<boolean>(true)),
+         blue = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo),
+                                                coeffs[2], y / 8, 1,
+                                                static_cast<boolean>(true));
     return Point(red[0][x / 8][(y % 8) * 8 + (x % 8)],
                  green[0][x / 8][(y % 8) * 8 + (x % 8)],
                  blue[0][x / 8][(y % 8) * 8 + (x % 8)]);
 }
 
 Point_ JpegImage::at(const int& y, const int& x) const {
-    auto red = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[0],
-                y / 8, 1, static_cast<boolean>(true)),
-         green = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[1],
-                y / 8, 1, static_cast<boolean>(true)),
-         blue = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo), coeffs[2],
-                y / 8, 1, static_cast<boolean>(true));
+    auto red = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo),
+                                               coeffs[0], y / 8, 1,
+                                               static_cast<boolean>(true)),
+         green = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo),
+                                                 coeffs[1], y / 8, 1,
+                                                 static_cast<boolean>(true)),
+         blue = (dinfo.mem->access_virt_barray)(reinterpret_cast<j_common_ptr>(&dinfo),
+                                                coeffs[2], y / 8, 1,
+                                                static_cast<boolean>(true));
     return Point_(red[0][x / 8][(y % 8) * 8 + (x % 8)],
-                 green[0][x / 8][(y % 8) * 8 + (x % 8)],
-                 blue[0][x / 8][(y % 8) * 8 + (x % 8)]);
+                  green[0][x / 8][(y % 8) * 8 + (x % 8)],
+                  blue[0][x / 8][(y % 8) * 8 + (x % 8)]);
 }
 
 void JpegImage::writeTo(const std::string& dst) {
@@ -98,4 +100,4 @@ void JpegImage::writeTo(const std::string& dst) {
     jpeg_destroy_compress(&cinfo);
 }
 
-}
+} // namespace imagestego

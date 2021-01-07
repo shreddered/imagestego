@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,9 +33,8 @@
 #include <vector>
 
 #ifndef CHAR_BIT
-#   define CHAR_BIT 8
+#define CHAR_BIT 8
 #endif
-
 
 namespace imagestego {
 
@@ -48,12 +47,13 @@ namespace imagestego {
 class BitArrayImpl final {
     class BitReference;
     class BitIterator;
+
 public:
     typedef BitReference reference;
     typedef BitIterator iterator;
     typedef const BitIterator const_iterator;
 
-    bool operator ==(const BitArrayImpl& other);
+    bool operator==(const BitArrayImpl& other);
 
     /**
      * Constructor of BitArrayImpl.
@@ -130,7 +130,7 @@ public:
      * @param i Index of element in array.
      * @return Instance of proxy class representing element.
      */
-    BitReference operator [](std::size_t i);
+    BitReference operator[](std::size_t i);
 
     /**
      * Operator [] overloading.
@@ -138,7 +138,7 @@ public:
      * @param i Index of element in array.
      * @return Read-only element of array.
      */
-    bool operator [](std::size_t i) const;
+    bool operator[](std::size_t i) const;
 
     /**
      * Adds element to the end.
@@ -189,8 +189,8 @@ public:
      * @return Iterator pointing to past-the-end element in array.
      */
     iterator end();
-private:
 
+private:
     /**
      * Block type of undelying array. Integer blocks used to store bits.
      */
@@ -217,7 +217,9 @@ private:
          * @param pos Bit index of block.
          */
         explicit BitReference(BlockType& block, std::size_t pos) noexcept;
+
     public:
+        BitReference(const BitReference&) = default;
 
         /**
          * Cast reference to bool.
@@ -232,7 +234,7 @@ private:
          * @param val Value to be assigned.
          * @return This instance's reference.
          */
-        BitReference& operator =(bool val) noexcept;
+        BitReference& operator=(bool val) noexcept;
 
         /**
          * Operator = overloading.
@@ -240,14 +242,14 @@ private:
          * @param val Reference to be assigned.
          * @return This instance's reference.
          */
-        BitReference& operator =(const BitReference& other) noexcept;
+        BitReference& operator=(const BitReference& other) noexcept;
 
         /**
          * Comparator for two references.
          *
          * @return true if references are equal, false otherwise.
          */
-        bool operator ==(const BitReference& other) noexcept;
+        bool operator==(const BitReference& other) noexcept;
     }; // class BitReference
 
     /**
@@ -270,56 +272,56 @@ private:
          * @param pos Position of element iterator points to.
          */
         explicit BitIterator(BitArrayImpl* owner, std::size_t pos) noexcept;
-    public:
 
+    public:
         /**
          * Unary * overloading.
          *
          * @return Reference iterator points to.
          */
-        BitReference operator *();
+        BitReference operator*();
 
         /**
          * Prefix increment overloading.
          *
          * @return This instance's reference.
          */
-        BitIterator& operator ++();
+        BitIterator& operator++();
 
         /**
          * Postfix increment overloading.
          *
          * @return Iterator befor it was incremented.
          */
-        BitIterator operator ++(int);
+        BitIterator operator++(int);
 
         /**
          * Prefix decrement overloading.
          *
          * @return This instance's reference.
          */
-        BitIterator& operator --();
+        BitIterator& operator--();
 
         /**
          * Postfix decrement overloading.
          *
          * @return Iterator befor it was decremented.
          */
-        BitIterator operator --(int);
+        BitIterator operator--(int);
 
-        // BitIterator& operator +=(std::size_t i);
+        // BitIterator& operator+=(std::size_t i);
 
-        // BitIterator& operator -=(std::size_t i);
+        // BitIterator& operator-=(std::size_t i);
 
-        // BitIterator operator +(std::size_t i);
+        // BitIterator operator+(std::size_t i);
 
-        // BitIterator operator -(std::size_t i);
+        // BitIterator operator-(std::size_t i);
 
         /**
          * Iterator comparison.
          */
-        bool operator ==(const BitIterator& other) noexcept;
-        bool operator !=(const BitIterator& other) noexcept;
+        bool operator==(const BitIterator& other) noexcept;
+        bool operator!=(const BitIterator& other) noexcept;
     }; // class BitIterator
 
     /** Array of integer blocks. */
@@ -337,7 +339,7 @@ private:
      * @param sz Number of bits.
      * @return Number of blocks needed to store sz bits.
      */
-    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR std::size_t numberOfBlocks(std::size_t sz) {
+    inline static IMAGESTEGO_CONSTEXPR std::size_t numberOfBlocks(std::size_t sz) {
         return sz / bitsPerBlock + ((sz % bitsPerBlock != 0) ? 1 : 0);
     }
 
@@ -347,7 +349,7 @@ private:
      * @param i Index of an element.
      * @return Index of block containing i-th element.
      */
-    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR std::size_t blockIndex(std::size_t i) {
+    inline static IMAGESTEGO_CONSTEXPR std::size_t blockIndex(std::size_t i) {
         return i / bitsPerBlock;
     }
 
@@ -357,13 +359,13 @@ private:
      * @param i index of an element.
      * @return Index of bit in the block with i-th element.
      */
-    IMAGESTEGO_INLINE static IMAGESTEGO_CONSTEXPR std::size_t bitIndex(std::size_t i) {
+    inline static IMAGESTEGO_CONSTEXPR std::size_t bitIndex(std::size_t i) {
         return i % bitsPerBlock;
     }
 }; // class BitArrayImpl
 
 } // namespace imagestego
 
-std::ostream& operator <<(std::ostream& os, const imagestego::BitArrayImpl& arr);
+std::ostream& operator<<(std::ostream& os, const imagestego::BitArrayImpl& arr);
 
 #endif /* __IMAGESTEGO_CORE_BITARRAY_IMPL_HPP_INCLUDED__ */

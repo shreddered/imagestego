@@ -1,0 +1,16 @@
+Checks: 'readability-function-size,readability-identifier-naming,performance-*'
+CheckOptions:
+  - key: readability-function-size.ParameterThreshold
+    value: 5
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.ClassMethodCase
+    value: camelCaseBack
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case
+  - key: readability-identifier-naming.FunctionCase
+    value: camelCaseBack
+  - key: readability-identifier-naming.MemberCase
+    value: camelCaseBack
+  - key: readability-identifier-naming.PrivateMemberPrefix
+    value: _

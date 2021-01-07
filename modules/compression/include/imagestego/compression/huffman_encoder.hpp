@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,7 +34,6 @@
 #include <map>
 #include <string>
 
-
 namespace imagestego {
 
 class HuffmanEncoderImpl;
@@ -45,10 +44,11 @@ public:
     explicit HuffmanEncoder(const std::string& str) noexcept;
     explicit HuffmanEncoder(std::string&& str) noexcept;
     HuffmanEncoder(const HuffmanEncoder&) = delete;
-    HuffmanEncoder& operator =(const HuffmanEncoder&) = delete;
+    HuffmanEncoder& operator=(const HuffmanEncoder&) = delete;
     void setMessage(const std::string& str) override;
     BitArray getEncodedMessage() override;
     virtual ~HuffmanEncoder() noexcept;
+
 private:
     HuffmanEncoderImpl* encoder;
 }; // class HuffmanEncoder

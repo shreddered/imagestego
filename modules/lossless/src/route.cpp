@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,53 +28,42 @@
 #include <random>
 #include <utility>
 
-
 namespace imagestego {
 
-RouteImpl::RouteImpl(const std::pair<int, int>& mapSize, std::mt19937& _gen) noexcept : AvlTree(), _mapSize(mapSize), gen(_gen) {}
+RouteImpl::RouteImpl(const std::pair<int, int>& mapSize, std::mt19937& _gen) noexcept
+    : AvlTree(), _mapSize(mapSize), gen(_gen) {}
 
 void RouteImpl::create(std::size_t n) {
-    while(size() != n) {
+    while (size() != n) {
         insert({gen() % _mapSize.first, gen() % _mapSize.second});
     }
 }
 
 void RouteImpl::add() {
     auto sz = size();
-    while(size() != sz + 1) {
+    while (size() != sz + 1) {
         insert({gen() % _mapSize.first, gen() % _mapSize.second});
     }
 }
 
-void Route::setMapSize(const std::pair<int, int>& p) {
-    _route->setMapSize(p);
-}
+void Route::setMapSize(const std::pair<int, int>& p) { _route->setMapSize(p); }
 
-Route::Route(const std::pair<int, int>& mapSize, std::mt19937& gen) : _route(new RouteImpl(mapSize, gen)) {}
+Route::Route(const std::pair<int, int>& mapSize, std::mt19937& gen)
+    : _route(new RouteImpl(mapSize, gen)) {}
 
 Route::~Route() noexcept {
     if (_route)
         delete _route;
 }
 
-void Route::create(std::size_t n) {
-    _route->create(n);
-}
+void Route::create(std::size_t n) { _route->create(n); }
 
-void Route::add() {
-    _route->add();
-}
+void Route::add() { _route->add(); }
 
-typename Route::iterator Route::begin() {
-    return _route->begin();
-}
+typename Route::iterator Route::begin() { return _route->begin(); }
 
-typename Route::iterator Route::end() {
-    return _route->end();
-}
+typename Route::iterator Route::end() { return _route->end(); }
 
-bool Route::search(const std::pair<int, int>& p) {
-    return _route->search(p);
-}
+bool Route::search(const std::pair<int, int>& p) { return _route->search(p); }
 
 } // namespace imagestego

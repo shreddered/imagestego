@@ -1,5 +1,5 @@
-#include <tmmintrin.h>
 #include <cstdint>
+#include <tmmintrin.h>
 
 int main() {
     uint32_t buf[4] = {1, 2, 3, 4};

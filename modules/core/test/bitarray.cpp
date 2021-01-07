@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,7 +34,6 @@
 
 using imagestego::BitArray;
 
-
 std::bitset<32> reverse32(const std::bitset<32>& set) {
     const std::size_t n = static_cast<std::size_t>(set.to_ulong());
     return std::bitset<32>(imagestego::bswap(n));
@@ -50,7 +49,7 @@ TEST(Core, BitArray1) {
     EXPECT_EQ(reverse32(std::bitset<32>(temp)).to_string(), ss.str());
     EXPECT_EQ(ss.str(), arr.toString());
     std::ostringstream().swap(ss);
-    BitArray copy = arr;
+    BitArray copy = arr; // NOLINT: needed for testing
     ss << copy;
     EXPECT_EQ(ss.str(), reverse32(std::bitset<32>(temp)).to_string());
 }
@@ -69,13 +68,13 @@ TEST(Core, BitArray3) {
     memcpy(buf, &temp, sizeof(temp));
     BitArray arr = BitArray::fromByteString(std::string(buf, 4));
     std::string s = arr.toString();
-    arr.pushBack(1); s.push_back('1');
+    arr.pushBack(1);
+    s.push_back('1');
     EXPECT_EQ(arr.toString(), s);
 }
 
 TEST(Core, BitArray4) {
-    BitArray arr("10001010"),
-             arr1("1010101010");
+    BitArray arr("10001010"), arr1("1010101010");
     EXPECT_TRUE(arr[0] == arr1[0]);
     EXPECT_TRUE(arr[0] != arr[1]);
 }
@@ -104,7 +103,8 @@ TEST(Core, BitArrayIterator) {
     EXPECT_TRUE(!*it);
     it--;
     EXPECT_TRUE(*it);
-    BitArray tmp("1010101010100101010100100101010010100001001010100101010010101000010101");
+    BitArray tmp(
+        "1010101010100101010100100101010010100001001010100101010010101000010101");
     std::ostringstream().swap(ss);
     for (auto it = tmp.begin(); it != tmp.end(); ++it) {
         ss << *it;
@@ -140,8 +140,7 @@ TEST(Core, BitArrayPut) {
 }
 
 TEST(Core, BitArrayFromInt) {
-    BitArray arr = BitArray::fromInt(32),
-             tmp("00000000000000000000000000100000");
+    BitArray arr = BitArray::fromInt(32), tmp("00000000000000000000000000100000");
     EXPECT_TRUE(arr == tmp);
 }
 
