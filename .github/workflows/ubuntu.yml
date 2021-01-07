@@ -1,0 +1,90 @@
+name: Ubuntu
+
+on: [push, pull_request]
+
+jobs:
+  gcc-7-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+             sudo apt update
+             sudo apt install libopencv-dev lcov
+             git submodule update --init
+      - name: cmake
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF -D IMAGESTEGO_COVERAGE=ON
+      - name: build
+        run: cmake --build build -j 10
+      - name: test
+        run: |
+             cd build
+             cp ../test/test.jpg .
+             ctest -j 10 --output-on-failure
+      - name: coverage
+        run: |
+             gcc --version
+             gcov --version
+             lcov --version
+             touch coverage.info
+             lcov --directory . --capture --output-file coverage.info
+             lcov --remove coverage.info \
+                '/usr/*' \
+                "$(pwd)"'/third_party/*' \
+                "$(pwd)"'/modules/core/third_party/*' \
+                "$(pwd)"'/modules/core/test/*' \
+                "$(pwd)"'/modules/compression/test/*' \
+                "$(pwd)"'/modules/lossless/test/*' \
+                --output-file coverage.info
+             bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
+  gcc-10-amd64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+             sudo apt update
+             sudo apt install gcc-10 g++-10 libopencv-dev
+             git submodule update --init
+      - name: cmake
+        env:
+          CC: gcc-10
+          CXX: g++-10
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+      - name: build
+        run: cmake --build build -j 10
+      - name: test
+        run: |
+             cd build
+             cp ../test/test.jpg .
+             ctest -j 10 --output-on-failure
+
+  clang-10-amd64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+             sudo apt update
+             sudo apt install clang-10 libopencv-dev
+             git submodule update --init
+      - name: cmake
+        env:
+          CC: clang-10
+          CXX: clang++-10
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF
+      - name: build
+        run: cmake --build build -j 10
+      - name: test
+        run: |
+             cd build
+             cp ../test/test.jpg .
+             ctest -j 10 --output-on-failure
+  # gcc-arm64:
+    # runs-on: ubuntu-latest
+    # steps:
+      # - uses: actions/checkout@v2
+      # - name: install dependencies
+        # run: git submodule update --init
+      # - name: build
+        # run: docker run -v `pwd`:`pwd` -w `pwd` -t arm64v8/ubuntu ci/arm64-build.sh

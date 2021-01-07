@@ -1,5 +1,6 @@
-[![Build Status](https://travis-ci.com/shreddered/imagestego.svg?branch=master)](https://travis-ci.com/shreddered/imagestego)
 [![Build status](https://ci.appveyor.com/api/projects/status/stugi74mkai6x44q/branch/master?svg=true)](https://ci.appveyor.com/project/shreddered/imagestego/branch/master)
+[![Ubuntu](https://github.com/shreddered/imagestego/workflows/Ubuntu/badge.svg)](https://github.com/shreddered/imagestego/actions?query=workflow%3AUbuntu)
+[![macOS](https://github.com/shreddered/imagestego/workflows/macOS/badge.svg)](https://github.com/shreddered/imagestego/actions?query=workflow%3AmacOS)
 [![codecov](https://codecov.io/gh/shreddered/imagestego/branch/develop/graph/badge.svg)](https://codecov.io/gh/shreddered/imagestego)
 
 # imagestego
@@ -43,7 +44,7 @@ This library consists of components as described below.
 ### Subdirectory
 
 If you want to embed _imagestego_ into your project, you should use `add_subdirectory()`.
-After that `imagestego` interface target should be available:
+After that `imagestego` interface target will be available:
 
 ```cmake
 add_executable(foo
