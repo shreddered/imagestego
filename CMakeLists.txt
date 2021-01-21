@@ -86,7 +86,7 @@ option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
 option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
 option(IMAGESTEGO_COVERAGE "Check coverage" OFF)
 option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
-option(IMAGESTEGO_BUILD_DOCS "Build docs" ON)
+option(IMAGESTEGO_BUILD_DOCS "Build docs" OFF)
 set(IMAGESTEGO_MODULES "core,lossless,compression,wavelet" CACHE STRING "imagestego modules")
 
 if (WIN32)
