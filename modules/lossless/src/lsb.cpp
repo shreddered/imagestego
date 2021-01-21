@@ -47,11 +47,11 @@ public:
             _encoder->setMessage(msg);
             _msg = _encoder->getEncodedMessage();
         } else {
-            _msg = BitArray::fromByteString(msg);
+            _msg = imagestego::BitArray::fromByteString(msg);
         }
     }
     void setSecretKey(const std::string& key) {
-        _key = BitArray::fromByteString(key);
+        _key = imagestego::BitArray::fromByteString(key);
         _gen.seed(hash(key));
     }
     void createStegoContainer(const std::string& dst) {
@@ -111,7 +111,7 @@ private:
     std::mt19937 _gen;
     /** image */
     cv::Mat _image;
-    BitArray _key, _msg;
+    imagestego::BitArray _key, _msg;
 }; // class LsbEmbedder
 
 class LsbExtracter final {
@@ -124,13 +124,13 @@ public:
     }
     void setImage(const std::string& src) { _image = cv::imread(src); }
     void setSecretKey(const std::string& key) {
-        _key = BitArray::fromByteString(key);
+        _key = imagestego::BitArray::fromByteString(key);
         _gen.seed(hash(key));
     }
     std::string extractMessage() {
         if (_key.empty())
             throw Exception(Exception::Codes::NoKeyFound);
-        BitArray sz;
+        imagestego::BitArray sz;
         std::size_t idx = 0;
         Route r(std::make_pair(_image.cols, _image.rows), _gen);
         r.create(32);
@@ -144,7 +144,7 @@ public:
             idx = (idx + 1) % _key.size();
         }
         auto size = sz.toInt();
-        BitArray msg;
+        imagestego::BitArray msg;
         Route r1(r.begin(), r.end(), _gen);
         r1.setMapSize(std::make_pair(_image.cols, _image.rows));
         r1.create(32 + size);
@@ -171,7 +171,7 @@ private:
     Decoder* _decoder;
     std::mt19937 _gen;
     cv::Mat _image;
-    BitArray _key;
+    imagestego::BitArray _key;
 }; // class LsbExtracter
 
 } // namespace impl

@@ -38,10 +38,12 @@
 
 namespace imagestego {
 
+namespace impl {
+
 /**
  * Implementation of class BitArray for working with bit sequences.
  */
-class BitArrayImpl final {
+class BitArray final {
     class BitReference;
     class BitIterator;
 
@@ -50,32 +52,32 @@ public:
     typedef BitIterator iterator;
     typedef const BitIterator const_iterator;
 
-    bool operator==(const BitArrayImpl& other);
+    bool operator==(const BitArray& other);
 
     /**
-     * Constructor of BitArrayImpl.
+     * Constructor of BitArray.
      *
      * Constructs empty array.
      */
-    explicit BitArrayImpl() noexcept;
+    explicit BitArray() noexcept;
 
     /**
-     * Constructor of BitArrayImpl.
+     * Constructor of BitArray.
      *
      * Constructs array from binary string.
      *
      * @param str String containing '1' and '0'.
      */
-    BitArrayImpl(const std::string& str);
+    BitArray(const std::string& str);
 
     /**
-     * Constructor of BitArrayImpl.
+     * Constructor of BitArray.
      *
      * Constructs array with given size.
      *
      * @param sz Size of array.
      */
-    explicit BitArrayImpl(std::size_t sz);
+    explicit BitArray(std::size_t sz);
 
     /**
      * Converter from byte sequence to bit array.
@@ -83,7 +85,7 @@ public:
      * @param str Byte string to be converted to bit array.
      * @return Converted array.
      */
-    static BitArrayImpl fromByteString(std::string str);
+    static BitArray fromByteString(std::string str);
 
     /**
      * Creates array from unsigned 32-bit integer type.
@@ -91,7 +93,7 @@ public:
      * @param num Number to be converted to bit array.
      * @return Created array.
      */
-    static BitArrayImpl fromInt(uint32_t num);
+    static BitArray fromInt(uint32_t num);
 
     /**
      * Converter from bit array to byte string.
@@ -198,7 +200,7 @@ private:
      */
     class IMAGESTEGO_EXPORTS BitReference final {
     private:
-        friend class BitArrayImpl;
+        friend class BitArray;
         friend class BitIterator;
 
         /* Integer block */
@@ -254,10 +256,10 @@ private:
      */
     class IMAGESTEGO_EXPORTS BitIterator final {
     private:
-        friend class BitArrayImpl;
+        friend class BitArray;
 
         /** Iterator's owner. */
-        BitArrayImpl* _owner;
+        BitArray* _owner;
 
         /** Current position. */
         std::size_t _pos;
@@ -268,7 +270,7 @@ private:
          * @param owner Iterator's owner.
          * @param pos Position of element iterator points to.
          */
-        explicit BitIterator(BitArrayImpl* owner, std::size_t pos) noexcept;
+        explicit BitIterator(BitArray* owner, std::size_t pos) noexcept;
 
     public:
         /**
@@ -359,10 +361,12 @@ private:
     inline static IMAGESTEGO_CONSTEXPR std::size_t bitIndex(std::size_t i) {
         return i % bitsPerBlock;
     }
-}; // class BitArrayImpl
+}; // class BitArray
+
+} // namespace impl
 
 } // namespace imagestego
 
-std::ostream& operator<<(std::ostream& os, const imagestego::BitArrayImpl& arr);
+std::ostream& operator<<(std::ostream& os, const imagestego::impl::BitArray& arr);
 
 #endif /* __IMAGESTEGO_CORE_BITARRAY_IMPL_HPP_INCLUDED__ */

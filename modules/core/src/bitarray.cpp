@@ -30,25 +30,25 @@
 namespace imagestego {
 
 // BitArray
-BitArray::BitArray(BitArrayImpl* arr) noexcept : _arr(arr) {}
+BitArray::BitArray(impl::BitArray* arr) noexcept : _arr(arr) {}
 
-BitArray::BitArray() : _arr(new BitArrayImpl()) {}
+BitArray::BitArray() : _arr(new impl::BitArray()) {}
 
-BitArray::BitArray(const std::string& str) : _arr(new BitArrayImpl(str)) {}
+BitArray::BitArray(const std::string& str) : _arr(new impl::BitArray(str)) {}
 
-BitArray::BitArray(std::size_t sz) : _arr(new BitArrayImpl(sz)) {}
+BitArray::BitArray(std::size_t sz) : _arr(new impl::BitArray(sz)) {}
 
 BitArray::~BitArray() noexcept {
     if (_arr)
         delete _arr;
 }
 
-BitArray::BitArray(const BitArray& other) : _arr(new BitArrayImpl(*other._arr)) {}
+BitArray::BitArray(const BitArray& other) : _arr(new impl::BitArray(*other._arr)) {}
 
 BitArray& BitArray::operator=(const BitArray& other) {
     if (this != &other) {
         delete _arr;
-        _arr = new BitArrayImpl(*other._arr);
+        _arr = new impl::BitArray(*other._arr);
     }
     return *this;
 }
@@ -63,16 +63,16 @@ BitArray& BitArray::operator=(BitArray&& other) noexcept {
 }
 
 BitArray BitArray::fromByteString(const std::string& str) {
-    BitArray arr(new BitArrayImpl(BitArrayImpl::fromByteString(str)));
+    BitArray arr(new impl::BitArray(impl::BitArray::fromByteString(str)));
     return arr;
 }
 
 BitArray BitArray::fromInt(uint32_t num) {
-    BitArray arr(new BitArrayImpl(BitArrayImpl::fromInt(num)));
+    BitArray arr(new impl::BitArray(impl::BitArray::fromInt(num)));
     return arr;
 }
 
-typename BitArrayImpl::reference BitArray::operator[](std::size_t i) {
+typename impl::BitArray::reference BitArray::operator[](std::size_t i) {
     return _arr->operator[](i);
 }
 

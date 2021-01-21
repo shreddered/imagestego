@@ -63,7 +63,7 @@ public:
     /**
      * Iterator type definition.
      */
-    typedef typename BitArrayImpl::iterator iterator;
+    typedef typename impl::BitArray::iterator iterator;
 
     /**
      * @brief Bit array constructor.
@@ -154,7 +154,7 @@ public:
      * @param i Index of element in array.
      * @return Instance of proxy class representing element.
      */
-    typename BitArrayImpl::reference operator[](std::size_t i);
+    typename impl::BitArray::reference operator[](std::size_t i);
 
     /**
      * Operator [] overloading.
@@ -232,10 +232,10 @@ private:
      *
      * @param arr Pointer to implementation.
      */
-    explicit BitArray(BitArrayImpl* arr) noexcept;
+    explicit BitArray(impl::BitArray* arr) noexcept;
 
     /** Pointer to implementation. */
-    BitArrayImpl* _arr;
+    impl::BitArray* _arr;
 }; // class BitArray
 
 } // namespace imagestego
