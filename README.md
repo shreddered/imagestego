@@ -148,5 +148,7 @@ This software is distibuted under MIT License. For more details see [LICENSE](LI
 
 # Further development
 
-- [x] Wavelet module
 - [x] JPEG module
+- [ ] Vectorize inverse haar wavelet
+- [ ] Implement more steganographic schemes
+- [ ] Implement more wavelet schemes
