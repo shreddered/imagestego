@@ -1,0 +1,5 @@
+PROJECT_NAME    = "imagestego"
+PROJECT_NUMBER  = 1.0.0
+OUTPUT_LANGUAGE = English
+INPUT           = src include modules
+RECURSIVE       = YES
