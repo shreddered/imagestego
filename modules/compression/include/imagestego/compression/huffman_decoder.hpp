@@ -36,7 +36,7 @@ namespace imagestego {
 
 class HuffmanDecoderImpl;
 
-class IMAGESTEGO_EXPORTS HuffmanDecoder : public AbstractDecoder {
+class IMAGESTEGO_EXPORTS HuffmanDecoder : public Decoder {
 public:
     explicit HuffmanDecoder() noexcept;
     explicit HuffmanDecoder(const BitArray& arr) noexcept;

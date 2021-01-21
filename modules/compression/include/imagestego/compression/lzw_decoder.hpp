@@ -34,7 +34,7 @@ namespace imagestego {
 
 class LzwDecoderImpl;
 
-class IMAGESTEGO_EXPORTS LzwDecoder : public AbstractDecoder {
+class IMAGESTEGO_EXPORTS LzwDecoder : public Decoder {
 public:
     explicit LzwDecoder();
     explicit LzwDecoder(const BitArray& arr);

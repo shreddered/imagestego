@@ -34,7 +34,7 @@ namespace imagestego {
 
 class LzwEncoderImpl;
 
-class IMAGESTEGO_EXPORTS LzwEncoder : public AbstractEncoder {
+class IMAGESTEGO_EXPORTS LzwEncoder : public Encoder {
 public:
     explicit LzwEncoder();
     explicit LzwEncoder(const std::string& str);

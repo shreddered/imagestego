@@ -43,14 +43,14 @@ class LsbExtracterImpl;
 /**
  * Class for performing LSB-based embedding.
  */
-class IMAGESTEGO_EXPORTS LsbEmbedder : public AbstractStegoEmbedder {
+class IMAGESTEGO_EXPORTS LsbEmbedder : public StegoEmbedder {
 public:
     /**
      * Constructs embedder with given encoder.
      *
      * @param encoder Encoder which will process data.
      */
-    explicit LsbEmbedder(AbstractEncoder* encoder = nullptr);
+    explicit LsbEmbedder(Encoder* encoder = nullptr);
 
     /**
      * LsbEmbedder destructror.
@@ -89,14 +89,14 @@ private:
     LsbEmbedderImpl* _embedder;
 }; // class LsbEmbedder
 
-class IMAGESTEGO_EXPORTS LsbExtracter : public AbstractStegoExtracter {
+class IMAGESTEGO_EXPORTS LsbExtracter : public StegoExtracter {
 public:
     /**
      * Constructs extracter with given decoder.
      *
      * @param decoder Decoder of extracted data.
      */
-    explicit LsbExtracter(AbstractDecoder* decoder = nullptr);
+    explicit LsbExtracter(Decoder* decoder = nullptr);
 
     /**
      * LsbExtracter destructror.

@@ -38,7 +38,7 @@ namespace imagestego {
 
 class HuffmanEncoderImpl;
 
-class IMAGESTEGO_EXPORTS HuffmanEncoder : public AbstractEncoder {
+class IMAGESTEGO_EXPORTS HuffmanEncoder : public Encoder {
 public:
     explicit HuffmanEncoder() noexcept;
     explicit HuffmanEncoder(const std::string& str) noexcept;
