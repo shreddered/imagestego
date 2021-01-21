@@ -33,7 +33,11 @@
 
 namespace imagestego {
 
-class HaarWaveletImpl;
+namespace impl {
+
+class HaarWavelet;
+
+} // namespace impl
 
 class IMAGESTEGO_EXPORTS HaarWavelet : public AbstractWavelet {
 public:
@@ -43,12 +47,16 @@ public:
     virtual ~HaarWavelet() noexcept;
 
 private:
-    HaarWaveletImpl* pImpl;
+    impl::HaarWavelet* pImpl;
 };
 
 namespace experimental {
 
-class HaarWaveletImpl;
+namespace impl {
+
+class HaarWavelet;
+
+} // namespace impl
 
 class IMAGESTEGO_EXPORTS HaarWavelet : public AbstractWavelet {
 public:
@@ -58,7 +66,7 @@ public:
     virtual ~HaarWavelet() noexcept;
 
 private:
-    HaarWaveletImpl* pImpl;
+    impl::HaarWavelet* pImpl;
 };
 
 } // namespace experimental

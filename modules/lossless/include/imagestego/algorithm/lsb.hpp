@@ -36,9 +36,13 @@
 
 namespace imagestego {
 
-class LsbEmbedderImpl;
+namespace impl {
 
-class LsbExtracterImpl;
+class LsbEmbedder;
+
+class LsbExtracter;
+
+} // namespace impl
 
 /**
  * Class for performing LSB-based embedding.
@@ -86,7 +90,7 @@ public:
     void createStegoContainer(const std::string& dst) override;
 
 private:
-    LsbEmbedderImpl* _embedder;
+    impl::LsbEmbedder* _embedder;
 }; // class LsbEmbedder
 
 class IMAGESTEGO_EXPORTS LsbExtracter : public StegoExtracter {
@@ -125,7 +129,7 @@ public:
     std::string extractMessage() override;
 
 private:
-    LsbExtracterImpl* _extracter;
+    impl::LsbExtracter* _extracter;
 }; // class LsbExtracter
 
 } // namespace imagestego

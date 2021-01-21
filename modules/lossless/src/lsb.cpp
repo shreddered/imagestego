@@ -31,11 +31,13 @@
 
 namespace imagestego {
 
-class LsbEmbedderImpl final {
+namespace impl {
+
+class LsbEmbedder final {
 public:
-    explicit LsbEmbedderImpl(Encoder* encoder = nullptr) noexcept
+    explicit LsbEmbedder(Encoder* encoder = nullptr) noexcept
         : _encoder(encoder) {}
-    virtual ~LsbEmbedderImpl() noexcept {
+    virtual ~LsbEmbedder() noexcept {
         if (_encoder)
             delete _encoder;
     }
@@ -110,13 +112,13 @@ private:
     /** image */
     cv::Mat _image;
     BitArray _key, _msg;
-}; // class LsbEmbedderImpl
+}; // class LsbEmbedder
 
-class LsbExtracterImpl final {
+class LsbExtracter final {
 public:
-    explicit LsbExtracterImpl(Decoder* decoder = nullptr) noexcept
+    explicit LsbExtracter(Decoder* decoder = nullptr) noexcept
         : _decoder(decoder) {}
-    virtual ~LsbExtracterImpl() noexcept {
+    virtual ~LsbExtracter() noexcept {
         if (_decoder)
             delete _decoder;
     }
@@ -170,11 +172,13 @@ private:
     std::mt19937 _gen;
     cv::Mat _image;
     BitArray _key;
-}; // class LsbExtracterImpl
+}; // class LsbExtracter
+
+} // namespace impl
 
 // LsbEmbedder
 LsbEmbedder::LsbEmbedder(Encoder* encoder)
-    : _embedder(new LsbEmbedderImpl(encoder)) {}
+    : _embedder(new impl::LsbEmbedder(encoder)) {}
 
 LsbEmbedder::~LsbEmbedder() noexcept {
     if (_embedder)
@@ -193,7 +197,7 @@ void LsbEmbedder::createStegoContainer(const std::string& dst) {
 
 // LsbExtracter
 LsbExtracter::LsbExtracter(Decoder* decoder)
-    : _extracter(new LsbExtracterImpl(decoder)) {}
+    : _extracter(new impl::LsbExtracter(decoder)) {}
 
 LsbExtracter::~LsbExtracter() noexcept {
     if (_extracter)
