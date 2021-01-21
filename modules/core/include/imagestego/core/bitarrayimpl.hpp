@@ -40,9 +40,6 @@ namespace imagestego {
 
 /**
  * Implementation of class BitArray for working with bit sequences.
- *
- * Implementation of this class is similar to std::vector<bool>. Also several methods
- * provided for convenient usage with other classes.
  */
 class BitArrayImpl final {
     class BitReference;
