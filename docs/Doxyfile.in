@@ -1,6 +1,7 @@
 PROJECT_NAME        = "imagestego"
 PROJECT_NUMBER      = @IMAGESTEGO_VERSION@
 OUTPUT_LANGUAGE     = English
+COLLABORATION_GRAPH = NO
 INPUT               = @IMAGESTEGO_SOURCE_DIR@/modules
 RECURSIVE           = YES
 EXCLUDE_PATTERNS    = */test/* */perf/*
