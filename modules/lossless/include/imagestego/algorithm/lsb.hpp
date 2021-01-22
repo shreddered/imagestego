@@ -45,7 +45,7 @@ class LsbExtracter;
 } // namespace impl
 
 /**
- * Class for performing LSB-based embedding.
+ * @brief Class for performing LSB-based embedding.
  */
 class IMAGESTEGO_EXPORTS LsbEmbedder : public StegoEmbedder {
 public:
