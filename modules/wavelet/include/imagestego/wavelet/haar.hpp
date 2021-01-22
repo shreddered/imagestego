@@ -39,10 +39,28 @@ class HaarWavelet;
 
 } // namespace impl
 
-class IMAGESTEGO_EXPORTS HaarWavelet : public AbstractWavelet {
+/**
+ * @brief Class which implements Haar wavelet.
+ */
+class IMAGESTEGO_EXPORTS HaarWavelet : public Wavelet {
 public:
+    /**
+     * Constructs empty HaarWavelet.
+     */
     explicit HaarWavelet();
+    /**
+     * @brief Transforms given matrix using Haar lifting scheme.
+     *
+     * @param mat Matrix to be transformed.
+     * @return Transformed matrix.
+     */
     cv::Mat transform(const cv::Mat& mat) override;
+    /**
+     * @brief Applies inverse transform.
+     *
+     * @param mat Matrix to be transformed.
+     * @return Transformed matrix.
+     */
     cv::Mat inverse(const cv::Mat& mat) override;
     virtual ~HaarWavelet() noexcept;
 
@@ -58,16 +76,34 @@ class HaarWavelet;
 
 } // namespace impl
 
+/**
+ * @brief SIMD-accelerated Haar wavelet.
+ */
 class IMAGESTEGO_EXPORTS HaarWavelet : public AbstractWavelet {
 public:
+    /**
+     * Constructs empty HaarWavelet instance.
+     */
     explicit HaarWavelet();
+    /**
+     * @brief Transforms given matrix using Haar lifting scheme.
+     *
+     * @param mat Matrix to be transformed.
+     * @return Transformed matrix.
+     */
     cv::Mat transform(const cv::Mat& mat) override;
+    /**
+     * @brief Applies inverse transform.
+     *
+     * @param mat Matrix to be transformed.
+     * @return Transformed matrix.
+     */
     cv::Mat inverse(const cv::Mat& mat) override;
     virtual ~HaarWavelet() noexcept;
 
 private:
     impl::HaarWavelet* pImpl;
-};
+}; // class HaarWavelet
 
 } // namespace experimental
 

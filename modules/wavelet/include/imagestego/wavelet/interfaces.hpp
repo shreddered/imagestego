@@ -32,12 +32,27 @@
 
 namespace imagestego {
 
-class IMAGESTEGO_EXPORTS AbstractWavelet {
+/**
+ * @brief Interface for custom wavelet schemes.
+ */
+class IMAGESTEGO_EXPORTS Wavelet {
 public:
+    /**
+     * @brief Method for transforming given matrix.
+     *
+     * @param src Matrix to be transformed.
+     * @return Transformed matrix.
+     */
     virtual cv::Mat transform(const cv::Mat& src) = 0;
+    /**
+     * @brief Method applying inverse transform on given matrix.
+     *
+     * @param src Matrix to be transformed.
+     * @return Transformed matrix.
+     */
     virtual cv::Mat inverse(const cv::Mat& src) = 0;
-    virtual ~AbstractWavelet() noexcept = default;
-}; // class AbstractWaveletTransform
+    virtual ~Wavelet() noexcept = default;
+}; // class Wavelet
 
 } // namespace imagestego
 

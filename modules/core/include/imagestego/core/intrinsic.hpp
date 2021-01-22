@@ -29,9 +29,23 @@
 
 namespace imagestego {
 
+/**
+ * @brief Fast integer base-2 logarithm implementation.
+ *
+ * Fast base-2 integer logarithm of integer value.
+ *
+ * @param value Value with which base-2 logarithm will be computed.
+ * @return Binary logarithm of given value.
+ */
 IMAGESTEGO_EXPORTS uint8_t log2(uint32_t value) noexcept;
 
-IMAGESTEGO_EXPORTS uint32_t bswap(uint32_t) noexcept;
+/**
+ * @brief Fast implementation of byte order change.
+ *
+ * @param value 4 byte integer value.
+ * @return Byte swapped integer.
+ */
+IMAGESTEGO_EXPORTS uint32_t bswap(uint32_t value) noexcept;
 
 } // namespace imagestego
 
