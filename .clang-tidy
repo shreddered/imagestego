@@ -1,4 +1,5 @@
 Checks: 'readability-function-size,readability-identifier-naming,performance-*'
+WarningsAsErrors: 'readability-*'
 CheckOptions:
   - key: readability-function-size.ParameterThreshold
     value: 5
