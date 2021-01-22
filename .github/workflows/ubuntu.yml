@@ -10,10 +10,14 @@ jobs:
       - name: install dependencies
         run: |
              sudo apt update
-             sudo apt install libopencv-dev lcov
+             sudo apt install libopencv-dev lcov clang-tidy clang-formatter
              git submodule update --init
       - name: cmake
-        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF -D IMAGESTEGO_COVERAGE=ON
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF -D IMAGESTEGO_COVERAGE=ON -D CMAKE_EXPORT_COMPILE_COMMANDS=ON
+      - name: linter
+        run: |
+             cd build
+             run-clang-tidy
       - name: build
         run: cmake --build build -j 10
       - name: test
