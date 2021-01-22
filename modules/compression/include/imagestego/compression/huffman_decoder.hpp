@@ -34,7 +34,11 @@
 
 namespace imagestego {
 
-class HuffmanDecoderImpl;
+namespace impl {
+
+class HuffmanDecoder;
+
+} // namespace impl
 
 class IMAGESTEGO_EXPORTS HuffmanDecoder : public Decoder {
 public:
@@ -45,7 +49,7 @@ public:
     std::string getDecodedMessage() override;
 
 private:
-    HuffmanDecoderImpl* decoder;
+    impl::HuffmanDecoder* decoder;
 }; // class HuffmanDecoder
 
 } // namespace imagestego

@@ -36,7 +36,11 @@
 
 namespace imagestego {
 
-class HuffmanEncoderImpl;
+namespace impl {
+
+class HuffmanEncoder;
+
+} // namespace impl
 
 class IMAGESTEGO_EXPORTS HuffmanEncoder : public Encoder {
 public:
@@ -50,7 +54,7 @@ public:
     virtual ~HuffmanEncoder() noexcept;
 
 private:
-    HuffmanEncoderImpl* encoder;
+    impl::HuffmanEncoder* encoder;
 }; // class HuffmanEncoder
 
 } // namespace imagestego
