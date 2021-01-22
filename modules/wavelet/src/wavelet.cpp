@@ -31,11 +31,13 @@
 
 namespace imagestego {
 
-class WaveletEmbedderImpl {
+namespace impl {
+
+class WaveletEmbedder {
 public:
-    explicit WaveletEmbedderImpl(AbstractWavelet* wavelet, AbstractEncoder* encoder)
+    explicit WaveletEmbedder(Wavelet* wavelet, Encoder* encoder)
         : _encoder(encoder), _wavelet(wavelet) {}
-    virtual ~WaveletEmbedderImpl() noexcept {
+    virtual ~WaveletEmbedder() noexcept {
         delete _wavelet;
         if (_encoder)
             delete _encoder;
@@ -45,7 +47,7 @@ public:
         if (_encoder) {
             _encoder->setMessage(msg);
         } else {
-            arr = BitArray::fromByteString(msg);
+            arr = imagestego::BitArray::fromByteString(msg);
         }
     }
     void setSecretKey(const std::string& key) {}
@@ -53,13 +55,15 @@ public:
     void createStegoContainer(const std::string& dst) {}
 
 private:
-    AbstractEncoder* _encoder;
-    AbstractWavelet* _wavelet;
-    BitArray arr;
-}; // class WaveletEmbedderImpl
+    Encoder* _encoder;
+    Wavelet* _wavelet;
+    imagestego::BitArray arr;
+}; // class WaveletEmbedder
 
-WaveletEmbedder::WaveletEmbedder(AbstractWavelet* wavelet, AbstractEncoder* encoder)
-    : pImpl(new WaveletEmbedderImpl(wavelet, encoder)) {}
+} // namespace impl
+
+WaveletEmbedder::WaveletEmbedder(Wavelet* wavelet, Encoder* encoder)
+    : pImpl(new impl::WaveletEmbedder(wavelet, encoder)) {}
 
 WaveletEmbedder::~WaveletEmbedder() noexcept {
     if (pImpl)
