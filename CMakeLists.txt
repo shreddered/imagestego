@@ -177,6 +177,9 @@ string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
 # imagestego interface
 add_library(imagestego INTERFACE)
 
+# installation rules
+include("cmake/imagestego-install.cmake")
+
 # macro for marking every imagestego module
 macro(imagestego_library)
   if (ARGC EQUAL 0)
@@ -187,8 +190,8 @@ macro(imagestego_library)
   set(IMAGESTEGO_LIBS ${IMAGESTEGO_LIBS} PARENT_SCOPE)
 
   if (IMAGESTEGO_INSTALL)
-    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
-      DESTINATION include
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+      DESTINATION ${IMAGESTEGO_INCLUDE_DESTINATION}
     )
   endif()
 
@@ -354,9 +357,6 @@ if (IMAGESTEGO_BUILD_PERF_TESTS)
 endif(IMAGESTEGO_BUILD_PERF_TESTS)
 
 include("cmake/CPackConfig.cmake")
-
-# installation rules
-include("cmake/imagestego-install.cmake")
 
 if (IMAGESTEGO_INSTALL)
   install(TARGETS ${IMAGESTEGO_LIBS}
