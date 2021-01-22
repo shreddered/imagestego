@@ -42,15 +42,39 @@ class HuffmanEncoder;
 
 } // namespace impl
 
+/**
+ * @brief Class implementing Huffman coding.
+ */
 class IMAGESTEGO_EXPORTS HuffmanEncoder : public Encoder {
 public:
+    /**
+     * @brief Constructs empty HuffmanEncoder instance.
+     */
     explicit HuffmanEncoder() noexcept;
+    /**
+     * @brief Constructs HuffmanEncoder instance with given message.
+     *
+     * @param str Message to be encoded.
+     */
     explicit HuffmanEncoder(const std::string& str) noexcept;
     explicit HuffmanEncoder(std::string&& str) noexcept;
     HuffmanEncoder(const HuffmanEncoder&) = delete;
     HuffmanEncoder& operator=(const HuffmanEncoder&) = delete;
+    /**
+     * @brief Setter for message to be encoded.
+     *
+     * @param str Message to be encoded.
+     */
     void setMessage(const std::string& str) override;
+    /**
+     * @brief Getter for encoded message.
+     *
+     * @return Encoded message.
+     */
     BitArray getEncodedMessage() override;
+    /**
+     * @brief Destructs HuffmanEncoder.
+     */
     virtual ~HuffmanEncoder() noexcept;
 
 private:

@@ -38,12 +38,36 @@ class LzwEncoder;
 
 } // namespace impl
 
+/**
+ * @brief Class implementing LZW encoding.
+ */
 class IMAGESTEGO_EXPORTS LzwEncoder : public Encoder {
 public:
+    /**
+     * @brief Constructs empty LzwEncoder instance.
+     */
     explicit LzwEncoder();
+    /**
+     * @brief Constructs LzwEncoder instance with given message.
+     *
+     * @param arr Message to be encoded.
+     */
     explicit LzwEncoder(const std::string& str);
+    /**
+     * @brief Destructs LzwEncoder.
+     */
     virtual ~LzwEncoder() noexcept;
+    /**
+     * @brief Setter for message to be encoded.
+     *
+     * @param str Message to be decoded.
+     */
     void setMessage(const std::string& str) override;
+    /**
+     * @brief Getter for encoded message.
+     *
+     * @return Encoded message.
+     */
     BitArray getEncodedMessage() override;
 
 private:
