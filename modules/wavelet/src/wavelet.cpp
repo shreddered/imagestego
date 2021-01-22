@@ -50,14 +50,16 @@ public:
             arr = imagestego::BitArray::fromByteString(msg);
         }
     }
-    void setSecretKey(const std::string& key) {}
+    void setSecretKey(const std::string& key) {
+
+    }
 
     void createStegoContainer(const std::string& dst) {}
 
 private:
+    imagestego::BitArray _arr;
     Encoder* _encoder;
     Wavelet* _wavelet;
-    imagestego::BitArray arr;
 }; // class WaveletEmbedder
 
 } // namespace impl

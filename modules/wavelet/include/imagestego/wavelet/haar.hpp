@@ -79,7 +79,7 @@ class HaarWavelet;
 /**
  * @brief SIMD-accelerated Haar wavelet.
  */
-class IMAGESTEGO_EXPORTS HaarWavelet : public AbstractWavelet {
+class IMAGESTEGO_EXPORTS HaarWavelet : public Wavelet {
 public:
     /**
      * Constructs empty HaarWavelet instance.
