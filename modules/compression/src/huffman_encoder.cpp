@@ -48,7 +48,7 @@ public:
     }
     void getHuffmanTree() {
         if (_codeTable.empty()) {
-            __buildCode();
+            buildCode();
         }
         _route.clear();
         _alphabet.clear();
@@ -76,7 +76,7 @@ private:
                 delete right;
         }
     };
-    void __buildCode() {
+    void buildCode() {
         std::unordered_map<char, std::size_t> weight;
         std::for_each(_msg.begin(), _msg.end(),
                       [&weight](const char& c) mutable { ++weight[c]; });
@@ -104,7 +104,7 @@ private:
     }
     void encode() {
         if (_codeTable.empty())
-            __buildCode();
+            buildCode();
         if (_encodedMsg.empty()) {
             getHuffmanTree();
             _encodedMsg.insert(0, BitArray::fromByteString(_alphabet).toString());
