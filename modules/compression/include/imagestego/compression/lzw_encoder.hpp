@@ -32,7 +32,11 @@
 
 namespace imagestego {
 
-class LzwEncoderImpl;
+namespace impl {
+
+class LzwEncoder;
+
+} // namespace impl
 
 class IMAGESTEGO_EXPORTS LzwEncoder : public Encoder {
 public:
@@ -43,7 +47,7 @@ public:
     BitArray getEncodedMessage() override;
 
 private:
-    LzwEncoderImpl* _encoder;
+    impl::LzwEncoder* _encoder;
 }; // class LzwEncoder
 
 } // namespace imagestego

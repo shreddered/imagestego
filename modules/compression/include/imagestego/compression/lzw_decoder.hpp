@@ -32,7 +32,11 @@
 
 namespace imagestego {
 
-class LzwDecoderImpl;
+namespace impl {
+
+class LzwDecoder;
+
+} // namespace impl
 
 class IMAGESTEGO_EXPORTS LzwDecoder : public Decoder {
 public:
@@ -43,7 +47,7 @@ public:
     std::string getDecodedMessage() override;
 
 private:
-    LzwDecoderImpl* _decoder;
+    impl::LzwDecoder* _decoder;
 }; // class LzwDecoder
 
 } // namespace imagestego
