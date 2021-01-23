@@ -26,6 +26,7 @@
 #include "imagestego/algorithm/wavelet.hpp"
 #include "imagestego/core.hpp"
 // c++ headers
+#include <algorithm>
 #include <random>
 // opencv headers
 #include <opencv2/core.hpp>
@@ -49,7 +50,7 @@ public:
         if (_encoder) {
             _encoder->setMessage(msg);
         } else {
-            arr = imagestego::BitArray::fromByteString(msg);
+            _arr = imagestego::BitArray::fromByteString(msg);
         }
     }
     void setSecretKey(const std::string& key) {
@@ -57,9 +58,39 @@ public:
     }
 
     void createStegoContainer(const std::string& dst) {
+        std::size_t idx = 0;
+        auto rect = selectRect(_image, _prng, _arr.size());
+        cv::Mat transformed = _wavelet->transform(_image(rect));
+        for (int row = 0; row < transformed.rows; ++row) {
+            for (int col = 0; col < transformed.cols; ++col) {
+                auto p = transformed.at<cv::Vec3s>(row, col);
+                for (int color = 0; color != 3; ++color) {
+                    if (_arr[idx]) {
+                        p.val[color] |= 1;
+                    } else {
+                        p.val[color] &= ~1u;
+                    }
+                }
+            }
+        }
+        _wavelet->inverse(transformed).copyTo(_image(rect));
+        cv::imwrite(dst, _image);
     }
 
 private:
+    static cv::Rect selectRect(const cv::Mat& src, std::mt19937& gen,
+                        std::size_t minRectArea) {
+        int x0, y0, x1, y1;
+        do {
+            auto x = std::minmax(gen() % src.cols, gen() % src.cols),
+                 y = std::minmax(gen() % src.rows, gen() % src.rows);
+            x0 = x.first;
+            x1 = x.second;
+            y0 = y.first;
+            y1 = y.second;
+        } while ((x1 - x0) * (y1 - y0) < minRectArea);
+        return cv::Rect(cv::Point(x0, y0), cv::Point(x1, y1));
+    }
     cv::Mat _image;
     imagestego::BitArray _arr;
     std::mt19937 _prng;
@@ -67,20 +98,27 @@ private:
     Wavelet* _wavelet;
 }; // class WaveletEmbedder
 
+class WaveletExtracter {
+}; // class WaveletExtracter
+
 } // namespace impl
 
 WaveletEmbedder::WaveletEmbedder(Wavelet* wavelet, Encoder* encoder)
-    : pImpl(new impl::WaveletEmbedder(wavelet, encoder)) {}
+    : _pImpl(new impl::WaveletEmbedder(wavelet, encoder)) {}
 
 WaveletEmbedder::~WaveletEmbedder() noexcept {
-    if (pImpl)
-        delete pImpl;
+    if (_pImpl)
+        delete _pImpl;
 }
 
-void WaveletEmbedder::setImage(const std::string& src) { pImpl->setImage(src); }
+void WaveletEmbedder::setImage(const std::string& src) { _pImpl->setImage(src); }
 
-void WaveletEmbedder::setMessage(const std::string& msg) { pImpl->setMessage(msg); }
+void WaveletEmbedder::setMessage(const std::string& msg) { _pImpl->setMessage(msg); }
 
-void WaveletEmbedder::setSecretKey(const std::string& key) { pImpl->setSecretKey(key); }
+void WaveletEmbedder::setSecretKey(const std::string& key) { _pImpl->setSecretKey(key); }
+
+void WaveletEmbedder::createStegoContainer(const std::string& dst) {
+    _pImpl->createStegoContainer(dst);
+}
 
 } // namespace imagestego
