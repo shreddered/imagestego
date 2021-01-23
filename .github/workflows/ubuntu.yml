@@ -84,3 +84,14 @@ jobs:
              cd build
              cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
+  gcc-9-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: prepare environment
+        run: |
+             sudo apt update
+             sudo apt install qemu binfmt-support qemu-user-static
+             docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - name: build
+        run: docker run -v $(pwd):$(pwd) -w $(pwd) --cap-add=SYS_PTRACE -t shreddered/imagestego:arm64 scripts/build.sh
