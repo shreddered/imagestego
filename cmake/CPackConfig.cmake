@@ -19,6 +19,9 @@ else()
   set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${IMAGESTEGO_RUNTIME}-${IMAGESTEGO_ARCH}")
 endif()
 
+# debian package dependencies
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libopencv-core-dev (>= 4.2), libopencv-imgcodecs-dev (>= 4.2)")
+
 # source rules
 set(CPACK_SOURCE_GENERATOR TGZ ZIP)
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
