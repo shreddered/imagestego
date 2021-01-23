@@ -93,6 +93,9 @@ private:
     impl::LsbEmbedder* _embedder;
 }; // class LsbEmbedder
 
+/**
+ * @brief Class for performing LSB extracting.
+ */
 class IMAGESTEGO_EXPORTS LsbExtracter : public StegoExtracter {
 public:
     /**
