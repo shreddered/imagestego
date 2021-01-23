@@ -40,6 +40,9 @@ class WaveletEmbedderImpl;
 
 } // namespace impl
 
+/**
+ * @brief Class for wavelet-based embedding
+ */
 class IMAGESTEGO_EXPORTS WaveletEmbedder : public StegoEmbedder {
 public:
     /**
