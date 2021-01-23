@@ -92,6 +92,7 @@ jobs:
         run: |
              sudo apt update
              sudo apt install qemu binfmt-support qemu-user-static
+             git submodule update --init
              docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
       - name: build
         run: docker run -v $(pwd):$(pwd) -w $(pwd) --cap-add=SYS_PTRACE -t shreddered/imagestego:arm64 scripts/build.sh
