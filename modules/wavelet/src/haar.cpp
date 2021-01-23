@@ -35,9 +35,11 @@
 
 namespace imagestego {
 
-class HaarWaveletImpl final {
+namespace impl {
+
+class HaarWavelet final {
 public:
-    explicit HaarWaveletImpl() noexcept {}
+    explicit HaarWavelet() noexcept {}
     cv::Mat transform(const cv::Mat& mat) {
         cv::Mat dst;
         std::vector<cv::Mat> planes, _planes;
@@ -120,9 +122,11 @@ private:
         return inverseHorizontalLifting(src.t());
     }
     static inline int floor2(int num) { return (num < 0) ? (num - 1) / 2 : num / 2; }
-}; // class HaarWaveletImpl
+}; // class HaarWavelet
 
-HaarWavelet::HaarWavelet() : pImpl(new HaarWaveletImpl) {}
+} // namespace impl
+
+HaarWavelet::HaarWavelet() : pImpl(new impl::HaarWavelet) {}
 
 HaarWavelet::~HaarWavelet() noexcept {
     if (pImpl)
@@ -135,9 +139,11 @@ cv::Mat HaarWavelet::inverse(const cv::Mat& mat) { return pImpl->inverse(mat); }
 
 namespace experimental {
 
-class HaarWaveletImpl {
+namespace impl {
+
+class HaarWavelet {
 public:
-    explicit HaarWaveletImpl() noexcept {}
+    explicit HaarWavelet() noexcept {}
     cv::Mat transform(const cv::Mat& mat) {
         cv::Mat dst;
         std::vector<std::future<cv::Mat>> futures;
@@ -172,21 +178,23 @@ public:
 private:
     static cv::Mat horizontalLifting(const cv::Mat& src);
     static cv::Mat verticalLifting(const cv::Mat& src);
-}; // class HaarWaveletImpl
+}; // class HaarWavelet
 
-cv::Mat HaarWaveletImpl::horizontalLifting(const cv::Mat& src) {
+cv::Mat HaarWavelet::horizontalLifting(const cv::Mat& src) {
     cv::Mat dst(src.size(), CV_16SC1);
-    horizontal_haar(src.data, dst.data, src.rows, src.cols);
+    horizontalHaar(src.data, dst.data, src.rows, src.cols);
     return dst;
 }
 
-cv::Mat HaarWaveletImpl::verticalLifting(const cv::Mat& src) {
+cv::Mat HaarWavelet::verticalLifting(const cv::Mat& src) {
     cv::Mat dst(src.size(), CV_16SC1);
-    vertical_haar(src.data, dst.data, src.rows, src.cols);
+    verticalHaar(src.data, dst.data, src.rows, src.cols);
     return dst;
 }
 
-HaarWavelet::HaarWavelet() : pImpl(new HaarWaveletImpl) {}
+} // namespace impl
+
+HaarWavelet::HaarWavelet() : pImpl(new impl::HaarWavelet) {}
 
 HaarWavelet::~HaarWavelet() noexcept {
     if (pImpl) {

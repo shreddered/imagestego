@@ -10,3 +10,4 @@ Makefile
 compile_commands.json
 *.info
 *TODO*
+docs/Doxyfile

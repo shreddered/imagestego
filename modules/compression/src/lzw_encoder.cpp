@@ -28,15 +28,17 @@
 
 namespace imagestego {
 
-class LzwEncoderImpl : private Dictionary {
+namespace impl {
+
+class LzwEncoder : private Dictionary {
 public:
-    explicit LzwEncoderImpl() noexcept : Dictionary() {}
-    explicit LzwEncoderImpl(const std::string& str) noexcept : Dictionary(), _msg(str) {}
+    explicit LzwEncoder() noexcept : Dictionary() {}
+    explicit LzwEncoder(const std::string& str) noexcept : Dictionary(), _msg(str) {}
     void setMessage(const std::string& str) noexcept {
         _msg = str;
         _encodedMsg.clear();
     }
-    BitArray getEncodedMessage() {
+    imagestego::BitArray getEncodedMessage() {
         if (_encodedMsg.empty() && _msg.size() != 1) {
             encode();
         }
@@ -46,7 +48,7 @@ public:
 private:
     static constexpr std::size_t maxDictionarySize = (1 << maxBits) - 1;
     std::string _msg;
-    BitArray _encodedMsg;
+    imagestego::BitArray _encodedMsg;
     void encode() {
         StringElement s;
         uint8_t currentBitsPerBlock = 8;
@@ -72,11 +74,13 @@ private:
         }
         _encodedMsg.put(s.prefixIndex, currentBitsPerBlock);
     }
-}; // class LzwEncoderImpl
+}; // class LzwEncoder
 
-LzwEncoder::LzwEncoder() : _encoder(new LzwEncoderImpl) {}
+} // namespace impl
 
-LzwEncoder::LzwEncoder(const std::string& str) : _encoder(new LzwEncoderImpl(str)) {}
+LzwEncoder::LzwEncoder() : _encoder(new impl::LzwEncoder) {}
+
+LzwEncoder::LzwEncoder(const std::string& str) : _encoder(new impl::LzwEncoder(str)) {}
 
 LzwEncoder::~LzwEncoder() noexcept {
     if (_encoder)

@@ -34,9 +34,13 @@
 
 namespace imagestego {
 
+namespace impl {
+
 class WaveletEmbedderImpl;
 
-class IMAGESTEGO_EXPORTS WaveletEmbedder : public AbstractStegoEmbedder {
+} // namespace impl
+
+class IMAGESTEGO_EXPORTS WaveletEmbedder : public StegoEmbedder {
 public:
     /**
      * Constructs imagesteo::WaveletEmbedder instance.
@@ -44,8 +48,8 @@ public:
      * @param wavelet Wavelet transform.
      * @param encoder Data encoder.
      */
-    explicit WaveletEmbedder(AbstractWavelet* wavelet,
-                             AbstractEncoder* encoder = nullptr);
+    explicit WaveletEmbedder(Wavelet* wavelet,
+                             Encoder* encoder = nullptr);
 
     /**
      * imagestego::WaveletEmbedder destructor.
@@ -81,7 +85,7 @@ public:
     void createStegoContainer(const std::string& dst) override;
 
 private:
-    WaveletEmbedderImpl* pImpl;
+    impl::WaveletEmbedder* pImpl;
 }; // class WaveletEmbedder
 
 } // namespace imagestego

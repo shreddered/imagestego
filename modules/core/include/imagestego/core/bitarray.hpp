@@ -39,7 +39,7 @@ class BitArray;
 } // namespace imagestego
 
 /**
- * Operator << overloading.
+ * @brief Operator << overloading.
  *
  * Operator << overloading for printing bit array.
  *
@@ -53,17 +53,20 @@ IMAGESTEGO_EXPORTS std::ostream& operator<<(std::ostream& os,
 namespace imagestego {
 
 /**
- * Class representing bit array.
+ * @brief Class representing bit array.
+ *
+ * Implementation of this class is similar to std::vector<bool>. Also several methods
+ * provided for convenient usage with other classes.
  */
 class IMAGESTEGO_EXPORTS BitArray {
 public:
     /**
      * Iterator type definition.
      */
-    typedef typename BitArrayImpl::iterator iterator;
+    typedef typename impl::BitArray::iterator iterator;
 
     /**
-     * Bit array constructor.
+     * @brief Bit array constructor.
      *
      * Constructs an empty array.
      */
@@ -151,7 +154,7 @@ public:
      * @param i Index of element in array.
      * @return Instance of proxy class representing element.
      */
-    typename BitArrayImpl::reference operator[](std::size_t i);
+    typename impl::BitArray::reference operator[](std::size_t i);
 
     /**
      * Operator [] overloading.
@@ -229,10 +232,10 @@ private:
      *
      * @param arr Pointer to implementation.
      */
-    explicit BitArray(BitArrayImpl* arr) noexcept;
+    explicit BitArray(impl::BitArray* arr) noexcept;
 
     /** Pointer to implementation. */
-    BitArrayImpl* _arr;
+    impl::BitArray* _arr;
 }; // class BitArray
 
 } // namespace imagestego

@@ -10,10 +10,14 @@ jobs:
       - name: install dependencies
         run: |
              sudo apt update
-             sudo apt install libopencv-dev lcov
+             sudo apt install libopencv-dev lcov clang-tidy clang-format
              git submodule update --init
       - name: cmake
-        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF -D IMAGESTEGO_COVERAGE=ON
+        run: cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D IMAGESTEGO_BUILD_TESTS=ON -D IMAGESTEGO_BUILD_PERF_TESTS=OFF -D IMAGESTEGO_COVERAGE=ON -D CMAKE_EXPORT_COMPILE_COMMANDS=ON
+      - name: linter
+        run: |
+             cd build
+             run-clang-tidy
       - name: build
         run: cmake --build build -j 10
       - name: test
@@ -80,11 +84,3 @@ jobs:
              cd build
              cp ../test/test.jpg .
              ctest -j 10 --output-on-failure
-  # gcc-arm64:
-    # runs-on: ubuntu-latest
-    # steps:
-      # - uses: actions/checkout@v2
-      # - name: install dependencies
-        # run: git submodule update --init
-      # - name: build
-        # run: docker run -v `pwd`:`pwd` -w `pwd` -t arm64v8/ubuntu ci/arm64-build.sh

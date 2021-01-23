@@ -34,18 +34,46 @@
 
 namespace imagestego {
 
-class HuffmanDecoderImpl;
+namespace impl {
 
-class IMAGESTEGO_EXPORTS HuffmanDecoder : public AbstractDecoder {
+class HuffmanDecoder;
+
+} // namespace impl
+
+/**
+ * @brief Class implementing Huffman decoding.
+ */
+class IMAGESTEGO_EXPORTS HuffmanDecoder : public Decoder {
 public:
+    /**
+     * @brief Constructs empty HuffmanDecoder instance.
+     */
     explicit HuffmanDecoder() noexcept;
+    /**
+     * @brief Constructs HuffmanDecoder instance with given message.
+     *
+     * @param arr Message to be decoded.
+     */
     explicit HuffmanDecoder(const BitArray& arr) noexcept;
+    /**
+     * @brief Destructs HuffmanDecoder.
+     */
     virtual ~HuffmanDecoder() noexcept;
+    /**
+     * @brief Setter for message to be decoded.
+     *
+     * @param str Message to be decoded.
+     */
     void setMessage(const BitArray& arr) override;
+    /**
+     * @brief Getter for decoded message.
+     *
+     * @return Decoded message.
+     */
     std::string getDecodedMessage() override;
 
 private:
-    HuffmanDecoderImpl* decoder;
+    impl::HuffmanDecoder* decoder;
 }; // class HuffmanDecoder
 
 } // namespace imagestego

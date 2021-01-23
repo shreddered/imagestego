@@ -86,6 +86,7 @@ option(IMAGESTEGO_WITH_LIBJPEG "Build own libjpeg" OFF)
 option(IMAGESTEGO_BUILD_OPENCV "Build own opencv" OFF)
 option(IMAGESTEGO_COVERAGE "Check coverage" OFF)
 option(IMAGESTEGO_BUILD_EXAMPLES "Build examples" ON)
+option(IMAGESTEGO_BUILD_DOCS "Build docs" OFF)
 set(IMAGESTEGO_MODULES "core,lossless,compression,wavelet" CACHE STRING "imagestego modules")
 
 if (WIN32)
@@ -176,6 +177,9 @@ string(REPLACE "," ";" IMAGESTEGO_BUILD_LIST "${IMAGESTEGO_MODULES}")
 # imagestego interface
 add_library(imagestego INTERFACE)
 
+# installation rules
+include("cmake/imagestego-install.cmake")
+
 # macro for marking every imagestego module
 macro(imagestego_library)
   if (ARGC EQUAL 0)
@@ -186,8 +190,8 @@ macro(imagestego_library)
   set(IMAGESTEGO_LIBS ${IMAGESTEGO_LIBS} PARENT_SCOPE)
 
   if (IMAGESTEGO_INSTALL)
-    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
-      DESTINATION include
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+      DESTINATION ${IMAGESTEGO_INCLUDE_DESTINATION}
     )
   endif()
 
@@ -315,6 +319,8 @@ endforeach()
   # add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/examples")
 # endif()
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/docs)
+
 if (IMAGESTEGO_BUILD_TESTS OR IMAGESTEGO_BUILD_PERF_TESTS)
   enable_testing()
   # gtest
@@ -351,9 +357,6 @@ if (IMAGESTEGO_BUILD_PERF_TESTS)
 endif(IMAGESTEGO_BUILD_PERF_TESTS)
 
 include("cmake/CPackConfig.cmake")
-
-# installation rules
-include("cmake/imagestego-install.cmake")
 
 if (IMAGESTEGO_INSTALL)
   install(TARGETS ${IMAGESTEGO_LIBS}

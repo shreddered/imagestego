@@ -36,12 +36,15 @@ std::size_t read(const imagestego::BitArray& arr, std::size_t& i, uint8_t bits) 
 
 namespace imagestego {
 
-class LzwDecoderImpl : private Dictionary {
+namespace impl {
+
+class LzwDecoder : private Dictionary {
 public:
     static constexpr uint8_t maxBits = 12;
-    explicit LzwDecoderImpl() noexcept : Dictionary() {}
-    explicit LzwDecoderImpl(const BitArray& arr) noexcept : Dictionary(), _msg(arr) {}
-    void setMessage(const BitArray& arr) noexcept {
+    explicit LzwDecoder() noexcept : Dictionary() {}
+    explicit LzwDecoder(const imagestego::BitArray& arr) noexcept
+        : Dictionary(), _msg(arr) {}
+    void setMessage(const imagestego::BitArray& arr) noexcept {
         _msg = arr;
         _decodedMsg.clear();
     }
@@ -54,7 +57,7 @@ public:
 
 private:
     std::string _decodedMsg;
-    BitArray _msg;
+    imagestego::BitArray _msg;
     void decode() {
         // reading first 4 bits
         std::size_t i = 0;
@@ -89,11 +92,13 @@ private:
             }
         }
     }
-}; // class LzwDecoderImpl
+}; // class LzwDecoder
 
-LzwDecoder::LzwDecoder() : _decoder(new LzwDecoderImpl) {}
+} // namespace impl
 
-LzwDecoder::LzwDecoder(const BitArray& arr) : _decoder(new LzwDecoderImpl(arr)) {}
+LzwDecoder::LzwDecoder() : _decoder(new impl::LzwDecoder) {}
+
+LzwDecoder::LzwDecoder(const BitArray& arr) : _decoder(new impl::LzwDecoder(arr)) {}
 
 LzwDecoder::~LzwDecoder() noexcept { delete _decoder; }
 

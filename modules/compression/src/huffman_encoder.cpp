@@ -30,23 +30,25 @@
 
 namespace imagestego {
 
-class HuffmanEncoderImpl final {
+namespace impl {
+
+class HuffmanEncoder final {
 public:
-    explicit HuffmanEncoderImpl() noexcept {}
-    explicit HuffmanEncoderImpl(const std::string& str) noexcept : _msg(str) {}
-    HuffmanEncoderImpl(const HuffmanEncoderImpl&) = delete;
-    HuffmanEncoderImpl& operator=(const HuffmanEncoderImpl&) = delete;
+    explicit HuffmanEncoder() noexcept {}
+    explicit HuffmanEncoder(const std::string& str) noexcept : _msg(str) {}
+    HuffmanEncoder(const HuffmanEncoder&) = delete;
+    HuffmanEncoder& operator=(const HuffmanEncoder&) = delete;
     void setMessage(const std::string& str) noexcept {
         _msg = str;
         _encodedMsg.clear();
     }
-    BitArray getEncodedMessage() {
+    imagestego::BitArray getEncodedMessage() {
         encode();
-        return BitArray(_encodedMsg);
+        return imagestego::BitArray(_encodedMsg);
     }
     void getHuffmanTree() {
         if (_codeTable.empty()) {
-            __buildCode();
+            buildCode();
         }
         _route.clear();
         _alphabet.clear();
@@ -55,7 +57,7 @@ public:
         _route += '0';
     }
     std::string getAlphabet() const noexcept { return _alphabet; }
-    virtual ~HuffmanEncoderImpl() noexcept {
+    virtual ~HuffmanEncoder() noexcept {
         if (_root)
             delete _root;
     }
@@ -74,7 +76,7 @@ private:
                 delete right;
         }
     };
-    void __buildCode() {
+    void buildCode() {
         std::unordered_map<char, std::size_t> weight;
         std::for_each(_msg.begin(), _msg.end(),
                       [&weight](const char& c) mutable { ++weight[c]; });
@@ -102,7 +104,7 @@ private:
     }
     void encode() {
         if (_codeTable.empty())
-            __buildCode();
+            buildCode();
         if (_encodedMsg.empty()) {
             getHuffmanTree();
             _encodedMsg.insert(0, BitArray::fromByteString(_alphabet).toString());
@@ -132,13 +134,15 @@ private:
     std::string _alphabet;
 }; // class HuffmanEncoderImpl
 
-HuffmanEncoder::HuffmanEncoder() noexcept : encoder(new HuffmanEncoderImpl()) {}
+} // namespace impl
+
+HuffmanEncoder::HuffmanEncoder() noexcept : encoder(new impl::HuffmanEncoder) {}
 
 HuffmanEncoder::HuffmanEncoder(const std::string& str) noexcept
-    : encoder(new HuffmanEncoderImpl(str)) {}
+    : encoder(new impl::HuffmanEncoder(str)) {}
 
 HuffmanEncoder::HuffmanEncoder(std::string&& str) noexcept
-    : encoder(new HuffmanEncoderImpl(str)) {}
+    : encoder(new impl::HuffmanEncoder(str)) {}
 
 void HuffmanEncoder::setMessage(const std::string& str) { encoder->setMessage(str); }
 

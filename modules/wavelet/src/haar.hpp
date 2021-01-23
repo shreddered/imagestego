@@ -41,7 +41,7 @@ extern "C" {
  * @param rows Number of rows.
  * @param cols Number of columns.
  */
-void vertical_haar(const uint8_t* src, uint8_t* dst, const int rows, const int cols);
+void verticalHaar(const uint8_t* src, uint8_t* dst, const int rows, const int cols);
 
 /**
  * Function which computes horizontal lifting.
@@ -53,7 +53,7 @@ void vertical_haar(const uint8_t* src, uint8_t* dst, const int rows, const int c
  * @param rows Number of rows.
  * @param cols Number of columns.
  */
-void horizontal_haar(const uint8_t* src, uint8_t* dst, int rows, int cols);
+void horizontalHaar(const uint8_t* src, uint8_t* dst, int rows, int cols);
 
 #ifdef __cplusplus
 }

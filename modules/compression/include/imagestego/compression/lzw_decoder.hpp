@@ -32,18 +32,46 @@
 
 namespace imagestego {
 
-class LzwDecoderImpl;
+namespace impl {
 
-class IMAGESTEGO_EXPORTS LzwDecoder : public AbstractDecoder {
+class LzwDecoder;
+
+} // namespace impl
+
+/**
+ * @brief Class implementing LZW decoding.
+ */
+class IMAGESTEGO_EXPORTS LzwDecoder : public Decoder {
 public:
+    /**
+     * @brief Constructs empty LzwDecoder instance.
+     */
     explicit LzwDecoder();
+    /**
+     * @brief Constructs LzwDecoder instance with given message.
+     *
+     * @param arr Message to be decoded.
+     */
     explicit LzwDecoder(const BitArray& arr);
+    /**
+     * @brief Destructs LzwDecoder.
+     */
     virtual ~LzwDecoder() noexcept;
+    /**
+     * @brief Setter for message to be decoded.
+     *
+     * @param str Message to be decoded.
+     */
     void setMessage(const BitArray& arr) override;
+    /**
+     * @brief Getter for decoded message.
+     *
+     * @return Decoded message.
+     */
     std::string getDecodedMessage() override;
 
 private:
-    LzwDecoderImpl* _decoder;
+    impl::LzwDecoder* _decoder;
 }; // class LzwDecoder
 
 } // namespace imagestego

@@ -33,36 +33,81 @@
 
 namespace imagestego {
 
-class IMAGESTEGO_EXPORTS AbstractStegoEmbedder {
+/**
+ * @brief Interface for custom stego embedders.
+ */
+class IMAGESTEGO_EXPORTS StegoEmbedder {
 public:
+    /**
+     * @brief Source image setter.
+     */
     virtual void setImage(const std::string& imageName) = 0;
+    /**
+     * @brief Secret message setter.
+     */
     virtual void setMessage(const std::string& msg) = 0;
+    /**
+     * @brief Setter for secret key.
+     */
     virtual void setSecretKey(const std::string& key) = 0;
+    /**
+     * @brief Method for creating stego container.
+     */
     virtual void createStegoContainer(const std::string& dst) = 0;
-    virtual ~AbstractStegoEmbedder() = default;
-}; // class AbstractStegoEmbedder
+    virtual ~StegoEmbedder() = default;
+}; // class StegoEmbedder
 
-class IMAGESTEGO_EXPORTS AbstractStegoExtracter {
+/**
+ * @brief Interface for custom stego extracters.
+ */
+class IMAGESTEGO_EXPORTS StegoExtracter {
 public:
+    /**
+     * @brief Source image setter.
+     */
     virtual void setImage(const std::string& imageName) = 0;
+    /**
+     * @brief Setter for secret key.
+     */
     virtual void setSecretKey(const std::string& key) = 0;
+    /**
+     * @brief Function for extracting secret message.
+     */
     virtual std::string extractMessage() = 0;
-    virtual ~AbstractStegoExtracter() = default;
-}; // class AbstractStegoExtracter
+    virtual ~StegoExtracter() = default;
+}; // class StegoExtracter
 
-class IMAGESTEGO_EXPORTS AbstractEncoder {
+/**
+ * @brief Interface for custom encoders.
+ */
+class IMAGESTEGO_EXPORTS Encoder {
 public:
+    /**
+     * @brief Setter for message to be encoded.
+     */
     virtual void setMessage(const std::string& msg) = 0;
+    /**
+     * @brief Getter for encoded message.
+     */
     virtual BitArray getEncodedMessage() = 0;
-    virtual ~AbstractEncoder() noexcept = default;
-}; // class AbstractEncoder
+    virtual ~Encoder() noexcept = default;
+}; // class Encoder
 
-class IMAGESTEGO_EXPORTS AbstractDecoder {
+/**
+ * @brief Interface for custom decoders.
+ */
+class IMAGESTEGO_EXPORTS Decoder {
 public:
+    /**
+     * @brief Encoded message setter.
+     */
     virtual void setMessage(const BitArray& arr) = 0;
+    /**
+     * @brief Getter for decoded message.
+     */
     virtual std::string getDecodedMessage() = 0;
-    virtual ~AbstractDecoder() noexcept = default;
-}; // class AbstractDecoder
+    virtual ~Decoder() noexcept = default;
+}; // class Decoder
 
 } // namespace imagestego
 

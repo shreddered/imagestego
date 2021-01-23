@@ -35,15 +35,18 @@ unsigned char takeChar(const BitArray& arr, const std::size_t& pos) {
     return tmp;
 }
 
-class HuffmanDecoderImpl {
+namespace impl {
+
+class HuffmanDecoder {
 public:
-    explicit HuffmanDecoderImpl() noexcept {}
-    explicit HuffmanDecoderImpl(const BitArray& arr) noexcept : _encodedMsg(arr) {}
-    virtual ~HuffmanDecoderImpl() noexcept {
+    explicit HuffmanDecoder() noexcept {}
+    explicit HuffmanDecoder(const imagestego::BitArray& arr) noexcept
+        : _encodedMsg(arr) {}
+    virtual ~HuffmanDecoder() noexcept {
         if (_root)
             delete _root;
     }
-    void setMessage(const BitArray& arr) { _encodedMsg = arr; }
+    void setMessage(const imagestego::BitArray& arr) { _encodedMsg = arr; }
     std::string getDecodedMessage() {
         if (!_root) {
             readDfs();
@@ -144,18 +147,20 @@ private:
         }
     }
     std::unordered_map<std::string, char> _codeTable;
-    BitArray _encodedMsg;
+    imagestego::BitArray _encodedMsg;
     std::vector<std::string> _codes;
     std::string _alphabet;
     std::string _decodedMsg;
     std::size_t _it;
     TreeNode* _root = nullptr;
-}; // class HuffmanDecoderImpl
+}; // class HuffmanDecoder
 
-HuffmanDecoder::HuffmanDecoder() noexcept : decoder(new HuffmanDecoderImpl()) {}
+} // namespace impl
+
+HuffmanDecoder::HuffmanDecoder() noexcept : decoder(new impl::HuffmanDecoder()) {}
 
 HuffmanDecoder::HuffmanDecoder(const BitArray& arr) noexcept
-    : decoder(new HuffmanDecoderImpl(arr)) {}
+    : decoder(new impl::HuffmanDecoder(arr)) {}
 
 HuffmanDecoder::~HuffmanDecoder() noexcept { delete decoder; }
 

@@ -85,7 +85,7 @@ static IMAGESTEGO_INLINE int align8(const int num) {
 // Extension-specific implementation goes here
 #if IMAGESTEGO_AVX512BW_SUPPORTED
 
-void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst,
+void inverseVerticalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst,
         const int rows, const int cols) {
     static const __mmask32 len2mask[] = { 0x00000000, 0x00000001, 0x00000003, 0x00000007,
                                           0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f,
@@ -176,7 +176,7 @@ void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMA
 
 #if IMAGESTEGO_AVX2_SUPPORTED && !IMAGESTEGO_AVX512BW_SUPPORTED
 
-void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst,
+void inverseVerticalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst,
         const int rows, const int cols) {
     const __m256i zero = _mm256_setzero_si256();
     const int16_t* src = (const int16_t*) _src;
@@ -226,7 +226,7 @@ void inverse_vertical_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMA
 
 #if IMAGESTEGO_AVX2_SUPPORTED
 
-void inverse_horizontal_haar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst,
+void inverseHorizontalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst,
         const int rows, const int cols) {
     const __m256i zero = _mm256_setzero_si256();
     const int16_t* src = (const int16_t*) _src;
