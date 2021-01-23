@@ -7,3 +7,4 @@ EXCLUDE_SYMBOLS     = imagestego::impl::* imagestego::experimental::impl::* imag
 RECURSIVE           = YES
 EXCLUDE_PATTERNS    = */test/* */perf/* */third_party/*
 GENERATE_HTML       = YES
+GENERATE_LATEX      = NO
