@@ -3,7 +3,11 @@ PROJECT_NUMBER      = @IMAGESTEGO_VERSION@
 OUTPUT_LANGUAGE     = English
 COLLABORATION_GRAPH = NO
 INPUT               = @IMAGESTEGO_SOURCE_DIR@/modules
-EXCLUDE_SYMBOLS     = imagestego::impl::* imagestego::experimental::impl::* imagestego::StringElement
+EXCLUDE_SYMBOLS     = imagestego::impl::* \
+                      imagestego::experimental::impl::* \
+                      imagestego::StringElement \
+                      imagestego::Route \
+                      imagestego::RouteImpl
 RECURSIVE           = YES
 EXCLUDE_PATTERNS    = */test/* */perf/* */third_party/*
 GENERATE_HTML       = YES
