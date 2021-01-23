@@ -24,7 +24,9 @@
 
 // imagestego headers
 #include "imagestego/algorithm/wavelet.hpp"
-#include "imagestego/core/bitarray.hpp"
+#include "imagestego/core.hpp"
+// c++ headers
+#include <random>
 // opencv headers
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -42,7 +44,7 @@ public:
         if (_encoder)
             delete _encoder;
     }
-    void setImage(const std::string& src) { _wavelet->setMatrix(cv::imread(src)); }
+    void setImage(const std::string& src) { _image = cv::imread(src); }
     void setMessage(const std::string& msg) {
         if (_encoder) {
             _encoder->setMessage(msg);
@@ -51,13 +53,16 @@ public:
         }
     }
     void setSecretKey(const std::string& key) {
-
+        _prng.seed(imagestego::hash(key));
     }
 
-    void createStegoContainer(const std::string& dst) {}
+    void createStegoContainer(const std::string& dst) {
+    }
 
 private:
+    cv::Mat _image;
     imagestego::BitArray _arr;
+    std::mt19937 _prng;
     Encoder* _encoder;
     Wavelet* _wavelet;
 }; // class WaveletEmbedder
