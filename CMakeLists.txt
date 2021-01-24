@@ -202,6 +202,8 @@ macro(imagestego_library)
     string(REPLACE "${ARGV0};" "" ${ARGV0}_SOURCES "${ARGV}")
     # library target
     add_library(${ARGV0} ${${ARGV0}_SOURCES})
+
+    target_link_libraries(imagestego INTERFACE ${ARGV0})
     # adding to coverage
     imagestego_add_coverage(${ARGV0})
     # compiler ID
