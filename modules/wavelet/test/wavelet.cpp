@@ -33,13 +33,28 @@
 
 TEST(Wavelet, WaveletEmbedder) {
     imagestego::WaveletEmbedder emb(new imagestego::HaarWavelet);
-    emb.setMessage("hello");
-    emb.setSecretKey("ass");
+    emb.setMessage("test message");
+    emb.setSecretKey("key");
     emb.setImage("test.jpg");
     emb.createStegoContainer("wavelet.png");
 
     imagestego::WaveletExtracter ext(new imagestego::HaarWavelet);
     ext.setImage("wavelet.png");
-    ext.setSecretKey("ass");
+    ext.setSecretKey("key");
+    EXPECT_EQ(ext.extractMessage(), "test message");
+}
+
+TEST(Wavelet, WaveletEmbedderHuffman) {
+    imagestego::WaveletEmbedder emb(new imagestego::HaarWavelet,
+                                    new imagestego::HuffmanEncoder);
+    emb.setMessage("asad dsda sssa sadsa");
+    emb.setSecretKey("key");
+    emb.setImage("test.jpg");
+    emb.createStegoContainer("wavelet_huffman.png");
+
+    imagestego::WaveletExtracter ext(new imagestego::HaarWavelet,
+                                     new imagestego::HuffmanDecoder);
+    ext.setImage("wavelet_huffman.png");
+    ext.setSecretKey("key");
     std::cout << ext.extractMessage() << std::endl;
 }
