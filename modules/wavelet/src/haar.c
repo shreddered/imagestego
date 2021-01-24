@@ -198,7 +198,7 @@ void verticalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_R
         }
     }
     if (rows % 2 != 0) {
-        memcpy(dst + (rows - 1) * cols,
+        memcpy(dst + (rows - 1) * cols, // NOLINT: allow memcpy usage
                src + (rows - 1) * cols,
                cols * sizeof(int16_t));
     }
@@ -299,11 +299,11 @@ void verticalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_R
             loptr[col] = floor2(ptr1[col] + ptr2[col]);
             hiptr[col] = ptr1[col] - ptr2[col];
         }
-        if (rows % 2 != 0) {
-            memcpy(dst + (rows - 1) * cols,
-                   src + (rows - 1) * cols,
-                   cols * sizeof(int16_t));
-        }
+    }
+    if (rows % 2 != 0) {
+        memcpy(dst + (rows - 1) * cols, // NOLINT: allow memcpy usage
+               src + (rows - 1) * cols,
+               cols * sizeof(int16_t));
     }
 }
 
@@ -372,7 +372,7 @@ void verticalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_R
         }
     }
     if (rows % 2 != 0) {
-        memcpy(dst + (rows - 1) * cols,
+        memcpy(dst + (rows - 1) * cols, // NOLINT: allow memcpy usage
                src + (rows - 1) * cols,
                cols * sizeof(int16_t));
     }
