@@ -33,8 +33,6 @@ This library consists of components as described below.
 
 - _lossless_ component contains steganographic schemes with lossless destination.
 
-- _jpeg_ component contains steganographic schemes with JPEG writer.
-
 - _wavelet_ component contains different wavelet transforms.
 
 # Integration
@@ -119,6 +117,15 @@ $ cmake -D CMAKE_INSTALL_PREFIX=<optional: install prefix here> ..
 $ make
 # if you want to install it
 $ sudo make install
+```
+
+If you are interested in building tests, then you should do the following:
+```bash
+$ mkdir build/ && cd build/
+$ cmake -D CMAKE_INSTALL_PREFIX=<optional: install prefix here> ..
+$ make
+$ cp ../test/test.jpg . # copy test data
+$ ctest --verbose
 ```
 
 # Usage
