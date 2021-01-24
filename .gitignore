@@ -3,6 +3,7 @@
 *.jpg
 !test/test.jpg
 *.png
+!images/imagestego.png
 *build*/
 *install*/
 Makefile
