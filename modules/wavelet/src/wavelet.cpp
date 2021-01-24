@@ -47,6 +47,7 @@ cv::Rect selectRect(const cv::Mat& src, std::mt19937& gen,
         x1 = x.second;
         y0 = y.first;
         y1 = y.second;
+        // NOLINTNEXTLINE
     } while ((x1 - x0) * (y1 - y0) < minRectArea && !(y0 == 0 && x0 >= 0 && x0 <= 11));
     return cv::Rect(cv::Point(x0, y0), cv::Point(x1, y1));
 }

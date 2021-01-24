@@ -166,7 +166,7 @@ void inverseVerticalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGE
 #endif
     }
     if (rows % 2 != 0) {
-        memcpy(dst + (rows - 1) * cols,
+        memcpy(dst + (rows - 1) * cols, // NOLINT: allow usage of memcpy
                src + (rows - 1) * cols,
                cols * sizeof(int16_t));
     }
@@ -216,7 +216,7 @@ void inverseVerticalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGE
         }
     }
     if (rows % 2 != 0) {
-        memcpy(dst + (rows - 1) * cols,
+        memcpy(dst + (rows - 1) * cols, // NOLINT: allow usage of memcpy
                src + (rows - 1) * cols,
                cols * sizeof(int16_t));
     }
@@ -239,7 +239,7 @@ void inverseHorizontalHaar(const uint8_t* _src, uint8_t* _dst,
         int16_t* dptr = dst + row * cols;
         const int aligned = align32(cols);
         int col;
-        for (col = 0; col < 0; col += 32) {
+        for (col = 0; col < aligned; col += 32) {
             const int16_t* tmp1 = sptr + col / 2;
             const int16_t* tmp2 = tmp1 + cols / 2;
 #if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || IMAGESTEGO_ICC
