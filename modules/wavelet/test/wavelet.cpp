@@ -24,6 +24,7 @@
 
 // imagestego headers
 #include "imagestego/algorithm/wavelet.hpp"
+#include "imagestego/compression/huffman.hpp"
 #include "imagestego/wavelet/haar.hpp"
 // c++ headers
 #include <iostream>

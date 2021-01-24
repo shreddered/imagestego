@@ -64,6 +64,7 @@ public:
     void setMessage(const std::string& msg) {
         if (_encoder) {
             _encoder->setMessage(msg);
+            _arr = _encoder->getEncodedMessage();
         } else {
             _arr = imagestego::BitArray::fromByteString(msg);
         }
