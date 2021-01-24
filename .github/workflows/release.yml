@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build package
+        id: build_packages
+        run: |
+             cmake -S . -B build -D IMAGESTEGO_BUILD_DOCS=ON -D CMAKE_BUILD_TYPE=Release -D BUILD_SHARED_LIBS=ON -D CPACK_GENERATOR="DEB;RPM"
+             cmake --build build -j 10
+             cmake --build build --target docs
+             cmake --build build --target package
+             cd build
+             DEB_PACKAGE_NAME=$(ls *.deb | tail -n 1)
+             RPM_PACKAGE_NAME=$(ls *.rpm | tail -n 1)
+              echo "::set-output name=deb_package_filename::$DEB_PACKAGE_NAME"
+              echo "::set-output name=rpm_package_filename::$RPM_PACKAGE_NAME"
+      - uses: actions/create-release@v1
+        name: create release
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - uses: actions/upload-release-asset@v1
+        name: Upload .deb package
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/${{ steps.build_packages.outputs.deb_package_filename }}
+          asset_name: ${{ steps.build_packages.outputs.deb_package_filename }}
+          asset_content_type: application/zip
+      - uses: actions/upload-release-asset@v1
+        name: Upload .rpm package
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/${{ steps.build_packages.outputs.rpm_package_filename }}
+          asset_name: ${{ steps.build_packages.outputs.rpm_package_filename }}
+          asset_content_type: application/zip
