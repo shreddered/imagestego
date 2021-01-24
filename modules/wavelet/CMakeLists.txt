@@ -15,6 +15,7 @@ target_include_directories(imagestego_wavelet PUBLIC
 target_link_libraries(imagestego_wavelet PUBLIC
   imagestego_core
   opencv_core
+  opencv_imgcodecs
 )
 
 target_compile_definitions(imagestego_wavelet PUBLIC
