@@ -315,9 +315,9 @@ foreach(OPT ${IMAGESTEGO_BUILD_LIST})
   endif()
 endforeach()
 
-# if (IMAGESTEGO_BUILD_EXAMPLES)
-  # add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/examples")
-# endif()
+if (IMAGESTEGO_BUILD_EXAMPLES)
+  add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/examples")
+endif()
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/docs)
 
