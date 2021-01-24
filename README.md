@@ -18,6 +18,7 @@ Dependencies - [_opencv_](https://github.com/opencv/opencv) and [_libjpeg_](http
     * [Arch Linux](#arch-linux)
     * [macOS](#mac-os)
     * [Windows](#windows)
+- [Architecture](#architecture)
 - [Building](#building)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -103,6 +104,10 @@ You can open Windows command line and type:
 ```bat
 set "OPENCV_DIR=<path\to\opencv\build>"
 ```
+
+# Architecture
+
+![class-diagram](images/imagestego.png)
 
 # Building
 
