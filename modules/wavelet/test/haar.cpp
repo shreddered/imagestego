@@ -34,11 +34,25 @@
 
 TEST(Wavelet, Haar) {
     cv::Mat m(3, 4, CV_8UC1), dst;
-    cv::randu(m, cv::Scalar(0, 0, 0), cv::Scalar(255, 255, 255));
+    cv::randu(m, cv::Scalar(0), cv::Scalar(255));
     std::cout << m << std::endl;
     imagestego::HaarWavelet wavelet;
     dst = wavelet.transform(m);
     std::cout << dst << std::endl;
     cv::Mat tmp = wavelet.inverse(dst);
     std::cout << tmp << std::endl;
+}
+
+TEST(Wavelet, InverseVectorHaar) {
+    cv::Mat m(1, 32, CV_16SC1);
+    cv::randu(m, cv::Scalar(0), cv::Scalar(255));
+    std::cout << "original: " << m << std::endl;
+    imagestego::HaarWavelet w1;
+    imagestego::experimental::HaarWavelet w2;
+    cv::Mat dst = w2.transform(m);
+    std::cout << dst << std::endl;
+    cv::Mat exp = w2.inverse(dst),
+            actual = w1.inverse(dst);
+    std::cout << std::hex << "inverse(v): " << exp << std::endl
+        << "inverse:    " << actual << std::endl;
 }

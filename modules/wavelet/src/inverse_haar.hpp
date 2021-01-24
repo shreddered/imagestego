@@ -41,7 +41,7 @@ extern "C" {
  * @param rows Number of rows.
  * @param cols Number of columns.
  */
-void inverse_vertical_haar(const uint8_t* src, uint8_t* dst, const int rows,
+void inverseVerticalHaar(const uint8_t* src, uint8_t* dst, const int rows,
                            const int cols);
 
 /**
@@ -54,7 +54,7 @@ void inverse_vertical_haar(const uint8_t* src, uint8_t* dst, const int rows,
  * @param rows Number of rows.
  * @param cols Number of columns.
  */
-void inverse_horizontal_haar(const uint8_t* src, uint8_t* dst, int rows, int cols);
+void inverseHorizontalHaar(const uint8_t* src, uint8_t* dst, int rows, int cols);
 
 #ifdef __cplusplus
 }
