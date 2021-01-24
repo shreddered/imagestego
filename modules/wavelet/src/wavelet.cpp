@@ -122,7 +122,9 @@ public:
     explicit WaveletExtracter(Wavelet* wavelet, Decoder* decoder)
         : _wavelet(wavelet), _decoder(decoder) {}
     virtual ~WaveletExtracter() noexcept {
-
+        delete _wavelet;
+        if (_decoder)
+            delete _decoder;
     }
     void setImage(const std::string& src) {
         _image = cv::imread(src);
