@@ -22,6 +22,18 @@ target_compile_definitions(imagestego_wavelet PUBLIC
   "-DIMAGESTEGO_WAVELET"
 )
 
+# imagestego_add_test(WAVELET
+  # NAME wavelet_embedder
+  # FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/wavelet.cpp
+  # LIBS imagestego_wavelet
+# )
+
+imagestego_add_test(WAVELET
+  NAME haar
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/test/haar.cpp
+  LIBS imagestego_wavelet
+)
+
 imagestego_add_perf_test(WAVELET
   NAME haar_perf
   FILE ${CMAKE_CURRENT_SOURCE_DIR}/perf/haar.cpp

@@ -30,13 +30,16 @@
 #include "imagestego/core/interfaces.hpp"
 #include "imagestego/wavelet/interfaces.hpp"
 // c++ headers
+#include <random>
 #include <string>
 
 namespace imagestego {
 
 namespace impl {
 
-class WaveletEmbedderImpl;
+class WaveletEmbedder;
+
+class WaveletExtracter;
 
 } // namespace impl
 
