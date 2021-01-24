@@ -130,20 +130,7 @@ $ ctest --verbose
 
 # Usage
 
-The basic usage is:
-
-```cpp
-// imagestego
-#include <imagestego/imagestego.hpp>
-
-int main(int argc, char** argv) {
-    imagestego::embedSecretMessage(new imagestego::LsbEmbedder, "in.png",
-                                   "out.png", "message", "key");
-    return 0;
-}
-```
-
-More examples are coming soon!
+Examples of usage can be found in [examples/](examples/) folder.
 
 # Contributing
 
@@ -155,7 +142,7 @@ This software is distibuted under MIT License. For more details see [LICENSE](LI
 
 # Further development
 
-- [x] JPEG module
+- [ ] JPEG module
 - [ ] Vectorize inverse haar wavelet
 - [ ] Implement more steganographic schemes
 - [ ] Implement more wavelet schemes
