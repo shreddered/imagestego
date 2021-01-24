@@ -77,7 +77,7 @@ public:
         for (int row = 0; row < _image.rows && idx < 32; ++row) {
             for (int col = 0; col < _image.cols && idx < 32; ++col) {
                 auto p = _image.at<cv::Vec3b>(row, col);
-                for (int color = 0; color != 3 && idx < 32; ++color) {
+                for (int color = 0; color < 3 && idx < 32; ++color) {
                     if (size[idx]) {
                         p.val[color] |= 1;
                     } else {
@@ -88,8 +88,9 @@ public:
                 _image.at<cv::Vec3b>(row, col) = p;
             }
         }
-        auto rect = selectRect(_image, _prng, _arr.size());
+        auto rect = selectRect(_image, _prng, _arr.size() * 4);
         cv::Mat transformed = _wavelet->transform(_image(rect));
+        idx = 0;
         for (int row = transformed.rows / 2; row < transformed.rows && idx < _arr.size(); ++row) {
             for (int col = transformed.cols / 2; col < transformed.cols && idx < _arr.size(); ++col) {
                 auto p = transformed.at<cv::Vec3s>(row, col);
@@ -104,7 +105,6 @@ public:
                 transformed.at<cv::Vec3s>(row, col) = p;
             }
         }
-        std::cout << _arr << std::endl;
         _wavelet->inverse(transformed).copyTo(_image(rect));
         cv::imwrite(dst, _image);
     }
@@ -142,12 +142,9 @@ public:
                 }
             }
         }
-        std::cout << _size << std::endl;
         std::size_t size = _size.toInt();
-        std::cout << "size = " << size << std::endl;
         idx = 0;
-        auto rect = selectRect(_image, _prng, size);
-        std::cout << "generated rect: " << rect << std::endl;
+        auto rect = selectRect(_image, _prng, size * 4);
         cv::Mat transformed = _wavelet->transform(_image(rect));
         for (int row = transformed.rows / 2; row < transformed.rows && idx < size; ++row) {
             for (int col = transformed.cols / 2; col < transformed.cols && idx < size; ++col) {
@@ -158,7 +155,6 @@ public:
                 }
             }
         }
-        std::cout << msg << std::endl;
         if (_decoder) {
             _decoder->setMessage(msg);
             return _decoder->getDecodedMessage();
