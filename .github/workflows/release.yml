@@ -11,6 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: install dependencies
+        run: |
+             sudo apt update
+             sudo apt install libopencv-dev lcov clang-tidy clang-format
+             git submodule update --init
       - name: build package
         id: build_packages
         run: |
