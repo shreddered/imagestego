@@ -23,6 +23,7 @@ Dependencies - [_opencv_](https://github.com/opencv/opencv) and [_libjpeg_](http
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
+- [References](#references)
 
 # Overview
 
@@ -151,3 +152,9 @@ This software is distibuted under MIT License. For more details see [LICENSE](LI
 - [ ] Vectorize inverse haar wavelet
 - [ ] Implement more steganographic schemes
 - [ ] Implement more wavelet schemes
+
+# References
+
+1. [2-D Wavelet Transform Enhancement on General-Purpose Microprocessors: Memory Hierarchy and SIMD Parallelism Exploitation](2-D Wavelet Transform Enhancement on General-Purpose Microprocessors: Memory Hierarchy and SIMD Parallelism Exploitation)
+2. [An efficient LZW implementation](http://warp.povusers.org/EfficientLZW/)
+3. [Оптимальное хранение словаря в алгоритме Хаффмана](https://neerc.ifmo.ru/wiki/index.php?title=%D0%9E%D0%BF%D1%82%D0%B8%D0%BC%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5_%D1%81%D0%BB%D0%BE%D0%B2%D0%B0%D1%80%D1%8F_%D0%B2_%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC%D0%B5_%D0%A5%D0%B0%D1%84%D1%84%D0%BC%D0%B0%D0%BD%D0%B0)
