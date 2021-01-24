@@ -72,19 +72,19 @@ public:
         cv::split(mat, _planes);
         std::vector<std::future<cv::Mat>> futures;
         futures.reserve(_planes.size());
-        for (const cv::Mat& mat : _planes) {
+        for (const cv::Mat& mat_ : _planes) {
             futures.emplace_back(std::async(
                 [](const cv::Mat& src) {
                     return inverseHorizontalLifting(inverseVerticalLifting(src));
                 },
-                std::cref(mat)));
+                std::cref(mat_)));
         }
         planes.reserve(_planes.size());
         for (auto&& f : futures) {
             planes.emplace_back(f.get());
         }
         cv::merge(planes, dst);
-        return mat;
+        return dst;
     }
 
 private:
@@ -116,10 +116,10 @@ private:
                 dst.at<short>(i, (j << 1) + 1) = a - floor2(b);
             }
         }
-        return src;
+        return dst;
     }
     static inline cv::Mat inverseVerticalLifting(const cv::Mat& src) {
-        return inverseHorizontalLifting(src.t());
+        return inverseHorizontalLifting(src.t()).t();
     }
     static inline int floor2(int num) { return (num < 0) ? (num - 1) / 2 : num / 2; }
 }; // class HaarWavelet
