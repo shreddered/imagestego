@@ -30,13 +30,16 @@
 #include "imagestego/core/interfaces.hpp"
 #include "imagestego/wavelet/interfaces.hpp"
 // c++ headers
+#include <random>
 #include <string>
 
 namespace imagestego {
 
 namespace impl {
 
-class WaveletEmbedderImpl;
+class WaveletEmbedder;
+
+class WaveletExtracter;
 
 } // namespace impl
 
@@ -88,8 +91,40 @@ public:
     void createStegoContainer(const std::string& dst) override;
 
 private:
-    impl::WaveletEmbedder* pImpl;
+    impl::WaveletEmbedder* _pImpl;
 }; // class WaveletEmbedder
+
+class IMAGESTEGO_EXPORTS WaveletExtracter : public StegoExtracter {
+public:
+    /**
+     * Constructs imagesteo::WaveletEmbedder instance.
+     *
+     * @param wavelet Wavelet transform.
+     * @param encoder Data encoder.
+     */
+    explicit WaveletExtracter(Wavelet* wavelet,
+                              Decoder* encoder = nullptr);
+
+    /**
+     * @brief Destructs WaveletExtracter
+     */
+    virtual ~WaveletExtracter() noexcept;
+
+    /**
+     * @brief Source image setter.
+     */
+    void setImage(const std::string& imageName) override;
+    /**
+     * @brief Setter for secret key.
+     */
+    void setSecretKey(const std::string& key) override;
+    /**
+     * @brief Function for extracting secret message.
+     */
+    std::string extractMessage() override;
+private:
+    impl::WaveletExtracter* _pImpl;
+}; // class WaveletExtracter
 
 } // namespace imagestego
 

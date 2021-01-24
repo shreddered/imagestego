@@ -166,7 +166,7 @@ void inverseVerticalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGE
 #endif
     }
     if (rows % 2 != 0) {
-        memcpy(dst + (rows - 1) * cols,
+        memcpy(dst + (rows - 1) * cols, // NOLINT: allow usage of memcpy
                src + (rows - 1) * cols,
                cols * sizeof(int16_t));
     }
@@ -216,7 +216,7 @@ void inverseVerticalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGE
         }
     }
     if (rows % 2 != 0) {
-        memcpy(dst + (rows - 1) * cols,
+        memcpy(dst + (rows - 1) * cols, // NOLINT: allow usage of memcpy
                src + (rows - 1) * cols,
                cols * sizeof(int16_t));
     }
@@ -226,9 +226,12 @@ void inverseVerticalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGE
 
 #if IMAGESTEGO_AVX2_SUPPORTED
 
-void inverseHorizontalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMAGESTEGO_RESTRICT _dst,
+void inverseHorizontalHaar(const uint8_t* _src, uint8_t* _dst,
         const int rows, const int cols) {
-    const __m256i zero = _mm256_setzero_si256();
+    const __m256i ones = _mm256_set_epi16(1, 1, 1, 1,
+                                          1, 1, 1, 1,
+                                          1, 1, 1, 1,
+                                          1, 1, 1, 1);
     const int16_t* src = (const int16_t*) _src;
     int16_t* dst = (int16_t*) _dst;
     for (int row = 0; row != rows; ++row) {
@@ -236,14 +239,15 @@ void inverseHorizontalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMA
         int16_t* dptr = dst + row * cols;
         const int aligned = align32(cols);
         int col;
-        for (col = 0; col != aligned; col += 32) {
+        for (col = 0; col < aligned; col += 32) {
             const int16_t* tmp1 = sptr + col / 2;
             const int16_t* tmp2 = tmp1 + cols / 2;
 #if IMAGESTEGO_GCC || IMAGESTEGO_CLANG || IMAGESTEGO_ICC
             asm(
                 "vmovdqu (%[lo]), %%ymm0              \n\t"
                 "vmovdqu (%[hi]), %%ymm1              \n\t"
-                "vpavgw  %%ymm1, %[zero], %%ymm2      \n\t"
+                "vpaddw  %%ymm1, %[ones], %%ymm2      \n\t"
+                "vpsraw  $0x1, %%ymm2, %%ymm2         \n\t"
                 "vpaddw  %%ymm0, %%ymm2, %%ymm2       \n\t"
                 "vpsraw  $0x1, %%ymm1, %%ymm1         \n\t"
                 "vpsubw  %%ymm1, %%ymm0, %%ymm1       \n\t"
@@ -253,14 +257,14 @@ void inverseHorizontalHaar(const uint8_t* IMAGESTEGO_RESTRICT _src, uint8_t* IMA
                 : [lo]   "r" (tmp1),
                   [hi]   "r" (tmp2),
                   [dst]  "r" (dptr),
-                  [zero] "x" (zero),
+                  [ones] "x" (ones),
                   [col]  "r" ((ptrdiff_t) col)
                 : "%ymm0", "%ymm1", "%ymm2", "memory"
             );
 #endif
         }
-        for (; col < cols - 1; col += 2) {
-            dptr[col] = sptr[col / 2] + ceil2(sptr[col / 2 + cols / 2]);
+        for (col = 0; col < cols - 1; col += 2) {
+            dptr[col] = (sptr[col / 2] + ceil2(sptr[col / 2 + cols / 2]));
             dptr[col + 1] = sptr[col / 2] - floor2(sptr[col / 2 + cols / 2]);
         }
         if (rows % 2 != 0) {

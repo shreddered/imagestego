@@ -21,43 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef __IMAGESTEGO_WAVELET_PRIVATE_INVERSE_HAAR_HPP_INCLUDED__
-#define __IMAGESTEGO_WAVELET_PRIVATE_INVERSE_HAAR_HPP_INCLUDED__
 
-// c headers
-#include <cstdint>
+#ifndef __IMAGESTEGO_LZW_HPP_INCLUDED__
+#define __IMAGESTEGO_LZW_HPP_INCLUDED__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "imagestego/compression/lzw_decoder.hpp"
+#include "imagestego/compression/lzw_encoder.hpp"
 
-/**
- * Function which computes inverse vertical lifting.
- *
- * NB: pointers only from CV_16S matrices are accepted.
- *
- * @param src Pointer to source matrix obtained from cv::Mat::data.
- * @param dst Destination pointer.
- * @param rows Number of rows.
- * @param cols Number of columns.
- */
-void inverseVerticalHaar(const uint8_t* src, uint8_t* dst, const int rows,
-                           const int cols);
-
-/**
- * Function which computes inverse horizontal lifting.
- *
- * NB: pointers only from CV_16S matrices are accepted.
- *
- * @param src Pointer to source matrix obtained from cv::Mat::data.
- * @param dst Destination pointer.
- * @param rows Number of rows.
- * @param cols Number of columns.
- */
-void inverseHorizontalHaar(const uint8_t* src, uint8_t* dst, int rows, int cols);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* __IMAGESTEGO_WAVELET_PRIVATE_INVERSE_HAAR_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_LZW_HPP_INCLUDED__ */
