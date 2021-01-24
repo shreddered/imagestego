@@ -1,6 +1,6 @@
 include(InstallRequiredSystemLibraries)
 
-set(CPACK_PACKAGE_VENDOR "imagestego team")
+set(CPACK_PACKAGE_VENDOR "Dmitry Kalinin")
 set(CPACK_PACKAGE_CONTACT "x.shreddered.x@gmail.com")
 
 set(CPACK_PACKAGE_VERSION_MAJOR ${IMAGESTEGO_VERSION_MAJOR})
@@ -20,7 +20,7 @@ else()
 endif()
 
 # debian package dependencies
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libopencv-core-dev (>= 4.2), libopencv-imgcodecs-dev (>= 4.2)")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libopencv-core-dev (>= 4.2), libopencv-imgcodecs-dev (>= 4.2), cmake (>= 3.5)")
 
 # source rules
 set(CPACK_SOURCE_GENERATOR TGZ ZIP)
