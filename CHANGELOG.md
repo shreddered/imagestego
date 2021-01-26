@@ -1,5 +1,5 @@
 # Changelog
 
-## v1.0.0-alpha \[2021-01-24\]
+## v1.0.0 \[2021-01-24\]
 
 Initial release.
