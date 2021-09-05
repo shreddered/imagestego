@@ -22,11 +22,17 @@
  * SOFTWARE.
  */
 
-#ifndef __IMAGESTEGO_CORE_HPP_INCLUDED__
-#define __IMAGESTEGO_CORE_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_CORE_EXPORT_HPP_INCLUDED__
+#define __IMAGESTEGO_CORE_EXPORT_HPP_INCLUDED__
 
-// imagestego headers
-#include "imagestego/core/export.hpp"
-#include "imagestego/core/types.hpp"
+#if (defined(WIN32) || defined(_WIN32) || defined(WINCE)) && defined(IMAGESTEGO_DLL)
+#ifdef IMAGESTEGO_EXPORT
+#define IMAGESTEGO_EXPORTS __declspec(dllexport)
+#else
+#define IMAGESTEGO_EXPORTS __declspec(dllimport)
+#endif
+#else
+#define IMAGESTEGO_EXPORTS /* nothing */
+#endif
 
-#endif /* __IMAGESTEGO_CORE_HPP_INCLUDED__ */
+#endif /* __IMAGESTEGO_CORE_EXPORT_HPP_INCLUDED__ */

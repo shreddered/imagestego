@@ -22,11 +22,21 @@
  * SOFTWARE.
  */
 
-#ifndef __IMAGESTEGO_CORE_HPP_INCLUDED__
-#define __IMAGESTEGO_CORE_HPP_INCLUDED__
+#ifndef __IMAGESTEGO_CORE_TYPES_HPP_INCLUDED__
+#define __IMAGESTEGO_CORE_TYPES_HPP_INCLUDED__
 
-// imagestego headers
-#include "imagestego/core/export.hpp"
-#include "imagestego/core/types.hpp"
+namespace imagestego {
 
-#endif /* __IMAGESTEGO_CORE_HPP_INCLUDED__ */
+enum status {
+    ok = 0,
+    error = 0x1
+}; // enum status
+
+enum compressmode {
+    uncompressed,
+    zlib
+}; // enumm compressmode
+
+} // namespace imagestego
+
+#endif /* __IMAGESTEGO_CORE_TYPES_HPP_INCLUDED__ */
