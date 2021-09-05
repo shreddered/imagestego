@@ -26,7 +26,8 @@
 #define __IMAGESTEGO_LSB_HPP_INCLUDED__
 
 // imagestego headers
-#include "imagestego/core.hpp"
+#included "imagestego/core/export.hpp"
+#include "imagestego/core/types.hpp"
 // c++ headers
 #include <string>
 // opencv headers
@@ -37,7 +38,7 @@ namespace imagestego {
 namespace lsb {
 
 /**
- * @brief This function performs classic LSB insertion
+ * @brief A function that performs classic LSB insertion
  *
  * @param image Source image
  * @param msg Bytes to insert
@@ -46,10 +47,11 @@ namespace lsb {
  *
  * @return imagestego::ok on success
  */
-int insert(cv::Mat image, const std::string& msg, const std::string& key, int compress = imagestego::uncompressed);
+IMAGESTEGO_EXPORTS imagestego::status insert(cv::Mat image, const std::string& msg,
+        const std::string& key, imagestego::compressmode compress = imagestego::uncompressed);
 
 /**
- * @brief This function performs LSB extraction
+ * @brief A function that performs LSB extraction
  *
  * @param image Source image
  * @param msg Reference to extracted message
@@ -58,7 +60,9 @@ int insert(cv::Mat image, const std::string& msg, const std::string& key, int co
  *
  * @return imagestego::ok on success
  */
-int extract(cv::Mat image, std::string& msg, const std::string& key, int compress = imagestego::uncompressed);
+// IMAGESTEGO_EXPORTS imagestego::status extract(cv::Mat image, std::string& msg,
+        // const std::string& key, imagestego::compressmode compress = imagestego::uncompressed);
+
 
 } // namespace lsb
 
