@@ -27,113 +27,40 @@
 
 // imagestego headers
 #include "imagestego/core.hpp"
-#include "imagestego/core/bitarray.hpp"
-#include "imagestego/core/interfaces.hpp"
 // c++ headers
-#include <random>
 #include <string>
-#include <type_traits>
+// opencv headers
+#include <opencv2/core/mat.hpp>
 
 namespace imagestego {
 
-namespace impl {
-
-class LsbEmbedder;
-
-class LsbExtracter;
-
-} // namespace impl
+namespace lsb {
 
 /**
- * @brief Class for performing LSB-based embedding.
+ * @brief This function performs classic LSB insertion
+ *
+ * @param image Source image
+ * @param msg Bytes to insert
+ * @param key Secret key
+ * @param compress Use compression. No compression by default
+ *
+ * @return imagestego::ok on success
  */
-class IMAGESTEGO_EXPORTS LsbEmbedder : public StegoEmbedder {
-public:
-    /**
-     * Constructs embedder with given encoder.
-     *
-     * @param encoder Encoder which will process data.
-     */
-    explicit LsbEmbedder(Encoder* encoder = nullptr);
-
-    /**
-     * LsbEmbedder destructror.
-     */
-    virtual ~LsbEmbedder() noexcept;
-
-    /**
-     * Setter for source image.
-     *
-     * @param src Path to image.
-     */
-    void setImage(const std::string& src) override;
-
-    /**
-     * Setter for message.
-     *
-     * @param msg Message string.
-     */
-    void setMessage(const std::string& msg) override;
-
-    /**
-     * Setter for secret key.
-     *
-     * @param src Secret key string.
-     */
-    void setSecretKey(const std::string& key) override;
-
-    /**
-     * Performs embedding.
-     *
-     * @param dst Path to new image.
-     */
-    void createStegoContainer(const std::string& dst) override;
-
-private:
-    impl::LsbEmbedder* _embedder;
-}; // class LsbEmbedder
+int insert(cv::Mat image, const std::string& msg, const std::string& key, int compress = imagestego::uncompressed);
 
 /**
- * @brief Class for performing LSB extracting.
+ * @brief This function performs LSB extraction
+ *
+ * @param image Source image
+ * @param msg Reference to extracted message
+ * @param key Secret key
+ * @param compress Use compression. No compression by default
+ *
+ * @return imagestego::ok on success
  */
-class IMAGESTEGO_EXPORTS LsbExtracter : public StegoExtracter {
-public:
-    /**
-     * Constructs extracter with given decoder.
-     *
-     * @param decoder Decoder of extracted data.
-     */
-    explicit LsbExtracter(Decoder* decoder = nullptr);
+int extract(cv::Mat image, std::string& msg, const std::string& key, int compress = imagestego::uncompressed);
 
-    /**
-     * LsbExtracter destructror.
-     */
-    virtual ~LsbExtracter() noexcept;
-
-    /**
-     * Setter for stego container.
-     *
-     * @param src Path to image with stego message.
-     */
-    void setImage(const std::string& dst) override;
-
-    /**
-     * Sets secret key.
-     *
-     * @param key Secret key.
-     */
-    void setSecretKey(const std::string& key) override;
-
-    /**
-     * Extracts message from image.
-     *
-     * @return Extracted message.
-     */
-    std::string extractMessage() override;
-
-private:
-    impl::LsbExtracter* _extracter;
-}; // class LsbExtracter
+} // namespace lsb
 
 } // namespace imagestego
 
